@@ -57,12 +57,12 @@ func makeUnix() {
 
 	defer os.Chdir(wd)
 
-	if err := os.Chdir(tclDir); err != nil {
+	if err := os.Chdir(filepath.Join(tclDir, "unix")); err != nil {
 		fail("%s\n", err)
 	}
 
 	newCmd(nil, nil, "make", "distclean").Run()
-	cmd := newCmd(nil, nil, filepath.Join("unix", "configure"),
+	cmd := newCmd(nil, nil, "./configure",
 		"--disable-dll-unload",
 		"--disable-load",
 		"--disable-threads",
@@ -97,9 +97,11 @@ func makeUnix() {
 			}
 		case "gcc":
 			for _, v := range lines {
-				if !strings.Contains(v, "tclAppInit.o") {
-					cc(cFiles, optm, &opts, v)
+				if strings.Contains(v, "tclAppInit.o") {
+					break
 				}
+
+				cc(cFiles, optm, &opts, v)
 			}
 		case "rm":
 			// nop
@@ -365,13 +367,22 @@ func untar(root string, r io.Reader) error {
 
 		switch hdr.Typeflag {
 		case tar.TypeDir:
-			if err = os.MkdirAll(filepath.Join(root, hdr.Name), 0770); err != nil {
+			dir := filepath.Join(root, hdr.Name)
+			if strings.Contains(dir, "/pkgs/") || strings.HasSuffix(dir, "/pkgs") {
+				break
+			}
+
+			if err = os.MkdirAll(dir, 0770); err != nil {
 				return err
 			}
 		case tar.TypeSymlink, tar.TypeXGlobalHeader:
 			// skip
 		case tar.TypeReg, tar.TypeRegA:
 			dir := filepath.Dir(filepath.Join(root, hdr.Name))
+			if strings.Contains(dir, "/pkgs/") || strings.HasSuffix(dir, "/pkgs") {
+				break
+			}
+
 			if _, err := os.Stat(dir); err != nil {
 				if !os.IsNotExist(err) {
 					return err
