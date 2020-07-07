@@ -1,9 +1,3 @@
-# sqlite
+# tcl
 
-Package sqlite is an in-process implementation of a self-contained, serverless, zero-configuration, transactional SQL database engine. (Work In Progress)
-
-Installation
-
-    $ go get modernc.org/sqlite
-
-Documentation: [godoc.org/modernc.org/sqlite](http://godoc.org/modernc.org/sqlite)
+Tcl (Tool Command Language) is a very powerful but easy to learn dynamic programming language, suitable for a very wide range of uses, including web and desktop applications, networking, administration, testing and many more.
