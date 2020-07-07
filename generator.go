@@ -77,7 +77,7 @@ func makeUnix() {
 		fail("%s\n", err)
 	}
 
-	groups := group(stdout.String())
+	groups := makeGroups(stdout.String())
 	var objectFiles, opts []string
 	optm := map[string]struct{}{}
 	cFiles := map[string]string{}
@@ -238,7 +238,7 @@ func splitCCLine(s string) (r []string) {
 	return r
 }
 
-func group(s string) map[string][]string {
+func makeGroups(s string) map[string][]string {
 	s = strings.ReplaceAll(s, "\\\n", "")
 	a := strings.Split(s, "\n")
 	r := map[string][]string{}
