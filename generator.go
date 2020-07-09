@@ -101,7 +101,7 @@ func makeUnix() {
 					break
 				}
 
-				cc(cFiles, optm, &opts, v)
+				parseCCLine(cFiles, optm, &opts, v)
 			}
 		case "rm":
 			// nop
@@ -128,7 +128,7 @@ func makeUnix() {
 	}
 }
 
-func cc(cFiles map[string]string, m map[string]struct{}, opts *[]string, line string) {
+func parseCCLine(cFiles map[string]string, m map[string]struct{}, opts *[]string, line string) {
 	// fmt.Printf("line `%s`\n", line) //TODO-
 	for _, tok := range splitCCLine(line) {
 		// fmt.Printf("tok `%s`\n", tok) //TODO-
