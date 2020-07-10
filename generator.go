@@ -112,7 +112,19 @@ func makeUnix() {
 	args := []string{
 		"-o", filepath.Join(wd, filepath.FromSlash(fmt.Sprintf("lib/tcl_%s_%s.go", runtime.GOOS, runtime.GOARCH))),
 		"-ccgo-long-double-is-double",
+		"../compat/zlib/adler32.c",
+		"../compat/zlib/compress.c",
+		"../compat/zlib/crc32.c",
+		"../compat/zlib/deflate.c",
+		"../compat/zlib/infback.c",
+		"../compat/zlib/inffast.c",
+		"../compat/zlib/inflate.c",
+		"../compat/zlib/inftrees.c",
+		"../compat/zlib/trees.c",
+		"../compat/zlib/uncompr.c",
+		"../compat/zlib/zutil.c",
 	}
+
 	args = append(args, opts...)
 	for _, v := range objectFiles {
 		args = append(args, cFiles[v])
