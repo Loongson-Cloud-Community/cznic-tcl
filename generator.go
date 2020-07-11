@@ -111,7 +111,10 @@ func makeUnix() {
 	}
 	args := []string{
 		"-o", filepath.Join(wd, filepath.FromSlash(fmt.Sprintf("lib/tcl_%s_%s.go", runtime.GOOS, runtime.GOARCH))),
+		"-ccgo-export-externs", "X",
+		"-ccgo-export-fields", "F",
 		"-ccgo-long-double-is-double",
+		"-ccgo-pkgname", "tcl",
 		"../compat/zlib/adler32.c",
 		"../compat/zlib/compress.c",
 		"../compat/zlib/crc32.c",
@@ -153,6 +156,10 @@ func parseCCLine(cFiles map[string]string, m map[string]struct{}, opts *[]string
 
 			// nop
 		case strings.HasPrefix(tok, "-D"):
+			if tok == "-DHAVE_CPUID=1" {
+				break
+			}
+
 			if i := strings.IndexByte(tok, '='); i > 0 {
 				def := tok[:i+1]
 				val := tok[i+1:]
