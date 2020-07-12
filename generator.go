@@ -115,6 +115,7 @@ func makeUnix() {
 		"-ccgo-export-fields", "F",
 		"-ccgo-long-double-is-double",
 		"-ccgo-pkgname", "tcl",
+		//TODO- "-ccgo-watch-instrumentation", //TODO-
 		"../compat/zlib/adler32.c",
 		"../compat/zlib/compress.c",
 		"../compat/zlib/crc32.c",
