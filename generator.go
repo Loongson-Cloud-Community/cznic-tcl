@@ -35,8 +35,21 @@ var (
 )
 
 func fail(s string, args ...interface{}) {
-	fmt.Fprintf(os.Stderr, s, args...)
+	fmt.Fprintf(os.Stderr, origin(2)+":"+s, args...)
 	os.Exit(1)
+}
+
+func origin(skip int) string {
+	pc, fn, fl, _ := runtime.Caller(skip)
+	f := runtime.FuncForPC(pc)
+	var fns string
+	if f != nil {
+		fns = f.Name()
+		if x := strings.LastIndex(fns, "."); x > 0 {
+			fns = fns[x+1:]
+		}
+	}
+	return fmt.Sprintf("%s:%d:%s", fn, fl, fns)
 }
 
 func main() {
@@ -91,6 +104,7 @@ func makeUnix() {
 		"--disable-dll-unload",
 		"--disable-load",
 		"--disable-threads",
+		"--enable-symbols=mem", //TODO- adds TCL_MEM_DEBUG
 	)
 	if err = cmd.Run(); err != nil {
 		fail("%s\n", err)
@@ -146,6 +160,7 @@ func makeUnixLibAndShell(testWD string) {
 		"-ccgo-export-fields", "F",
 		"-ccgo-long-double-is-double",
 		"-ccgo-pkgname", "tcl",
+		"-DTCL_COMPILE_DEBUG=1", //TODO-
 		"../compat/zlib/adler32.c",
 		"../compat/zlib/compress.c",
 		"../compat/zlib/crc32.c",
@@ -175,6 +190,7 @@ func makeUnixLibAndShell(testWD string) {
 	args = []string{
 		"-o", filepath.Join(testWD, filepath.FromSlash(fmt.Sprintf("tclsh/tclsh_%s_%s.go", runtime.GOOS, runtime.GOARCH))),
 		"-ccgo-long-double-is-double",
+		"-DTCL_COMPILE_DEBUG=1", //TODO-
 		"tclAppInit.c",
 		"-lmodernc.org/tcl/lib",
 	}
@@ -218,6 +234,7 @@ func makeUnixTclTest(testWD string) {
 		"-o", filepath.Join(testWD, filepath.FromSlash(fmt.Sprintf("internal/tcltest/tcltest_%s_%s.go", runtime.GOOS, runtime.GOARCH))),
 		"-ccgo-long-double-is-double",
 		"-ccgo-pkgname", "tcltest",
+		"-DTCL_COMPILE_DEBUG=1", //TODO-
 		"../generic/tclOOStubLib.c",
 		"../generic/tclStubLib.c",
 		"../generic/tclTomMathStubLib.c",
@@ -246,6 +263,7 @@ func parseCCLine(cPaths *[]string, cFiles map[string]string, m map[string]struct
 		switch {
 		case
 			tok == "-c",
+			tok == "-g",
 			tok == "-pipe",
 			strings.HasPrefix(tok, "-W"),
 			strings.HasPrefix(tok, "-O"):
