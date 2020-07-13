@@ -2,33 +2,24 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package main // import "modernc.org/tcl"
+package tcl // import "modernc.org/tcl"
 
 import (
-	"bytes"
-	"context"
-	"database/sql"
 	"flag"
 	"fmt"
+	"io"
 	"io/ioutil"
-	"math/rand"
 	"os"
 	"os/exec"
 	"path"
 	"path/filepath"
-	"regexp"
 	"runtime"
 	"runtime/debug"
-	"sort"
-	"strconv"
 	"strings"
-	"sync"
 	"sync/atomic"
 	"testing"
-	"time"
 
-	"modernc.org/mathutil"
-	"modernc.org/sqlite/internal/tclsh"
+	"modernc.org/tcl/internal/tcltest"
 )
 
 func caller(s string, va ...interface{}) {
@@ -88,6 +79,104 @@ func init() {
 
 // ============================================================================
 
-func Test(t *testing.T) {
-	t.Logf("TODO")
+var (
+	oDbgTcl = flag.Bool("dbg.tcl", false, "")
+)
+
+func TestMain(m *testing.M) {
+	oTcltest := flag.Bool("tcltest", false, "")
+	flag.Parse()
+	if *oTcltest {
+		var argv []string
+		for _, v := range os.Args {
+			if !strings.HasPrefix(v, "-test.") && v != "-tcltest" {
+				argv = append(argv, v)
+			}
+		}
+		os.Args = argv
+		tcltest.Main()
+		panic("unreachable")
+	}
+
+	os.Exit(m.Run())
+}
+
+func testTclTest(t *testing.T, blacklist map[string]struct{}, stdout, stderr io.Writer) int {
+	m, err := filepath.Glob(filepath.FromSlash("testdata/tcl/*"))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	dir, err := ioutil.TempDir("", "tcl-test-")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	defer os.RemoveAll(dir)
+
+	wd, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	defer os.Chdir(wd)
+
+	if err := os.Chdir(dir); err != nil {
+		t.Fatal(err)
+	}
+
+	for _, v := range m {
+		if _, ok := blacklist[filepath.Base(v)]; ok {
+			continue
+		}
+
+		s := filepath.Join(wd, v)
+		d := filepath.Join(dir, filepath.Base(v))
+		f, err := ioutil.ReadFile(s)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		fi, err := os.Stat(s)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if err := ioutil.WriteFile(d, f, fi.Mode()&os.ModePerm); err != nil {
+			t.Fatal(err)
+		}
+	}
+	var rc int
+	var cmd *exec.Cmd
+	switch {
+	case *oDbgTcl:
+		cmd = exec.Command(os.Args[0], "-tcltest", "dbg.tcl")
+	default:
+		cmd = exec.Command(os.Args[0], "-tcltest", "all.tcl")
+	}
+	cmd.Stdout = stdout
+	cmd.Stderr = stderr
+	if cmd.Run() != nil {
+		rc = 1
+	}
+	return rc
+}
+
+func TestTclTest(t *testing.T) {
+	blacklist := map[string]struct{}{}
+	wd, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	pth, err := filepath.Abs(wd)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	os.Setenv("TCL_LIBRARY", filepath.FromSlash(pth+"/lib"))
+	rc := testTclTest(t, blacklist, os.Stdout, os.Stderr)
+	if rc != 0 {
+		t.Fatal(rc)
+	}
 }

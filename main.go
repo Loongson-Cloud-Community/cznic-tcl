@@ -4,7 +4,7 @@
 
 //go:generate go run generator.go
 
-package main
+package tcl
 
 import (
 	"fmt"
@@ -47,8 +47,4 @@ func trc(s string, args ...interface{}) string { //TODO-
 	fmt.Fprintf(os.Stdout, "%s\n", r)
 	os.Stdout.Sync()
 	return r
-}
-
-func main() {
-	panic(todo(""))
 }
