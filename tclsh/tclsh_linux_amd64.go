@@ -2081,7 +2081,7 @@ type TclPlatStubs = TclPlatStubs1 /* tclPlatDecls.h:86:3 */
 
 func main1(tls *crt.TLS, argc int32, argv uintptr) int32 { /* tclAppInit.c:72:1: */
 
-	tcl.XTcl_MainEx(tls, argc, argv, *(*uintptr)(unsafe.Pointer(&struct{ f func(*crt.TLS, uintptr) int32 }{Tcl_AppInit})), (tcl.XTcl_CreateInterp(tls)))
+	tcl.XTcl_MainEx(tls, argc, argv, *(*uintptr)(unsafe.Pointer(&struct{ f func(*crt.TLS, uintptr) int32 }{Tcl_AppInit})), tcl.XTcl_CreateInterp(tls))
 	return 0 // Needed only to prevent compiler warning.
 }
 
@@ -2125,7 +2125,7 @@ func Tcl_AppInit(tls *crt.TLS, interp uintptr) int32 { /* tclAppInit.c:108:1: */
 	// is the name of the application. If this line is deleted then no
 	// user-specific startup file will be run under any conditions.
 
-	tcl.XTcl_ObjSetVar2(tls, interp, tcl.XTcl_DbNewStringObj(tls, ts /* "tcl_rcFileName" */, -1, ts+15 /* "tclAppInit.c" */, 156), (uintptr(0)),
+	tcl.XTcl_ObjSetVar2(tls, interp, tcl.XTcl_DbNewStringObj(tls, ts /* "tcl_rcFileName" */, -1, ts+15 /* "tclAppInit.c" */, 156), uintptr(0),
 		tcl.XTcl_DbNewStringObj(tls, ts+28 /* "~/.tclshrc" */, -1, ts+15 /* "tclAppInit.c" */, 157), 1)
 
 	return 0
