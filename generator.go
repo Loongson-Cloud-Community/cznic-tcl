@@ -160,7 +160,6 @@ func makeUnixLibAndShell(testWD string) {
 		"-ccgo-export-fields", "F",
 		"-ccgo-long-double-is-double",
 		"-ccgo-pkgname", "tcl",
-		"-DTCL_COMPILE_DEBUG=1", //TODO-
 		"../compat/zlib/adler32.c",
 		"../compat/zlib/compress.c",
 		"../compat/zlib/crc32.c",
@@ -190,7 +189,6 @@ func makeUnixLibAndShell(testWD string) {
 	args = []string{
 		"-o", filepath.Join(testWD, filepath.FromSlash(fmt.Sprintf("tclsh/tclsh_%s_%s.go", runtime.GOOS, runtime.GOARCH))),
 		"-ccgo-long-double-is-double",
-		"-DTCL_COMPILE_DEBUG=1", //TODO-
 		"tclAppInit.c",
 		"-lmodernc.org/tcl/lib",
 	}
@@ -234,7 +232,6 @@ func makeUnixTclTest(testWD string) {
 		"-o", filepath.Join(testWD, filepath.FromSlash(fmt.Sprintf("internal/tcltest/tcltest_%s_%s.go", runtime.GOOS, runtime.GOARCH))),
 		"-ccgo-long-double-is-double",
 		"-ccgo-pkgname", "tcltest",
-		"-DTCL_COMPILE_DEBUG=1", //TODO-
 		"../generic/tclOOStubLib.c",
 		"../generic/tclStubLib.c",
 		"../generic/tclTomMathStubLib.c",
