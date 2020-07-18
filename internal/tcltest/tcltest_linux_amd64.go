@@ -9298,9 +9298,9 @@ func Tcltest_Init(tls *crt.TLS, interp uintptr) int32 { /* tclTest.c:544:1: */
 		f func(*crt.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestexitmainloopCmd})),
 		uintptr(0), uintptr(0))
-	*(*Tcl_ValueType)(unsafe.Pointer(bp /* &t3ArgTypes */ + uintptr(0)*4)) = Tcl_ValueType(2)
-	*(*Tcl_ValueType)(unsafe.Pointer(bp /* &t3ArgTypes */ + uintptr(1)*4)) = Tcl_ValueType(2)
-	(*(*func(*crt.TLS, uintptr, uintptr, int32, uintptr, uintptr, ClientData))(unsafe.Pointer((tclStubsPtr + 776 /* &.tcl_CreateMathFunc */))))(tls, interp, ts+1314 /* "T3" */, 2, bp /* &t3ArgTypes */, *(*uintptr)(unsafe.Pointer(&struct {
+	*(*Tcl_ValueType)(unsafe.Pointer(bp /* &t3ArgTypes[0] */ + uintptr(0)*4)) = Tcl_ValueType(2)
+	*(*Tcl_ValueType)(unsafe.Pointer(bp /* &t3ArgTypes[0] */ + uintptr(1)*4)) = Tcl_ValueType(2)
+	(*(*func(*crt.TLS, uintptr, uintptr, int32, uintptr, uintptr, ClientData))(unsafe.Pointer((tclStubsPtr + 776 /* &.tcl_CreateMathFunc */))))(tls, interp, ts+1314 /* "T3" */, 2, bp /* &t3ArgTypes[0] */, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*crt.TLS, ClientData, uintptr, uintptr, uintptr) int32
 	}{TestMathFunc2})),
 		uintptr(0))
@@ -9601,12 +9601,12 @@ func AsyncHandlerProc(tls *crt.TLS, clientData ClientData, interp uintptr, code 
 		return 0
 	}
 
-	(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp /* &string */, int64(code))
-	*(*uintptr)(unsafe.Pointer(bp + 24 /* &listArgv */ + uintptr(0)*8)) = (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).command
-	*(*uintptr)(unsafe.Pointer(bp + 24 /* &listArgv */ + uintptr(1)*8)) = (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 2736 /* &.tcl_GetString */))))(tls, (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1344 /* &.tcl_GetObjResult */))))(tls, interp))
-	*(*uintptr)(unsafe.Pointer(bp + 24 /* &listArgv */ + uintptr(2)*8)) = bp /* &string */
-	*(*uintptr)(unsafe.Pointer(bp + 24 /* &listArgv */ + uintptr(3)*8)) = uintptr(0)
-	cmd = (*(*func(*crt.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1552 /* &.tcl_Merge */))))(tls, 3, bp+24 /* &listArgv */)
+	(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp /* &string[0] */, int64(code))
+	*(*uintptr)(unsafe.Pointer(bp + 24 /* &listArgv[0] */ + uintptr(0)*8)) = (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).command
+	*(*uintptr)(unsafe.Pointer(bp + 24 /* &listArgv[0] */ + uintptr(1)*8)) = (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 2736 /* &.tcl_GetString */))))(tls, (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1344 /* &.tcl_GetObjResult */))))(tls, interp))
+	*(*uintptr)(unsafe.Pointer(bp + 24 /* &listArgv[0] */ + uintptr(2)*8)) = bp /* &string[0] */
+	*(*uintptr)(unsafe.Pointer(bp + 24 /* &listArgv[0] */ + uintptr(3)*8)) = uintptr(0)
+	cmd = (*(*func(*crt.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1552 /* &.tcl_Merge */))))(tls, 3, bp+24 /* &listArgv[0] */)
 	if interp != (uintptr(0)) {
 		code = (*(*func(*crt.TLS, uintptr, uintptr, int32, int32) int32)(unsafe.Pointer((tclStubsPtr + 2344 /* &.tcl_EvalEx */))))(tls, interp, cmd, -1, 0)
 	} else {
@@ -9796,8 +9796,8 @@ func TestcmdtokenCmd(tls *crt.TLS, dummy ClientData, interp uintptr, argc int32,
 			f func(*crt.TLS, ClientData, uintptr, int32, uintptr) int32
 		}{CmdProc1})),
 			ts+1662 /* "original" */, uintptr(0))
-		crt.Xsprintf(tls, bp+112 /* &buf */, ts+1912 /* "%p" */, crt.VaList(bp+32, token))
-		(*(*func(*crt.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1872 /* &.tcl_SetResult */))))(tls, interp, bp+112 /* &buf */, uintptr(1))
+		crt.Xsprintf(tls, bp+112 /* &buf[0] */, ts+1912 /* "%p" */, crt.VaList(bp+32, token))
+		(*(*func(*crt.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1872 /* &.tcl_SetResult */))))(tls, interp, bp+112 /* &buf[0] */, uintptr(1))
 	} else if crt.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*8)), ts+1915 /* "name" */) == 0 {
 		var objPtr uintptr
 
@@ -10124,8 +10124,8 @@ func DelCallbackProc(tls *crt.TLS, clientData ClientData, interp uintptr) { /* t
 	var id int32 = int32(clientData)
 	// var buffer [24]int8 at bp, 24
 
-	(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp /* &buffer */, int64(id))
-	(*(*func(*crt.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 960 /* &.tcl_DStringAppendElement */))))(tls, uintptr(unsafe.Pointer(&delString)), bp /* &buffer */)
+	(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp /* &buffer[0] */, int64(id))
+	(*(*func(*crt.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 960 /* &.tcl_DStringAppendElement */))))(tls, uintptr(unsafe.Pointer(&delString)), bp /* &buffer[0] */)
 	if interp != delInterp {
 		(*(*func(*crt.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 960 /* &.tcl_DStringAppendElement */))))(tls, uintptr(unsafe.Pointer(&delString)), ts+2477 /* "bogus interprete..." */)
 	}
@@ -11031,9 +11031,9 @@ func ExitProcOdd(tls *crt.TLS, clientData ClientData) { /* tclTest.c:2404:1: */
 
 	var len int32
 
-	crt.Xsprintf(tls, bp+8 /* &buf */, ts+3807 /* "odd %d\n" */, crt.VaList(bp, int32(clientData)))
-	len = int32(crt.Xstrlen(tls, bp+8 /* &buf */))
-	if len != int32(crt.Xwrite(tls, 1, bp+8 /* &buf */, uint64(len))) {
+	crt.Xsprintf(tls, bp+8 /* &buf[0] */, ts+3807 /* "odd %d\n" */, crt.VaList(bp, int32(clientData)))
+	len = int32(crt.Xstrlen(tls, bp+8 /* &buf[0] */))
+	if len != int32(crt.Xwrite(tls, 1, bp+8 /* &buf[0] */, uint64(len))) {
 		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 32 /* &.tcl_Panic */))))(tls, ts+3815 /* "ExitProcOdd: una..." */, 0)
 	}
 }
@@ -11046,9 +11046,9 @@ func ExitProcEven(tls *crt.TLS, clientData ClientData) { /* tclTest.c:2418:1: */
 
 	var len int32
 
-	crt.Xsprintf(tls, bp+8 /* &buf */, ts+3854 /* "even %d\n" */, crt.VaList(bp, int32(clientData)))
-	len = int32(crt.Xstrlen(tls, bp+8 /* &buf */))
-	if len != int32(crt.Xwrite(tls, 1, bp+8 /* &buf */, uint64(len))) {
+	crt.Xsprintf(tls, bp+8 /* &buf[0] */, ts+3854 /* "even %d\n" */, crt.VaList(bp, int32(clientData)))
+	len = int32(crt.Xstrlen(tls, bp+8 /* &buf[0] */))
+	if len != int32(crt.Xwrite(tls, 1, bp+8 /* &buf[0] */, uint64(len))) {
 		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 32 /* &.tcl_Panic */))))(tls, ts+3863 /* "ExitProcEven: un..." */, 0)
 	}
 }
@@ -11088,8 +11088,8 @@ func TestexprlongCmd(tls *crt.TLS, clientData ClientData, interp uintptr, argc i
 	if result != 0 {
 		return result
 	}
-	crt.Xsprintf(tls, bp+64 /* &buf */, ts+3933 /* ": %ld" */, crt.VaList(bp+32, *(*int64)(unsafe.Pointer(bp + 56 /* exprResult */))))
-	(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+40, bp+64 /* &buf */, uintptr(0)))
+	crt.Xsprintf(tls, bp+64 /* &buf[0] */, ts+3933 /* ": %ld" */, crt.VaList(bp+32, *(*int64)(unsafe.Pointer(bp + 56 /* exprResult */))))
+	(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+40, bp+64 /* &buf[0] */, uintptr(0)))
 	return 0
 }
 
@@ -11127,8 +11127,8 @@ func TestexprlongobjCmd(tls *crt.TLS, clientData ClientData, interp uintptr, obj
 	if result != 0 {
 		return result
 	}
-	crt.Xsprintf(tls, bp+32 /* &buf */, ts+3933 /* ": %ld" */, crt.VaList(bp, *(*int64)(unsafe.Pointer(bp + 24 /* exprResult */))))
-	(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+8, bp+32 /* &buf */, uintptr(0)))
+	crt.Xsprintf(tls, bp+32 /* &buf[0] */, ts+3933 /* ": %ld" */, crt.VaList(bp, *(*int64)(unsafe.Pointer(bp + 24 /* exprResult */))))
+	(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+8, bp+32 /* &buf[0] */, uintptr(0)))
 	return 0
 }
 
@@ -11167,9 +11167,9 @@ func TestexprdoubleCmd(tls *crt.TLS, clientData ClientData, interp uintptr, argc
 	if result != 0 {
 		return result
 	}
-	crt.Xstrcpy(tls, bp+56 /* &buf */, ts+3950 /* ": " */)
-	(*(*func(*crt.TLS, uintptr, float64, uintptr))(unsafe.Pointer((tclStubsPtr + 1632 /* &.tcl_PrintDouble */))))(tls, interp, *(*float64)(unsafe.Pointer(bp + 48 /* exprResult */)), (bp + 56 /* &buf */ + uintptr(2)))
-	(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+32, bp+56 /* &buf */, uintptr(0)))
+	crt.Xstrcpy(tls, bp+56 /* &buf[0] */, ts+3950 /* ": " */)
+	(*(*func(*crt.TLS, uintptr, float64, uintptr))(unsafe.Pointer((tclStubsPtr + 1632 /* &.tcl_PrintDouble */))))(tls, interp, *(*float64)(unsafe.Pointer(bp + 48 /* exprResult */)), (bp + 56 /* &buf[0] */ + uintptr(2)))
+	(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+32, bp+56 /* &buf[0] */, uintptr(0)))
 	return 0
 }
 
@@ -11207,9 +11207,9 @@ func TestexprdoubleobjCmd(tls *crt.TLS, clientData ClientData, interp uintptr, o
 	if result != 0 {
 		return result
 	}
-	crt.Xstrcpy(tls, bp+24 /* &buf */, ts+3950 /* ": " */)
-	(*(*func(*crt.TLS, uintptr, float64, uintptr))(unsafe.Pointer((tclStubsPtr + 1632 /* &.tcl_PrintDouble */))))(tls, interp, *(*float64)(unsafe.Pointer(bp + 16 /* exprResult */)), (bp + 24 /* &buf */ + uintptr(2)))
-	(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp, bp+24 /* &buf */, uintptr(0)))
+	crt.Xstrcpy(tls, bp+24 /* &buf[0] */, ts+3950 /* ": " */)
+	(*(*func(*crt.TLS, uintptr, float64, uintptr))(unsafe.Pointer((tclStubsPtr + 1632 /* &.tcl_PrintDouble */))))(tls, interp, *(*float64)(unsafe.Pointer(bp + 16 /* exprResult */)), (bp + 24 /* &buf[0] */ + uintptr(2)))
+	(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp, bp+24 /* &buf[0] */, uintptr(0)))
 	return 0
 }
 
@@ -11647,12 +11647,12 @@ func TestlinkCmd(tls *crt.TLS, dummy ClientData, interp uintptr, argc int32, arg
 		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 2024 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4296 /* "uwide" */)
 		created = 0
 	} else if crt.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*8)), ts+1671 /* "get" */) == 0 {
-		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+212 /* &buffer */, int64(intVar))
-		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+212 /* &buffer */)
-		(*(*func(*crt.TLS, uintptr, float64, uintptr))(unsafe.Pointer((tclStubsPtr + 1632 /* &.tcl_PrintDouble */))))(tls, uintptr(0), realVar, bp+212 /* &buffer */)
-		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+212 /* &buffer */)
-		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+212 /* &buffer */, int64(boolVar))
-		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+212 /* &buffer */)
+		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+212 /* &buffer[0] */, int64(intVar))
+		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+212 /* &buffer[0] */)
+		(*(*func(*crt.TLS, uintptr, float64, uintptr))(unsafe.Pointer((tclStubsPtr + 1632 /* &.tcl_PrintDouble */))))(tls, uintptr(0), realVar, bp+212 /* &buffer[0] */)
+		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+212 /* &buffer[0] */)
+		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+212 /* &buffer[0] */, int64(boolVar))
+		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+212 /* &buffer[0] */)
 		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, func() uintptr {
 			if stringVar == (uintptr(0)) {
 				return ts + 2631 /* "-" */
@@ -11663,24 +11663,24 @@ func TestlinkCmd(tls *crt.TLS, dummy ClientData, interp uintptr, argc int32, arg
 		tmp = (*(*func(*crt.TLS, Tcl_WideInt, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 3904 /* &.tcl_DbNewWideIntObj */))))(tls, wideVar, ts+1485 /* "/home/jnml/src/m..." */, 3035)
 		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 2736 /* &.tcl_GetString */))))(tls, tmp))
 		(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 168 /* &.tcl_DbDecrRefCount */))))(tls, tmp, ts+1485 /* "/home/jnml/src/m..." */, 3037)
-		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+212 /* &buffer */, int64(int32(charVar)))
-		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+212 /* &buffer */)
-		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+212 /* &buffer */, int64(int32(ucharVar)))
-		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+212 /* &buffer */)
-		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+212 /* &buffer */, int64(int32(shortVar)))
-		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+212 /* &buffer */)
-		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+212 /* &buffer */, int64(int32(ushortVar)))
-		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+212 /* &buffer */)
-		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+212 /* &buffer */, int64(int32(uintVar)))
-		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+212 /* &buffer */)
+		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+212 /* &buffer[0] */, int64(int32(charVar)))
+		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+212 /* &buffer[0] */)
+		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+212 /* &buffer[0] */, int64(int32(ucharVar)))
+		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+212 /* &buffer[0] */)
+		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+212 /* &buffer[0] */, int64(int32(shortVar)))
+		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+212 /* &buffer[0] */)
+		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+212 /* &buffer[0] */, int64(int32(ushortVar)))
+		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+212 /* &buffer[0] */)
+		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+212 /* &buffer[0] */, int64(int32(uintVar)))
+		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+212 /* &buffer[0] */)
 		tmp = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, longVar, ts+1485 /* "/home/jnml/src/m..." */, 3048)
 		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 2736 /* &.tcl_GetString */))))(tls, tmp))
 		(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 168 /* &.tcl_DbDecrRefCount */))))(tls, tmp, ts+1485 /* "/home/jnml/src/m..." */, 3050)
 		tmp = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, int64(ulongVar), ts+1485 /* "/home/jnml/src/m..." */, 3051)
 		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 2736 /* &.tcl_GetString */))))(tls, tmp))
 		(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 168 /* &.tcl_DbDecrRefCount */))))(tls, tmp, ts+1485 /* "/home/jnml/src/m..." */, 3053)
-		(*(*func(*crt.TLS, uintptr, float64, uintptr))(unsafe.Pointer((tclStubsPtr + 1632 /* &.tcl_PrintDouble */))))(tls, uintptr(0), float64(floatVar), bp+212 /* &buffer */)
-		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+212 /* &buffer */)
+		(*(*func(*crt.TLS, uintptr, float64, uintptr))(unsafe.Pointer((tclStubsPtr + 1632 /* &.tcl_PrintDouble */))))(tls, uintptr(0), float64(floatVar), bp+212 /* &buffer[0] */)
+		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+212 /* &buffer[0] */)
 		tmp = (*(*func(*crt.TLS, Tcl_WideInt, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 3904 /* &.tcl_DbNewWideIntObj */))))(tls, Tcl_WideInt(uwideVar), ts+1485 /* "/home/jnml/src/m..." */, 3056)
 		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 2736 /* &.tcl_GetString */))))(tls, tmp))
 		(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 168 /* &.tcl_DbDecrRefCount */))))(tls, tmp, ts+1485 /* "/home/jnml/src/m..." */, 3058)
@@ -12667,8 +12667,8 @@ __21:
 
 	varName = (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 2736 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*8)))
 	(*(*func(*crt.TLS, Tcl_RegExp, int32, uintptr, uintptr))(unsafe.Pointer((tclIntStubsPtr + 1224 /* &.tclRegExpRangeUniChar */))))(tls, regExpr, -1, bp+104 /* &start */, bp+108 /* &end */)
-	crt.Xsprintf(tls, bp+112 /* &resinfo */, ts+4856 /* "%d %d" */, crt.VaList(bp, *(*int32)(unsafe.Pointer(bp + 104 /* start */)), (*(*int32)(unsafe.Pointer(bp + 108 /* end */))-1)))
-	value = (*(*func(*crt.TLS, uintptr, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 1920 /* &.tcl_SetVar2 */))))(tls, interp, varName, uintptr(0), bp+112 /* &resinfo */, 0)
+	crt.Xsprintf(tls, bp+112 /* &resinfo[0] */, ts+4856 /* "%d %d" */, crt.VaList(bp, *(*int32)(unsafe.Pointer(bp + 104 /* start */)), (*(*int32)(unsafe.Pointer(bp + 108 /* end */))-1)))
+	value = (*(*func(*crt.TLS, uintptr, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 1920 /* &.tcl_SetVar2 */))))(tls, interp, varName, uintptr(0), bp+112 /* &resinfo[0] */, 0)
 	if !(value == (uintptr(0))) {
 		goto __25
 	}
@@ -12685,8 +12685,8 @@ __23:
 
 	(*(*func(*crt.TLS, Tcl_RegExp, uintptr))(unsafe.Pointer((tclStubsPtr + 3032 /* &.tcl_RegExpGetInfo */))))(tls, regExpr, bp+160 /* &info */)
 	varName1 = (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 2736 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*8)))
-	crt.Xsprintf(tls, bp+192 /* &resinfo1 */, ts+4886 /* "%ld" */, crt.VaList(bp+48, (*Tcl_RegExpInfo)(unsafe.Pointer(bp+160 /* &info */)).extendStart))
-	value1 = (*(*func(*crt.TLS, uintptr, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 1920 /* &.tcl_SetVar2 */))))(tls, interp, varName1, uintptr(0), bp+192 /* &resinfo1 */, 0)
+	crt.Xsprintf(tls, bp+192 /* &resinfo1[0] */, ts+4886 /* "%ld" */, crt.VaList(bp+48, (*Tcl_RegExpInfo)(unsafe.Pointer(bp+160 /* &info */)).extendStart))
+	value1 = (*(*func(*crt.TLS, uintptr, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 1920 /* &.tcl_SetVar2 */))))(tls, interp, varName1, uintptr(0), bp+192 /* &resinfo1[0] */, 0)
 	if !(value1 == (uintptr(0))) {
 		goto __27
 	}
@@ -12756,10 +12756,10 @@ __34:
 __37:
 	;
 
-	*(*uintptr)(unsafe.Pointer(bp + 248 /* &objs */ + uintptr(0)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, int64(*(*int32)(unsafe.Pointer(bp + 240 /* start1 */))), ts+1485 /* "/home/jnml/src/m..." */, 4027)
-	*(*uintptr)(unsafe.Pointer(bp + 248 /* &objs */ + uintptr(1)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, int64(*(*int32)(unsafe.Pointer(bp + 244 /* end1 */))), ts+1485 /* "/home/jnml/src/m..." */, 4028)
+	*(*uintptr)(unsafe.Pointer(bp + 248 /* &objs[0] */ + uintptr(0)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, int64(*(*int32)(unsafe.Pointer(bp + 240 /* start1 */))), ts+1485 /* "/home/jnml/src/m..." */, 4027)
+	*(*uintptr)(unsafe.Pointer(bp + 248 /* &objs[0] */ + uintptr(1)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, int64(*(*int32)(unsafe.Pointer(bp + 244 /* end1 */))), ts+1485 /* "/home/jnml/src/m..." */, 4028)
 
-	newPtr = (*(*func(*crt.TLS, int32, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_DbNewListObj */))))(tls, 2, bp+248 /* &objs */, ts+1485 /* "/home/jnml/src/m..." */, 4030)
+	newPtr = (*(*func(*crt.TLS, int32, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_DbNewListObj */))))(tls, 2, bp+248 /* &objs[0] */, ts+1485 /* "/home/jnml/src/m..." */, 4030)
 	goto __32
 __31:
 	if !(ii == -1) {
@@ -13657,7 +13657,7 @@ func GetTimesObjCmd(tls *crt.TLS, unused ClientData, interp uintptr, notused1 in
 	crt.Xfprintf(tls, crt.Xstderr, ts+5839 /* "sprintf of 12345..." */, 0)
 	(*(*func(*crt.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 3872 /* &.tcl_GetTime */))))(tls, bp+104 /* &start */)
 	for i = 0; i < 100000; i++ {
-		crt.Xsprintf(tls, bp+140 /* &newString */, ts+5870 /* "%d" */, crt.VaList(bp+64, 12345))
+		crt.Xsprintf(tls, bp+140 /* &newString[0] */, ts+5870 /* "%d" */, crt.VaList(bp+64, 12345))
 	}
 	(*(*func(*crt.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 3872 /* &.tcl_GetTime */))))(tls, bp+120 /* &stop */)
 	timePer = (float64((((*Tcl_Time)(unsafe.Pointer(bp+120 /* &stop */)).sec - (*Tcl_Time)(unsafe.Pointer(bp+104 /* &start */)).sec) * int64(1000000)) + ((*Tcl_Time)(unsafe.Pointer(bp+120 /* &stop */)).usec - (*Tcl_Time)(unsafe.Pointer(bp+104 /* &start */)).usec)))
@@ -14370,18 +14370,18 @@ func TestChannelCmd(tls *crt.TLS, clientData ClientData, interp uintptr, argc in
 			(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, ts+6710 /* "crlf" */)
 		}
 		IOQueued = (*(*func(*crt.TLS, Tcl_Channel) int32)(unsafe.Pointer((tclStubsPtr + 1480 /* &.tcl_InputBuffered */))))(tls, chan1)
-		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+584 /* &buf */, int64(IOQueued))
-		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+584 /* &buf */)
+		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+584 /* &buf[0] */, int64(IOQueued))
+		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+584 /* &buf[0] */)
 
 		IOQueued = (*(*func(*crt.TLS, Tcl_Channel) int32)(unsafe.Pointer((tclStubsPtr + 3848 /* &.tcl_OutputBuffered */))))(tls, chan1)
-		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+584 /* &buf */, int64(IOQueued))
-		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+584 /* &buf */)
+		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+584 /* &buf[0] */, int64(IOQueued))
+		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+584 /* &buf[0] */)
 
-		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+584 /* &buf */, int64(int32((*(*func(*crt.TLS, Tcl_Channel) Tcl_WideInt)(unsafe.Pointer((tclStubsPtr + 3952 /* &.tcl_Tell */))))(tls, chan1))))
-		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+584 /* &buf */)
+		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+584 /* &buf[0] */, int64(int32((*(*func(*crt.TLS, Tcl_Channel) Tcl_WideInt)(unsafe.Pointer((tclStubsPtr + 3952 /* &.tcl_Tell */))))(tls, chan1))))
+		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+584 /* &buf[0] */)
 
-		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+584 /* &buf */, int64((*ChannelState)(unsafe.Pointer(statePtr)).refCount))
-		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+584 /* &buf */)
+		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+584 /* &buf[0] */, int64((*ChannelState)(unsafe.Pointer(statePtr)).refCount))
+		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, bp+584 /* &buf[0] */)
 
 		return 0
 	}
@@ -14392,8 +14392,8 @@ func TestChannelCmd(tls *crt.TLS, clientData ClientData, interp uintptr, argc in
 			return 1
 		}
 		IOQueued = (*(*func(*crt.TLS, Tcl_Channel) int32)(unsafe.Pointer((tclStubsPtr + 1480 /* &.tcl_InputBuffered */))))(tls, chan1)
-		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+584 /* &buf */, int64(IOQueued))
-		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+144, bp+584 /* &buf */, uintptr(0)))
+		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+584 /* &buf[0] */, int64(IOQueued))
+		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+144, bp+584 /* &buf[0] */, uintptr(0)))
 		return 0
 	}
 
@@ -14403,8 +14403,8 @@ func TestChannelCmd(tls *crt.TLS, clientData ClientData, interp uintptr, argc in
 			return 1
 		}
 
-		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+584 /* &buf */, int64((*(*func(*crt.TLS, Tcl_Channel) int32)(unsafe.Pointer((tclStubsPtr + 3320 /* &.tcl_IsChannelShared */))))(tls, chan1)))
-		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+176, bp+584 /* &buf */, uintptr(0)))
+		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+584 /* &buf[0] */, int64((*(*func(*crt.TLS, Tcl_Channel) int32)(unsafe.Pointer((tclStubsPtr + 3320 /* &.tcl_IsChannelShared */))))(tls, chan1)))
+		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+176, bp+584 /* &buf[0] */, uintptr(0)))
 		return 0
 	}
 
@@ -14414,8 +14414,8 @@ func TestChannelCmd(tls *crt.TLS, clientData ClientData, interp uintptr, argc in
 			return 1
 		}
 
-		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+584 /* &buf */, int64((*(*func(*crt.TLS, Tcl_Channel) int32)(unsafe.Pointer((tclStubsPtr + 3528 /* &.tcl_IsStandardChannel */))))(tls, chan1)))
-		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+208, bp+584 /* &buf */, uintptr(0)))
+		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+584 /* &buf[0] */, int64((*(*func(*crt.TLS, Tcl_Channel) int32)(unsafe.Pointer((tclStubsPtr + 3528 /* &.tcl_IsStandardChannel */))))(tls, chan1)))
+		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+208, bp+584 /* &buf[0] */, uintptr(0)))
 		return 0
 	}
 
@@ -14480,8 +14480,8 @@ func TestChannelCmd(tls *crt.TLS, clientData ClientData, interp uintptr, argc in
 		}
 
 		IOQueued = (*(*func(*crt.TLS, Tcl_Channel) int32)(unsafe.Pointer((tclStubsPtr + 3848 /* &.tcl_OutputBuffered */))))(tls, chan1)
-		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+584 /* &buf */, int64(IOQueued))
-		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+304, bp+584 /* &buf */, uintptr(0)))
+		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+584 /* &buf[0] */, int64(IOQueued))
+		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+304, bp+584 /* &buf[0] */, uintptr(0)))
 		return 0
 	}
 
@@ -14527,8 +14527,8 @@ func TestChannelCmd(tls *crt.TLS, clientData ClientData, interp uintptr, argc in
 			return 1
 		}
 
-		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+584 /* &buf */, int64((*ChannelState)(unsafe.Pointer(statePtr)).refCount))
-		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+368, bp+584 /* &buf */, uintptr(0)))
+		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+584 /* &buf[0] */, int64((*ChannelState)(unsafe.Pointer(statePtr)).refCount))
+		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+368, bp+584 /* &buf[0] */, uintptr(0)))
 		return 0
 	}
 
@@ -14928,7 +14928,7 @@ func TestGetIndexFromObjStructObjCmd(tls *crt.TLS, dummy ClientData, interp uint
 		(*(*func(*crt.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 2128 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+7559 /* "argument targetv..." */)
 		return 1
 	}
-	if (*(*func(*crt.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 2448 /* &.tcl_GetIndexFromObjStruct */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*8)), bp+72 /* &ary */, (int32(uint64(2)*8)),
+	if (*(*func(*crt.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 2448 /* &.tcl_GetIndexFromObjStruct */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*8)), bp+72 /* &ary[0] */, (int32(uint64(2)*8)),
 		ts+7580 /* "dummy" */, 0, bp+136 /* &idx */) != 0 {
 		return 1
 	}
@@ -14938,11 +14938,11 @@ func TestGetIndexFromObjStructObjCmd(tls *crt.TLS, dummy ClientData, interp uint
 	if *(*int32)(unsafe.Pointer(bp + 136 /* idx */)) != *(*int32)(unsafe.Pointer(bp + 140 /* target */)) {
 		// var buffer [64]int8 at bp+144, 64
 
-		crt.Xsprintf(tls, bp+144 /* &buffer */, ts+5870 /* "%d" */, crt.VaList(bp, *(*int32)(unsafe.Pointer(bp + 136 /* idx */))))
+		crt.Xsprintf(tls, bp+144 /* &buffer[0] */, ts+5870 /* "%d" */, crt.VaList(bp, *(*int32)(unsafe.Pointer(bp + 136 /* idx */))))
 		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+8, ts+7586, /* "index value comp..." */
-			bp+144 /* &buffer */, uintptr(0)))
-		crt.Xsprintf(tls, bp+144 /* &buffer */, ts+5870 /* "%d" */, crt.VaList(bp+32, *(*int32)(unsafe.Pointer(bp + 140 /* target */))))
-		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+40, ts+7622 /* " when " */, bp+144 /* &buffer */, ts+7629 /* " expected" */, uintptr(0)))
+			bp+144 /* &buffer[0] */, uintptr(0)))
+		crt.Xsprintf(tls, bp+144 /* &buffer[0] */, ts+5870 /* "%d" */, crt.VaList(bp+32, *(*int32)(unsafe.Pointer(bp + 140 /* target */))))
+		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+40, ts+7622 /* " when " */, bp+144 /* &buffer[0] */, ts+7629 /* " expected" */, uintptr(0)))
 		return 1
 	}
 	(*(*func(*crt.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 2128 /* &.tcl_WrongNumArgs */))))(tls, interp, 3, objv, uintptr(0))
@@ -15539,10 +15539,10 @@ func NREUnwind_callback(tls *crt.TLS, data uintptr, interp uintptr, result int32
 	} else {
 		// var idata [3]uintptr at bp+8, 24
 
-		*(*uintptr)(unsafe.Pointer(bp + 8 /* &idata */ + uintptr(0)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, int64((int32((int64(*(*ClientData)(unsafe.Pointer(data + uintptr(1)*8))) - int64(*(*ClientData)(unsafe.Pointer(data + uintptr(0)*8)))) / 1))), ts+1485 /* "/home/jnml/src/m..." */, 6994)
-		*(*uintptr)(unsafe.Pointer(bp + 8 /* &idata */ + uintptr(1)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, int64((int32((int64(*(*ClientData)(unsafe.Pointer(data + uintptr(2)*8))) - int64(*(*ClientData)(unsafe.Pointer(data + uintptr(0)*8)))) / 1))), ts+1485 /* "/home/jnml/src/m..." */, 6995)
-		*(*uintptr)(unsafe.Pointer(bp + 8 /* &idata */ + uintptr(2)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, int64((int32((int64(bp /* &none */) - int64(*(*ClientData)(unsafe.Pointer(data + uintptr(0)*8)))) / 1))), ts+1485 /* "/home/jnml/src/m..." */, 6996)
-		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1896 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*crt.TLS, int32, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_DbNewListObj */))))(tls, 3, bp+8 /* &idata */, ts+1485 /* "/home/jnml/src/m..." */, 6997))
+		*(*uintptr)(unsafe.Pointer(bp + 8 /* &idata[0] */ + uintptr(0)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, int64((int32((int64(*(*ClientData)(unsafe.Pointer(data + uintptr(1)*8))) - int64(*(*ClientData)(unsafe.Pointer(data + uintptr(0)*8)))) / 1))), ts+1485 /* "/home/jnml/src/m..." */, 6994)
+		*(*uintptr)(unsafe.Pointer(bp + 8 /* &idata[0] */ + uintptr(1)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, int64((int32((int64(*(*ClientData)(unsafe.Pointer(data + uintptr(2)*8))) - int64(*(*ClientData)(unsafe.Pointer(data + uintptr(0)*8)))) / 1))), ts+1485 /* "/home/jnml/src/m..." */, 6995)
+		*(*uintptr)(unsafe.Pointer(bp + 8 /* &idata[0] */ + uintptr(2)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, int64((int32((int64(bp /* &none */) - int64(*(*ClientData)(unsafe.Pointer(data + uintptr(0)*8)))) / 1))), ts+1485 /* "/home/jnml/src/m..." */, 6996)
+		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1896 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*crt.TLS, int32, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_DbNewListObj */))))(tls, 3, bp+8 /* &idata[0] */, ts+1485 /* "/home/jnml/src/m..." */, 6997))
 	}
 	return 0
 }
@@ -15576,19 +15576,19 @@ func TestNRELevels(tls *crt.TLS, clientData ClientData, interp uintptr, objc int
 
 	*(*ptrdiff_t)(unsafe.Pointer(bp /* depth */)) = ((int64(refDepth) - int64(bp /* &depth */)) / 8)
 
-	*(*uintptr)(unsafe.Pointer(bp + 8 /* &levels */ + uintptr(0)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, *(*ptrdiff_t)(unsafe.Pointer(bp /* depth */)), ts+1485 /* "/home/jnml/src/m..." */, 7040)
-	*(*uintptr)(unsafe.Pointer(bp + 8 /* &levels */ + uintptr(1)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, int64((*Interp)(unsafe.Pointer(iPtr)).numLevels), ts+1485 /* "/home/jnml/src/m..." */, 7041)
-	*(*uintptr)(unsafe.Pointer(bp + 8 /* &levels */ + uintptr(2)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, int64((*CmdFrame)(unsafe.Pointer((*Interp)(unsafe.Pointer(iPtr)).cmdFramePtr)).level), ts+1485 /* "/home/jnml/src/m..." */, 7042)
-	*(*uintptr)(unsafe.Pointer(bp + 8 /* &levels */ + uintptr(3)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, int64((*CallFrame)(unsafe.Pointer((*Interp)(unsafe.Pointer(iPtr)).varFramePtr)).level), ts+1485 /* "/home/jnml/src/m..." */, 7043)
-	*(*uintptr)(unsafe.Pointer(bp + 8 /* &levels */ + uintptr(4)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, (int64(((*ExecStack)(unsafe.Pointer((*ExecEnv1)(unsafe.Pointer((*Interp)(unsafe.Pointer(iPtr)).execEnvPtr)).execStackPtr)).tosPtr - ((*ExecEnv1)(unsafe.Pointer((*Interp)(unsafe.Pointer(iPtr)).execEnvPtr)).execStackPtr + 40 /* &.stackWords */)) / 8)), ts+1485 /* "/home/jnml/src/m..." */, 7044)
+	*(*uintptr)(unsafe.Pointer(bp + 8 /* &levels[0] */ + uintptr(0)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, *(*ptrdiff_t)(unsafe.Pointer(bp /* depth */)), ts+1485 /* "/home/jnml/src/m..." */, 7040)
+	*(*uintptr)(unsafe.Pointer(bp + 8 /* &levels[0] */ + uintptr(1)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, int64((*Interp)(unsafe.Pointer(iPtr)).numLevels), ts+1485 /* "/home/jnml/src/m..." */, 7041)
+	*(*uintptr)(unsafe.Pointer(bp + 8 /* &levels[0] */ + uintptr(2)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, int64((*CmdFrame)(unsafe.Pointer((*Interp)(unsafe.Pointer(iPtr)).cmdFramePtr)).level), ts+1485 /* "/home/jnml/src/m..." */, 7042)
+	*(*uintptr)(unsafe.Pointer(bp + 8 /* &levels[0] */ + uintptr(3)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, int64((*CallFrame)(unsafe.Pointer((*Interp)(unsafe.Pointer(iPtr)).varFramePtr)).level), ts+1485 /* "/home/jnml/src/m..." */, 7043)
+	*(*uintptr)(unsafe.Pointer(bp + 8 /* &levels[0] */ + uintptr(4)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, (int64(((*ExecStack)(unsafe.Pointer((*ExecEnv1)(unsafe.Pointer((*Interp)(unsafe.Pointer(iPtr)).execEnvPtr)).execStackPtr)).tosPtr - ((*ExecEnv1)(unsafe.Pointer((*Interp)(unsafe.Pointer(iPtr)).execEnvPtr)).execStackPtr + 40 /* &.stackWords */)) / 8)), ts+1485 /* "/home/jnml/src/m..." */, 7044)
 
 	for cbPtr != 0 {
 		i++
 		cbPtr = (*NRE_callback)(unsafe.Pointer(cbPtr)).nextPtr
 	}
-	*(*uintptr)(unsafe.Pointer(bp + 8 /* &levels */ + uintptr(5)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, int64(i), ts+1485 /* "/home/jnml/src/m..." */, 7051)
+	*(*uintptr)(unsafe.Pointer(bp + 8 /* &levels[0] */ + uintptr(5)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, int64(i), ts+1485 /* "/home/jnml/src/m..." */, 7051)
 
-	(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1896 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*crt.TLS, int32, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_DbNewListObj */))))(tls, 6, bp+8 /* &levels */, ts+1485 /* "/home/jnml/src/m..." */, 7053))
+	(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1896 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*crt.TLS, int32, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_DbNewListObj */))))(tls, 6, bp+8 /* &levels[0] */, ts+1485 /* "/home/jnml/src/m..." */, 7053))
 	return 0
 }
 
@@ -15652,9 +15652,9 @@ func TestconcatobjCmd(tls *crt.TLS, dummy ClientData, interp uintptr, argc int32
 
 	tmpPtr = (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 248 /* &.tcl_DuplicateObj */))))(tls, list1Ptr)
 
-	*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv */ + uintptr(0)*8)) = tmpPtr
-	*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv */ + uintptr(1)*8)) = emptyPtr
-	concatPtr = (*(*func(*crt.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 152 /* &.tcl_ConcatObj */))))(tls, 2, bp+552 /* &objv */)
+	*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv[0] */ + uintptr(0)*8)) = tmpPtr
+	*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv[0] */ + uintptr(1)*8)) = emptyPtr
+	concatPtr = (*(*func(*crt.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 152 /* &.tcl_ConcatObj */))))(tls, 2, bp+552 /* &objv[0] */)
 	if (*Tcl_Obj)(unsafe.Pointer(concatPtr)).refCount != 0 {
 		result = 1
 		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp,
@@ -15678,12 +15678,12 @@ func TestconcatobjCmd(tls *crt.TLS, dummy ClientData, interp uintptr, argc int32
 			(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 32 /* &.tcl_Panic */))))(tls, ts+8260 /* "extremely unsafe..." */, 0)
 		}
 		tmpPtr = (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 248 /* &.tcl_DuplicateObj */))))(tls, list1Ptr)
-		*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv */ + uintptr(0)*8)) = tmpPtr
+		*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv[0] */ + uintptr(0)*8)) = tmpPtr
 	}
 	(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 168 /* &.tcl_DbDecrRefCount */))))(tls, concatPtr, ts+1485 /* "/home/jnml/src/m..." */, 7144)
 
 	(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 176 /* &.tcl_DbIncrRefCount */))))(tls, tmpPtr, ts+1485 /* "/home/jnml/src/m..." */, 7146)
-	concatPtr = (*(*func(*crt.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 152 /* &.tcl_ConcatObj */))))(tls, 2, bp+552 /* &objv */)
+	concatPtr = (*(*func(*crt.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 152 /* &.tcl_ConcatObj */))))(tls, 2, bp+552 /* &objv[0] */)
 	if (*Tcl_Obj)(unsafe.Pointer(concatPtr)).refCount != 0 {
 		result = 1
 		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp,
@@ -15713,14 +15713,14 @@ func TestconcatobjCmd(tls *crt.TLS, dummy ClientData, interp uintptr, argc int32
 			(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 32 /* &.tcl_Panic */))))(tls, ts+8260 /* "extremely unsafe..." */, 0)
 		}
 		tmpPtr = (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 248 /* &.tcl_DuplicateObj */))))(tls, list1Ptr)
-		*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv */ + uintptr(0)*8)) = tmpPtr
+		*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv[0] */ + uintptr(0)*8)) = tmpPtr
 	}
 	(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 168 /* &.tcl_DbDecrRefCount */))))(tls, concatPtr, ts+1485 /* "/home/jnml/src/m..." */, 7176)
 
-	*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv */ + uintptr(0)*8)) = emptyPtr
-	*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv */ + uintptr(1)*8)) = tmpPtr
-	*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv */ + uintptr(2)*8)) = emptyPtr
-	concatPtr = (*(*func(*crt.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 152 /* &.tcl_ConcatObj */))))(tls, 3, bp+552 /* &objv */)
+	*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv[0] */ + uintptr(0)*8)) = emptyPtr
+	*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv[0] */ + uintptr(1)*8)) = tmpPtr
+	*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv[0] */ + uintptr(2)*8)) = emptyPtr
+	concatPtr = (*(*func(*crt.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 152 /* &.tcl_ConcatObj */))))(tls, 3, bp+552 /* &objv[0] */)
 	if (*Tcl_Obj)(unsafe.Pointer(concatPtr)).refCount != 0 {
 		result = 1
 		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp,
@@ -15744,12 +15744,12 @@ func TestconcatobjCmd(tls *crt.TLS, dummy ClientData, interp uintptr, argc int32
 			(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 32 /* &.tcl_Panic */))))(tls, ts+8260 /* "extremely unsafe..." */, 0)
 		}
 		tmpPtr = (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 248 /* &.tcl_DuplicateObj */))))(tls, list1Ptr)
-		*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv */ + uintptr(1)*8)) = tmpPtr
+		*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv[0] */ + uintptr(1)*8)) = tmpPtr
 	}
 	(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 168 /* &.tcl_DbDecrRefCount */))))(tls, concatPtr, ts+1485 /* "/home/jnml/src/m..." */, 7205)
 
 	(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 176 /* &.tcl_DbIncrRefCount */))))(tls, tmpPtr, ts+1485 /* "/home/jnml/src/m..." */, 7207)
-	concatPtr = (*(*func(*crt.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 152 /* &.tcl_ConcatObj */))))(tls, 3, bp+552 /* &objv */)
+	concatPtr = (*(*func(*crt.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 152 /* &.tcl_ConcatObj */))))(tls, 3, bp+552 /* &objv[0] */)
 	if (*Tcl_Obj)(unsafe.Pointer(concatPtr)).refCount != 0 {
 		result = 1
 		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp,
@@ -15779,16 +15779,16 @@ func TestconcatobjCmd(tls *crt.TLS, dummy ClientData, interp uintptr, argc int32
 			(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 32 /* &.tcl_Panic */))))(tls, ts+8260 /* "extremely unsafe..." */, 0)
 		}
 		tmpPtr = (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 248 /* &.tcl_DuplicateObj */))))(tls, list1Ptr)
-		*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv */ + uintptr(1)*8)) = tmpPtr
+		*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv[0] */ + uintptr(1)*8)) = tmpPtr
 	}
 	(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 168 /* &.tcl_DbDecrRefCount */))))(tls, concatPtr, ts+1485 /* "/home/jnml/src/m..." */, 7237)
 
 	// Verify that an unshared list is not corrupted when concat'ing things to
 	// it.
 
-	*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv */ + uintptr(0)*8)) = tmpPtr
-	*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv */ + uintptr(1)*8)) = list2Ptr
-	concatPtr = (*(*func(*crt.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 152 /* &.tcl_ConcatObj */))))(tls, 2, bp+552 /* &objv */)
+	*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv[0] */ + uintptr(0)*8)) = tmpPtr
+	*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv[0] */ + uintptr(1)*8)) = list2Ptr
+	concatPtr = (*(*func(*crt.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 152 /* &.tcl_ConcatObj */))))(tls, 2, bp+552 /* &objv[0] */)
 	if (*Tcl_Obj)(unsafe.Pointer(concatPtr)).refCount != 0 {
 		result = 1
 		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp,
@@ -15814,14 +15814,14 @@ func TestconcatobjCmd(tls *crt.TLS, dummy ClientData, interp uintptr, argc int32
 			(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 168 /* &.tcl_DbDecrRefCount */))))(tls, tmpPtr, ts+1485 /* "/home/jnml/src/m..." */, 7268)
 		}
 		tmpPtr = (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 248 /* &.tcl_DuplicateObj */))))(tls, list1Ptr)
-		*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv */ + uintptr(0)*8)) = tmpPtr
+		*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv[0] */ + uintptr(0)*8)) = tmpPtr
 	}
 	(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 168 /* &.tcl_DbDecrRefCount */))))(tls, concatPtr, ts+1485 /* "/home/jnml/src/m..." */, 7273)
 
-	*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv */ + uintptr(0)*8)) = tmpPtr
-	*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv */ + uintptr(1)*8)) = list2Ptr
+	*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv[0] */ + uintptr(0)*8)) = tmpPtr
+	*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv[0] */ + uintptr(1)*8)) = list2Ptr
 	(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 176 /* &.tcl_DbIncrRefCount */))))(tls, tmpPtr, ts+1485 /* "/home/jnml/src/m..." */, 7277)
-	concatPtr = (*(*func(*crt.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 152 /* &.tcl_ConcatObj */))))(tls, 2, bp+552 /* &objv */)
+	concatPtr = (*(*func(*crt.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 152 /* &.tcl_ConcatObj */))))(tls, 2, bp+552 /* &objv[0] */)
 	if (*Tcl_Obj)(unsafe.Pointer(concatPtr)).refCount != 0 {
 		result = 1
 		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp,
@@ -15847,15 +15847,15 @@ func TestconcatobjCmd(tls *crt.TLS, dummy ClientData, interp uintptr, argc int32
 			(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 168 /* &.tcl_DbDecrRefCount */))))(tls, tmpPtr, ts+1485 /* "/home/jnml/src/m..." */, 7300)
 		}
 		tmpPtr = (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 248 /* &.tcl_DuplicateObj */))))(tls, list1Ptr)
-		*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv */ + uintptr(0)*8)) = tmpPtr
+		*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv[0] */ + uintptr(0)*8)) = tmpPtr
 	}
 	(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 168 /* &.tcl_DbDecrRefCount */))))(tls, concatPtr, ts+1485 /* "/home/jnml/src/m..." */, 7305)
 
-	*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv */ + uintptr(0)*8)) = tmpPtr
-	*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv */ + uintptr(1)*8)) = list2Ptr
+	*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv[0] */ + uintptr(0)*8)) = tmpPtr
+	*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv[0] */ + uintptr(1)*8)) = list2Ptr
 	(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 176 /* &.tcl_DbIncrRefCount */))))(tls, tmpPtr, ts+1485 /* "/home/jnml/src/m..." */, 7309)
 	(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 176 /* &.tcl_DbIncrRefCount */))))(tls, tmpPtr, ts+1485 /* "/home/jnml/src/m..." */, 7310)
-	concatPtr = (*(*func(*crt.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 152 /* &.tcl_ConcatObj */))))(tls, 2, bp+552 /* &objv */)
+	concatPtr = (*(*func(*crt.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 152 /* &.tcl_ConcatObj */))))(tls, 2, bp+552 /* &objv[0] */)
 	if (*Tcl_Obj)(unsafe.Pointer(concatPtr)).refCount != 0 {
 		result = 1
 		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp,
@@ -15882,7 +15882,7 @@ func TestconcatobjCmd(tls *crt.TLS, dummy ClientData, interp uintptr, argc int32
 			(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 168 /* &.tcl_DbDecrRefCount */))))(tls, tmpPtr, ts+1485 /* "/home/jnml/src/m..." */, 7334)
 		}
 		tmpPtr = (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 248 /* &.tcl_DuplicateObj */))))(tls, list1Ptr)
-		*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv */ + uintptr(0)*8)) = tmpPtr
+		*(*uintptr)(unsafe.Pointer(bp + 552 /* &objv[0] */ + uintptr(0)*8)) = tmpPtr
 	}
 	(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 168 /* &.tcl_DbDecrRefCount */))))(tls, concatPtr, ts+1485 /* "/home/jnml/src/m..." */, 7339)
 
@@ -15935,13 +15935,13 @@ func TestparseargsCmd(tls *crt.TLS, dummy ClientData, interp uintptr, objc int32
 	}
 
 	foo = 0
-	if (*(*func(*crt.TLS, uintptr, uintptr, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 4848 /* &.tcl_ParseArgsObjv */))))(tls, interp, bp /* &argTable */, bp+192 /* &count */, objv, bp+200 /* &remObjv */) != 0 {
+	if (*(*func(*crt.TLS, uintptr, uintptr, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 4848 /* &.tcl_ParseArgsObjv */))))(tls, interp, bp /* &argTable[0] */, bp+192 /* &count */, objv, bp+200 /* &remObjv */) != 0 {
 		return 1
 	}
-	*(*uintptr)(unsafe.Pointer(bp + 208 /* &result */ + uintptr(0)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, int64(foo), ts+1485 /* "/home/jnml/src/m..." */, 7398)
-	*(*uintptr)(unsafe.Pointer(bp + 208 /* &result */ + uintptr(1)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, int64(*(*int32)(unsafe.Pointer(bp + 192 /* count */))), ts+1485 /* "/home/jnml/src/m..." */, 7399)
-	*(*uintptr)(unsafe.Pointer(bp + 208 /* &result */ + uintptr(2)*8)) = (*(*func(*crt.TLS, int32, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_DbNewListObj */))))(tls, *(*int32)(unsafe.Pointer(bp + 192 /* count */)), *(*uintptr)(unsafe.Pointer(bp + 200 /* remObjv */)), ts+1485 /* "/home/jnml/src/m..." */, 7400)
-	(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1896 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*crt.TLS, int32, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_DbNewListObj */))))(tls, 3, bp+208 /* &result */, ts+1485 /* "/home/jnml/src/m..." */, 7401))
+	*(*uintptr)(unsafe.Pointer(bp + 208 /* &result[0] */ + uintptr(0)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, int64(foo), ts+1485 /* "/home/jnml/src/m..." */, 7398)
+	*(*uintptr)(unsafe.Pointer(bp + 208 /* &result[0] */ + uintptr(1)*8)) = (*(*func(*crt.TLS, int64, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_DbNewLongObj */))))(tls, int64(*(*int32)(unsafe.Pointer(bp + 192 /* count */))), ts+1485 /* "/home/jnml/src/m..." */, 7399)
+	*(*uintptr)(unsafe.Pointer(bp + 208 /* &result[0] */ + uintptr(2)*8)) = (*(*func(*crt.TLS, int32, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_DbNewListObj */))))(tls, *(*int32)(unsafe.Pointer(bp + 192 /* count */)), *(*uintptr)(unsafe.Pointer(bp + 200 /* remObjv */)), ts+1485 /* "/home/jnml/src/m..." */, 7400)
+	(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1896 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*crt.TLS, int32, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_DbNewListObj */))))(tls, 3, bp+208 /* &result[0] */, ts+1485 /* "/home/jnml/src/m..." */, 7401))
 	(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 72 /* &.tcl_DbCkfree */))))(tls, *(*uintptr)(unsafe.Pointer(bp + 200 /* remObjv */)), ts+1485 /* "/home/jnml/src/m..." */, 7402)
 	return 0
 }
@@ -16614,7 +16614,7 @@ func TestbignumobjCmd(tls *crt.TLS, clientData ClientData, interp uintptr, objc 
 		(*(*func(*crt.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 2128 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+9305 /* "option ?arg ...?" */)
 		return 1
 	}
-	if (*(*func(*crt.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 2448 /* &.tcl_GetIndexFromObjStruct */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*8)), bp /* &subcmds */, int32(8), ts+3497 /* "option" */, 0, bp+56 /* &index */) != 0 {
+	if (*(*func(*crt.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 2448 /* &.tcl_GetIndexFromObjStruct */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*8)), bp /* &subcmds[0] */, int32(8), ts+3497 /* "option" */, 0, bp+56 /* &index */) != 0 {
 		return 1
 	}
 	string = (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 2736 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*8)))
@@ -17648,7 +17648,7 @@ func TestlistobjCmd(tls *crt.TLS, clientData ClientData, interp uintptr, objc in
 	if GetVariableIndex(tls, interp, index, bp /* &varIndex */) != 0 {
 		return 1
 	}
-	if (*(*func(*crt.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 2448 /* &.tcl_GetIndexFromObjStruct */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*8)), bp+8 /* &subcommands */, int32(8), ts+4732 /* "command" */, 0, bp+32 /* &cmdIndex */) != 0 {
+	if (*(*func(*crt.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 2448 /* &.tcl_GetIndexFromObjStruct */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*8)), bp+8 /* &subcommands[0] */, int32(8), ts+4732 /* "command" */, 0, bp+32 /* &cmdIndex */) != 0 {
 		return 1
 	}
 	switch *(*int32)(unsafe.Pointer(bp + 32 /* cmdIndex */)) {
@@ -18222,7 +18222,7 @@ __25:
 	if !(*(*int32)(unsafe.Pointer(bp + 208 /* i */)) < objc) {
 		goto __27
 	}
-	*(*uintptr)(unsafe.Pointer(bp + 112 /* &strings */ + uintptr((*(*int32)(unsafe.Pointer(bp + 208 /* i */))-3))*8)) = (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 2736 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(*(*int32)(unsafe.Pointer(bp + 208 /* i */)))*8)))
+	*(*uintptr)(unsafe.Pointer(bp + 112 /* &strings[0] */ + uintptr((*(*int32)(unsafe.Pointer(bp + 208 /* i */))-3))*8)) = (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 2736 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(*(*int32)(unsafe.Pointer(bp + 208 /* i */)))*8)))
 	goto __26
 __26:
 	*(*int32)(unsafe.Pointer(bp + 208 /* i */))++
@@ -18234,7 +18234,7 @@ __28:
 	if !(*(*int32)(unsafe.Pointer(bp + 208 /* i */)) < (12 + 3)) {
 		goto __30
 	}
-	*(*uintptr)(unsafe.Pointer(bp + 112 /* &strings */ + uintptr((*(*int32)(unsafe.Pointer(bp + 208 /* i */))-3))*8)) = uintptr(0)
+	*(*uintptr)(unsafe.Pointer(bp + 112 /* &strings[0] */ + uintptr((*(*int32)(unsafe.Pointer(bp + 208 /* i */))-3))*8)) = uintptr(0)
 	goto __29
 __29:
 	*(*int32)(unsafe.Pointer(bp + 208 /* i */))++
@@ -18242,10 +18242,10 @@ __29:
 	goto __30
 __30:
 	;
-	(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 136 /* &.tcl_AppendStringsToObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 96 /* varIndex */)))*8)), crt.VaList(bp, *(*uintptr)(unsafe.Pointer(bp + 112 /* &strings */ + uintptr(0)*8)), *(*uintptr)(unsafe.Pointer(bp + 112 /* &strings */ + uintptr(1)*8)),
-		*(*uintptr)(unsafe.Pointer(bp + 112 /* &strings */ + uintptr(2)*8)), *(*uintptr)(unsafe.Pointer(bp + 112 /* &strings */ + uintptr(3)*8)), *(*uintptr)(unsafe.Pointer(bp + 112 /* &strings */ + uintptr(4)*8)), *(*uintptr)(unsafe.Pointer(bp + 112 /* &strings */ + uintptr(5)*8)),
-		*(*uintptr)(unsafe.Pointer(bp + 112 /* &strings */ + uintptr(6)*8)), *(*uintptr)(unsafe.Pointer(bp + 112 /* &strings */ + uintptr(7)*8)), *(*uintptr)(unsafe.Pointer(bp + 112 /* &strings */ + uintptr(8)*8)), *(*uintptr)(unsafe.Pointer(bp + 112 /* &strings */ + uintptr(9)*8)),
-		*(*uintptr)(unsafe.Pointer(bp + 112 /* &strings */ + uintptr(10)*8)), *(*uintptr)(unsafe.Pointer(bp + 112 /* &strings */ + uintptr(11)*8))))
+	(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 136 /* &.tcl_AppendStringsToObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 96 /* varIndex */)))*8)), crt.VaList(bp, *(*uintptr)(unsafe.Pointer(bp + 112 /* &strings[0] */ + uintptr(0)*8)), *(*uintptr)(unsafe.Pointer(bp + 112 /* &strings[0] */ + uintptr(1)*8)),
+		*(*uintptr)(unsafe.Pointer(bp + 112 /* &strings[0] */ + uintptr(2)*8)), *(*uintptr)(unsafe.Pointer(bp + 112 /* &strings[0] */ + uintptr(3)*8)), *(*uintptr)(unsafe.Pointer(bp + 112 /* &strings[0] */ + uintptr(4)*8)), *(*uintptr)(unsafe.Pointer(bp + 112 /* &strings[0] */ + uintptr(5)*8)),
+		*(*uintptr)(unsafe.Pointer(bp + 112 /* &strings[0] */ + uintptr(6)*8)), *(*uintptr)(unsafe.Pointer(bp + 112 /* &strings[0] */ + uintptr(7)*8)), *(*uintptr)(unsafe.Pointer(bp + 112 /* &strings[0] */ + uintptr(8)*8)), *(*uintptr)(unsafe.Pointer(bp + 112 /* &strings[0] */ + uintptr(9)*8)),
+		*(*uintptr)(unsafe.Pointer(bp + 112 /* &strings[0] */ + uintptr(10)*8)), *(*uintptr)(unsafe.Pointer(bp + 112 /* &strings[0] */ + uintptr(11)*8))))
 	(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1896 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 96 /* varIndex */)))*8)))
 	goto __4
 __7: // get
@@ -18588,9 +18588,9 @@ func CheckIfVarUnset(tls *crt.TLS, interp uintptr, varPtr uintptr, varIndex int3
 	if *(*uintptr)(unsafe.Pointer(varPtr + uintptr(varIndex)*8)) == (uintptr(0)) {
 		// var buf [56]int8 at bp+8, 56
 
-		crt.Xsprintf(tls, bp+8 /* &buf */, ts+10013 /* "variable %d is u..." */, crt.VaList(bp, varIndex))
+		crt.Xsprintf(tls, bp+8 /* &buf[0] */, ts+10013 /* "variable %d is u..." */, crt.VaList(bp, varIndex))
 		(*(*func(*crt.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1752 /* &.tcl_ResetResult */))))(tls, interp)
-		(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 144 /* &.tcl_AppendToObj */))))(tls, (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1344 /* &.tcl_GetObjResult */))))(tls, interp), bp+8 /* &buf */, -1)
+		(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 144 /* &.tcl_AppendToObj */))))(tls, (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1344 /* &.tcl_GetObjResult */))))(tls, interp), bp+8 /* &buf[0] */, -1)
 		return 1
 	}
 	return 0
@@ -18717,15 +18717,15 @@ func RegisterCommand(tls *crt.TLS, interp uintptr, namespace uintptr, cmdTablePt
 	// var buf [128]int8 at bp+32, 128
 
 	if (*CmdTable)(unsafe.Pointer(cmdTablePtr)).exportIt != 0 {
-		crt.Xsprintf(tls, bp+32 /* &buf */, ts+10063, /* "namespace eval %..." */
+		crt.Xsprintf(tls, bp+32 /* &buf[0] */, ts+10063, /* "namespace eval %..." */
 			crt.VaList(bp, namespace, (*CmdTable)(unsafe.Pointer(cmdTablePtr)).cmdName))
-		if (*(*func(*crt.TLS, uintptr, uintptr, int32, int32) int32)(unsafe.Pointer((tclStubsPtr + 2344 /* &.tcl_EvalEx */))))(tls, interp, bp+32 /* &buf */, -1, 0) != 0 {
+		if (*(*func(*crt.TLS, uintptr, uintptr, int32, int32) int32)(unsafe.Pointer((tclStubsPtr + 2344 /* &.tcl_EvalEx */))))(tls, interp, bp+32 /* &buf[0] */, -1, 0) != 0 {
 			return 1
 		}
 	}
 
-	crt.Xsprintf(tls, bp+32 /* &buf */, ts+10105 /* "%s::%s" */, crt.VaList(bp+16, namespace, (*CmdTable)(unsafe.Pointer(cmdTablePtr)).cmdName))
-	(*(*func(*crt.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 784 /* &.tcl_CreateObjCommand */))))(tls, interp, bp+32 /* &buf */, (*CmdTable)(unsafe.Pointer(cmdTablePtr)).proc, uintptr(0), uintptr(0))
+	crt.Xsprintf(tls, bp+32 /* &buf[0] */, ts+10105 /* "%s::%s" */, crt.VaList(bp+16, namespace, (*CmdTable)(unsafe.Pointer(cmdTablePtr)).cmdName))
+	(*(*func(*crt.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 784 /* &.tcl_CreateObjCommand */))))(tls, interp, bp+32 /* &buf[0] */, (*CmdTable)(unsafe.Pointer(cmdTablePtr)).proc, uintptr(0), uintptr(0))
 	return 0
 }
 
@@ -18849,13 +18849,13 @@ func ProcBodyTestProcObjCmd(tls *crt.TLS, dummy ClientData, interp uintptr, objc
 	}
 	(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 176 /* &.tcl_DbIncrRefCount */))))(tls, bodyObjPtr, ts+10267 /* "/home/jnml/src/m..." */, 294)
 
-	*(*uintptr)(unsafe.Pointer(bp + 96 /* &myobjv */ + uintptr(0)*8)) = *(*uintptr)(unsafe.Pointer(objv + uintptr(0)*8))
-	*(*uintptr)(unsafe.Pointer(bp + 96 /* &myobjv */ + uintptr(1)*8)) = *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*8))
-	*(*uintptr)(unsafe.Pointer(bp + 96 /* &myobjv */ + uintptr(2)*8)) = *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*8))
-	*(*uintptr)(unsafe.Pointer(bp + 96 /* &myobjv */ + uintptr(3)*8)) = bodyObjPtr
-	*(*uintptr)(unsafe.Pointer(bp + 96 /* &myobjv */ + uintptr(4)*8)) = uintptr(0)
+	*(*uintptr)(unsafe.Pointer(bp + 96 /* &myobjv[0] */ + uintptr(0)*8)) = *(*uintptr)(unsafe.Pointer(objv + uintptr(0)*8))
+	*(*uintptr)(unsafe.Pointer(bp + 96 /* &myobjv[0] */ + uintptr(1)*8)) = *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*8))
+	*(*uintptr)(unsafe.Pointer(bp + 96 /* &myobjv[0] */ + uintptr(2)*8)) = *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*8))
+	*(*uintptr)(unsafe.Pointer(bp + 96 /* &myobjv[0] */ + uintptr(3)*8)) = bodyObjPtr
+	*(*uintptr)(unsafe.Pointer(bp + 96 /* &myobjv[0] */ + uintptr(4)*8)) = uintptr(0)
 
-	result = (*(*func(*crt.TLS, ClientData, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 3136 /* &.tcl_ProcObjCmd */))))(tls, uintptr(0), interp, objc, bp+96 /* &myobjv */)
+	result = (*(*func(*crt.TLS, ClientData, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 3136 /* &.tcl_ProcObjCmd */))))(tls, uintptr(0), interp, objc, bp+96 /* &myobjv[0] */)
 	(*(*func(*crt.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 168 /* &.tcl_DbDecrRefCount */))))(tls, bodyObjPtr, ts+10267 /* "/home/jnml/src/m..." */, 303)
 
 	return result
@@ -19097,8 +19097,8 @@ func TestfilehandlerCmd(tls *crt.TLS, clientData ClientData, interp uintptr, arg
 				*(*uintptr)(unsafe.Pointer(argv + uintptr(0)*8)), ts+10536 /* " counts index\"" */, uintptr(0)))
 			return 1
 		}
-		crt.Xsprintf(tls, bp+500 /* &buf */, ts+4856 /* "%d %d" */, crt.VaList(bp+120, (*Pipe)(unsafe.Pointer(pipePtr)).readCount, (*Pipe)(unsafe.Pointer(pipePtr)).writeCount))
-		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+136, bp+500 /* &buf */, uintptr(0)))
+		crt.Xsprintf(tls, bp+500 /* &buf[0] */, ts+4856 /* "%d %d" */, crt.VaList(bp+120, (*Pipe)(unsafe.Pointer(pipePtr)).readCount, (*Pipe)(unsafe.Pointer(pipePtr)).writeCount))
+		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+136, bp+500 /* &buf[0] */, uintptr(0)))
 	} else if crt.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*8)), ts+1478 /* "create" */) == 0 {
 		if argc != 5 {
 			(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+152, ts+2505, /* "wrong # argument..." */
@@ -19156,7 +19156,7 @@ func TestfilehandlerCmd(tls *crt.TLS, clientData ClientData, interp uintptr, arg
 			return 1
 		}
 
-		for crt.Xread(tls, ((int32((*Pipe)(unsafe.Pointer(pipePtr)).readFile))-1), bp+548 /* &buffer */, uint64(4000)) > int64(0) {
+		for crt.Xread(tls, ((int32((*Pipe)(unsafe.Pointer(pipePtr)).readFile))-1), bp+548 /* &buffer[0] */, uint64(4000)) > int64(0) {
 		}
 	} else if crt.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*8)), ts+10655 /* "fill" */) == 0 {
 		if argc != 3 {
@@ -19165,8 +19165,8 @@ func TestfilehandlerCmd(tls *crt.TLS, clientData ClientData, interp uintptr, arg
 			return 1
 		}
 
-		crt.Xmemset(tls, bp+548 /* &buffer */, 'a', uint64(4000))
-		for crt.Xwrite(tls, ((int32((*Pipe)(unsafe.Pointer(pipePtr)).writeFile))-1), bp+548 /* &buffer */, uint64(4000)) > int64(0) {
+		crt.Xmemset(tls, bp+548 /* &buffer[0] */, 'a', uint64(4000))
+		for crt.Xwrite(tls, ((int32((*Pipe)(unsafe.Pointer(pipePtr)).writeFile))-1), bp+548 /* &buffer[0] */, uint64(4000)) > int64(0) {
 		}
 	} else if crt.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*8)), ts+10673 /* "fillpartial" */) == 0 {
 		// var buf [24]int8 at bp+4548, 24
@@ -19177,9 +19177,9 @@ func TestfilehandlerCmd(tls *crt.TLS, clientData ClientData, interp uintptr, arg
 			return 1
 		}
 
-		crt.Xmemset(tls, bp+548 /* &buffer */, 'b', uint64(10))
-		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+4548 /* &buf */, crt.Xwrite(tls, ((int32((*Pipe)(unsafe.Pointer(pipePtr)).writeFile))-1), bp+548 /* &buffer */, uint64(10)))
-		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+384, bp+4548 /* &buf */, uintptr(0)))
+		crt.Xmemset(tls, bp+548 /* &buffer[0] */, 'b', uint64(10))
+		(*(*func(*crt.TLS, uintptr, int64) int32)(unsafe.Pointer((tclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp+4548 /* &buf[0] */, crt.Xwrite(tls, ((int32((*Pipe)(unsafe.Pointer(pipePtr)).writeFile))-1), bp+548 /* &buffer[0] */, uint64(10)))
+		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp+384, bp+4548 /* &buf[0] */, uintptr(0)))
 	} else if crt.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*8)), ts+10705 /* "oneevent" */) == 0 {
 		(*(*func(*crt.TLS, int32) int32)(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_DoOneEvent */))))(tls, ((int32(1) << 3) | (int32(1) << 1)))
 	} else if crt.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*8)), ts+10714 /* "wait" */) == 0 {
