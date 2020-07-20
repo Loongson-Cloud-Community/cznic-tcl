@@ -8929,85 +8929,38 @@ type TestChannel = TestChannel1 /* tclTest.c:150:3 */
 
 var firstDetached uintptr /* tclTest.c:152:20: */
 
-var testReportingFilesystem = Tcl_Filesystem{
-	ts + 307, /* "reporting" */
-	int32(unsafe.Sizeof(Tcl_Filesystem{})),
-	uintptr(0x1),
-	0, // path in
-	0,
-	0,
-	uintptr(0), // native to norm
-	uintptr(0), // convert to native
-	0,
-	uintptr(0), // path type
-	uintptr(0), // separator
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	uintptr(0),
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	uintptr(0),
-	0,
+var testReportingFilesystem = Tcl_Filesystem{typeName: ts + 307, /* "reporting" */ structureLength: int32(unsafe.Sizeof(Tcl_Filesystem{})), version: uintptr(0x1), pathInFilesystemProc: 0, dupInternalRepProc:// path in
+0, freeInternalRepProc:                                                                             0, internalToNormalizedProc:                     uintptr(0), createInternalRepProc:// native to norm
+uintptr(0), normalizePathProc:// convert to native
+0, filesystemPathTypeProc: uintptr(0), filesystemSeparatorProc:// path type
+uintptr(0), statProc:// separator
+0, accessProc: 0, openFileChannelProc: 0, matchInDirectoryProc: 0, utimeProc: 0, linkProc: 0, listVolumesProc: uintptr(0), fileAttrStringsProc: 0, fileAttrsGetProc: 0, fileAttrsSetProc: 0, createDirectoryProc: 0, removeDirectoryProc: 0, deleteFileProc: 0, copyFileProc: 0, renameFileProc: 0, copyDirectoryProc: 0, lstatProc: 0, loadFileProc: 0, getCwdProc: uintptr(0), chdirProc: 0,
 } /* tclTest.c:442:29 */
 
-var simpleFilesystem = Tcl_Filesystem{
-	ts + 317, /* "simple" */
-	int32(unsafe.Sizeof(Tcl_Filesystem{})),
-	uintptr(0x1),
-	0,
-	uintptr(0),
-	uintptr(0),
-	// No internal to normalized, since we don't create any
-	// pure 'internal' Tcl_Obj path representations
-	uintptr(0),
-	// No create native rep function, since we don't use it
-	// or 'Tcl_FSNewNativePath'
-	uintptr(0),
-	// Normalize path isn't needed - we assume paths only have
-	// one representation
-	uintptr(0),
-	uintptr(0),
-	uintptr(0),
-	0,
-	0,
-	0,
-	0,
-	uintptr(0),
-	// We choose not to support symbolic links inside our vfs's
-	uintptr(0),
-	0,
-	uintptr(0),
-	uintptr(0),
-	uintptr(0),
-	uintptr(0),
-	uintptr(0),
-	uintptr(0),
-	// No copy file - fallback will occur at Tcl level
-	uintptr(0),
-	// No rename file - fallback will occur at Tcl level
-	uintptr(0),
-	// No copy directory - fallback will occur at Tcl level
-	uintptr(0),
-	// Use stat for lstat
-	uintptr(0),
-	// No load - fallback on core implementation
-	uintptr(0),
-	// We don't need a getcwd or chdir - fallback on Tcl's versions
-	uintptr(0),
-	uintptr(0),
+var simpleFilesystem = Tcl_Filesystem{typeName: ts + 317, /* "simple" */ structureLength: int32(unsafe.Sizeof(Tcl_Filesystem{})), version: uintptr(0x1), pathInFilesystemProc: 0, dupInternalRepProc: uintptr(0), freeInternalRepProc: uintptr(0), internalToNormalizedProc:
+// No internal to normalized, since we don't create any
+// pure 'internal' Tcl_Obj path representations
+uintptr(0), createInternalRepProc:
+// No create native rep function, since we don't use it
+// or 'Tcl_FSNewNativePath'
+uintptr(0), normalizePathProc:
+// Normalize path isn't needed - we assume paths only have
+// one representation
+uintptr(0), filesystemPathTypeProc: uintptr(0), filesystemSeparatorProc: uintptr(0), statProc: 0, accessProc: 0, openFileChannelProc: 0, matchInDirectoryProc: 0, utimeProc: uintptr(0), linkProc:
+// We choose not to support symbolic links inside our vfs's
+uintptr(0), listVolumesProc: 0, fileAttrStringsProc: uintptr(0), fileAttrsGetProc: uintptr(0), fileAttrsSetProc: uintptr(0), createDirectoryProc: uintptr(0), removeDirectoryProc: uintptr(0), deleteFileProc: uintptr(0), copyFileProc:
+// No copy file - fallback will occur at Tcl level
+uintptr(0), renameFileProc:
+// No rename file - fallback will occur at Tcl level
+uintptr(0), copyDirectoryProc:
+// No copy directory - fallback will occur at Tcl level
+uintptr(0), lstatProc:
+// Use stat for lstat
+uintptr(0), loadFileProc:
+// No load - fallback on core implementation
+uintptr(0), getCwdProc:
+// We don't need a getcwd or chdir - fallback on Tcl's versions
+uintptr(0), chdirProc: uintptr(0),
 } /* tclTest.c:476:29 */
 
 //----------------------------------------------------------------------
@@ -15516,9 +15469,7 @@ func TestHashSystemHashCmd(tls *crt.TLS, clientData ClientData, interp uintptr, 
 	return 0
 }
 
-var hkType = Tcl_HashKeyType{
-	1, 0x2,
-	uintptr(0), uintptr(0), uintptr(0), uintptr(0),
+var hkType = Tcl_HashKeyType{version: 1, flags: 0x2, hashKeyProc: uintptr(0), compareKeysProc: uintptr(0), allocEntryProc: uintptr(0), freeEntryProc: uintptr(0),
 } /* tclTest.c:6882:34 */
 
 // Used for testing Tcl_GetInt which is no longer used directly by the
@@ -15963,8 +15914,8 @@ func TestparseargsCmd(tls *crt.TLS, dummy ClientData, interp uintptr, objc int32
 	// var result [3]uintptr at bp+208, 24
 
 	*(*[4]Tcl_ArgvInfo)(unsafe.Pointer(bp /* argTable */)) = [4]Tcl_ArgvInfo{
-		{15, ts + 8838 /* "-bool" */, uintptr(int64(1)), uintptr(unsafe.Pointer(&foo)), ts + 8844 /* "booltest" */, uintptr(0)},
-		{18, ts + 4960 /* "--" */, uintptr(0), uintptr(0), ts + 8853 /* "Marks the end of..." */, uintptr(0)}, {22, ts + 8882 /* "-help" */, uintptr(0), uintptr(0), ts + 8888 /* "Print summary of..." */, uintptr(0)}, {23, uintptr(0), uintptr(0), uintptr(0), uintptr(0), uintptr(0)},
+		{__type: 15, keyStr: ts + 8838 /* "-bool" */, srcPtr: uintptr(int64(1)), dstPtr: uintptr(unsafe.Pointer(&foo)), helpStr: ts + 8844 /* "booltest" */, clientData: uintptr(0)},
+		{__type: 18, keyStr: ts + 4960 /* "--" */, srcPtr: uintptr(0), dstPtr: uintptr(0), helpStr: ts + 8853 /* "Marks the end of..." */, clientData: uintptr(0)}, {__type: 22, keyStr: ts + 8882 /* "-help" */, srcPtr: uintptr(0), dstPtr: uintptr(0), helpStr: ts + 8888 /* "Print summary of..." */, clientData: uintptr(0)}, {__type: 23, keyStr: uintptr(0), srcPtr: uintptr(0), dstPtr: uintptr(0), helpStr: uintptr(0), clientData: uintptr(0)},
 	}
 
 	foo = 0
