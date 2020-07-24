@@ -81,19 +81,59 @@ func init() {
 
 var (
 	oDbgTcl = flag.Bool("dbg.tcl", false, "")
+	oMatch  = flag.String("match", "", "argument of -match passed to the Tcl test suite")
 )
 
 func TestMain(m *testing.M) {
 	oTcltest := flag.Bool("tcltest", false, "")
 	flag.Parse()
 	if *oTcltest {
-		blacklist := []string{
-			"exit-1.1",   // ---- errorInfo: couldn't fork child process: function not implemented
-			"exit-1.2",   // ---- Result was: couldn't fork child process: function not implemented
-			"basic-46.2", // ---- Result was: couldn't fork child process: function not implemented
-			"basic-46.3", // ---- Result was: couldn't fork child process: function not implemented
-			"basic-46.4", // ---- Result was: couldn't fork child process: function not implemented
-			"basic-46.5", // ---- Result was: couldn't fork child process: function not implemented
+		skip := []string{
+			// These will probably never work w/o adjusting Tcl C sources.
+			"basic-46.2",    // ---- Result was: couldn't fork child process: function not implemented
+			"basic-46.3",    // ---- Result was: couldn't fork child process: function not implemented
+			"basic-46.4",    // ---- Result was: couldn't fork child process: function not implemented
+			"basic-46.5",    // ---- Result was: couldn't fork child process: function not implemented
+			"chan-io-14.3",  // ---- errorInfo: couldn't fork child process: function not implemented
+			"chan-io-14.4",  // ---- errorInfo: couldn't fork child process: function not implemented
+			"chan-io-28.6",  // ---- errorInfo: couldn't fork child process: function not implemented
+			"chan-io-28.7",  // ---- errorInfo: couldn't fork child process: function not implemented
+			"chan-io-29.33", // ---- errorInfo: couldn't fork child process: function not implemented
+			"chan-io-60.1",  // ---- errorInfo: couldn't fork child process: function not implemented
+			"compile-12.2",  // ---- errorInfo: couldn't fork child process: function not implemented
+			"compile-13.1",  // ---- errorInfo: couldn't fork child process: function not implemented
+			"exit-1.1",      // ---- errorInfo: couldn't fork child process: function not implemented
+			"exit-1.2",      // ---- Result was: couldn't fork child process: function not implemented
+
+			//TODO
+			//
+			// These should probably all work. Some fail due to missing crt
+			// implementations, some are - or possibly are - bugs in ccgo and/or crt.
+			"chan-16.9",     // ---- Test setup failed: couldn't open socket: function not implemented
+			"chan-17.3",     // ==== chan-17.3 chan command: pipe subcommand FAILED
+			"chan-17.4",     // ==== chan-17.4 chan command: pipe subcommand FAILED
+			"chan-io-29.34", // ---- errorInfo: couldn't open socket: function not implemented
+			"chan-io-29.35", // ---- errorInfo: couldn't open socket: function not implemented
+			"chan-io-39.18", // ---- errorInfo: couldn't open socket: function not implemented
+			"chan-io-39.19", // ---- errorInfo: couldn't open socket: function not implemented
+			"chan-io-39.20", // ---- errorInfo: couldn't open socket: function not implemented
+			"chan-io-39.21", // ---- errorInfo: couldn't open socket: function not implemented
+			"chan-io-39.23", // ---- errorInfo: couldn't open socket: function not implemented
+			"chan-io-39.24", // ---- errorInfo: couldn't open socket: function not implemented
+			"chan-io-51.1",  // ---- errorInfo: couldn't open socket: function not implemented
+			"chan-io-53.5",  // ---- errorInfo: couldn't open socket: function not implemented
+			"chan-io-54.1",  // ---- errorInfo: couldn't open socket: function not implemented
+			"chan-io-54.2",  // ---- errorInfo: couldn't open socket: function not implemented
+			"chan-io-57.1",  // ---- errorInfo: couldn't open socket: function not implemented
+			"chan-io-57.2",  // ---- errorInfo: couldn't open socket: function not implemented
+			"clock-40.1",    // ==== clock-40.1 regression - bad month with -timezone :localtime FAILED
+			"clock-42.1",    // ==== clock-42.1 regression test - %z in :localtime when west of Greenwich FAILED
+		}
+		notFile := []string{
+			"cmdAH.test",        // modernc.org/crt/v3/crt.go:2699:Xgetpwnam: TODOTODO
+			"cmdIL.test",        // unexpected fault address 0x7fd10000001c
+			"compExpr-old.test", // modernc.org/crt/v3/crt.go:2357:Xmodf: TODOTODO
+			"[d-z]*",            //TODO
 		}
 		var argv []string
 		for _, v := range os.Args {
@@ -107,9 +147,9 @@ func TestMain(m *testing.M) {
 		argv = append(
 			argv,
 			"-debug", "1",
-			"-notfile", "[c-z]*",
+			"-notfile", strings.Join(notFile, " "),
 			"-singleproc", "1",
-			"-skip", strings.Join(blacklist, " "),
+			"-skip", strings.Join(skip, " "),
 		)
 		os.Args = argv
 		tcltest.Main()
@@ -119,7 +159,7 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-func testTclTest(t *testing.T, blacklist map[string]struct{}, stdout, stderr io.Writer) int {
+func testTclTest(t *testing.T, stdout, stderr io.Writer) int {
 	m, err := filepath.Glob(filepath.FromSlash("testdata/tcl/*"))
 	if err != nil {
 		t.Fatal(err)
@@ -144,10 +184,6 @@ func testTclTest(t *testing.T, blacklist map[string]struct{}, stdout, stderr io.
 	}
 
 	for _, v := range m {
-		if _, ok := blacklist[filepath.Base(v)]; ok {
-			continue
-		}
-
 		s := filepath.Join(wd, v)
 		d := filepath.Join(dir, filepath.Base(v))
 		f, err := ioutil.ReadFile(s)
@@ -167,6 +203,8 @@ func testTclTest(t *testing.T, blacklist map[string]struct{}, stdout, stderr io.
 	var rc int
 	var cmd *exec.Cmd
 	switch {
+	case *oMatch != "":
+		cmd = exec.Command(os.Args[0], "-tcltest", "all.tcl", "-match", *oMatch)
 	case *oDbgTcl:
 		cmd = exec.Command(os.Args[0], "-tcltest", "dbg.tcl")
 	default:
@@ -181,7 +219,6 @@ func testTclTest(t *testing.T, blacklist map[string]struct{}, stdout, stderr io.
 }
 
 func TestTclTest(t *testing.T) {
-	blacklist := map[string]struct{}{}
 	wd, err := os.Getwd()
 	if err != nil {
 		t.Fatal(err)
@@ -193,7 +230,7 @@ func TestTclTest(t *testing.T) {
 	}
 
 	os.Setenv("TCL_LIBRARY", filepath.FromSlash(pth+"/lib"))
-	rc := testTclTest(t, blacklist, os.Stdout, os.Stderr)
+	rc := testTclTest(t, os.Stdout, os.Stderr)
 	if rc != 0 {
 		t.Fatal(rc)
 	}

@@ -75,15 +75,28 @@ func main() {
 	}
 
 	for _, v := range m {
-		f, err := ioutil.ReadFile(v)
-		if err != nil {
-			fail("cannot read %v: %v", v, err)
-		}
+		copyFile(v, filepath.Join(dst, filepath.Base(v)))
+	}
 
-		fn := filepath.Join(dst, filepath.Base(v))
-		if err := ioutil.WriteFile(fn, f, 0660); err != nil {
-			fail("cannot write %v: %v", fn, err)
-		}
+	dir := filepath.FromSlash("lib/tcltests")
+	if err := os.MkdirAll(dir, 0770); err != nil {
+		fail("cannot create %q: %v", dir, err)
+	}
+
+	copyFile("testdata/tcl/pkgIndex.tcl", "lib/tcltests/pkgIndex.tcl")
+	copyFile("testdata/tcl/tcltests.tcl", "lib/tcltests/tcltests.tcl")
+}
+
+func copyFile(src, dest string) {
+	src = filepath.FromSlash(src)
+	dest = filepath.FromSlash(dest)
+	f, err := ioutil.ReadFile(src)
+	if err != nil {
+		fail("cannot read %v: %v", src, err)
+	}
+
+	if err := ioutil.WriteFile(dest, f, 0660); err != nil {
+		fail("cannot write %v: %v", dest, err)
 	}
 }
 
@@ -291,7 +304,7 @@ func parseCCLine(cPaths *[]string, cFiles map[string]string, m map[string]struct
 					case '\\':
 						val = val[1:]
 						if len(val) == 0 {
-							fail("invalid defintion: `%s`", tok)
+							fail("invalid definition: `%s`", tok)
 						}
 
 						c = val[0]
