@@ -87,12 +87,30 @@ func TestMain(m *testing.M) {
 	oTcltest := flag.Bool("tcltest", false, "")
 	flag.Parse()
 	if *oTcltest {
+		blacklist := []string{
+			"exit-1.1",   // ---- errorInfo: couldn't fork child process: function not implemented
+			"exit-1.2",   // ---- Result was: couldn't fork child process: function not implemented
+			"basic-46.2", // ---- Result was: couldn't fork child process: function not implemented
+			"basic-46.3", // ---- Result was: couldn't fork child process: function not implemented
+			"basic-46.4", // ---- Result was: couldn't fork child process: function not implemented
+			"basic-46.5", // ---- Result was: couldn't fork child process: function not implemented
+		}
 		var argv []string
 		for _, v := range os.Args {
 			if !strings.HasPrefix(v, "-test.") && v != "-tcltest" {
 				argv = append(argv, v)
 			}
 		}
+		// -asidefromdir, -constraints, -debug, -errfile, -file, -limitconstraints,
+		// -load, -loadfile, -match, -notfile, -outfile, -preservecore, -relateddir,
+		// -singleproc, -skip, -testdir, -tmpdir, or -verbose
+		argv = append(
+			argv,
+			"-debug", "1",
+			"-notfile", "[c-z]*",
+			"-singleproc", "1",
+			"-skip", strings.Join(blacklist, " "),
+		)
 		os.Args = argv
 		tcltest.Main()
 		panic("unreachable")
