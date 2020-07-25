@@ -85,57 +85,137 @@ var (
 	oVerbose = flag.String("verbose", "", "argument of -verbose passed to the Tcl test suite: https://www.tcl.tk/man/tcl8.4/TclCmd/tcltest.htm#M96")
 )
 
-func TestMain(m *testing.M) {
+func TestMain(m *testing.M) { // 24783
 	oTcltest := flag.Bool("tcltest", false, "execute the Tcl test suite in internal/tcltest (internal use only)")
 	flag.Parse()
 	if *oTcltest {
-		skip := []string{}
+		skip := []string{
+			// Need fork. (Not implemented)
+			"basic-46.2",
+			"basic-46.3",
+			"basic-46.4",
+			"basic-46.5",
+			"chan-io-14.3",
+			"chan-io-14.4",
+			"chan-io-28.6",
+			"chan-io-28.7",
+			"chan-io-29.33",
+			"chan-io-60.1",
+			"compile-12.2",
+			"compile-13.1",
+			"env-2.1",
+			"env-2.2",
+			"env-2.3",
+			"env-2.4",
+			"env-3.1",
+			"env-4.1",
+			"env-4.3",
+			"env-4.4",
+			"env-4.5",
+			"event-13.8",
+			"event-14.8",
+			"event-7.5",
+			"exit-1.1",
+			"exit-1.2",
+			"pid-1.2",
+			"regexp-14.3",
+			"regexpComp-14.3",
+			"subst-5.8",
+			"subst-5.9",
+			"subst-5.10",
+
+			//TODO Need socket.
+			"chan-16.9",
+			"chan-io-29.34",
+			"chan-io-29.35",
+			"chan-io-39.18",
+			"chan-io-39.19",
+			"chan-io-39.20",
+			"chan-io-39.21",
+			"chan-io-39.23",
+			"chan-io-39.24",
+			"chan-io-51.1",
+			"chan-io-53.5",
+			"chan-io-54.1",
+			"chan-io-54.2",
+			"chan-io-57.1",
+			"chan-io-57.2",
+			"event-11.5",
+			"zlib-9.*",
+			"zlib-10.0",
+			"zlib-10.1",
+			"zlib-10.2",
+
+			//TODO other
+			"chan-17.3",
+			"chan-17.4",
+			"clock-40.1",
+			"clock-42.1",
+			"cmdIL-6.*",
+			"compExpr-old-19.1",
+			"event-1.1",
+			"event-13.3",
+			"event-13.6",
+			"event-14.3",
+			"event-14.6",
+			"expr-19.1",
+			"expr-39.*",
+			"expr-42.1",
+			"expr-46.*",
+			"expr-old-32.*",
+			"expr-old-33.*",
+			"expr-old-34.*",
+			"expr-old-37.*",
+			"expr-old-39.1",
+			"format-5.*",
+			"info-16.4",
+			"interp-32.1",
+			"safe-13.*",
+			"safe-16.3",
+			"safe-16.4",
+			"scan-6.6",
+			"set-old-10.8",
+			"timer-7.*",
+			"trace-24.5",
+			"trace-25.*",
+			"trace-34.1",
+			"unixFCmd-1.*",
+			"unixFCmd-2.*",
+			"unixFCmd-12.2",
+			"unixFCmd-15.1",
+			"unixFCmd-16.*",
+			"unixFCmd-13.2",
+			"util-6.6",
+			"util-10.*",
+			"util-11.*",
+			"util-15.*",
+			"util-16.*",
+			"zlib-8.*",
+			"zlib-9.2",
+			"zlib-9.3",
+		}
 		notFile := []string{
-			"aaa_exit.test",
-			"basic.test",
-			"chan.test",
-			"chanio.test",
-			"clock.test",
-			"cmdAH.test",
-			"cmdIL.test",
-			"compExpr-old.test",
-			"compile.test",
-			"encoding.test",
-			"env.test",
-			"event.test",
+			// Need fork. (Not implemented)
 			"exec.test",
-			"expr-old.test",
-			"expr.test",
-			"fCmd.test",
-			"fileName.test",
-			"fileSystem.test",
-			"format.test",
-			"http.test",
-			"http11.test",
-			"httpold.test",
-			"info.test",
-			"interp.test",
-			"io.test",
-			"ioCmd.test",
-			"main.test",
-			"mathop.test",
-			"msgcat.test",
-			"pid.test",
-			"regexp.test",
-			"regexpComp.test",
-			"safe.test",
-			"scan.test",
-			"set-old.test",
-			"socket.test",
 			"stack.test",
-			"subst.test",
-			"tcltest.test",
-			"timer.test",
-			"trace.test",
-			"unixFCmd.test",
-			"unknown.test",
-			"util.test",
-			"zlib.test",
+
+			//TODO
+			"cmdAH.test",      //TODO
+			"encoding.test",   //TODO
+			"fCmd.test",       //TODO
+			"fileName.test",   //TODO
+			"fileSystem.test", //TODO
+			"http.test",       //TODO
+			"http11.test",     //TODO
+			"httpold.test",    //TODO
+			"io.test",         //TODO
+			"ioCmd.test",      //TODO
+			"main.test",       //TODO
+			"mathop.test",     //TODO
+			"msgcat.test",     //TODO
+			"socket.test",     //TODO
+			"tcltest.test",    //TODO
+			"unixNotfy.test",  //TODO
 		}
 		var argv []string
 		for _, v := range os.Args {
