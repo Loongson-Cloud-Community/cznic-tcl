@@ -133,7 +133,7 @@ func TestMain(m *testing.M) {
 			"cmdAH.test",        // modernc.org/crt/v3/crt.go:2699:Xgetpwnam: TODOTODO
 			"cmdIL.test",        // unexpected fault address 0x7fd10000001c
 			"compExpr-old.test", // modernc.org/crt/v3/crt.go:2357:Xmodf: TODOTODO
-			"[d-z]*",            //TODO
+			"[e-z]*",            //TODO
 		}
 		var argv []string
 		for _, v := range os.Args {
