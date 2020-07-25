@@ -80,60 +80,62 @@ func init() {
 // ============================================================================
 
 var (
-	oDbgTcl = flag.Bool("dbg.tcl", false, "")
-	oMatch  = flag.String("match", "", "argument of -match passed to the Tcl test suite")
+	oDebug   = flag.String("debug", "", "argument of -debug passed to the Tcl test suite: https://www.tcl.tk/man/tcl8.4/TclCmd/tcltest.htm#M91")
+	oFile    = flag.String("file", "", "argument of -file passed to the Tcl test suite: https://www.tcl.tk/man/tcl8.4/TclCmd/tcltest.htm#M110")
+	oVerbose = flag.String("verbose", "", "argument of -verbose passed to the Tcl test suite: https://www.tcl.tk/man/tcl8.4/TclCmd/tcltest.htm#M96")
 )
 
 func TestMain(m *testing.M) {
-	oTcltest := flag.Bool("tcltest", false, "")
+	oTcltest := flag.Bool("tcltest", false, "execute the Tcl test suite in internal/tcltest (internal use only)")
 	flag.Parse()
 	if *oTcltest {
-		skip := []string{
-			// These will probably never work w/o adjusting Tcl C sources.
-			"basic-46.2",    // ---- Result was: couldn't fork child process: function not implemented
-			"basic-46.3",    // ---- Result was: couldn't fork child process: function not implemented
-			"basic-46.4",    // ---- Result was: couldn't fork child process: function not implemented
-			"basic-46.5",    // ---- Result was: couldn't fork child process: function not implemented
-			"chan-io-14.3",  // ---- errorInfo: couldn't fork child process: function not implemented
-			"chan-io-14.4",  // ---- errorInfo: couldn't fork child process: function not implemented
-			"chan-io-28.6",  // ---- errorInfo: couldn't fork child process: function not implemented
-			"chan-io-28.7",  // ---- errorInfo: couldn't fork child process: function not implemented
-			"chan-io-29.33", // ---- errorInfo: couldn't fork child process: function not implemented
-			"chan-io-60.1",  // ---- errorInfo: couldn't fork child process: function not implemented
-			"compile-12.2",  // ---- errorInfo: couldn't fork child process: function not implemented
-			"compile-13.1",  // ---- errorInfo: couldn't fork child process: function not implemented
-			"exit-1.1",      // ---- errorInfo: couldn't fork child process: function not implemented
-			"exit-1.2",      // ---- Result was: couldn't fork child process: function not implemented
-
-			//TODO
-			//
-			// These should probably all work. Some fail due to missing crt
-			// implementations, some are - or possibly are - bugs in ccgo and/or crt.
-			"chan-16.9",     // ---- Test setup failed: couldn't open socket: function not implemented
-			"chan-17.3",     // ==== chan-17.3 chan command: pipe subcommand FAILED
-			"chan-17.4",     // ==== chan-17.4 chan command: pipe subcommand FAILED
-			"chan-io-29.34", // ---- errorInfo: couldn't open socket: function not implemented
-			"chan-io-29.35", // ---- errorInfo: couldn't open socket: function not implemented
-			"chan-io-39.18", // ---- errorInfo: couldn't open socket: function not implemented
-			"chan-io-39.19", // ---- errorInfo: couldn't open socket: function not implemented
-			"chan-io-39.20", // ---- errorInfo: couldn't open socket: function not implemented
-			"chan-io-39.21", // ---- errorInfo: couldn't open socket: function not implemented
-			"chan-io-39.23", // ---- errorInfo: couldn't open socket: function not implemented
-			"chan-io-39.24", // ---- errorInfo: couldn't open socket: function not implemented
-			"chan-io-51.1",  // ---- errorInfo: couldn't open socket: function not implemented
-			"chan-io-53.5",  // ---- errorInfo: couldn't open socket: function not implemented
-			"chan-io-54.1",  // ---- errorInfo: couldn't open socket: function not implemented
-			"chan-io-54.2",  // ---- errorInfo: couldn't open socket: function not implemented
-			"chan-io-57.1",  // ---- errorInfo: couldn't open socket: function not implemented
-			"chan-io-57.2",  // ---- errorInfo: couldn't open socket: function not implemented
-			"clock-40.1",    // ==== clock-40.1 regression - bad month with -timezone :localtime FAILED
-			"clock-42.1",    // ==== clock-42.1 regression test - %z in :localtime when west of Greenwich FAILED
-		}
+		skip := []string{}
 		notFile := []string{
-			"cmdAH.test",        // modernc.org/crt/v3/crt.go:2699:Xgetpwnam: TODOTODO
-			"cmdIL.test",        // unexpected fault address 0x7fd10000001c
-			"compExpr-old.test", // modernc.org/crt/v3/crt.go:2357:Xmodf: TODOTODO
-			"[e-z]*",            //TODO
+			"aaa_exit.test",
+			"basic.test",
+			"chan.test",
+			"chanio.test",
+			"clock.test",
+			"cmdAH.test",
+			"cmdIL.test",
+			"compExpr-old.test",
+			"compile.test",
+			"encoding.test",
+			"env.test",
+			"event.test",
+			"exec.test",
+			"expr-old.test",
+			"expr.test",
+			"fCmd.test",
+			"fileName.test",
+			"fileSystem.test",
+			"format.test",
+			"http.test",
+			"http11.test",
+			"httpold.test",
+			"info.test",
+			"interp.test",
+			"io.test",
+			"ioCmd.test",
+			"main.test",
+			"mathop.test",
+			"msgcat.test",
+			"pid.test",
+			"regexp.test",
+			"regexpComp.test",
+			"safe.test",
+			"scan.test",
+			"set-old.test",
+			"socket.test",
+			"stack.test",
+			"subst.test",
+			"tcltest.test",
+			"timer.test",
+			"trace.test",
+			"unixFCmd.test",
+			"unknown.test",
+			"util.test",
+			"zlib.test",
 		}
 		var argv []string
 		for _, v := range os.Args {
@@ -141,12 +143,8 @@ func TestMain(m *testing.M) {
 				argv = append(argv, v)
 			}
 		}
-		// -asidefromdir, -constraints, -debug, -errfile, -file, -limitconstraints,
-		// -load, -loadfile, -match, -notfile, -outfile, -preservecore, -relateddir,
-		// -singleproc, -skip, -testdir, -tmpdir, or -verbose
 		argv = append(
 			argv,
-			"-debug", "1",
 			"-notfile", strings.Join(notFile, " "),
 			"-singleproc", "1",
 			"-skip", strings.Join(skip, " "),
@@ -200,22 +198,24 @@ func testTclTest(t *testing.T, stdout, stderr io.Writer) int {
 			t.Fatal(err)
 		}
 	}
-	var rc int
-	var cmd *exec.Cmd
-	switch {
-	case *oMatch != "":
-		cmd = exec.Command(os.Args[0], "-tcltest", "all.tcl", "-match", *oMatch)
-	case *oDbgTcl:
-		cmd = exec.Command(os.Args[0], "-tcltest", "dbg.tcl")
-	default:
-		cmd = exec.Command(os.Args[0], "-tcltest", "all.tcl")
+	args := []string{"-tcltest", "all.tcl"}
+	if *oDebug != "" {
+		args = append(args, "-debug", *oDebug)
 	}
+	if *oFile != "" {
+		args = append(args, "-file", *oFile)
+	}
+	if *oVerbose != "" {
+		args = append(args, "-verbose", *oVerbose)
+	}
+	cmd := exec.Command(os.Args[0], args...)
 	cmd.Stdout = stdout
 	cmd.Stderr = stderr
 	if cmd.Run() != nil {
-		rc = 1
+		return 1
 	}
-	return rc
+
+	return 0
 }
 
 func TestTclTest(t *testing.T) {
