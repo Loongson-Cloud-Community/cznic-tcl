@@ -1,0 +1,689 @@
+Tests running in interp:  /tmp/go-build480570143/b001/tcl.test
+Tests located in:  /tmp/tcl-test-193052596
+Tests running in:  /tmp/tcl-test-193052596
+Temporary files stored in /tmp/tcl-test-193052596
+Test files sourced into current interpreter
+Skipping tests that match:  cmdIL-6.* trace-24.5 trace-25.* trace-34.1 zlib-8.* io-30.* io-29.* basic-46.2 basic-46.3 basic-46.4 basic-46.5 chan-io-14.3 chan-io-14.4 chan-io-28.6 chan-io-28.7 chan-io-29.33 chan-io-60.1 compile-12.2 compile-13.1 env-2.1 env-2.2 env-2.3 env-2.4 env-3.1 env-4.1 env-4.3 env-4.4 env-4.5 event-13.8 event-14.8 event-7.5 exit-1.1 exit-1.2 pid-1.2 regexp-14.3 regexpComp-14.3 subst-5.10 subst-5.8 subst-5.9 encoding-24.1 encoding-24.2 io-14.3 io-14.4 chan-16.9 chan-io-29.34 chan-io-29.35 chan-io-39.18 chan-io-39.19 chan-io-39.20 chan-io-39.21 chan-io-39.23 chan-io-39.24 chan-io-51.1 chan-io-53.5 chan-io-54.1 chan-io-54.2 chan-io-57.1 chan-io-57.2 event-11.5 zlib-10.0 zlib-10.1 zlib-10.2 zlib-9.* io-39.18 io-39.19 io-39.20 io-39.21 io-39.23 io-39.24 io-51.1 io-53.5 io-54.1 io-54.2 io-57.1 io-57.2 io-60.1 info-16.4 unixFCmd-16.* cmdAH-2.5 cmdAH-8.39 cmdAH-15.1 cmdAH-19.* cmdAH-30.8 safe-13.* safe-16.3 unixFCmd-1.* unixFCmd-12.2 cmdAH-7.1 unixFCmd-15.1 chan-17.4 event-13.6 event-14.6
+Running tests that match:  *
+Skipping test files that match:  exec.test http11.test ioCmd.test main.test stack.test socket.test cmdAH.test fCmd.test fileName.test fileSystem.test msgcat.test tcltest.test http.test httpold.test unixNotfy.test
+Only running test files that match:  *.test
+Tests began at Sun Jul 26 20:30:43 CEST 2020
+aaa_exit.test
+append.test
+appendComp.test
+apply.test
+assemble.test
+assocd.test
+async.test
+autoMkindex.test
+basic.test
+binary.test
+case.test
+chan.test
+
+
+==== chan-17.3 chan command: pipe subcommand FAILED
+==== Contents of test case:
+
+	set l [chan pipe]
+    foreach {pr pw} $l break
+    list [llength $l] [fconfigure $pr -blocking] [fconfigure $pw -blocking]
+
+---- Test cleanup failed:
+bad file number
+---- errorInfo(cleanup): bad file number
+    while executing
+"close $pw"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): POSIX EBADF {bad file number}
+==== chan-17.3 FAILED
+
+chanio.test
+clock.test
+
+
+==== clock-40.1 regression - bad month with -timezone :localtime FAILED
+==== Contents of test case:
+
+	clock scan 2000-01-01T00:00:00 -timezone :localtime  -format %Y-%m-%dT%H:%M:%S
+    
+---- Result was:
+946681200
+---- Result should have been (exact matching):
+946684800
+==== clock-40.1 FAILED
+
+
+
+==== clock-42.1 regression test - %z in :localtime when west of Greenwich FAILED
+==== Contents of test case:
+
+	clock format 0 -format %z -timezone :localtime
+    
+---- Result was:
++0100
+---- Result should have been (exact matching):
+-0500
+==== clock-42.1 FAILED
+
+cmdIL.test
+cmdInfo.test
+cmdMZ.test
+compExpr-old.test
+
+
+==== compExpr-old-19.1 expr and interpreter result object resetting FAILED
+==== Contents of test case:
+
+    proc p {} {
+        set t  10.0
+        set x  2.0
+        set dx 0.2
+        set f  {$dx-$x/10}
+        set g  {-$x/5}
+        set center 1.0
+        set x  [expr $x-$center]
+        set dx [expr $dx+$g]
+        set x  [expr $x+$f+$center]
+        set x  [expr $x+$f+$center]
+        set y  [expr round($x)]
+    }
+    p
+
+---- Result was:
+1
+---- Result should have been (exact matching):
+3
+==== compExpr-old-19.1 FAILED
+
+compExpr.test
+compile.test
+concat.test
+config.test
+coroutine.test
+dcall.test
+dict.test
+dstring.test
+encoding.test
+
+
+==== encoding-12.1 LoadTableEncoding: normal encoding FAILED
+==== Contents of test case:
+
+    set x [encoding convertto iso8859-3 \u120]
+    append x [encoding convertto iso8859-3 \ud5]
+    append x [encoding convertfrom iso8859-3 \xd5]
+
+---- Result was:
+Õ+Ġ
+---- Result should have been (exact matching):
+Õ?Ġ
+==== encoding-12.1 FAILED
+
+env.test
+error.test
+eval.test
+event.test
+
+
+==== event-1.1 Tcl_CreateFileHandler, reading FAILED
+==== Contents of test case:
+
+    testfilehandler create 0 readable off
+    testfilehandler clear 0
+    testfilehandler oneevent
+    lappend result [testfilehandler counts 0]
+    testfilehandler fillpartial 0
+    testfilehandler oneevent
+    lappend result [testfilehandler counts 0]
+    testfilehandler oneevent
+    lappend result [testfilehandler counts 0]
+
+---- Result was:
+{0 0} {0 0} {0 0}
+---- Result should have been (exact matching):
+{0 0} {1 0} {2 0}
+==== event-1.1 FAILED
+
+
+
+==== event-13.3 Tcl_WaitForFile procedure, readable FAILED
+==== Contents of test case:
+
+    after 100 set x timeout
+    testfilehandler create 1 off off
+    testfilehandler fillpartial 1
+    set x "no timeout"
+    set result [testfilehandler wait 1 readable 100]
+    update
+    list $result $x
+
+---- Result was:
+{} timeout
+---- Result should have been (exact matching):
+readable {no timeout}
+==== event-13.3 FAILED
+
+
+
+==== event-14.3 Tcl_WaitForFile procedure, readable, big fd FAILED
+==== Contents of test case:
+
+    after 100 set x timeout
+    testfilehandler create 1 off off
+    testfilehandler fillpartial 1
+    set x "no timeout"
+    set result [testfilehandler wait 1 readable 100]
+    update
+    list $result $x
+
+---- Result was:
+{} timeout
+---- Result should have been (exact matching):
+readable {no timeout}
+==== event-14.3 FAILED
+
+execute.test
+expr-old.test
+
+
+==== expr-old-32.35 math functions in expressions FAILED
+==== Contents of test case:
+
+    expr round(1.49)
+
+---- Result was:
+0
+---- Result should have been (exact matching):
+1
+==== expr-old-32.35 FAILED
+
+
+
+==== expr-old-32.36 math functions in expressions FAILED
+==== Contents of test case:
+
+    expr round(1.51)
+
+---- Result was:
+1
+---- Result should have been (exact matching):
+2
+==== expr-old-32.36 FAILED
+
+
+
+==== expr-old-32.37 math functions in expressions FAILED
+==== Contents of test case:
+
+    expr round(-1.49)
+
+---- Result was:
+0
+---- Result should have been (exact matching):
+-1
+==== expr-old-32.37 FAILED
+
+
+
+==== expr-old-32.38 math functions in expressions FAILED
+==== Contents of test case:
+
+    expr round(-1.51)
+
+---- Result was:
+-1
+---- Result should have been (exact matching):
+-2
+==== expr-old-32.38 FAILED
+
+
+
+==== expr-old-32.39 math functions in expressions FAILED
+==== Contents of test case:
+
+    expr round(1e60)
+
+---- Result was:
+0
+---- Result should have been (exact matching):
+999999999999999949387135297074018866963645011013410073083904
+==== expr-old-32.39 FAILED
+
+
+
+==== expr-old-32.40 math functions in expressions FAILED
+==== Contents of test case:
+
+    expr round(-1e60)
+
+---- Result was:
+0
+---- Result should have been (exact matching):
+-999999999999999949387135297074018866963645011013410073083904
+==== expr-old-32.40 FAILED
+
+
+
+==== expr-old-32.50 math functions in expressions FAILED
+==== Contents of test case:
+
+    set result [expr round(srand(12345) * 1000)]
+    for {set i 0} {$i < 10} {incr i} {
+	lappend result [expr round(rand() * 1000)]
+    }
+    set result
+
+---- Result was:
+1 1 1 1 1 0 1 1 0 1 0
+---- Result should have been (exact matching):
+97 834 948 36 12 51 766 585 914 784 333
+==== expr-old-32.50 FAILED
+
+
+
+==== expr-old-34.15 errors in math functions FAILED
+==== Contents of test case:
+
+    expr round(1.0e30)
+
+---- Result was:
+0
+---- Result should have been (exact matching):
+1000000000000000019884624838656
+==== expr-old-34.15 FAILED
+
+
+
+==== expr-old-34.16 errors in math functions FAILED
+==== Contents of test case:
+
+    expr round(-1.0e30)
+
+---- Result was:
+0
+---- Result should have been (exact matching):
+-1000000000000000019884624838656
+==== expr-old-34.16 FAILED
+
+
+
+==== expr-old-39.1 Rounding with wide result FAILED
+==== Contents of test case:
+
+    set x 1.0e10
+    set y [expr $x + 0.1]
+    catch {
+	set x [list [expr {$x == round($y)}] [expr $x == -round(-$y)]]
+    }
+    set x
+
+---- Result was:
+0 0
+---- Result should have been (exact matching):
+1 1
+==== expr-old-39.1 FAILED
+
+expr.test
+
+
+==== expr-19.1 expr and interpreter result object resetting FAILED
+==== Contents of test case:
+
+    proc p {} {
+        set t  10.0
+        set x  2.0
+        set dx 0.2
+        set f  {$dx-$x/10}
+        set g  {-$x/5}
+        set center 1.0
+        set x  [expr $x-$center]
+        set dx [expr $dx+$g]
+        set x  [expr $x+$f+$center]
+        set x  [expr $x+$f+$center]
+        set y  [expr round($x)]
+    }
+    p
+
+---- Result was:
+1
+---- Result should have been (exact matching):
+3
+==== expr-19.1 FAILED
+
+
+
+==== expr-46.2 round() rounds to +-infinity FAILED
+==== Contents of test case:
+
+    expr round(1.5)
+
+---- Result was:
+1
+---- Result should have been (exact matching):
+2
+==== expr-46.2 FAILED
+
+
+
+==== expr-46.4 round() rounds to +-infinity FAILED
+==== Contents of test case:
+
+    expr round(-1.5)
+
+---- Result was:
+-1
+---- Result should have been (exact matching):
+-2
+==== expr-46.4 FAILED
+
+
+
+==== expr-46.5 round() overflow FAILED
+==== Contents of test case:
+
+    expr round(9.2233720368547758e+018)
+
+---- Result was:
+0
+---- Result should have been (exact matching):
+9223372036854775808
+==== expr-46.5 FAILED
+
+
+
+==== expr-46.6 round() overflow FAILED
+==== Contents of test case:
+
+    expr round(-9.2233720368547758e+018)
+
+---- Result was:
+0
+---- Result should have been (exact matching):
+-9223372036854775808
+==== expr-46.6 FAILED
+
+
+
+==== expr-46.13 round() boundary case - round down FAILED
+==== Contents of test case:
+
+    expr {round(2147483647 - 0.51)}
+
+---- Result was:
+0
+---- Result should have been (exact matching):
+2147483646
+==== expr-46.13 FAILED
+
+
+
+==== expr-46.14 round() boundary case - round up FAILED
+==== Contents of test case:
+
+    expr {round(2147483647 - 0.50)}
+
+---- Result was:
+1
+---- Result should have been (exact matching):
+2147483647
+==== expr-46.14 FAILED
+
+
+
+==== expr-46.15 round() boundary case - round up to wide FAILED
+==== Contents of test case:
+
+    expr {round(2147483647 + 0.50)}
+
+---- Result was:
+1
+---- Result should have been (exact matching):
+2147483648
+==== expr-46.15 FAILED
+
+
+
+==== expr-46.16 round() boundary case - round up FAILED
+==== Contents of test case:
+
+    expr {round(-2147483648 + 0.51)}
+
+---- Result was:
+0
+---- Result should have been (exact matching):
+-2147483647
+==== expr-46.16 FAILED
+
+
+
+==== expr-46.17 round() boundary case - round down FAILED
+==== Contents of test case:
+
+    expr {round(-2147483648 + 0.50)}
+
+---- Result was:
+-1
+---- Result should have been (exact matching):
+-2147483648
+==== expr-46.17 FAILED
+
+
+
+==== expr-46.18 round() boundary case - round down to wide FAILED
+==== Contents of test case:
+
+    expr {round(-2147483648 - 0.50)}
+
+---- Result was:
+-1
+---- Result should have been (exact matching):
+-2147483649
+==== expr-46.18 FAILED
+
+
+
+==== expr-46.19 round() handling of long/bignum boundary FAILED
+==== Contents of test case:
+
+    expr {round(double(0x7fffffffffffffff))}
+
+---- Result was:
+0
+---- Result should have been (exact matching):
+9223372036854775808
+==== expr-46.19 FAILED
+
+fileSystemEncoding.test
+for-old.test
+for.test
+foreach.test
+format.test
+get.test
+history.test
+httpPipeline.test
+if-old.test
+if.test
+incr-old.test
+incr.test
+indexObj.test
+info.test
+init.test
+interp.test
+io.test
+ioTrans.test
+
+
+==== iortrans-3.1 chan finalize, handler destruction has no effect on channel FAILED
+==== Contents of test case:
+
+    proc foo {args} {
+	lappend ::res $args
+	handle.initialize
+	return
+    }
+    lappend res [set c [chan push [tempchan] foo]]
+    rename foo {}
+    lappend res [file channels file*]
+    lappend res [file channels rt*]
+    lappend res [catch {close $c} msg] $msg
+    lappend res [file channels file*]
+    lappend res [file channels rt*]
+
+---- Result was:
+{initialize rt15 {read write}} file9 {file3 file9} {} 1 {invalid command name "foo"} file3 {}
+---- Result should have been (glob matching):
+{initialize rt* {read write}} file* file* {} 1 {invalid command name "foo"} {} {}
+==== iortrans-3.1 FAILED
+
+iogt.test
+join.test
+lindex.test
+link.test
+linsert.test
+list.test
+listObj.test
+llength.test
+lmap.test
+load.test
+lrange.test
+lrepeat.test
+lreplace.test
+lsearch.test
+lset.test
+lsetComp.test
+macOSXFCmd.test
+macOSXLoad.test
+mathop.test
+
+
+==== mathop-25.30 exp operator FAILED
+==== Contents of test case:
+expr {[set res [TestOp **  $big -1e-18]] >  0 && $res < 1}
+---- Result was:
+0
+---- Result should have been (exact matching):
+1
+==== mathop-25.30 FAILED
+
+misc.test
+namespace-old.test
+namespace.test
+notify.test
+nre.test
+obj.test
+oo.test
+ooNext2.test
+opt.test
+package.test
+parse.test
+parseExpr.test
+parseOld.test
+pid.test
+pkgMkIndex.test
+platform.test
+proc-old.test
+proc.test
+pwd.test
+reg.test
+regexp.test
+regexpComp.test
+registry.test
+rename.test
+resolver.test
+result.test
+safe.test
+scan.test
+security.test
+set-old.test
+set.test
+source.test
+split.test
+string.test
+stringComp.test
+stringObj.test
+subst.test
+switch.test
+tailcall.test
+thread.test
+timer.test
+tm.test
+trace.test
+unixFCmd.test
+
+
+==== unixFCmd-13.2 GetOwnerAttribute FAILED
+==== Contents of test case:
+
+    close [open foo.test w]
+    file attributes foo.test -owner
+
+---- Result was:
+jnml
+---- Result should have been (exact matching):
+root
+==== unixFCmd-13.2 FAILED
+
+unixFile.test
+unixForkEvent.test
+unixInit.test
+unknown.test
+unload.test
+uplevel.test
+upvar.test
+utf.test
+util.test
+var.test
+while-old.test
+while.test
+winConsole.test
+winDde.test
+winFCmd.test
+winFile.test
+winNotify.test
+winPipe.test
+winTime.test
+zlib.test
+
+Tests ended at Sun Jul 26 20:31:26 CEST 2020
+all.tcl:	Total	31434	Passed	27940	Skipped	3461	Failed	33
+Sourced 135 Test Files.
+Files with failing tests: chan.test clock.test compExpr-old.test encoding.test event.test expr-old.test expr.test ioTrans.test mathop.test unixFCmd.test
+Number of tests skipped for each constraint:
+	9	!ieeeFloatingPoint
+	11	!singleTestInterp
+	76	bigEndian
+	5	bug-3057639
+	49	dde
+	1	dontCopyLinks
+	60	emptyTest
+	1	execMknod
+	1	foundGroup
+	5	fullutf
+	2	hasIsoLocale
+	1	knownBadTest
+	38	knownBug
+	100	localeRegexp
+	52	longIs32bit
+	14	macosxFileAttr
+	79	memory
+	18	nonPortable
+	9	nt
+	19	pkgaRequired
+	20	pkguaRequired
+	4	readonlyAttr
+	1996	serverNeeded
+	138	stdio
+	1	testCPUID
+	1	testexprparser && !ieeeFloatingPoint
+	1	testwinclock
+	21	testwordend
+	88	thread
+	3	threaded
+	3	tip389
+	2	umask
+	2	wideBiggerThanInt
+	387	win
+	4	winVista

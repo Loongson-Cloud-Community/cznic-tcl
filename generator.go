@@ -57,7 +57,7 @@ func main() {
 	switch runtime.GOOS {
 	case "linux":
 		makeUnix()
-		if err := newCmd(nil, nil, "sh", "-c", fmt.Sprintf("cp -r %s %s", filepath.FromSlash(tclDir+"/library/*"), "lib/")).Run(); err != nil {
+		if err := newCmd(nil, nil, "sh", "-c", fmt.Sprintf("cp -r %s %s", filepath.FromSlash(tclDir+"/library/*"), "assets/")).Run(); err != nil {
 			fail("error copying tcl library: %v", err)
 		}
 	default:
@@ -78,13 +78,13 @@ func main() {
 		copyFile(v, filepath.Join(dst, filepath.Base(v)))
 	}
 
-	dir := filepath.FromSlash("lib/tcltests")
+	dir := filepath.FromSlash("assets/tcltests")
 	if err := os.MkdirAll(dir, 0770); err != nil {
 		fail("cannot create %q: %v", dir, err)
 	}
 
-	copyFile("testdata/tcl/pkgIndex.tcl", "lib/tcltests/pkgIndex.tcl")
-	copyFile("testdata/tcl/tcltests.tcl", "lib/tcltests/tcltests.tcl")
+	copyFile("testdata/tcl/pkgIndex.tcl", "assets/tcltests/pkgIndex.tcl")
+	copyFile("testdata/tcl/tcltests.tcl", "assets/tcltests/tcltests.tcl")
 }
 
 func copyFile(src, dest string) {
@@ -117,7 +117,7 @@ func makeUnix() {
 		"--disable-dll-unload",
 		"--disable-load",
 		"--disable-threads",
-		"--enable-symbols=mem", //TODO- adds TCL_MEM_DEBUG
+		//TODO- "--enable-symbols=mem", //TODO- adds TCL_MEM_DEBUG
 	)
 	if err = cmd.Run(); err != nil {
 		fail("%s\n", err)
@@ -173,7 +173,7 @@ func makeUnixLibAndShell(testWD string) {
 		"-ccgo-export-fields", "F",
 		"-ccgo-long-double-is-double",
 		"-ccgo-pkgname", "tcl",
-		"-ccgo-verify-structs", //TODO-
+		//TODO- "-ccgo-verify-structs", //TODO-
 		"../compat/zlib/adler32.c",
 		"../compat/zlib/compress.c",
 		"../compat/zlib/crc32.c",
@@ -201,9 +201,10 @@ func makeUnixLibAndShell(testWD string) {
 	}
 
 	args = []string{
-		"-o", filepath.Join(testWD, filepath.FromSlash(fmt.Sprintf("tclsh/tclsh_%s_%s.go", runtime.GOOS, runtime.GOARCH))),
+		"-o", filepath.Join(testWD, filepath.FromSlash(fmt.Sprintf("internal/tclsh/tclsh_%s_%s.go", runtime.GOOS, runtime.GOARCH))),
 		"-ccgo-long-double-is-double",
-		"-ccgo-verify-structs", //TODO-
+		"-ccgo-pkgname", "tclsh",
+		//TODO- "-ccgo-verify-structs", //TODO-
 		"tclAppInit.c",
 		"-lmodernc.org/tcl/lib",
 	}
@@ -247,7 +248,7 @@ func makeUnixTclTest(testWD string) {
 		"-o", filepath.Join(testWD, filepath.FromSlash(fmt.Sprintf("internal/tcltest/tcltest_%s_%s.go", runtime.GOOS, runtime.GOARCH))),
 		"-ccgo-long-double-is-double",
 		"-ccgo-pkgname", "tcltest",
-		"-ccgo-verify-structs", //TODO-
+		//TODO- "-ccgo-verify-structs", //TODO-
 		"../generic/tclOOStubLib.c",
 		"../generic/tclStubLib.c",
 		"../generic/tclTomMathStubLib.c",
@@ -287,9 +288,9 @@ func parseCCLine(cPaths *[]string, cFiles map[string]string, m map[string]struct
 				break
 			}
 
-			if tok == "-DNDEBUG=1" { //TODO-
-				break
-			}
+			//TODO- if tok == "-DNDEBUG=1" { //TODO-
+			//TODO- 	break
+			//TODO- }
 
 			if i := strings.IndexByte(tok, '='); i > 0 {
 				def := tok[:i+1]
@@ -492,6 +493,7 @@ func download() {
 			case strings.HasSuffix(base, ".tar.gz"):
 				return untar(root, bufio.NewReader(f))
 			}
+
 			panic("internal error") //TODOOK
 		}(); err != nil {
 			fmt.Fprintln(os.Stderr, err)

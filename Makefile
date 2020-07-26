@@ -10,7 +10,7 @@ ngrep='TODOOK\|internal\/vfs\|internal\/bin\|internal\/mptest\|.*stringer.*\.go'
 all: editor
 	date
 	go version 2>&1 | tee log
-	#./unconvert.sh
+	./unconvert.sh
 	gofmt -l -s -w *.go
 	go test -i
 	go test 2>&1 -timeout 1h | tee -a log
@@ -22,11 +22,12 @@ all: editor
 	#TODO GOOS=windows GOARCH=amd64 go build
 	go vet 2>&1 | grep -v $(ngrep) || true
 	golint 2>&1 | grep -v $(ngrep) || true
-	make todo
+	#make todo
 	misspell *.go
-	#staticcheck | grep -v 'lexer\.go\|parser\.go' || true
+	staticcheck
 	maligned || true
 	grep -n 'FAIL\|PASS' log 
+	git diff --unified=0 testdata *.golden
 	go version
 	date 2>&1 | tee -a log
 
