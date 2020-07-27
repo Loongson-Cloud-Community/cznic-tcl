@@ -82,6 +82,7 @@ func init() {
 var (
 	oDebug   = flag.String("debug", "", "argument of -debug passed to the Tcl test suite: https://www.tcl.tk/man/tcl8.4/TclCmd/tcltest.htm#M91")
 	oFile    = flag.String("file", "", "argument of -file passed to the Tcl test suite: https://www.tcl.tk/man/tcl8.4/TclCmd/tcltest.htm#M110")
+	oMatch   = flag.String("match", "", "argument of -match passed to the Tcl test suite: https://www.tcl.tk/man/tcl8.4/TclCmd/tcltest.htm#114")
 	oVerbose = flag.String("verbose", "", "argument of -verbose passed to the Tcl test suite: https://www.tcl.tk/man/tcl8.4/TclCmd/tcltest.htm#M96")
 )
 
@@ -145,6 +146,9 @@ func testTclTest(t *testing.T, stdout, stderr io.Writer) int {
 	}
 	if *oVerbose != "" {
 		args = append(args, "-verbose", *oVerbose)
+	}
+	if *oMatch != "" {
+		args = append(args, "-match", *oMatch)
 	}
 	cmd := exec.Command(os.Args[0], args...)
 	cmd.Stdout = stdout
