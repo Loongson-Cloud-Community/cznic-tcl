@@ -1,13 +1,13 @@
-Tests running in interp:  /tmp/go-build814241292/b001/tcl.test
-Tests located in:  /tmp/tcl-test-794894580
-Tests running in:  /tmp/tcl-test-794894580
-Temporary files stored in /tmp/tcl-test-794894580
+Tests running in interp:  /tmp/go-build870822337/b001/tcl.test
+Tests located in:  /tmp/tcl-test-668488179
+Tests running in:  /tmp/tcl-test-668488179
+Temporary files stored in /tmp/tcl-test-668488179
 Test files sourced into current interpreter
 Skipping tests that match:  cmdIL-6.* trace-24.5 trace-25.* trace-34.1 zlib-8.* io-30.* io-29.* basic-46.2 basic-46.3 basic-46.4 basic-46.5 chan-io-14.3 chan-io-14.4 chan-io-28.6 chan-io-28.7 chan-io-29.33 chan-io-60.1 compile-12.2 compile-13.1 env-2.1 env-2.2 env-2.3 env-2.4 env-3.1 env-4.1 env-4.3 env-4.4 env-4.5 event-13.8 event-14.8 event-7.5 exit-1.1 exit-1.2 pid-1.2 regexp-14.3 regexpComp-14.3 subst-5.10 subst-5.8 subst-5.9 encoding-24.1 encoding-24.2 io-14.3 io-14.4 chan-16.9 chan-io-29.34 chan-io-29.35 chan-io-39.18 chan-io-39.19 chan-io-39.20 chan-io-39.21 chan-io-39.23 chan-io-39.24 chan-io-51.1 chan-io-53.5 chan-io-54.1 chan-io-54.2 chan-io-57.1 chan-io-57.2 event-11.5 zlib-10.0 zlib-10.1 zlib-10.2 zlib-9.* io-39.18 io-39.19 io-39.20 io-39.21 io-39.23 io-39.24 io-51.1 io-53.5 io-54.1 io-54.2 io-57.1 io-57.2 io-60.1 info-16.4 unixFCmd-16.* cmdAH-2.5 cmdAH-8.39 cmdAH-15.1 cmdAH-19.* cmdAH-30.8 safe-13.* safe-16.3 unixFCmd-1.* unixFCmd-12.2 cmdAH-7.1 unixFCmd-15.1 chan-17.4 event-13.6 event-14.6
 Running tests that match:  *
 Skipping test files that match:  exec.test http11.test ioCmd.test main.test stack.test socket.test cmdAH.test fCmd.test fileName.test fileSystem.test msgcat.test tcltest.test http.test httpold.test unixNotfy.test
 Only running test files that match:  *.test
-Tests began at Mon Jul 27 16:44:24 CEST 2020
+Tests began at Mon Jul 27 17:08:01 CEST 2020
 aaa_exit.test
 append.test
 appendComp.test
@@ -26,32 +26,6 @@ cmdIL.test
 cmdInfo.test
 cmdMZ.test
 compExpr-old.test
-
-
-==== compExpr-old-19.1 expr and interpreter result object resetting FAILED
-==== Contents of test case:
-
-    proc p {} {
-        set t  10.0
-        set x  2.0
-        set dx 0.2
-        set f  {$dx-$x/10}
-        set g  {-$x/5}
-        set center 1.0
-        set x  [expr $x-$center]
-        set dx [expr $dx+$g]
-        set x  [expr $x+$f+$center]
-        set x  [expr $x+$f+$center]
-        set y  [expr round($x)]
-    }
-    p
-
----- Result was:
-1
----- Result should have been (exact matching):
-3
-==== compExpr-old-19.1 FAILED
-
 compExpr.test
 compile.test
 concat.test
@@ -82,315 +56,7 @@ eval.test
 event.test
 execute.test
 expr-old.test
-
-
-==== expr-old-32.35 math functions in expressions FAILED
-==== Contents of test case:
-
-    expr round(1.49)
-
----- Result was:
-0
----- Result should have been (exact matching):
-1
-==== expr-old-32.35 FAILED
-
-
-
-==== expr-old-32.36 math functions in expressions FAILED
-==== Contents of test case:
-
-    expr round(1.51)
-
----- Result was:
-1
----- Result should have been (exact matching):
-2
-==== expr-old-32.36 FAILED
-
-
-
-==== expr-old-32.37 math functions in expressions FAILED
-==== Contents of test case:
-
-    expr round(-1.49)
-
----- Result was:
-0
----- Result should have been (exact matching):
--1
-==== expr-old-32.37 FAILED
-
-
-
-==== expr-old-32.38 math functions in expressions FAILED
-==== Contents of test case:
-
-    expr round(-1.51)
-
----- Result was:
--1
----- Result should have been (exact matching):
--2
-==== expr-old-32.38 FAILED
-
-
-
-==== expr-old-32.39 math functions in expressions FAILED
-==== Contents of test case:
-
-    expr round(1e60)
-
----- Result was:
-0
----- Result should have been (exact matching):
-999999999999999949387135297074018866963645011013410073083904
-==== expr-old-32.39 FAILED
-
-
-
-==== expr-old-32.40 math functions in expressions FAILED
-==== Contents of test case:
-
-    expr round(-1e60)
-
----- Result was:
-0
----- Result should have been (exact matching):
--999999999999999949387135297074018866963645011013410073083904
-==== expr-old-32.40 FAILED
-
-
-
-==== expr-old-32.50 math functions in expressions FAILED
-==== Contents of test case:
-
-    set result [expr round(srand(12345) * 1000)]
-    for {set i 0} {$i < 10} {incr i} {
-	lappend result [expr round(rand() * 1000)]
-    }
-    set result
-
----- Result was:
-1 1 1 1 1 0 1 1 0 1 0
----- Result should have been (exact matching):
-97 834 948 36 12 51 766 585 914 784 333
-==== expr-old-32.50 FAILED
-
-
-
-==== expr-old-34.15 errors in math functions FAILED
-==== Contents of test case:
-
-    expr round(1.0e30)
-
----- Result was:
-0
----- Result should have been (exact matching):
-1000000000000000019884624838656
-==== expr-old-34.15 FAILED
-
-
-
-==== expr-old-34.16 errors in math functions FAILED
-==== Contents of test case:
-
-    expr round(-1.0e30)
-
----- Result was:
-0
----- Result should have been (exact matching):
--1000000000000000019884624838656
-==== expr-old-34.16 FAILED
-
-
-
-==== expr-old-39.1 Rounding with wide result FAILED
-==== Contents of test case:
-
-    set x 1.0e10
-    set y [expr $x + 0.1]
-    catch {
-	set x [list [expr {$x == round($y)}] [expr $x == -round(-$y)]]
-    }
-    set x
-
----- Result was:
-0 0
----- Result should have been (exact matching):
-1 1
-==== expr-old-39.1 FAILED
-
 expr.test
-
-
-==== expr-19.1 expr and interpreter result object resetting FAILED
-==== Contents of test case:
-
-    proc p {} {
-        set t  10.0
-        set x  2.0
-        set dx 0.2
-        set f  {$dx-$x/10}
-        set g  {-$x/5}
-        set center 1.0
-        set x  [expr $x-$center]
-        set dx [expr $dx+$g]
-        set x  [expr $x+$f+$center]
-        set x  [expr $x+$f+$center]
-        set y  [expr round($x)]
-    }
-    p
-
----- Result was:
-1
----- Result should have been (exact matching):
-3
-==== expr-19.1 FAILED
-
-
-
-==== expr-46.2 round() rounds to +-infinity FAILED
-==== Contents of test case:
-
-    expr round(1.5)
-
----- Result was:
-1
----- Result should have been (exact matching):
-2
-==== expr-46.2 FAILED
-
-
-
-==== expr-46.4 round() rounds to +-infinity FAILED
-==== Contents of test case:
-
-    expr round(-1.5)
-
----- Result was:
--1
----- Result should have been (exact matching):
--2
-==== expr-46.4 FAILED
-
-
-
-==== expr-46.5 round() overflow FAILED
-==== Contents of test case:
-
-    expr round(9.2233720368547758e+018)
-
----- Result was:
-0
----- Result should have been (exact matching):
-9223372036854775808
-==== expr-46.5 FAILED
-
-
-
-==== expr-46.6 round() overflow FAILED
-==== Contents of test case:
-
-    expr round(-9.2233720368547758e+018)
-
----- Result was:
-0
----- Result should have been (exact matching):
--9223372036854775808
-==== expr-46.6 FAILED
-
-
-
-==== expr-46.13 round() boundary case - round down FAILED
-==== Contents of test case:
-
-    expr {round(2147483647 - 0.51)}
-
----- Result was:
-0
----- Result should have been (exact matching):
-2147483646
-==== expr-46.13 FAILED
-
-
-
-==== expr-46.14 round() boundary case - round up FAILED
-==== Contents of test case:
-
-    expr {round(2147483647 - 0.50)}
-
----- Result was:
-1
----- Result should have been (exact matching):
-2147483647
-==== expr-46.14 FAILED
-
-
-
-==== expr-46.15 round() boundary case - round up to wide FAILED
-==== Contents of test case:
-
-    expr {round(2147483647 + 0.50)}
-
----- Result was:
-1
----- Result should have been (exact matching):
-2147483648
-==== expr-46.15 FAILED
-
-
-
-==== expr-46.16 round() boundary case - round up FAILED
-==== Contents of test case:
-
-    expr {round(-2147483648 + 0.51)}
-
----- Result was:
-0
----- Result should have been (exact matching):
--2147483647
-==== expr-46.16 FAILED
-
-
-
-==== expr-46.17 round() boundary case - round down FAILED
-==== Contents of test case:
-
-    expr {round(-2147483648 + 0.50)}
-
----- Result was:
--1
----- Result should have been (exact matching):
--2147483648
-==== expr-46.17 FAILED
-
-
-
-==== expr-46.18 round() boundary case - round down to wide FAILED
-==== Contents of test case:
-
-    expr {round(-2147483648 - 0.50)}
-
----- Result was:
--1
----- Result should have been (exact matching):
--2147483649
-==== expr-46.18 FAILED
-
-
-
-==== expr-46.19 round() handling of long/bignum boundary FAILED
-==== Contents of test case:
-
-    expr {round(double(0x7fffffffffffffff))}
-
----- Result was:
-0
----- Result should have been (exact matching):
-9223372036854775808
-==== expr-46.19 FAILED
-
 fileSystemEncoding.test
 for-old.test
 for.test
@@ -518,10 +184,10 @@ winPipe.test
 winTime.test
 zlib.test
 
-Tests ended at Mon Jul 27 16:45:19 CEST 2020
-all.tcl:	Total	31434	Passed	27947	Skipped	3461	Failed	26
+Tests ended at Mon Jul 27 17:08:55 CEST 2020
+all.tcl:	Total	31434	Passed	27970	Skipped	3461	Failed	3
 Sourced 135 Test Files.
-Files with failing tests: compExpr-old.test encoding.test expr-old.test expr.test mathop.test unixFCmd.test
+Files with failing tests: encoding.test mathop.test unixFCmd.test
 Number of tests skipped for each constraint:
 	9	!ieeeFloatingPoint
 	11	!singleTestInterp
