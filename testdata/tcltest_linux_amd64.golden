@@ -1,13 +1,13 @@
-Tests running in interp:  /tmp/go-build480570143/b001/tcl.test
-Tests located in:  /tmp/tcl-test-193052596
-Tests running in:  /tmp/tcl-test-193052596
-Temporary files stored in /tmp/tcl-test-193052596
+Tests running in interp:  /tmp/go-build201969479/b001/tcl.test
+Tests located in:  /tmp/tcl-test-779048327
+Tests running in:  /tmp/tcl-test-779048327
+Temporary files stored in /tmp/tcl-test-779048327
 Test files sourced into current interpreter
 Skipping tests that match:  cmdIL-6.* trace-24.5 trace-25.* trace-34.1 zlib-8.* io-30.* io-29.* basic-46.2 basic-46.3 basic-46.4 basic-46.5 chan-io-14.3 chan-io-14.4 chan-io-28.6 chan-io-28.7 chan-io-29.33 chan-io-60.1 compile-12.2 compile-13.1 env-2.1 env-2.2 env-2.3 env-2.4 env-3.1 env-4.1 env-4.3 env-4.4 env-4.5 event-13.8 event-14.8 event-7.5 exit-1.1 exit-1.2 pid-1.2 regexp-14.3 regexpComp-14.3 subst-5.10 subst-5.8 subst-5.9 encoding-24.1 encoding-24.2 io-14.3 io-14.4 chan-16.9 chan-io-29.34 chan-io-29.35 chan-io-39.18 chan-io-39.19 chan-io-39.20 chan-io-39.21 chan-io-39.23 chan-io-39.24 chan-io-51.1 chan-io-53.5 chan-io-54.1 chan-io-54.2 chan-io-57.1 chan-io-57.2 event-11.5 zlib-10.0 zlib-10.1 zlib-10.2 zlib-9.* io-39.18 io-39.19 io-39.20 io-39.21 io-39.23 io-39.24 io-51.1 io-53.5 io-54.1 io-54.2 io-57.1 io-57.2 io-60.1 info-16.4 unixFCmd-16.* cmdAH-2.5 cmdAH-8.39 cmdAH-15.1 cmdAH-19.* cmdAH-30.8 safe-13.* safe-16.3 unixFCmd-1.* unixFCmd-12.2 cmdAH-7.1 unixFCmd-15.1 chan-17.4 event-13.6 event-14.6
 Running tests that match:  *
 Skipping test files that match:  exec.test http11.test ioCmd.test main.test stack.test socket.test cmdAH.test fCmd.test fileName.test fileSystem.test msgcat.test tcltest.test http.test httpold.test unixNotfy.test
 Only running test files that match:  *.test
-Tests began at Sun Jul 26 20:30:43 CEST 2020
+Tests began at Mon Jul 27 12:45:26 CEST 2020
 aaa_exit.test
 append.test
 appendComp.test
@@ -20,26 +20,6 @@ basic.test
 binary.test
 case.test
 chan.test
-
-
-==== chan-17.3 chan command: pipe subcommand FAILED
-==== Contents of test case:
-
-	set l [chan pipe]
-    foreach {pr pw} $l break
-    list [llength $l] [fconfigure $pr -blocking] [fconfigure $pw -blocking]
-
----- Test cleanup failed:
-bad file number
----- errorInfo(cleanup): bad file number
-    while executing
-"close $pw"
-    ("uplevel" body line 2)
-    invoked from within
-"uplevel 1 $cleanup"
----- errorCode(cleanup): POSIX EBADF {bad file number}
-==== chan-17.3 FAILED
-
 chanio.test
 clock.test
 
@@ -126,65 +106,6 @@ env.test
 error.test
 eval.test
 event.test
-
-
-==== event-1.1 Tcl_CreateFileHandler, reading FAILED
-==== Contents of test case:
-
-    testfilehandler create 0 readable off
-    testfilehandler clear 0
-    testfilehandler oneevent
-    lappend result [testfilehandler counts 0]
-    testfilehandler fillpartial 0
-    testfilehandler oneevent
-    lappend result [testfilehandler counts 0]
-    testfilehandler oneevent
-    lappend result [testfilehandler counts 0]
-
----- Result was:
-{0 0} {0 0} {0 0}
----- Result should have been (exact matching):
-{0 0} {1 0} {2 0}
-==== event-1.1 FAILED
-
-
-
-==== event-13.3 Tcl_WaitForFile procedure, readable FAILED
-==== Contents of test case:
-
-    after 100 set x timeout
-    testfilehandler create 1 off off
-    testfilehandler fillpartial 1
-    set x "no timeout"
-    set result [testfilehandler wait 1 readable 100]
-    update
-    list $result $x
-
----- Result was:
-{} timeout
----- Result should have been (exact matching):
-readable {no timeout}
-==== event-13.3 FAILED
-
-
-
-==== event-14.3 Tcl_WaitForFile procedure, readable, big fd FAILED
-==== Contents of test case:
-
-    after 100 set x timeout
-    testfilehandler create 1 off off
-    testfilehandler fillpartial 1
-    set x "no timeout"
-    set result [testfilehandler wait 1 readable 100]
-    update
-    list $result $x
-
----- Result was:
-{} timeout
----- Result should have been (exact matching):
-readable {no timeout}
-==== event-14.3 FAILED
-
 execute.test
 expr-old.test
 
@@ -514,30 +435,6 @@ init.test
 interp.test
 io.test
 ioTrans.test
-
-
-==== iortrans-3.1 chan finalize, handler destruction has no effect on channel FAILED
-==== Contents of test case:
-
-    proc foo {args} {
-	lappend ::res $args
-	handle.initialize
-	return
-    }
-    lappend res [set c [chan push [tempchan] foo]]
-    rename foo {}
-    lappend res [file channels file*]
-    lappend res [file channels rt*]
-    lappend res [catch {close $c} msg] $msg
-    lappend res [file channels file*]
-    lappend res [file channels rt*]
-
----- Result was:
-{initialize rt15 {read write}} file9 {file3 file9} {} 1 {invalid command name "foo"} file3 {}
----- Result should have been (glob matching):
-{initialize rt* {read write}} file* file* {} 1 {invalid command name "foo"} {} {}
-==== iortrans-3.1 FAILED
-
 iogt.test
 join.test
 lindex.test
@@ -647,10 +544,10 @@ winPipe.test
 winTime.test
 zlib.test
 
-Tests ended at Sun Jul 26 20:31:26 CEST 2020
-all.tcl:	Total	31434	Passed	27940	Skipped	3461	Failed	33
+Tests ended at Mon Jul 27 12:46:22 CEST 2020
+all.tcl:	Total	31434	Passed	27945	Skipped	3461	Failed	28
 Sourced 135 Test Files.
-Files with failing tests: chan.test clock.test compExpr-old.test encoding.test event.test expr-old.test expr.test ioTrans.test mathop.test unixFCmd.test
+Files with failing tests: clock.test compExpr-old.test encoding.test expr-old.test expr.test mathop.test unixFCmd.test
 Number of tests skipped for each constraint:
 	9	!ieeeFloatingPoint
 	11	!singleTestInterp
