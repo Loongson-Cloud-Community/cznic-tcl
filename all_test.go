@@ -193,9 +193,6 @@ func tclTestMain() {
 		"trace-24.5",
 		"trace-25.*",
 		"trace-34.1",
-		"zlib-8.*",
-		"io-30.*",
-		"io-29.*",
 
 		// Needs fork. (Not implemented)
 		"basic-46.2",
@@ -210,6 +207,8 @@ func tclTestMain() {
 		"chan-io-60.1",
 		"compile-12.2",
 		"compile-13.1",
+		"encoding-24.1",
+		"encoding-24.2",
 		"env-2.1",
 		"env-2.2",
 		"env-2.3",
@@ -224,16 +223,19 @@ func tclTestMain() {
 		"event-7.5",
 		"exit-1.1",
 		"exit-1.2",
+		"io-14.3",
+		"io-14.4",
 		"pid-1.2",
 		"regexp-14.3",
 		"regexpComp-14.3",
 		"subst-5.10",
 		"subst-5.8",
 		"subst-5.9",
-		"encoding-24.1",
-		"encoding-24.2",
-		"io-14.3",
-		"io-14.4",
+		"unixFCmd-13.2",
+		"io-29.33",
+		"io-29.33b",
+		"iocmd-32.*",
+		"iocmd-31.*",
 
 		//TODO Needs socket.
 		"chan-16.9",
@@ -269,6 +271,9 @@ func tclTestMain() {
 		"io-57.1",
 		"io-57.2",
 		"io-60.1",
+		"zlib-8.3",
+		"io-29.34",
+		"io-29.35",
 
 		//TODO getpwnam
 		"info-16.4",
@@ -290,19 +295,14 @@ func tclTestMain() {
 
 		//TODO getgrnam
 		"unixFCmd-15.1",
-
-		//TODO other
-		"chan-17.4",
-		"event-13.6",
-		"event-14.6",
 	}
 	notFile := []string{
 		// Needs fork. (Not implemented)
-		"exec.test",   // crashes
-		"http11.test", // crashes
-		"ioCmd.test",  // crashes
-		"main.test",   // all tests want fork
-		"stack.test",  // all tests want fork
+		"exec.test",
+		"http11.test",
+		"ioCmd.test",
+		"main.test",  // all tests want fork
+		"stack.test", // all tests want fork
 
 		//TODO Needs socket.
 		"socket.test",
@@ -318,9 +318,6 @@ func tclTestMain() {
 		//TODO gethostbyname
 		"http.test",
 		"httpold.test",
-
-		//TODO hangs
-		"unixNotfy.test",
 	}
 	var argv []string
 	for _, v := range os.Args {
