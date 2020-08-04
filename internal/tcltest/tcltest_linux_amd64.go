@@ -15,11 +15,1659 @@ var _ = math.Pi
 var _ reflect.Kind
 var _ unsafe.Pointer
 
+// Positions to pass to Tcl_QueueEvent:
+
+const ( /* tcl.h:1387:1: */
+	TCL_QUEUE_TAIL = 0
+	TCL_QUEUE_HEAD = 1
+	TCL_QUEUE_MARK = 2
+)
+
+// The following flags determine whether the blockModeProc above should set
+// the channel into blocking or nonblocking mode. They are passed as arguments
+// to the blockModeProc function in the above structure.
+
+//----------------------------------------------------------------------------
+// Enum for different types of file paths.
+
+const ( /* tcl.h:1609:1: */
+	TCL_PATH_ABSOLUTE        = 0
+	TCL_PATH_RELATIVE        = 1
+	TCL_PATH_VOLUME_RELATIVE = 2
+)
+
+//----------------------------------------------------------------------------
+// When a TCL command returns, the interpreter contains a result from the
+// command. Programmers are strongly encouraged to use one of the functions
+// Tcl_GetObjResult() or Tcl_GetStringResult() to read the interpreter's
+// result. See the SetResult man page for details. Besides this result, the
+// command function returns an integer code, which is one of the following:
+//
+// TCL_OK		Command completed normally; the interpreter's result
+//			contains the command's result.
+// TCL_ERROR		The command couldn't be completed successfully; the
+//			interpreter's result describes what went wrong.
+// TCL_RETURN		The command requests that the current function return;
+//			the interpreter's result contains the function's
+//			return value.
+// TCL_BREAK		The command requests that the innermost loop be
+//			exited; the interpreter's result is meaningless.
+// TCL_CONTINUE		Go on to the next iteration of the current loop; the
+//			interpreter's result is meaningless.
+
+//----------------------------------------------------------------------------
+// Flags to control what substitutions are performed by Tcl_SubstObj():
+
+// Argument descriptors for math function callbacks in expressions:
+
+const ( /* tcl.h:690:1: */
+	TCL_INT      = 0
+	TCL_DOUBLE   = 1
+	TCL_EITHER   = 2
+	TCL_WIDE_INT = 3
+)
+
+// TIP #268.
+// Values for the selection mode, i.e the package require preferences.
+
+const ( /* tclInt.h:1729:1: */
+	PKG_PREFER_LATEST = 0
+	PKG_PREFER_STABLE = 1
+)
+
+// Macros that use the TSD-ekeko.
+
+// Macros for script cancellation support (TIP #285).
+
+// Macros for splicing into and out of doubly linked lists. They assume
+// existence of struct items 'prevPtr' and 'nextPtr'.
+//
+// a = element to add or remove.
+// b = list head.
+//
+// TclSpliceIn adds to the head of the list.
+
+// EvalFlag bits for Interp structures:
+//
+// TCL_ALLOW_EXCEPTIONS	1 means it's OK for the script to terminate with a
+//			code other than TCL_OK or TCL_ERROR; 0 means codes
+//			other than these should be turned into errors.
+
+// Flag bits for Interp structures:
+//
+// DELETED:		Non-zero means the interpreter has been deleted:
+//			don't process any more commands for it, and destroy
+//			the structure as soon as all nested invocations of
+//			Tcl_Eval are done.
+// ERR_ALREADY_LOGGED:	Non-zero means information has already been logged in
+//			iPtr->errorInfo for the current Tcl_Eval instance, so
+//			Tcl_Eval needn't log it (used to implement the "error
+//			message log" command).
+// DONT_COMPILE_CMDS_INLINE: Non-zero means that the bytecode compiler should
+//			not compile any commands into an inline sequence of
+//			instructions. This is set 1, for example, when command
+//			traces are requested.
+// RAND_SEED_INITIALIZED: Non-zero means that the randSeed value of the interp
+//			has not be initialized. This is set 1 when we first
+//			use the rand() or srand() functions.
+// SAFE_INTERP:		Non zero means that the current interp is a safe
+//			interp (i.e. it has only the safe commands installed,
+//			less privilege than a regular interp).
+// INTERP_DEBUG_FRAME:	Used for switching on various extra interpreter
+//			debug/info mechanisms (e.g. info frame eval/uplevel
+//			tracing) which are performance intensive.
+// INTERP_TRACE_IN_PROGRESS: Non-zero means that an interp trace is currently
+//			active; so no further trace callbacks should be
+//			invoked.
+// INTERP_ALTERNATE_WRONG_ARGS: Used for listing second and subsequent forms
+//			of the wrong-num-args string in Tcl_WrongNumArgs.
+//			Makes it append instead of replacing and uses
+//			different intermediate text.
+// CANCELED:		Non-zero means that the script in progress should be
+//			canceled as soon as possible. This can be checked by
+//			extensions (and the core itself) by calling
+//			Tcl_Canceled and checking if TCL_ERROR is returned.
+//			This is a one-shot flag that is reset immediately upon
+//			being detected; however, if the TCL_CANCEL_UNWIND flag
+//			is set Tcl_Canceled will continue to report that the
+//			script in progress has been canceled thereby allowing
+//			the evaluation stack for the interp to be fully
+//			unwound.
+//
+// WARNING: For the sake of some extensions that have made use of former
+// internal values, do not re-use the flag values 2 (formerly ERR_IN_PROGRESS)
+// or 8 (formerly ERROR_CODE_SET).
+
+// Maximum number of levels of nesting permitted in Tcl commands (used to
+// catch infinite recursion).
+
+// The macro below is used to modify a "char" value (e.g. by casting it to an
+// unsigned character) so that it can be used safely with macros such as
+// isspace.
+
+// This macro is used to properly align the memory allocated by Tcl, giving
+// the same alignment as the native malloc.
+
+// This macro is used to determine the offset needed to safely allocate any
+// data structure in memory. Given a starting offset or size, it "rounds up"
+// or "aligns" the offset to the next 8-byte boundary so that any data
+// structure can be placed at the resulting offset without fear of an
+// alignment error.
+//
+// WARNING!! DO NOT USE THIS MACRO TO ALIGN POINTERS: it will produce the
+// wrong result on platforms that allocate addresses that are divisible by 4
+// or 2. Only use it for offsets or sizes.
+//
+// This macro is only used by tclCompile.c in the core (Bug 926445). It
+// however not be made file static, as extensions that touch bytecodes
+// (notably tbcload) require it.
+
+// The following enum values are used to specify the runtime platform setting
+// of the tclPlatform variable.
+
+const ( /* tclInt.h:2318:1: */
+	TCL_PLATFORM_UNIX    = 0 // Any Unix-like OS.
+	TCL_PLATFORM_WINDOWS = 2
+)
+
+// The following enum values are used to indicate the translation of a Tcl
+// channel. Declared here so that each platform can define
+// TCL_PLATFORM_TRANSLATION to the native translation on that platform.
+
+const ( /* tclInt.h:2329:1: */
+	TCL_TRANSLATE_AUTO = 0 // Eol == \r, \n and \r\n.
+	TCL_TRANSLATE_CR   = 1 // Eol == \r.
+	TCL_TRANSLATE_LF   = 2 // Eol == \n.
+	TCL_TRANSLATE_CRLF = 3
+)
+
+// The "globParameters" argument of the function TclGlob is an or'ed
+// combination of the following values:
+
+const ( /* tclInt.h:2564:1: */
+	TCL_PATH_DIRNAME   = 0
+	TCL_PATH_TAIL      = 1
+	TCL_PATH_EXTENSION = 2
+	TCL_PATH_ROOT      = 3
+)
+
+const ( /* tclInt.h:2738:1: */
+	TCL_EMPTYSTRING_UNKNOWN = -1
+	TCL_EMPTYSTRING_NO      = 0
+	TCL_EMPTYSTRING_YES     = 1
+)
+
+// end block for C++
+
+// Local Variables:
+// mode: c
+// c-basic-offset: 4
+// fill-column: 78
+// End:
+
+// Define ISO C stdio on top of C++ iostreams.
+//   Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+//	ISO C99 Standard: 7.19 Input/output	<stdio.h>
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+//	ISO C99 Standard 7.4: Character handling	<ctype.h>
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// bits/types.h -- definitions of __*_t types underlying *_t types.
+//   Copyright (C) 2002-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Never include this file directly; use <sys/types.h> instead.
+
+// These are all the characteristics of characters.
+//   If there get to be more than 16 distinct characteristics,
+//   many things must be changed that use `unsigned short int's.
+//
+//   The characteristics are stored always in network byte order (big
+//   endian).  We define the bit value interpretations here dependent on the
+//   machine's byte order.
+
+// Copyright (C) 1992-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+const ( /* ctype.h:46:1: */
+	_ISupper  = 256   // UPPERCASE.
+	_ISlower  = 512   // lowercase.
+	_ISalpha  = 1024  // Alphabetic.
+	_ISdigit  = 2048  // Numeric.
+	_ISxdigit = 4096  // Hexadecimal numeric.
+	_ISspace  = 8192  // Whitespace.
+	_ISprint  = 16384 // Printing.
+	_ISgraph  = 32768 // Graphical.
+	_ISblank  = 1     // Blank (usually SPC and TAB).
+	_IScntrl  = 2     // Control character.
+	_ISpunct  = 4     // Punctuation.
+	_ISalnum  = 8
+)
+
+// Inform libc code that these two types are effectively identical.
+
+// These macros extract size information from a `struct dirent *'.
+//   They may evaluate their argument multiple times, so it must not
+//   have side effects.  Each of these may involve a relatively costly
+//   call to `strlen' on some systems, so these values should be cached.
+//
+//   _D_EXACT_NAMLEN (DP)	returns the length of DP->d_name, not including
+//   its terminating null character.
+//
+//   _D_ALLOC_NAMLEN (DP)	returns a size at least (_D_EXACT_NAMLEN (DP) + 1);
+//   that is, the allocation size needed to hold the DP->d_name string.
+//   Use this macro when you don't need the exact length, just an upper bound.
+//   This macro is less likely to require calling `strlen' than _D_EXACT_NAMLEN.
+//
+
+// File types for `d_type'.
+const ( /* dirent.h:97:1: */
+	DT_UNKNOWN = 0
+	DT_FIFO    = 1
+	DT_CHR     = 2
+	DT_DIR     = 4
+	DT_BLK     = 6
+	DT_REG     = 8
+	DT_LNK     = 10
+	DT_SOCK    = 12
+	DT_WHT     = 14
+)
+
+// Depending on the type of TG_ARG, call an appropriately suffixed
+//   version of FUNC with arguments (including parentheses) ARGS.
+//   Suffixed functions may not exist for long double if it has the same
+//   format as double, or for other types with the same format as float,
+//   double or long double.  The behavior is undefined if the argument
+//   does not have a real floating type.  The definition may use a
+//   conditional expression, so all suffixed versions of FUNC must
+//   return the same type (FUNC may include a cast if necessary rather
+//   than being a single identifier).
+
+// ISO C99 defines some generic macros which work on any data type.
+
+// All floating-point numbers can be put in one of these categories.
+const ( /* math.h:853:1: */
+	FP_NAN       = 0
+	FP_INFINITE  = 1
+	FP_ZERO      = 2
+	FP_SUBNORMAL = 3
+	FP_NORMAL    = 4
+)
+
+// Standard well-known ports.
+const ( /* in.h:122:1: */
+	IPPORT_ECHO       = 7  // Echo service.
+	IPPORT_DISCARD    = 9  // Discard transmissions service.
+	IPPORT_SYSTAT     = 11 // System status service.
+	IPPORT_DAYTIME    = 13 // Time of day service.
+	IPPORT_NETSTAT    = 15 // Network status service.
+	IPPORT_FTP        = 21 // File Transfer Protocol.
+	IPPORT_TELNET     = 23 // Telnet protocol.
+	IPPORT_SMTP       = 25 // Simple Mail Transfer Protocol.
+	IPPORT_TIMESERVER = 37 // Timeserver service.
+	IPPORT_NAMESERVER = 42 // Domain Name Service.
+	IPPORT_WHOIS      = 43 // Internet Whois service.
+	IPPORT_MTP        = 57
+
+	IPPORT_TFTP    = 69 // Trivial File Transfer Protocol.
+	IPPORT_RJE     = 77
+	IPPORT_FINGER  = 79 // Finger service.
+	IPPORT_TTYLINK = 87
+	IPPORT_SUPDUP  = 95 // SUPDUP protocol.
+
+	IPPORT_EXECSERVER  = 512 // execd service.
+	IPPORT_LOGINSERVER = 513 // rlogind service.
+	IPPORT_CMDSERVER   = 514
+	IPPORT_EFSSERVER   = 520
+
+	// UDP ports.
+	IPPORT_BIFFUDP     = 512
+	IPPORT_WHOSERVER   = 513
+	IPPORT_ROUTESERVER = 520
+
+	// Ports less than this value are reserved for privileged processes.
+	IPPORT_RESERVED = 1024
+
+	// Ports greater this value are reserved for (non-privileged) servers.
+	IPPORT_USERRESERVED = 5000
+)
+
+// Options for use with `getsockopt' and `setsockopt' at the IPv6 level.
+//   The first word in the comment at the right is the data type used;
+//   "bool" means a boolean value stored in an `int'.
+
+// Advanced API (RFC3542) (1).
+
+// Advanced API (RFC3542) (2).
+
+// RFC5014.
+
+// RFC5082.
+
+// Obsolete synonyms for the above.
+
+// IPV6_MTU_DISCOVER values.
+
+// Socket level values for IPv6.
+
+// Routing header options for IPv6.
+
+// Standard well-defined IP protocols.
+const ( /* in.h:40:1: */
+	IPPROTO_IP      = 0   // Dummy protocol for TCP.
+	IPPROTO_ICMP    = 1   // Internet Control Message Protocol.
+	IPPROTO_IGMP    = 2   // Internet Group Management Protocol.
+	IPPROTO_IPIP    = 4   // IPIP tunnels (older KA9Q tunnels use 94).
+	IPPROTO_TCP     = 6   // Transmission Control Protocol.
+	IPPROTO_EGP     = 8   // Exterior Gateway Protocol.
+	IPPROTO_PUP     = 12  // PUP protocol.
+	IPPROTO_UDP     = 17  // User Datagram Protocol.
+	IPPROTO_IDP     = 22  // XNS IDP protocol.
+	IPPROTO_TP      = 29  // SO Transport Protocol Class 4.
+	IPPROTO_DCCP    = 33  // Datagram Congestion Control Protocol.
+	IPPROTO_IPV6    = 41  // IPv6 header.
+	IPPROTO_RSVP    = 46  // Reservation Protocol.
+	IPPROTO_GRE     = 47  // General Routing Encapsulation.
+	IPPROTO_ESP     = 50  // encapsulating security payload.
+	IPPROTO_AH      = 51  // authentication header.
+	IPPROTO_MTP     = 92  // Multicast Transport Protocol.
+	IPPROTO_BEETPH  = 94  // IP option pseudo header for BEET.
+	IPPROTO_ENCAP   = 98  // Encapsulation Header.
+	IPPROTO_PIM     = 103 // Protocol Independent Multicast.
+	IPPROTO_COMP    = 108 // Compression Header Protocol.
+	IPPROTO_SCTP    = 132 // Stream Control Transmission Protocol.
+	IPPROTO_UDPLITE = 136 // UDP-Lite protocol.
+	IPPROTO_MPLS    = 137 // MPLS in IP.
+	IPPROTO_RAW     = 255 // Raw IP packets.
+	IPPROTO_MAX     = 256
+)
+
+// If __USE_KERNEL_IPV6_DEFS is 1 then the user has included the kernel
+//   network headers first and we should use those ABI-identical definitions
+//   instead of our own, otherwise 0.
+const ( /* in.h:99:1: */
+	IPPROTO_HOPOPTS  = 0  // IPv6 Hop-by-Hop options.
+	IPPROTO_ROUTING  = 43 // IPv6 routing header.
+	IPPROTO_FRAGMENT = 44 // IPv6 fragmentation header.
+	IPPROTO_ICMPV6   = 58 // ICMPv6.
+	IPPROTO_NONE     = 59 // IPv6 no next header.
+	IPPROTO_DSTOPTS  = 60 // IPv6 destination options.
+	IPPROTO_MH       = 135
+)
+
+// Get the `_PC_*' symbols for the NAME argument to `pathconf' and `fpathconf';
+//   the `_SC_*' symbols for the NAME argument to `sysconf';
+//   and the `_CS_*' symbols for the NAME argument to `confstr'.
+// `sysconf', `pathconf', and `confstr' NAME values.  Generic version.
+//   Copyright (C) 1993-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Values for the NAME argument to `pathconf' and `fpathconf'.
+const ( /* confname.h:24:1: */
+	_PC_LINK_MAX           = 0
+	_PC_MAX_CANON          = 1
+	_PC_MAX_INPUT          = 2
+	_PC_NAME_MAX           = 3
+	_PC_PATH_MAX           = 4
+	_PC_PIPE_BUF           = 5
+	_PC_CHOWN_RESTRICTED   = 6
+	_PC_NO_TRUNC           = 7
+	_PC_VDISABLE           = 8
+	_PC_SYNC_IO            = 9
+	_PC_ASYNC_IO           = 10
+	_PC_PRIO_IO            = 11
+	_PC_SOCK_MAXBUF        = 12
+	_PC_FILESIZEBITS       = 13
+	_PC_REC_INCR_XFER_SIZE = 14
+	_PC_REC_MAX_XFER_SIZE  = 15
+	_PC_REC_MIN_XFER_SIZE  = 16
+	_PC_REC_XFER_ALIGN     = 17
+	_PC_ALLOC_SIZE_MIN     = 18
+	_PC_SYMLINK_MAX        = 19
+	_PC_2_SYMLINKS         = 20
+)
+
+// Values for the NAME argument to `confstr'.
+const ( /* confname.h:533:1: */
+	_CS_PATH = 0 // The default search path.
+
+	_CS_V6_WIDTH_RESTRICTED_ENVS = 1
+
+	_CS_GNU_LIBC_VERSION       = 2
+	_CS_GNU_LIBPTHREAD_VERSION = 3
+
+	_CS_V5_WIDTH_RESTRICTED_ENVS = 4
+
+	_CS_V7_WIDTH_RESTRICTED_ENVS = 5
+
+	_CS_LFS_CFLAGS      = 1000
+	_CS_LFS_LDFLAGS     = 1001
+	_CS_LFS_LIBS        = 1002
+	_CS_LFS_LINTFLAGS   = 1003
+	_CS_LFS64_CFLAGS    = 1004
+	_CS_LFS64_LDFLAGS   = 1005
+	_CS_LFS64_LIBS      = 1006
+	_CS_LFS64_LINTFLAGS = 1007
+
+	_CS_XBS5_ILP32_OFF32_CFLAGS     = 1100
+	_CS_XBS5_ILP32_OFF32_LDFLAGS    = 1101
+	_CS_XBS5_ILP32_OFF32_LIBS       = 1102
+	_CS_XBS5_ILP32_OFF32_LINTFLAGS  = 1103
+	_CS_XBS5_ILP32_OFFBIG_CFLAGS    = 1104
+	_CS_XBS5_ILP32_OFFBIG_LDFLAGS   = 1105
+	_CS_XBS5_ILP32_OFFBIG_LIBS      = 1106
+	_CS_XBS5_ILP32_OFFBIG_LINTFLAGS = 1107
+	_CS_XBS5_LP64_OFF64_CFLAGS      = 1108
+	_CS_XBS5_LP64_OFF64_LDFLAGS     = 1109
+	_CS_XBS5_LP64_OFF64_LIBS        = 1110
+	_CS_XBS5_LP64_OFF64_LINTFLAGS   = 1111
+	_CS_XBS5_LPBIG_OFFBIG_CFLAGS    = 1112
+	_CS_XBS5_LPBIG_OFFBIG_LDFLAGS   = 1113
+	_CS_XBS5_LPBIG_OFFBIG_LIBS      = 1114
+	_CS_XBS5_LPBIG_OFFBIG_LINTFLAGS = 1115
+
+	_CS_POSIX_V6_ILP32_OFF32_CFLAGS     = 1116
+	_CS_POSIX_V6_ILP32_OFF32_LDFLAGS    = 1117
+	_CS_POSIX_V6_ILP32_OFF32_LIBS       = 1118
+	_CS_POSIX_V6_ILP32_OFF32_LINTFLAGS  = 1119
+	_CS_POSIX_V6_ILP32_OFFBIG_CFLAGS    = 1120
+	_CS_POSIX_V6_ILP32_OFFBIG_LDFLAGS   = 1121
+	_CS_POSIX_V6_ILP32_OFFBIG_LIBS      = 1122
+	_CS_POSIX_V6_ILP32_OFFBIG_LINTFLAGS = 1123
+	_CS_POSIX_V6_LP64_OFF64_CFLAGS      = 1124
+	_CS_POSIX_V6_LP64_OFF64_LDFLAGS     = 1125
+	_CS_POSIX_V6_LP64_OFF64_LIBS        = 1126
+	_CS_POSIX_V6_LP64_OFF64_LINTFLAGS   = 1127
+	_CS_POSIX_V6_LPBIG_OFFBIG_CFLAGS    = 1128
+	_CS_POSIX_V6_LPBIG_OFFBIG_LDFLAGS   = 1129
+	_CS_POSIX_V6_LPBIG_OFFBIG_LIBS      = 1130
+	_CS_POSIX_V6_LPBIG_OFFBIG_LINTFLAGS = 1131
+
+	_CS_POSIX_V7_ILP32_OFF32_CFLAGS     = 1132
+	_CS_POSIX_V7_ILP32_OFF32_LDFLAGS    = 1133
+	_CS_POSIX_V7_ILP32_OFF32_LIBS       = 1134
+	_CS_POSIX_V7_ILP32_OFF32_LINTFLAGS  = 1135
+	_CS_POSIX_V7_ILP32_OFFBIG_CFLAGS    = 1136
+	_CS_POSIX_V7_ILP32_OFFBIG_LDFLAGS   = 1137
+	_CS_POSIX_V7_ILP32_OFFBIG_LIBS      = 1138
+	_CS_POSIX_V7_ILP32_OFFBIG_LINTFLAGS = 1139
+	_CS_POSIX_V7_LP64_OFF64_CFLAGS      = 1140
+	_CS_POSIX_V7_LP64_OFF64_LDFLAGS     = 1141
+	_CS_POSIX_V7_LP64_OFF64_LIBS        = 1142
+	_CS_POSIX_V7_LP64_OFF64_LINTFLAGS   = 1143
+	_CS_POSIX_V7_LPBIG_OFFBIG_CFLAGS    = 1144
+	_CS_POSIX_V7_LPBIG_OFFBIG_LDFLAGS   = 1145
+	_CS_POSIX_V7_LPBIG_OFFBIG_LIBS      = 1146
+	_CS_POSIX_V7_LPBIG_OFFBIG_LINTFLAGS = 1147
+
+	_CS_V6_ENV = 1148
+	_CS_V7_ENV = 1149
+)
+
+// Values for the argument to `sysconf'.
+const ( /* confname.h:71:1: */
+	_SC_ARG_MAX               = 0
+	_SC_CHILD_MAX             = 1
+	_SC_CLK_TCK               = 2
+	_SC_NGROUPS_MAX           = 3
+	_SC_OPEN_MAX              = 4
+	_SC_STREAM_MAX            = 5
+	_SC_TZNAME_MAX            = 6
+	_SC_JOB_CONTROL           = 7
+	_SC_SAVED_IDS             = 8
+	_SC_REALTIME_SIGNALS      = 9
+	_SC_PRIORITY_SCHEDULING   = 10
+	_SC_TIMERS                = 11
+	_SC_ASYNCHRONOUS_IO       = 12
+	_SC_PRIORITIZED_IO        = 13
+	_SC_SYNCHRONIZED_IO       = 14
+	_SC_FSYNC                 = 15
+	_SC_MAPPED_FILES          = 16
+	_SC_MEMLOCK               = 17
+	_SC_MEMLOCK_RANGE         = 18
+	_SC_MEMORY_PROTECTION     = 19
+	_SC_MESSAGE_PASSING       = 20
+	_SC_SEMAPHORES            = 21
+	_SC_SHARED_MEMORY_OBJECTS = 22
+	_SC_AIO_LISTIO_MAX        = 23
+	_SC_AIO_MAX               = 24
+	_SC_AIO_PRIO_DELTA_MAX    = 25
+	_SC_DELAYTIMER_MAX        = 26
+	_SC_MQ_OPEN_MAX           = 27
+	_SC_MQ_PRIO_MAX           = 28
+	_SC_VERSION               = 29
+	_SC_PAGESIZE              = 30
+	_SC_RTSIG_MAX             = 31
+	_SC_SEM_NSEMS_MAX         = 32
+	_SC_SEM_VALUE_MAX         = 33
+	_SC_SIGQUEUE_MAX          = 34
+	_SC_TIMER_MAX             = 35
+
+	// Values for the argument to `sysconf'
+	//       corresponding to _POSIX2_* symbols.
+	_SC_BC_BASE_MAX        = 36
+	_SC_BC_DIM_MAX         = 37
+	_SC_BC_SCALE_MAX       = 38
+	_SC_BC_STRING_MAX      = 39
+	_SC_COLL_WEIGHTS_MAX   = 40
+	_SC_EQUIV_CLASS_MAX    = 41
+	_SC_EXPR_NEST_MAX      = 42
+	_SC_LINE_MAX           = 43
+	_SC_RE_DUP_MAX         = 44
+	_SC_CHARCLASS_NAME_MAX = 45
+
+	_SC_2_VERSION   = 46
+	_SC_2_C_BIND    = 47
+	_SC_2_C_DEV     = 48
+	_SC_2_FORT_DEV  = 49
+	_SC_2_FORT_RUN  = 50
+	_SC_2_SW_DEV    = 51
+	_SC_2_LOCALEDEF = 52
+
+	_SC_PII                 = 53
+	_SC_PII_XTI             = 54
+	_SC_PII_SOCKET          = 55
+	_SC_PII_INTERNET        = 56
+	_SC_PII_OSI             = 57
+	_SC_POLL                = 58
+	_SC_SELECT              = 59
+	_SC_UIO_MAXIOV          = 60
+	_SC_IOV_MAX             = 60
+	_SC_PII_INTERNET_STREAM = 61
+	_SC_PII_INTERNET_DGRAM  = 62
+	_SC_PII_OSI_COTS        = 63
+	_SC_PII_OSI_CLTS        = 64
+	_SC_PII_OSI_M           = 65
+	_SC_T_IOV_MAX           = 66
+
+	// Values according to POSIX 1003.1c (POSIX threads).
+	_SC_THREADS                      = 67
+	_SC_THREAD_SAFE_FUNCTIONS        = 68
+	_SC_GETGR_R_SIZE_MAX             = 69
+	_SC_GETPW_R_SIZE_MAX             = 70
+	_SC_LOGIN_NAME_MAX               = 71
+	_SC_TTY_NAME_MAX                 = 72
+	_SC_THREAD_DESTRUCTOR_ITERATIONS = 73
+	_SC_THREAD_KEYS_MAX              = 74
+	_SC_THREAD_STACK_MIN             = 75
+	_SC_THREAD_THREADS_MAX           = 76
+	_SC_THREAD_ATTR_STACKADDR        = 77
+	_SC_THREAD_ATTR_STACKSIZE        = 78
+	_SC_THREAD_PRIORITY_SCHEDULING   = 79
+	_SC_THREAD_PRIO_INHERIT          = 80
+	_SC_THREAD_PRIO_PROTECT          = 81
+	_SC_THREAD_PROCESS_SHARED        = 82
+
+	_SC_NPROCESSORS_CONF = 83
+	_SC_NPROCESSORS_ONLN = 84
+	_SC_PHYS_PAGES       = 85
+	_SC_AVPHYS_PAGES     = 86
+	_SC_ATEXIT_MAX       = 87
+	_SC_PASS_MAX         = 88
+
+	_SC_XOPEN_VERSION     = 89
+	_SC_XOPEN_XCU_VERSION = 90
+	_SC_XOPEN_UNIX        = 91
+	_SC_XOPEN_CRYPT       = 92
+	_SC_XOPEN_ENH_I18N    = 93
+	_SC_XOPEN_SHM         = 94
+
+	_SC_2_CHAR_TERM = 95
+	_SC_2_C_VERSION = 96
+	_SC_2_UPE       = 97
+
+	_SC_XOPEN_XPG2 = 98
+	_SC_XOPEN_XPG3 = 99
+	_SC_XOPEN_XPG4 = 100
+
+	_SC_CHAR_BIT   = 101
+	_SC_CHAR_MAX   = 102
+	_SC_CHAR_MIN   = 103
+	_SC_INT_MAX    = 104
+	_SC_INT_MIN    = 105
+	_SC_LONG_BIT   = 106
+	_SC_WORD_BIT   = 107
+	_SC_MB_LEN_MAX = 108
+	_SC_NZERO      = 109
+	_SC_SSIZE_MAX  = 110
+	_SC_SCHAR_MAX  = 111
+	_SC_SCHAR_MIN  = 112
+	_SC_SHRT_MAX   = 113
+	_SC_SHRT_MIN   = 114
+	_SC_UCHAR_MAX  = 115
+	_SC_UINT_MAX   = 116
+	_SC_ULONG_MAX  = 117
+	_SC_USHRT_MAX  = 118
+
+	_SC_NL_ARGMAX  = 119
+	_SC_NL_LANGMAX = 120
+	_SC_NL_MSGMAX  = 121
+	_SC_NL_NMAX    = 122
+	_SC_NL_SETMAX  = 123
+	_SC_NL_TEXTMAX = 124
+
+	_SC_XBS5_ILP32_OFF32  = 125
+	_SC_XBS5_ILP32_OFFBIG = 126
+	_SC_XBS5_LP64_OFF64   = 127
+	_SC_XBS5_LPBIG_OFFBIG = 128
+
+	_SC_XOPEN_LEGACY           = 129
+	_SC_XOPEN_REALTIME         = 130
+	_SC_XOPEN_REALTIME_THREADS = 131
+
+	_SC_ADVISORY_INFO          = 132
+	_SC_BARRIERS               = 133
+	_SC_BASE                   = 134
+	_SC_C_LANG_SUPPORT         = 135
+	_SC_C_LANG_SUPPORT_R       = 136
+	_SC_CLOCK_SELECTION        = 137
+	_SC_CPUTIME                = 138
+	_SC_THREAD_CPUTIME         = 139
+	_SC_DEVICE_IO              = 140
+	_SC_DEVICE_SPECIFIC        = 141
+	_SC_DEVICE_SPECIFIC_R      = 142
+	_SC_FD_MGMT                = 143
+	_SC_FIFO                   = 144
+	_SC_PIPE                   = 145
+	_SC_FILE_ATTRIBUTES        = 146
+	_SC_FILE_LOCKING           = 147
+	_SC_FILE_SYSTEM            = 148
+	_SC_MONOTONIC_CLOCK        = 149
+	_SC_MULTI_PROCESS          = 150
+	_SC_SINGLE_PROCESS         = 151
+	_SC_NETWORKING             = 152
+	_SC_READER_WRITER_LOCKS    = 153
+	_SC_SPIN_LOCKS             = 154
+	_SC_REGEXP                 = 155
+	_SC_REGEX_VERSION          = 156
+	_SC_SHELL                  = 157
+	_SC_SIGNALS                = 158
+	_SC_SPAWN                  = 159
+	_SC_SPORADIC_SERVER        = 160
+	_SC_THREAD_SPORADIC_SERVER = 161
+	_SC_SYSTEM_DATABASE        = 162
+	_SC_SYSTEM_DATABASE_R      = 163
+	_SC_TIMEOUTS               = 164
+	_SC_TYPED_MEMORY_OBJECTS   = 165
+	_SC_USER_GROUPS            = 166
+	_SC_USER_GROUPS_R          = 167
+	_SC_2_PBS                  = 168
+	_SC_2_PBS_ACCOUNTING       = 169
+	_SC_2_PBS_LOCATE           = 170
+	_SC_2_PBS_MESSAGE          = 171
+	_SC_2_PBS_TRACK            = 172
+	_SC_SYMLOOP_MAX            = 173
+	_SC_STREAMS                = 174
+	_SC_2_PBS_CHECKPOINT       = 175
+
+	_SC_V6_ILP32_OFF32  = 176
+	_SC_V6_ILP32_OFFBIG = 177
+	_SC_V6_LP64_OFF64   = 178
+	_SC_V6_LPBIG_OFFBIG = 179
+
+	_SC_HOST_NAME_MAX      = 180
+	_SC_TRACE              = 181
+	_SC_TRACE_EVENT_FILTER = 182
+	_SC_TRACE_INHERIT      = 183
+	_SC_TRACE_LOG          = 184
+
+	_SC_LEVEL1_ICACHE_SIZE     = 185
+	_SC_LEVEL1_ICACHE_ASSOC    = 186
+	_SC_LEVEL1_ICACHE_LINESIZE = 187
+	_SC_LEVEL1_DCACHE_SIZE     = 188
+	_SC_LEVEL1_DCACHE_ASSOC    = 189
+	_SC_LEVEL1_DCACHE_LINESIZE = 190
+	_SC_LEVEL2_CACHE_SIZE      = 191
+	_SC_LEVEL2_CACHE_ASSOC     = 192
+	_SC_LEVEL2_CACHE_LINESIZE  = 193
+	_SC_LEVEL3_CACHE_SIZE      = 194
+	_SC_LEVEL3_CACHE_ASSOC     = 195
+	_SC_LEVEL3_CACHE_LINESIZE  = 196
+	_SC_LEVEL4_CACHE_SIZE      = 197
+	_SC_LEVEL4_CACHE_ASSOC     = 198
+	_SC_LEVEL4_CACHE_LINESIZE  = 199
+	// Leave room here, maybe we need a few more cache levels some day.
+
+	_SC_IPV6        = 235
+	_SC_RAW_SOCKETS = 236
+
+	_SC_V7_ILP32_OFF32  = 237
+	_SC_V7_ILP32_OFFBIG = 238
+	_SC_V7_LP64_OFF64   = 239
+	_SC_V7_LPBIG_OFFBIG = 240
+
+	_SC_SS_REPL_MAX = 241
+
+	_SC_TRACE_EVENT_NAME_MAX = 242
+	_SC_TRACE_NAME_MAX       = 243
+	_SC_TRACE_SYS_MAX        = 244
+	_SC_TRACE_USER_EVENT_MAX = 245
+
+	_SC_XOPEN_STREAMS = 246
+
+	_SC_THREAD_ROBUST_PRIO_INHERIT = 247
+	_SC_THREAD_ROBUST_PRIO_PROTECT = 248
+)
+
+// Whose usage statistics do you want?
+const ( /* resource.h:158:1: */
+	// The calling process.
+	RUSAGE_SELF = 0
+
+	// All of its terminated child processes.
+	RUSAGE_CHILDREN = -1
+)
+
+// Priority limits.
+
+// The type of the WHICH argument to `getpriority' and `setpriority',
+//   indicating what flavor of entity the WHO argument specifies.
+const ( /* resource.h:187:1: */
+	PRIO_PROCESS = 0 // WHO is a process ID.
+	PRIO_PGRP    = 1 // WHO is a process group ID.
+	PRIO_USER    = 2
+)
+
+// Inline function declarations:
+
+// Slot 69 is reserved
+// Slot 70 is reserved
+// Slot 71 is reserved
+// Slot 72 is reserved
+// Slot 77 is reserved
+// Slot 79 is reserved
+
+// !END!: Do not edit above this line.
+
+// Local Variables:
+// mode: c
+// c-basic-offset: 4
+// fill-column: 78
+// End:
+
+// The headers are needed for the testalarm command that verifies the use of
+// SA_RESTART in signal handlers.
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+//	ISO C99 Standard: 7.14 Signal handling <signal.h>
+
+// Copyright (C) 1992-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Get the system-dependent definitions of structures and bit values.
+// Bit values & structures for resource limits.  Linux version.
+//   Copyright (C) 1994-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// bits/types.h -- definitions of __*_t types underlying *_t types.
+//   Copyright (C) 2002-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Never include this file directly; use <sys/types.h> instead.
+
+// Transmute defines to enumerations.  The macro re-definitions are
+//   necessary because some programs want to test for operating system
+//   features with #ifdef RUSAGE_SELF.  In ISO C the reflexive
+//   definition is a no-op.
+
+// Kinds of resource limit.
+const ( /* resource.h:31:1: */
+	// Per-process CPU limit, in seconds.
+	RLIMIT_CPU = 0
+
+	// Largest file that can be created, in bytes.
+	RLIMIT_FSIZE = 1
+
+	// Maximum size of data segment, in bytes.
+	RLIMIT_DATA = 2
+
+	// Maximum size of stack segment, in bytes.
+	RLIMIT_STACK = 3
+
+	// Largest core file that can be created, in bytes.
+	RLIMIT_CORE = 4
+
+	// Largest resident set size, in bytes.
+	//     This affects swapping; processes that are exceeding their
+	//     resident set size will be more likely to have physical memory
+	//     taken from them.
+	__RLIMIT_RSS = 5
+
+	// Number of open files.
+	RLIMIT_NOFILE  = 7
+	__RLIMIT_OFILE = 7 // BSD name for same.
+
+	// Address space limit.
+	RLIMIT_AS = 9
+
+	// Number of processes.
+	__RLIMIT_NPROC = 6
+
+	// Locked-in-memory address space.
+	__RLIMIT_MEMLOCK = 8
+
+	// Maximum number of file locks.
+	__RLIMIT_LOCKS = 10
+
+	// Maximum number of pending signals.
+	__RLIMIT_SIGPENDING = 11
+
+	// Maximum bytes in POSIX message queues.
+	__RLIMIT_MSGQUEUE = 12
+
+	// Maximum nice priority allowed to raise to.
+	//     Nice levels 19 .. -20 correspond to 0 .. 39
+	//     values of this resource limit.
+	__RLIMIT_NICE = 13
+
+	// Maximum realtime priority allowed for non-priviledged
+	//     processes.
+	__RLIMIT_RTPRIO = 14
+
+	// Maximum CPU time in µs that a process scheduled under a real-time
+	//     scheduling policy may consume without making a blocking system
+	//     call before being forcibly descheduled.
+	__RLIMIT_RTTIME = 15
+
+	__RLIMIT_NLIMITS = 16
+	__RLIM_NLIMITS   = 16
+)
+
+// POSIX names to access some of the members.
+
+// sigevent constants.  Linux version.
+//   Copyright (C) 1997-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// `sigev_notify' values.
+const ( /* sigevent-consts.h:27:1: */
+	SIGEV_SIGNAL = 0 // Notify via signal.
+	SIGEV_NONE   = 1 // Other notification: meaningless.
+	SIGEV_THREAD = 2 // Deliver via thread creation.
+
+	SIGEV_THREAD_ID = 4
+)
+
+// `si_code' values for SIGSEGV signal.
+const ( /* siginfo-consts.h:110:1: */
+	SEGV_MAPERR = 1 // Address not mapped to object.
+	SEGV_ACCERR = 2 // Invalid permissions for mapped object.
+	SEGV_BNDERR = 3 // Bounds checking failure.
+	SEGV_PKUERR = 4
+)
+
+// `si_code' values for SIGBUS signal.
+const ( /* siginfo-consts.h:123:1: */
+	BUS_ADRALN    = 1 // Invalid address alignment.
+	BUS_ADRERR    = 2 // Non-existant physical address.
+	BUS_OBJERR    = 3 // Object specific hardware error.
+	BUS_MCEERR_AR = 4 // Hardware memory error: action required.
+	BUS_MCEERR_AO = 5
+)
+
+// `si_code' values for SIGCHLD signal.
+const ( /* siginfo-consts.h:151:1: */
+	CLD_EXITED    = 1 // Child has exited.
+	CLD_KILLED    = 2 // Child was killed.
+	CLD_DUMPED    = 3 // Child terminated abnormally.
+	CLD_TRAPPED   = 4 // Traced child has trapped.
+	CLD_STOPPED   = 5 // Child has stopped.
+	CLD_CONTINUED = 6
+)
+
+// `si_code' values for SIGPOLL signal.
+const ( /* siginfo-consts.h:168:1: */
+	POLL_IN  = 1 // Data input available.
+	POLL_OUT = 2 // Output buffers available.
+	POLL_MSG = 3 // Input message available.
+	POLL_ERR = 4 // I/O error.
+	POLL_PRI = 5 // High priority input available.
+	POLL_HUP = 6
+)
+
+// X/Open requires some more fields with fixed names.
+
+// siginfo constants.  Linux version.
+//   Copyright (C) 1997-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Most of these constants are uniform across all architectures, but there
+//   is one exception.
+// Architecture-specific adjustments to siginfo_t.  x86 version.
+
+// Values for `si_code'.  Positive values are reserved for kernel-generated
+//   signals.
+const ( /* siginfo-consts.h:35:1: */
+	SI_ASYNCNL = -60 // Sent by asynch name lookup completion.
+	SI_TKILL   = -6  // Sent by tkill.
+	SI_SIGIO   = -5  // Sent by queued SIGIO.
+	SI_ASYNCIO = -4  // Sent by AIO completion.
+	SI_MESGQ   = -3  // Sent by real time mesq state change.
+	SI_TIMER   = -2  // Sent by timer expiration.
+	SI_QUEUE   = -1  // Sent by sigqueue.
+	SI_USER    = 0   // Sent by kill, sigsend.
+	SI_KERNEL  = 128
+)
+
+// `si_code' values for SIGILL signal.
+const ( /* siginfo-consts.h:68:1: */
+	ILL_ILLOPC = 1 // Illegal opcode.
+	ILL_ILLOPN = 2 // Illegal operand.
+	ILL_ILLADR = 3 // Illegal addressing mode.
+	ILL_ILLTRP = 4 // Illegal trap.
+	ILL_PRVOPC = 5 // Privileged opcode.
+	ILL_PRVREG = 6 // Privileged register.
+	ILL_COPROC = 7 // Coprocessor error.
+	ILL_BADSTK = 8
+)
+
+// `si_code' values for SIGFPE signal.
+const ( /* siginfo-consts.h:89:1: */
+	FPE_INTDIV = 1 // Integer divide by zero.
+	FPE_INTOVF = 2 // Integer overflow.
+	FPE_FLTDIV = 3 // Floating point divide by zero.
+	FPE_FLTOVF = 4 // Floating point overflow.
+	FPE_FLTUND = 5 // Floating point underflow.
+	FPE_FLTRES = 6 // Floating point inexact result.
+	FPE_FLTINV = 7 // Floating point invalid operation.
+	FPE_FLTSUB = 8
+)
+
+// Bits in the FLAGS argument to `send', `recv', et al.
+const ( /* socket.h:197:1: */
+	MSG_OOB        = 1  // Process out-of-band data.
+	MSG_PEEK       = 2  // Peek at incoming messages.
+	MSG_DONTROUTE  = 4  // Don't use local routing.
+	MSG_CTRUNC     = 8  // Control data lost before delivery.
+	MSG_PROXY      = 16 // Supply or ask second address.
+	MSG_TRUNC      = 32
+	MSG_DONTWAIT   = 64  // Nonblocking IO.
+	MSG_EOR        = 128 // End of record.
+	MSG_WAITALL    = 256 // Wait for a full request.
+	MSG_FIN        = 512
+	MSG_SYN        = 1024
+	MSG_CONFIRM    = 2048 // Confirm path validity.
+	MSG_RST        = 4096
+	MSG_ERRQUEUE   = 8192      // Fetch message from error queue.
+	MSG_NOSIGNAL   = 16384     // Do not generate SIGPIPE.
+	MSG_MORE       = 32768     // Sender will send more.
+	MSG_WAITFORONE = 65536     // Wait for at least one packet to return.
+	MSG_BATCH      = 262144    // sendmmsg: more messages coming.
+	MSG_ZEROCOPY   = 67108864  // Use user data in kernel path.
+	MSG_FASTOPEN   = 536870912 // Send data in TCP SYN.
+
+	MSG_CMSG_CLOEXEC = 1073741824
+)
+
+// Socket level message types.  This must match the definitions in
+//   <linux/socket.h>.
+const ( /* socket.h:329:1: */
+	SCM_RIGHTS = 1
+)
+
+// Copyright (C) 1989-2018 Free Software Foundation, Inc.
+//
+//This file is part of GCC.
+//
+//GCC is free software; you can redistribute it and/or modify
+//it under the terms of the GNU General Public License as published by
+//the Free Software Foundation; either version 3, or (at your option)
+//any later version.
+//
+//GCC is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//GNU General Public License for more details.
+//
+//Under Section 7 of GPL version 3, you are granted additional
+//permissions described in the GCC Runtime Library Exception, version
+//3.1, as published by the Free Software Foundation.
+//
+//You should have received a copy of the GNU General Public License and
+//a copy of the GCC Runtime Library Exception along with this program;
+//see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+//<http://www.gnu.org/licenses/>.
+
+// ISO C Standard:  7.17  Common definitions  <stddef.h>
+
+// Any one of these symbols __need_* means that GNU libc
+//   wants us just to define one data type.  So don't define
+//   the symbols that indicate this file's entire job has been done.
+
+// This avoids lossage on SunOS but only if stdtypes.h comes first.
+//   There's no way to win with the other order!  Sun lossage.
+
+// On 4.3bsd-net2, make sure ansi.h is included, so we have
+//   one less case to deal with in the following.
+// On FreeBSD 5, machine/ansi.h does not exist anymore...
+
+// In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
+//   defined if the corresponding type is *not* defined.
+//   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_.
+//   NetBSD defines _I386_ANSI_H_ and _X86_64_ANSI_H_ instead of _ANSI_H_
+
+// Sequent's header files use _PTRDIFF_T_ in some conflicting way.
+//   Just ignore it.
+
+// On VxWorks, <type/vxTypesBase.h> may have defined macros like
+//   _TYPE_size_t which will typedef size_t.  fixincludes patched the
+//   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
+//   not defined, and so that defining this macro defines _GCC_SIZE_T.
+//   If we find that the macros are still defined at this point, we must
+//   invoke them so that the type is defined as expected.
+
+// In case nobody has defined these types, but we aren't running under
+//   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
+//   __WCHAR_TYPE__ have reasonable values.  This can happen if the
+//   parts of GCC is compiled by an older compiler, that actually
+//   include gstddef.h, such as collect2.
+
+// Signed type of difference of two pointers.
+
+// Define this type if we are doing the whole job,
+//   or if we want this type in particular.
+
+// Unsigned type of `sizeof' something.
+
+// Define this type if we are doing the whole job,
+//   or if we want this type in particular.
+
+// Wide character type.
+//   Locale-writers should change this as necessary to
+//   be big enough to hold unique values not between 0 and 127,
+//   and not (wchar_t) -1, for each defined multibyte character.
+
+// Define this type if we are doing the whole job,
+//   or if we want this type in particular.
+
+//  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
+//    are already defined.
+//  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.
+//  NetBSD 5 requires the I386_ANSI_H and X86_64_ANSI_H checks here.
+
+// A null pointer constant.
+
+// This operating system-specific header file defines the SOCK_*, PF_*,
+//   AF_*, MSG_*, SOL_*, and SO_* constants, and the `struct sockaddr',
+//   `struct msghdr', and `struct linger' types.
+// System-specific socket constants and types.  Linux version.
+//   Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Copyright (C) 1989-2018 Free Software Foundation, Inc.
+//
+//This file is part of GCC.
+//
+//GCC is free software; you can redistribute it and/or modify
+//it under the terms of the GNU General Public License as published by
+//the Free Software Foundation; either version 3, or (at your option)
+//any later version.
+//
+//GCC is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//GNU General Public License for more details.
+//
+//Under Section 7 of GPL version 3, you are granted additional
+//permissions described in the GCC Runtime Library Exception, version
+//3.1, as published by the Free Software Foundation.
+//
+//You should have received a copy of the GNU General Public License and
+//a copy of the GCC Runtime Library Exception along with this program;
+//see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+//<http://www.gnu.org/licenses/>.
+
+// ISO C Standard:  7.17  Common definitions  <stddef.h>
+
+// Any one of these symbols __need_* means that GNU libc
+//   wants us just to define one data type.  So don't define
+//   the symbols that indicate this file's entire job has been done.
+
+// This avoids lossage on SunOS but only if stdtypes.h comes first.
+//   There's no way to win with the other order!  Sun lossage.
+
+// On 4.3bsd-net2, make sure ansi.h is included, so we have
+//   one less case to deal with in the following.
+// On FreeBSD 5, machine/ansi.h does not exist anymore...
+
+// In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
+//   defined if the corresponding type is *not* defined.
+//   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_.
+//   NetBSD defines _I386_ANSI_H_ and _X86_64_ANSI_H_ instead of _ANSI_H_
+
+// Sequent's header files use _PTRDIFF_T_ in some conflicting way.
+//   Just ignore it.
+
+// On VxWorks, <type/vxTypesBase.h> may have defined macros like
+//   _TYPE_size_t which will typedef size_t.  fixincludes patched the
+//   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
+//   not defined, and so that defining this macro defines _GCC_SIZE_T.
+//   If we find that the macros are still defined at this point, we must
+//   invoke them so that the type is defined as expected.
+
+// In case nobody has defined these types, but we aren't running under
+//   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
+//   __WCHAR_TYPE__ have reasonable values.  This can happen if the
+//   parts of GCC is compiled by an older compiler, that actually
+//   include gstddef.h, such as collect2.
+
+// Signed type of difference of two pointers.
+
+// Define this type if we are doing the whole job,
+//   or if we want this type in particular.
+
+// Unsigned type of `sizeof' something.
+
+// Define this type if we are doing the whole job,
+//   or if we want this type in particular.
+
+// Wide character type.
+//   Locale-writers should change this as necessary to
+//   be big enough to hold unique values not between 0 and 127,
+//   and not (wchar_t) -1, for each defined multibyte character.
+
+// Define this type if we are doing the whole job,
+//   or if we want this type in particular.
+
+//  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
+//    are already defined.
+//  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.
+//  NetBSD 5 requires the I386_ANSI_H and X86_64_ANSI_H checks here.
+
+// A null pointer constant.
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+//	POSIX Standard: 2.6 Primitive System Data Types	<sys/types.h>
+
+// Type for length arguments in socket calls.
+
+// Get the architecture-dependent definition of enum __socket_type.
+// Define enum __socket_type for generic Linux.
+//   Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Types of sockets.
+const ( /* socket_type.h:24:1: */
+	SOCK_STREAM = 1 // Sequenced, reliable, connection-based
+	//				   byte streams.
+	SOCK_DGRAM = 2 // Connectionless, unreliable datagrams
+	//				   of fixed maximum length.
+	SOCK_RAW       = 3 // Raw protocol interface.
+	SOCK_RDM       = 4 // Reliably-delivered messages.
+	SOCK_SEQPACKET = 5 // Sequenced, reliable, connection-based,
+	//				   datagrams of fixed maximum length.
+	SOCK_DCCP   = 6  // Datagram Congestion Control Protocol.
+	SOCK_PACKET = 10 // Linux specific way of getting packets
+	//				   at the dev level.  For writing rarp and
+	//				   other similar things on the user level.
+
+	// Flags to be ORed into the type parameter of socket and socketpair and
+	//     used for the flags parameter of paccept.
+
+	SOCK_CLOEXEC = 524288 // Atomically set close-on-exec flag for the
+	//				   new descriptor(s).
+	SOCK_NONBLOCK = 2048
+)
+
+// sigstack, sigaltstack definitions.
+//   Copyright (C) 1998-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Minimum stack size for a signal handler.
+
+// System default stack size.
+
+// ss_flags values for stack_t.  Linux version.
+//   Copyright (C) 1998-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Possible values for `ss_flags'.
+const ( /* ss_flags.h:27:1: */
+	SS_ONSTACK = 1
+	SS_DISABLE = 2
+)
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+//	POSIX Standard: 3.2.1 Wait for Process Termination	<sys/wait.h>
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// bits/types.h -- definitions of __*_t types underlying *_t types.
+//   Copyright (C) 2002-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Never include this file directly; use <sys/types.h> instead.
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+//	ISO C99 Standard: 7.14 Signal handling <signal.h>
+
+// These macros could also be defined in <stdlib.h>.
+// This will define the `W*' macros for the flag
+//   bits to `waitpid', `wait3', and `wait4'.
+// Definitions of flag bits for `waitpid' et al.
+//   Copyright (C) 1992-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Bits in the third argument to `waitpid'.
+
+// Bits in the fourth argument to `waitid'.
+
+// The following values are used by the `waitid' function.
+
+// The Linux kernel defines these bare, rather than an enum,
+//   which causes a conflict if the include order is reversed.
+
+const ( /* waitflags.h:52:1: */
+	P_ALL  = 0 // Wait for any child.
+	P_PID  = 1 // Wait for specified process.
+	P_PGID = 2
+)
+
+// The following constants should be used for the second parameter of
+//   `shutdown'.
+const ( /* socket.h:41:1: */
+	SHUT_RD   = 0 // No more receptions.
+	SHUT_WR   = 1 // No more transmissions.
+	SHUT_RDWR = 2
+)
+
+// Values for the first argument to `getitimer' and `setitimer'.
+const ( /* time.h:88:1: */
+	// Timers run in real time.
+	ITIMER_REAL = 0
+	// Timers run only when the process is executing.
+	ITIMER_VIRTUAL = 1
+	// Timers run when the process is executing and when
+	//       the system is executing on behalf of the process.
+	ITIMER_PROF = 2
+)
+
 type ptrdiff_t = int64 /* <builtin>:3:26 */
 
 type size_t = uint64 /* <builtin>:9:23 */
 
 type wchar_t = int32 /* <builtin>:15:24 */
+
+// Get the definitions of O_*, F_*, FD_*: all the
+//   numbers and flag bits for `open', `fcntl', et al.
+// O_*, F_*, FD_* bit values for Linux/x86.
+//   Copyright (C) 2001-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Not necessary, we always have 64-bit offsets.
+
+type flock = struct {
+	l_type   int16
+	l_whence int16
+	l_start  int64
+	l_len    int64
+	l_pid    int32
+	_        [4]byte
+}
+
+type flock64 = struct {
+	l_type   int16
+	l_whence int16
+	l_start  int64
+	l_len    int64
+	l_pid    int32
+	_        [4]byte
+}
 
 // Include generic Linux declarations.
 // O_*, F_*, FD_* bit values for Linux.
@@ -180,6 +1828,34 @@ type stat = struct {
 	__glibc_reserved [3]int64
 }
 
+// Note stat64 has the same shape as stat for x86-64.
+type stat64 = struct {
+	st_dev     uint64
+	st_ino     uint64
+	st_nlink   uint64
+	st_mode    uint32
+	st_uid     uint32
+	st_gid     uint32
+	__pad0     int32
+	st_rdev    uint64
+	st_size    int64
+	st_blksize int64
+	st_blocks  int64
+	st_atim    struct {
+		tv_sec  int64
+		tv_nsec int64
+	}
+	st_mtim struct {
+		tv_sec  int64
+		tv_nsec int64
+	}
+	st_ctim struct {
+		tv_sec  int64
+		tv_nsec int64
+	}
+	__glibc_reserved [3]int64
+}
+
 // Wide character type.
 //   Locale-writers should change this as necessary to
 //   be big enough to hold unique values not between 0 and 127,
@@ -200,6 +1876,17 @@ type stat = struct {
 type gid_t = uint32 /* pwd.h:38:17 */
 
 type uid_t = uint32 /* pwd.h:43:17 */
+
+// A record in the user database.
+type passwd = struct {
+	pw_name   uintptr
+	pw_passwd uintptr
+	pw_uid    uint32
+	pw_gid    uint32
+	pw_gecos  uintptr
+	pw_dir    uintptr
+	pw_shell  uintptr
+}
 
 type _IO_FILE = struct {
 	_flags          int32
@@ -626,6 +2313,57 @@ type sigaction = struct {
 	sa_restorer         uintptr
 }
 
+// Get machine-dependent `struct sigcontext' and signal subcodes.
+// Copyright (C) 2002-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// bits/types.h -- definitions of __*_t types underlying *_t types.
+//   Copyright (C) 2002-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Never include this file directly; use <sys/types.h> instead.
+
+type _fpx_sw_bytes = struct {
+	magic1            uint32
+	extended_size     uint32
+	xstate_bv         uint64
+	xstate_size       uint32
+	__glibc_reserved1 [7]uint32
+}
+
+type _fpreg = struct {
+	significand [4]uint16
+	exponent    uint16
+}
+
 type _fpxreg = struct {
 	significand       [4]uint16
 	exponent          uint16
@@ -652,6 +2390,37 @@ type _fpstate = struct {
 	__glibc_reserved1 [24]uint32
 }
 
+type sigcontext = struct {
+	r8          uint64
+	r9          uint64
+	r10         uint64
+	r11         uint64
+	r12         uint64
+	r13         uint64
+	r14         uint64
+	r15         uint64
+	rdi         uint64
+	rsi         uint64
+	rbp         uint64
+	rbx         uint64
+	rdx         uint64
+	rax         uint64
+	rcx         uint64
+	rsp         uint64
+	rip         uint64
+	eflags      uint64
+	cs          uint16
+	gs          uint16
+	fs          uint16
+	__pad0      uint16
+	err         uint64
+	trapno      uint64
+	oldmask     uint64
+	cr2         uint64
+	__184       struct{ fpstate uintptr }
+	__reserved1 [8]uint64
+}
+
 type _xsave_hdr = struct {
 	xstate_bv         uint64
 	__glibc_reserved1 [2]uint64
@@ -659,6 +2428,32 @@ type _xsave_hdr = struct {
 }
 
 type _ymmh_state = struct{ ymmh_space [64]uint32 }
+
+type _xstate = struct {
+	fpstate struct {
+		cwd       uint16
+		swd       uint16
+		ftw       uint16
+		fop       uint16
+		rip       uint64
+		rdp       uint64
+		mxcsr     uint32
+		mxcr_mask uint32
+		_st       [8]struct {
+			significand       [4]uint16
+			exponent          uint16
+			__glibc_reserved1 [3]uint16
+		}
+		_xmm              [16]struct{ element [4]uint32 }
+		__glibc_reserved1 [24]uint32
+	}
+	xstate_hdr struct {
+		xstate_bv         uint64
+		__glibc_reserved1 [2]uint64
+		__glibc_reserved2 [5]uint64
+	}
+	ymmh struct{ ymmh_space [64]uint32 }
+}
 
 // Copyright (C) 1989-2018 Free Software Foundation, Inc.
 //
@@ -996,6 +2791,199 @@ type ucontext_t1 = struct {
 // Userlevel context.
 type ucontext_t = ucontext_t1 /* ucontext.h:151:5 */
 
+// Define struct sigstack.
+//   Copyright (C) 1998-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Structure describing a signal stack (obsolete).
+type sigstack = struct {
+	ss_sp      uintptr
+	ss_onstack int32
+	_          [4]byte
+}
+
+// Some of the functions for handling signals in threaded programs must
+//   be defined here.
+// Declaration of common pthread types for all architectures.
+//   Copyright (C) 2017-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// For internal mutex and condition variable definitions.
+// Common threading primitives definitions for both POSIX and C11.
+//   Copyright (C) 2017-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Arch-specific definitions.  Each architecture must define the following
+//   macros to define the expected sizes of pthread data types:
+//
+//   __SIZEOF_PTHREAD_ATTR_T        - size of pthread_attr_t.
+//   __SIZEOF_PTHREAD_MUTEX_T       - size of pthread_mutex_t.
+//   __SIZEOF_PTHREAD_MUTEXATTR_T   - size of pthread_mutexattr_t.
+//   __SIZEOF_PTHREAD_COND_T        - size of pthread_cond_t.
+//   __SIZEOF_PTHREAD_CONDATTR_T    - size of pthread_condattr_t.
+//   __SIZEOF_PTHREAD_RWLOCK_T      - size of pthread_rwlock_t.
+//   __SIZEOF_PTHREAD_RWLOCKATTR_T  - size of pthread_rwlockattr_t.
+//   __SIZEOF_PTHREAD_BARRIER_T     - size of pthread_barrier_t.
+//   __SIZEOF_PTHREAD_BARRIERATTR_T - size of pthread_barrierattr_t.
+//
+//   Also, the following macros must be define for internal pthread_mutex_t
+//   struct definitions (struct __pthread_mutex_s):
+//
+//   __PTHREAD_COMPAT_PADDING_MID   - any additional members after 'kind'
+//				    and before '__spin' (for 64 bits) or
+//				    '__nusers' (for 32 bits).
+//   __PTHREAD_COMPAT_PADDING_END   - any additional members at the end of
+//				    the internal structure.
+//   __PTHREAD_MUTEX_LOCK_ELISION   - 1 if the architecture supports lock
+//				    elision or 0 otherwise.
+//   __PTHREAD_MUTEX_NUSERS_AFTER_KIND - control where to put __nusers.  The
+//				       preferred value for new architectures
+//				       is 0.
+//   __PTHREAD_MUTEX_USE_UNION      - control whether internal __spins and
+//				    __list will be place inside a union for
+//				    linuxthreads compatibility.
+//				    The preferred value for new architectures
+//				    is 0.
+//
+//   For a new port the preferred values for the required defines are:
+//
+//   #define __PTHREAD_COMPAT_PADDING_MID
+//   #define __PTHREAD_COMPAT_PADDING_END
+//   #define __PTHREAD_MUTEX_LOCK_ELISION         0
+//   #define __PTHREAD_MUTEX_NUSERS_AFTER_KIND    0
+//   #define __PTHREAD_MUTEX_USE_UNION            0
+//
+//   __PTHREAD_MUTEX_LOCK_ELISION can be set to 1 if the hardware plans to
+//   eventually support lock elision using transactional memory.
+//
+//   The additional macro defines any constraint for the lock alignment
+//   inside the thread structures:
+//
+//   __LOCK_ALIGNMENT - for internal lock/futex usage.
+//
+//   Same idea but for the once locking primitive:
+//
+//   __ONCE_ALIGNMENT - for pthread_once_t/once_flag definition.
+//
+//   And finally the internal pthread_rwlock_t (struct __pthread_rwlock_arch_t)
+//   must be defined.
+//
+// Copyright (C) 2002-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Determine the wordsize from the preprocessor defines.
+
+// Both x86-64 and x32 use the 64-bit system call interface.
+
+// Definitions for internal mutex struct.
+
+type __pthread_rwlock_arch_t = struct {
+	__readers       uint32
+	__writers       uint32
+	__wrphase_futex uint32
+	__writers_futex uint32
+	__pad3          uint32
+	__pad4          uint32
+	__cur_writer    int32
+	__shared        int32
+	__rwelision     int8
+	__pad1          [7]uint8
+	__pad2          uint64
+	__flags         uint32
+	_               [4]byte
+}
+
+// Common definition of pthread_mutex_t.
+
+type __pthread_internal_list = struct {
+	__prev uintptr
+	__next uintptr
+}
+
+// Lock elision support.
+
+type __pthread_mutex_s = struct {
+	__lock    int32
+	__count   uint32
+	__owner   int32
+	__nusers  uint32
+	__kind    int32
+	__spins   int16
+	__elision int16
+	__list    struct {
+		__prev uintptr
+		__next uintptr
+	}
+}
+
+// Common definition of pthread_cond_t.
+
+type __pthread_cond_s = struct {
+	__0            struct{ __wseq uint64 }
+	__8            struct{ __g1_start uint64 }
+	__g_refs       [2]uint32
+	__g_size       [2]uint32
+	__g1_orig_size uint32
+	__wrefs        uint32
+	__g_signals    [2]uint32
+}
+
 // Thread identifiers.  The structure of the attribute type is not
 //   exposed on purpose.
 type pthread_t = uint64 /* pthreadtypes.h:27:27 */
@@ -1020,53 +3008,13 @@ type pthread_key_t = uint32 /* pthreadtypes.h:49:22 */
 // Once-only execution
 type pthread_once_t = int32 /* pthreadtypes.h:53:30 */
 
-type pthread_mutex_t = struct {
-	__data struct {
-		__lock    int32
-		__count   uint32
-		__owner   int32
-		__nusers  uint32
-		__kind    int32
-		__spins   int16
-		__elision int16
-		__list    struct {
-			__prev uintptr
-			__next uintptr
-		}
-	}
-} /* pthreadtypes.h:72:3 */
+type pthread_mutex_t = struct{ __data __pthread_mutex_s } /* pthreadtypes.h:72:3 */
 
-type pthread_cond_t = struct {
-	__data struct {
-		__0            struct{ __wseq uint64 }
-		__8            struct{ __g1_start uint64 }
-		__g_refs       [2]uint32
-		__g_size       [2]uint32
-		__g1_orig_size uint32
-		__wrefs        uint32
-		__g_signals    [2]uint32
-	}
-} /* pthreadtypes.h:80:3 */
+type pthread_cond_t = struct{ __data __pthread_cond_s } /* pthreadtypes.h:80:3 */
 
 // Data structure for reader-writer lock variable handling.  The
 //   structure of the attribute type is deliberately not exposed.
-type pthread_rwlock_t = struct {
-	__data struct {
-		__readers       uint32
-		__writers       uint32
-		__wrphase_futex uint32
-		__writers_futex uint32
-		__pad3          uint32
-		__pad4          uint32
-		__cur_writer    int32
-		__shared        int32
-		__rwelision     int8
-		__pad1          [7]uint8
-		__pad2          uint64
-		__flags         uint32
-		_               [4]byte
-	}
-} /* pthreadtypes.h:91:3 */
+type pthread_rwlock_t = struct{ __data __pthread_rwlock_arch_t } /* pthreadtypes.h:91:3 */
 
 type pthread_rwlockattr_t = struct {
 	_      [0]uint64
@@ -2283,6 +4231,15 @@ type dirent = struct {
 	_        [5]byte
 }
 
+type dirent64 = struct {
+	d_ino    uint64
+	d_off    int64
+	d_reclen uint16
+	d_type   uint8
+	d_name   [256]int8
+	_        [5]byte
+}
+
 //---------------------------------------------------------------------------
 // Parameterize for 64-bit filesystem support.
 //---------------------------------------------------------------------------
@@ -2290,6 +4247,358 @@ type dirent = struct {
 type Tcl_DirEntry = dirent /* tclUnixPort.h:63:24 */
 
 type Tcl_SeekOffset = off_t /* tclUnixPort.h:83:16 */
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// bits/types.h -- definitions of __*_t types underlying *_t types.
+//   Copyright (C) 2002-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Never include this file directly; use <sys/types.h> instead.
+
+// `fd_set' type and related macros, and `select'/`pselect' declarations.
+//   Copyright (C) 1996-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+//	POSIX 1003.1g: 6.2 Select from File Descriptor Sets <sys/select.h>
+
+// Structure crudely representing a timezone.
+//   This is obsolete and should never be used.
+type timezone = struct {
+	tz_minuteswest int32
+	tz_dsttime     int32
+}
+
+// Type of the second argument to `getitimer' and
+//   the second and third arguments `setitimer'.
+type itimerval = struct {
+	it_interval struct {
+		tv_sec  int64
+		tv_usec int64
+	}
+	it_value struct {
+		tv_sec  int64
+		tv_usec int64
+	}
+}
+
+// Convenience macros for operations on timevals.
+//   NOTE: `timercmp' does not work for >= or <=.
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+//	ISO C99 Standard: 7.23 Date and time	<time.h>
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Copyright (C) 1989-2018 Free Software Foundation, Inc.
+//
+//This file is part of GCC.
+//
+//GCC is free software; you can redistribute it and/or modify
+//it under the terms of the GNU General Public License as published by
+//the Free Software Foundation; either version 3, or (at your option)
+//any later version.
+//
+//GCC is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//GNU General Public License for more details.
+//
+//Under Section 7 of GPL version 3, you are granted additional
+//permissions described in the GCC Runtime Library Exception, version
+//3.1, as published by the Free Software Foundation.
+//
+//You should have received a copy of the GNU General Public License and
+//a copy of the GCC Runtime Library Exception along with this program;
+//see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+//<http://www.gnu.org/licenses/>.
+
+// ISO C Standard:  7.17  Common definitions  <stddef.h>
+
+// Any one of these symbols __need_* means that GNU libc
+//   wants us just to define one data type.  So don't define
+//   the symbols that indicate this file's entire job has been done.
+
+// This avoids lossage on SunOS but only if stdtypes.h comes first.
+//   There's no way to win with the other order!  Sun lossage.
+
+// On 4.3bsd-net2, make sure ansi.h is included, so we have
+//   one less case to deal with in the following.
+// On FreeBSD 5, machine/ansi.h does not exist anymore...
+
+// In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
+//   defined if the corresponding type is *not* defined.
+//   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_.
+//   NetBSD defines _I386_ANSI_H_ and _X86_64_ANSI_H_ instead of _ANSI_H_
+
+// Sequent's header files use _PTRDIFF_T_ in some conflicting way.
+//   Just ignore it.
+
+// On VxWorks, <type/vxTypesBase.h> may have defined macros like
+//   _TYPE_size_t which will typedef size_t.  fixincludes patched the
+//   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
+//   not defined, and so that defining this macro defines _GCC_SIZE_T.
+//   If we find that the macros are still defined at this point, we must
+//   invoke them so that the type is defined as expected.
+
+// In case nobody has defined these types, but we aren't running under
+//   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
+//   __WCHAR_TYPE__ have reasonable values.  This can happen if the
+//   parts of GCC is compiled by an older compiler, that actually
+//   include gstddef.h, such as collect2.
+
+// Signed type of difference of two pointers.
+
+// Define this type if we are doing the whole job,
+//   or if we want this type in particular.
+
+// Unsigned type of `sizeof' something.
+
+// Define this type if we are doing the whole job,
+//   or if we want this type in particular.
+
+// Wide character type.
+//   Locale-writers should change this as necessary to
+//   be big enough to hold unique values not between 0 and 127,
+//   and not (wchar_t) -1, for each defined multibyte character.
+
+// Define this type if we are doing the whole job,
+//   or if we want this type in particular.
+
+//  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
+//    are already defined.
+//  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.
+//  NetBSD 5 requires the I386_ANSI_H and X86_64_ANSI_H checks here.
+
+// A null pointer constant.
+
+// This defines CLOCKS_PER_SEC, which is the number of processor clock
+//   ticks per second, and possibly a number of other constants.
+// System-dependent timing definitions.  Linux version.
+//   Copyright (C) 1996-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Never include this file directly; use <time.h> instead.
+
+// bits/types.h -- definitions of __*_t types underlying *_t types.
+//   Copyright (C) 2002-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Never include this file directly; use <sys/types.h> instead.
+
+// ISO/IEC 9899:1999 7.23.1: Components of time
+//   The macro `CLOCKS_PER_SEC' is an expression with type `clock_t' that is
+//   the number per second of the value returned by the `clock' function.
+// CAE XSH, Issue 4, Version 2: <time.h>
+//   The value of CLOCKS_PER_SEC is required to be 1 million on all
+//   XSI-conformant systems.
+
+// Identifier for system-wide realtime clock.
+// Monotonic system-wide clock.
+// High-resolution timer from the CPU.
+// Thread-specific CPU-time clock.
+// Monotonic system-wide clock, not adjusted for frequency scaling.
+// Identifier for system-wide realtime clock, updated only on ticks.
+// Monotonic system-wide clock, updated only on ticks.
+// Monotonic system-wide clock that includes time spent in suspension.
+// Like CLOCK_REALTIME but also wakes suspended system.
+// Like CLOCK_BOOTTIME but also wakes suspended system.
+// Like CLOCK_REALTIME but in International Atomic Time.
+
+// Flag to indicate time is absolute.
+
+// Many of the typedefs and structs whose official home is this header
+//   may also need to be defined by other headers.
+
+// bits/types.h -- definitions of __*_t types underlying *_t types.
+//   Copyright (C) 2002-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Never include this file directly; use <sys/types.h> instead.
+
+// ISO C `broken-down time' structure.
+type tm = struct {
+	tm_sec    int32
+	tm_min    int32
+	tm_hour   int32
+	tm_mday   int32
+	tm_mon    int32
+	tm_year   int32
+	tm_wday   int32
+	tm_yday   int32
+	tm_isdst  int32
+	tm_gmtoff int64
+	tm_zone   uintptr
+}
+
+// NB: Include guard matches what <linux/time.h> uses.
+
+// bits/types.h -- definitions of __*_t types underlying *_t types.
+//   Copyright (C) 2002-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Never include this file directly; use <sys/types.h> instead.
+
+// NB: Include guard matches what <linux/time.h> uses.
+
+// POSIX.1b structure for timer start values and intervals.
+type itimerspec = struct {
+	it_interval struct {
+		tv_sec  int64
+		tv_nsec int64
+	}
+	it_value struct {
+		tv_sec  int64
+		tv_nsec int64
+	}
+}
 
 // Definition of locale_t.
 //   Copyright (C) 2017-2018 Free Software Foundation, Inc.
@@ -2449,6 +4758,33 @@ type locale_t = uintptr /* locale_t.h:24:20 */
 //   which causes a conflict if the include order is reversed.
 
 type idtype_t = uint32 /* waitflags.h:57:3 */
+
+// This being here makes the prototypes valid whether or not
+//   we have already included <sys/resource.h> to define `struct rusage'.
+type rusage = struct {
+	ru_utime struct {
+		tv_sec  int64
+		tv_usec int64
+	}
+	ru_stime struct {
+		tv_sec  int64
+		tv_usec int64
+	}
+	__32  struct{ ru_maxrss int64 }
+	__40  struct{ ru_ixrss int64 }
+	__48  struct{ ru_idrss int64 }
+	__56  struct{ ru_isrss int64 }
+	__64  struct{ ru_minflt int64 }
+	__72  struct{ ru_majflt int64 }
+	__80  struct{ ru_nswap int64 }
+	__88  struct{ ru_inblock int64 }
+	__96  struct{ ru_oublock int64 }
+	__104 struct{ ru_msgsnd int64 }
+	__112 struct{ ru_msgrcv int64 }
+	__120 struct{ ru_nsignals int64 }
+	__128 struct{ ru_nvcsw int64 }
+	__136 struct{ ru_nivcsw int64 }
+}
 
 // Copyright (C) 1997-2018 Free Software Foundation, Inc.
 //   This file is part of the GNU C Library.
@@ -3495,6 +5831,128 @@ type sockaddr_storage = struct {
 	__ss_align   uint64
 }
 
+// Structure describing messages sent by
+//   `sendmsg' and received by `recvmsg'.
+type msghdr = struct {
+	msg_name       uintptr
+	msg_namelen    socklen_t
+	msg_iov        uintptr
+	msg_iovlen     size_t
+	msg_control    uintptr
+	msg_controllen size_t
+	msg_flags      int32
+	_              [4]byte
+}
+
+// Structure used for storage of ancillary data object information.
+type cmsghdr = struct {
+	_          [0]uint64
+	cmsg_len   size_t
+	cmsg_level int32
+	cmsg_type  int32
+}
+
+// Ugly workaround for unclean kernel headers.
+
+// Get socket manipulation related informations from kernel headers.
+// SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
+
+// SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
+
+// Socket-level I/O control calls.
+
+// For setsockopt(2)
+
+// Security levels - as per NRL IPv6 - don't actually do anything
+
+// Socket filtering
+
+// Instruct lower device to use last 4-bytes of skb data as FCS
+
+// Structure used to manipulate the SO_LINGER option.
+type linger = struct {
+	l_onoff  int32
+	l_linger int32
+}
+
+// This is the 4.3 BSD `struct sockaddr' format, which is used as wire
+//   format in the grotty old 4.3 `talk' protocol.
+type osockaddr = struct {
+	sa_family uint16
+	sa_data   [14]uint8
+}
+
+// Define some macros helping to catch buffer overflows.
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+//	POSIX Standard: 4.4 System Identification	<sys/utsname.h>
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Copyright (C) 1995-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Length of the entries in `struct utsname' is 65.
+
+// Linux provides as additional information in the `struct utsname'
+//   the name of the current domain.  Define _UTSNAME_DOMAIN_LENGTH
+//   to a value != 0 to activate this entry.
+
+// Structure describing the system and machine.
+type utsname = struct {
+	sysname      [65]int8
+	nodename     [65]int8
+	release      [65]int8
+	version      [65]int8
+	machine      [65]int8
+	__domainname [65]int8
+}
+
 // Copyright (C) 1991-2018 Free Software Foundation, Inc.
 //   This file is part of the GNU C Library.
 //
@@ -3589,6 +6047,72 @@ type sockaddr_storage = struct {
 type in_addr_t = uint32_t /* in.h:30:18 */
 type in_addr = struct{ s_addr in_addr_t }
 
+// Get system-specific definitions.
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Linux version.
+
+// If the application has already included linux/in6.h from a linux-based
+//   kernel then we will not define the IPv6 IPPROTO_* defines, in6_addr (nor the
+//   defines), sockaddr_in6, or ipv6_mreq. Same for in6_ptkinfo or ip6_mtuinfo
+//   in linux/ipv6.h. The ABI used by the linux-kernel and glibc match exactly.
+//   Neither the linux kernel nor glibc should break this ABI without coordination.
+//   In upstream kernel 56c176c9 the _UAPI prefix was stripped so we need to check
+//   for _LINUX_IN6_H and _IPV6_H now, and keep checking the old versions for
+//   maximum backwards compatibility.
+
+// Options for use with `getsockopt' and `setsockopt' at the IP level.
+//   The first word in the comment at the right is the data type used;
+//   "bool" means a boolean value stored in an `int'.
+// For BSD compatibility.
+
+// TProxy original addresses
+
+// IP_MTU_DISCOVER arguments.
+// Always use interface mtu (ignores dst pmtu) but don't set DF flag.
+//   Also incoming ICMP frag_needed notifications will be ignored on
+//   this socket to prevent accepting spoofed ones.
+// Like IP_PMTUDISC_INTERFACE but allow packets to be fragmented.
+
+// To select the IP level.
+
+// Structure used to describe IP options for IP_OPTIONS and IP_RETOPTS.
+//   The `ip_dst' field is used for the first-hop gateway when using a
+//   source route (this gets put into the header proper).
+type ip_opts = struct {
+	ip_dst  struct{ s_addr in_addr_t }
+	ip_opts [40]int8
+}
+
+// Like `struct ip_mreq' but including interface specification by index.
+type ip_mreqn = struct {
+	imr_multiaddr struct{ s_addr in_addr_t }
+	imr_address   struct{ s_addr in_addr_t }
+	imr_ifindex   int32
+}
+
+// Structure used for IP_PKTINFO.
+type in_pktinfo = struct {
+	ipi_ifindex  int32
+	ipi_spec_dst struct{ s_addr in_addr_t }
+	ipi_addr     struct{ s_addr in_addr_t }
+}
+
 // Type to represent a port.
 type in_port_t = uint16_t /* in.h:119:18 */
 
@@ -3614,6 +6138,368 @@ type in6_addr = struct {
 	}
 }
 
+// ::1
+
+// Structure describing an Internet socket address.
+type sockaddr_in = struct {
+	sin_family sa_family_t
+	sin_port   in_port_t
+	sin_addr   struct{ s_addr in_addr_t }
+	sin_zero   [8]uint8
+}
+
+// Ditto, for IPv6.
+type sockaddr_in6 = struct {
+	sin6_family   sa_family_t
+	sin6_port     in_port_t
+	sin6_flowinfo uint32_t
+	sin6_addr     struct {
+		__in6_u struct {
+			_          [0]uint32
+			__u6_addr8 [16]uint8_t
+		}
+	}
+	sin6_scope_id uint32_t
+}
+
+// IPv4 multicast request.
+type ip_mreq = struct {
+	imr_multiaddr struct{ s_addr in_addr_t }
+	imr_interface struct{ s_addr in_addr_t }
+}
+
+type ip_mreq_source = struct {
+	imr_multiaddr  struct{ s_addr in_addr_t }
+	imr_interface  struct{ s_addr in_addr_t }
+	imr_sourceaddr struct{ s_addr in_addr_t }
+}
+
+// Likewise, for IPv6.
+type ipv6_mreq = struct {
+	ipv6mr_multiaddr struct {
+		__in6_u struct {
+			_          [0]uint32
+			__u6_addr8 [16]uint8_t
+		}
+	}
+	ipv6mr_interface uint32
+}
+
+// Multicast group request.
+type group_req = struct {
+	gr_interface uint32_t
+	gr_group     struct {
+		ss_family    sa_family_t
+		__ss_padding [118]int8
+		__ss_align   uint64
+	}
+}
+
+type group_source_req = struct {
+	gsr_interface uint32_t
+	gsr_group     struct {
+		ss_family    sa_family_t
+		__ss_padding [118]int8
+		__ss_align   uint64
+	}
+	gsr_source struct {
+		ss_family    sa_family_t
+		__ss_padding [118]int8
+		__ss_align   uint64
+	}
+}
+
+// Full-state filter operations.
+type ip_msfilter = struct {
+	imsf_multiaddr struct{ s_addr in_addr_t }
+	imsf_interface struct{ s_addr in_addr_t }
+	imsf_fmode     uint32_t
+	imsf_numsrc    uint32_t
+	imsf_slist     [1]struct{ s_addr in_addr_t }
+}
+
+type group_filter = struct {
+	gf_interface uint32_t
+	gf_group     struct {
+		ss_family    sa_family_t
+		__ss_padding [118]int8
+		__ss_align   uint64
+	}
+	gf_fmode  uint32_t
+	gf_numsrc uint32_t
+	gf_slist  [1]struct {
+		ss_family    sa_family_t
+		__ss_padding [118]int8
+		__ss_align   uint64
+	}
+}
+
+// Copyright (C) 1996-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// All data returned by the network data base library are supplied in
+//   host order and returned in network order (suitable for use in
+//   system calls).
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Define uintN_t types.
+//   Copyright (C) 2017-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// This is necessary to make this include file properly replace the
+//   Sun version.
+// @(#)netdb.h	2.1 88/07/29 3.9 RPCSRC
+// Copyright (c) 2010, Oracle America, Inc.
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+//       copyright notice, this list of conditions and the following
+//       disclaimer in the documentation and/or other materials
+//       provided with the distribution.
+//     * Neither the name of the "Oracle America, Inc." nor the names of its
+//       contributors may be used to endorse or promote products derived
+//       from this software without specific prior written permission.
+//
+//   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+//   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+//   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+//   FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+//   COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+//   INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+//   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+//   GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+//   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+//   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+//   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Cleaned up for GNU C library roland@gnu.ai.mit.edu:
+//   added multiple inclusion protection and use of <sys/cdefs.h>.
+//   In GNU this file is #include'd by <netdb.h>.
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Copyright (C) 1989-2018 Free Software Foundation, Inc.
+//
+//This file is part of GCC.
+//
+//GCC is free software; you can redistribute it and/or modify
+//it under the terms of the GNU General Public License as published by
+//the Free Software Foundation; either version 3, or (at your option)
+//any later version.
+//
+//GCC is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//GNU General Public License for more details.
+//
+//Under Section 7 of GPL version 3, you are granted additional
+//permissions described in the GCC Runtime Library Exception, version
+//3.1, as published by the Free Software Foundation.
+//
+//You should have received a copy of the GNU General Public License and
+//a copy of the GCC Runtime Library Exception along with this program;
+//see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+//<http://www.gnu.org/licenses/>.
+
+// ISO C Standard:  7.17  Common definitions  <stddef.h>
+
+// Any one of these symbols __need_* means that GNU libc
+//   wants us just to define one data type.  So don't define
+//   the symbols that indicate this file's entire job has been done.
+
+// This avoids lossage on SunOS but only if stdtypes.h comes first.
+//   There's no way to win with the other order!  Sun lossage.
+
+// On 4.3bsd-net2, make sure ansi.h is included, so we have
+//   one less case to deal with in the following.
+// On FreeBSD 5, machine/ansi.h does not exist anymore...
+
+// In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
+//   defined if the corresponding type is *not* defined.
+//   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_.
+//   NetBSD defines _I386_ANSI_H_ and _X86_64_ANSI_H_ instead of _ANSI_H_
+
+// Sequent's header files use _PTRDIFF_T_ in some conflicting way.
+//   Just ignore it.
+
+// On VxWorks, <type/vxTypesBase.h> may have defined macros like
+//   _TYPE_size_t which will typedef size_t.  fixincludes patched the
+//   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
+//   not defined, and so that defining this macro defines _GCC_SIZE_T.
+//   If we find that the macros are still defined at this point, we must
+//   invoke them so that the type is defined as expected.
+
+// In case nobody has defined these types, but we aren't running under
+//   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
+//   __WCHAR_TYPE__ have reasonable values.  This can happen if the
+//   parts of GCC is compiled by an older compiler, that actually
+//   include gstddef.h, such as collect2.
+
+// Signed type of difference of two pointers.
+
+// Define this type if we are doing the whole job,
+//   or if we want this type in particular.
+
+// Unsigned type of `sizeof' something.
+
+// Define this type if we are doing the whole job,
+//   or if we want this type in particular.
+
+// Wide character type.
+//   Locale-writers should change this as necessary to
+//   be big enough to hold unique values not between 0 and 127,
+//   and not (wchar_t) -1, for each defined multibyte character.
+
+// Define this type if we are doing the whole job,
+//   or if we want this type in particular.
+
+//  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
+//    are already defined.
+//  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.
+//  NetBSD 5 requires the I386_ANSI_H and X86_64_ANSI_H checks here.
+
+// A null pointer constant.
+
+type rpcent = struct {
+	r_name    uintptr
+	r_aliases uintptr
+	r_number  int32
+	_         [4]byte
+}
+
+// Copyright (C) 1996-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Description of data base entry for a single network.  NOTE: here a
+//   poor assumption is made.  The network number is expected to fit
+//   into an unsigned long int variable.
+type netent = struct {
+	n_name     uintptr
+	n_aliases  uintptr
+	n_addrtype int32
+	n_net      uint32_t
+}
+
+// Description of data base entry for a single host.
+type hostent = struct {
+	h_name      uintptr
+	h_aliases   uintptr
+	h_addrtype  int32
+	h_length    int32
+	h_addr_list uintptr
+}
+
+// Description of data base entry for a single service.
+type servent = struct {
+	s_name    uintptr
+	s_aliases uintptr
+	s_port    int32
+	s_proto   uintptr
+}
+
+// Description of data base entry for a single service.
+type protoent = struct {
+	p_name    uintptr
+	p_aliases uintptr
+	p_proto   int32
+	_         [4]byte
+}
+
 // Extension from POSIX.1:2001.
 // Structure to contain information about address of a service provider.
 type addrinfo = struct {
@@ -3625,6 +6511,206 @@ type addrinfo = struct {
 	ai_addr      uintptr
 	ai_canonname uintptr
 	ai_next      uintptr
+}
+
+//---------------------------------------------------------------------------
+// Darwin specifc configure overrides.
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+// The following macros and declarations represent the interface between
+// generic and unix-specific parts of Tcl. Some of the macros may override
+// functions declared in tclInt.h.
+//---------------------------------------------------------------------------
+
+// The default platform eol translation on Unix is TCL_TRANSLATE_LF.
+
+//---------------------------------------------------------------------------
+// The following macros have trivial definitions, allowing generic code to
+// address platform-specific issues.
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+// The following defines wrap the system memory allocation routines.
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+// The following macros and declaration wrap the C runtime library functions.
+//---------------------------------------------------------------------------
+
+// FIXME - Hyper-enormous platform assumption!
+
+//---------------------------------------------------------------------------
+// Set of MT-safe implementations of some known-to-be-MT-unsafe library calls.
+// Instead of returning pointers to the static storage, those return pointers
+// to the TSD data.
+//---------------------------------------------------------------------------
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+//	POSIX Standard: 9.2.2 User Database Access	<pwd.h>
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+//	POSIX Standard: 9.2.1 Group Database Access	<grp.h>
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// bits/types.h -- definitions of __*_t types underlying *_t types.
+//   Copyright (C) 2002-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Never include this file directly; use <sys/types.h> instead.
+
+// Copyright (C) 1989-2018 Free Software Foundation, Inc.
+//
+//This file is part of GCC.
+//
+//GCC is free software; you can redistribute it and/or modify
+//it under the terms of the GNU General Public License as published by
+//the Free Software Foundation; either version 3, or (at your option)
+//any later version.
+//
+//GCC is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//GNU General Public License for more details.
+//
+//Under Section 7 of GPL version 3, you are granted additional
+//permissions described in the GCC Runtime Library Exception, version
+//3.1, as published by the Free Software Foundation.
+//
+//You should have received a copy of the GNU General Public License and
+//a copy of the GCC Runtime Library Exception along with this program;
+//see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+//<http://www.gnu.org/licenses/>.
+
+// ISO C Standard:  7.17  Common definitions  <stddef.h>
+
+// Any one of these symbols __need_* means that GNU libc
+//   wants us just to define one data type.  So don't define
+//   the symbols that indicate this file's entire job has been done.
+
+// This avoids lossage on SunOS but only if stdtypes.h comes first.
+//   There's no way to win with the other order!  Sun lossage.
+
+// On 4.3bsd-net2, make sure ansi.h is included, so we have
+//   one less case to deal with in the following.
+// On FreeBSD 5, machine/ansi.h does not exist anymore...
+
+// In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
+//   defined if the corresponding type is *not* defined.
+//   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_.
+//   NetBSD defines _I386_ANSI_H_ and _X86_64_ANSI_H_ instead of _ANSI_H_
+
+// Sequent's header files use _PTRDIFF_T_ in some conflicting way.
+//   Just ignore it.
+
+// On VxWorks, <type/vxTypesBase.h> may have defined macros like
+//   _TYPE_size_t which will typedef size_t.  fixincludes patched the
+//   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
+//   not defined, and so that defining this macro defines _GCC_SIZE_T.
+//   If we find that the macros are still defined at this point, we must
+//   invoke them so that the type is defined as expected.
+
+// In case nobody has defined these types, but we aren't running under
+//   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
+//   __WCHAR_TYPE__ have reasonable values.  This can happen if the
+//   parts of GCC is compiled by an older compiler, that actually
+//   include gstddef.h, such as collect2.
+
+// Signed type of difference of two pointers.
+
+// Define this type if we are doing the whole job,
+//   or if we want this type in particular.
+
+// Unsigned type of `sizeof' something.
+
+// Define this type if we are doing the whole job,
+//   or if we want this type in particular.
+
+// Wide character type.
+//   Locale-writers should change this as necessary to
+//   be big enough to hold unique values not between 0 and 127,
+//   and not (wchar_t) -1, for each defined multibyte character.
+
+// Define this type if we are doing the whole job,
+//   or if we want this type in particular.
+
+//  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
+//    are already defined.
+//  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.
+//  NetBSD 5 requires the I386_ANSI_H and X86_64_ANSI_H checks here.
+
+// A null pointer constant.
+
+// For the Single Unix specification we must define this type here.
+
+// The group structure.
+type group = struct {
+	gr_name   uintptr
+	gr_passwd uintptr
+	gr_gid    uint32
+	gr_mem    uintptr
 }
 
 // The tag name of this struct is _G_fpos_t to preserve historic
@@ -5964,6 +9050,31 @@ type lldiv_t = struct {
 	quot int64
 	rem  int64
 } /* stdlib.h:80:5 */
+
+// Reentrant versions of the `random' family of functions.
+//   These functions all use the following data structure to contain
+//   state, rather than global state variables.
+
+type random_data = struct {
+	fptr      uintptr
+	rptr      uintptr
+	state     uintptr
+	rand_type int32
+	rand_deg  int32
+	rand_sep  int32
+	end_ptr   uintptr
+}
+
+// Data structure for communication with thread safe versions.  This
+//   type is to be regarded as opaque.  It's only exported because users
+//   have to allocate objects of this type.
+type drand48_data = struct {
+	__x     [3]uint16
+	__old_x [3]uint16
+	__c     uint16
+	__init  uint16
+	__a     uint64
+}
 
 // If this symbol has done its job, get rid of it.
 
@@ -8656,6 +11767,185 @@ type TclRegexp1 = struct {
 
 type TclRegexp = TclRegexp1 /* tclRegexp.h:42:3 */
 
+// Local Variables:
+// mode: c
+// c-basic-offset: 4
+// fill-column: 78
+// End:
+
+// Required for TestlocaleCmd
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+//	ISO C99 Standard: 7.11 Localization	<locale.h>
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Copyright (C) 1989-2018 Free Software Foundation, Inc.
+//
+//This file is part of GCC.
+//
+//GCC is free software; you can redistribute it and/or modify
+//it under the terms of the GNU General Public License as published by
+//the Free Software Foundation; either version 3, or (at your option)
+//any later version.
+//
+//GCC is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//GNU General Public License for more details.
+//
+//Under Section 7 of GPL version 3, you are granted additional
+//permissions described in the GCC Runtime Library Exception, version
+//3.1, as published by the Free Software Foundation.
+//
+//You should have received a copy of the GNU General Public License and
+//a copy of the GCC Runtime Library Exception along with this program;
+//see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+//<http://www.gnu.org/licenses/>.
+
+// ISO C Standard:  7.17  Common definitions  <stddef.h>
+
+// Any one of these symbols __need_* means that GNU libc
+//   wants us just to define one data type.  So don't define
+//   the symbols that indicate this file's entire job has been done.
+
+// This avoids lossage on SunOS but only if stdtypes.h comes first.
+//   There's no way to win with the other order!  Sun lossage.
+
+// On 4.3bsd-net2, make sure ansi.h is included, so we have
+//   one less case to deal with in the following.
+// On FreeBSD 5, machine/ansi.h does not exist anymore...
+
+// In 4.3bsd-net2, machine/ansi.h defines these symbols, which are
+//   defined if the corresponding type is *not* defined.
+//   FreeBSD-2.1 defines _MACHINE_ANSI_H_ instead of _ANSI_H_.
+//   NetBSD defines _I386_ANSI_H_ and _X86_64_ANSI_H_ instead of _ANSI_H_
+
+// Sequent's header files use _PTRDIFF_T_ in some conflicting way.
+//   Just ignore it.
+
+// On VxWorks, <type/vxTypesBase.h> may have defined macros like
+//   _TYPE_size_t which will typedef size_t.  fixincludes patched the
+//   vxTypesBase.h so that this macro is only defined if _GCC_SIZE_T is
+//   not defined, and so that defining this macro defines _GCC_SIZE_T.
+//   If we find that the macros are still defined at this point, we must
+//   invoke them so that the type is defined as expected.
+
+// In case nobody has defined these types, but we aren't running under
+//   GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and
+//   __WCHAR_TYPE__ have reasonable values.  This can happen if the
+//   parts of GCC is compiled by an older compiler, that actually
+//   include gstddef.h, such as collect2.
+
+// Signed type of difference of two pointers.
+
+// Define this type if we are doing the whole job,
+//   or if we want this type in particular.
+
+// If this symbol has done its job, get rid of it.
+
+// Unsigned type of `sizeof' something.
+
+// Define this type if we are doing the whole job,
+//   or if we want this type in particular.
+
+// Wide character type.
+//   Locale-writers should change this as necessary to
+//   be big enough to hold unique values not between 0 and 127,
+//   and not (wchar_t) -1, for each defined multibyte character.
+
+// Define this type if we are doing the whole job,
+//   or if we want this type in particular.
+
+//  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
+//    are already defined.
+//  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.
+//  NetBSD 5 requires the I386_ANSI_H and X86_64_ANSI_H checks here.
+
+// A null pointer constant.
+
+// Offset of member MEMBER in a struct of type TYPE.
+
+// Definition of locale category symbol values.
+//   Copyright (C) 2001-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// These are the possibilities for the first argument to setlocale.
+//   The code assumes that the lowest LC_* symbol has the value zero.
+
+// Structure giving information about numeric and monetary notation.
+type lconv = struct {
+	decimal_point      uintptr
+	thousands_sep      uintptr
+	grouping           uintptr
+	int_curr_symbol    uintptr
+	currency_symbol    uintptr
+	mon_decimal_point  uintptr
+	mon_thousands_sep  uintptr
+	mon_grouping       uintptr
+	positive_sign      uintptr
+	negative_sign      uintptr
+	int_frac_digits    int8
+	frac_digits        int8
+	p_cs_precedes      int8
+	p_sep_by_space     int8
+	n_cs_precedes      int8
+	n_sep_by_space     int8
+	p_sign_posn        int8
+	n_sign_posn        int8
+	int_p_cs_precedes  int8
+	int_p_sep_by_space int8
+	int_n_cs_precedes  int8
+	int_n_sep_by_space int8
+	int_p_sign_posn    int8
+	int_n_sign_posn    int8
+	_                  [2]byte
+}
+
 // This value can be passed to `uselocale' and may be returned by it.
 //   Passing this value to any other function has undefined behavior.
 
@@ -9283,8 +12573,8 @@ func Tcltest_Init(tls *crt.TLS, interp uintptr) int32 { /* tclTest.c:544:1: */
 		f func(*crt.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestexitmainloopCmd})),
 		uintptr(0), uintptr(0))
-	*(*Tcl_ValueType)(unsafe.Pointer(bp /* &t3ArgTypes[0] */ + uintptr(0)*4)) = Tcl_ValueType(2)
-	*(*Tcl_ValueType)(unsafe.Pointer(bp /* &t3ArgTypes[0] */ + uintptr(1)*4)) = Tcl_ValueType(2)
+	*(*Tcl_ValueType)(unsafe.Pointer(bp /* &t3ArgTypes[0] */ + uintptr(0)*4)) = TCL_EITHER
+	*(*Tcl_ValueType)(unsafe.Pointer(bp /* &t3ArgTypes[0] */ + uintptr(1)*4)) = TCL_EITHER
 	(*(*func(*crt.TLS, uintptr, uintptr, int32, uintptr, uintptr, ClientData))(unsafe.Pointer((tclStubsPtr + 776 /* &.tcl_CreateMathFunc */))))(tls, interp, ts+1246 /* "T3" */, 2, bp /* &t3ArgTypes[0] */, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*crt.TLS, ClientData, uintptr, uintptr, uintptr) int32
 	}{TestMathFunc2})),
@@ -10589,17 +13879,13 @@ func TestencodingObjCmd(tls *crt.TLS, dummy ClientData, interp uintptr, objc int
 
 	var string uintptr
 	var encodingPtr uintptr
-	const ( /* tclTest.c:1956:5: */
-		ENC_CREATE = 0
-		ENC_DELETE = 1
-	)
 
 	if (*(*func(*crt.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 2448 /* &.tcl_GetIndexFromObjStruct */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*8)), uintptr(unsafe.Pointer(&optionStrings)), int32(unsafe.Sizeof(uintptr(0))), ts+3361 /* "option" */, 0, bp /* &index */) != 0 {
 		return 1
 	}
 
 	switch uint32(*(*int32)(unsafe.Pointer(bp /* index */))) {
-	case ENC_CREATE:
+	case uint32(0) /* ENC_CREATE */ :
 		{
 			// var type1 Tcl_EncodingType at bp+8, 48
 
@@ -10633,7 +13919,7 @@ func TestencodingObjCmd(tls *crt.TLS, dummy ClientData, interp uintptr, objc int
 			(*(*func(*crt.TLS, uintptr) Tcl_Encoding)(unsafe.Pointer((tclStubsPtr + 2312 /* &.tcl_CreateEncoding */))))(tls, bp+8 /* &type1 */)
 			break
 		}
-	case ENC_DELETE:
+	case uint32(1) /* ENC_DELETE */ :
 		if objc != 3 {
 			return 1
 		}
@@ -10864,9 +14150,9 @@ var positions = [4]uintptr{ // Possible queue positions
 } /* tclTest.c:2204:23 */
 var posNum = [3]Tcl_QueuePosition{
 	// Interpretation of the chosen position
-	Tcl_QueuePosition(1),
-	Tcl_QueuePosition(0),
-	Tcl_QueuePosition(2),
+	TCL_QUEUE_HEAD,
+	TCL_QUEUE_TAIL,
+	TCL_QUEUE_MARK,
 } /* tclTest.c:2208:36 */
 
 //----------------------------------------------------------------------
@@ -12079,7 +15365,7 @@ var lcTypes = [6]int32{
 
 // ARGSUSED
 func TestMathFunc(tls *crt.TLS, clientData ClientData, interp uintptr, args uintptr, resultPtr uintptr) int32 { /* tclTest.c:3370:1: */
-	(*Tcl_Value)(unsafe.Pointer(resultPtr)).__type = Tcl_ValueType(0)
+	(*Tcl_Value)(unsafe.Pointer(resultPtr)).__type = TCL_INT
 	(*Tcl_Value)(unsafe.Pointer(resultPtr)).intValue = int64(int32(clientData))
 	return 0
 }
@@ -12105,35 +15391,35 @@ func TestMathFunc2(tls *crt.TLS, clientData ClientData, interp uintptr, args uin
 
 	// Return the maximum of the two arguments with the correct type.
 
-	if (*Tcl_Value)(unsafe.Pointer(args+uintptr(0)*32)).__type == Tcl_ValueType(0) {
+	if (*Tcl_Value)(unsafe.Pointer(args+uintptr(0)*32)).__type == TCL_INT {
 		var i0 int32 = int32((*Tcl_Value)(unsafe.Pointer(args + uintptr(0)*32)).intValue)
 
-		if (*Tcl_Value)(unsafe.Pointer(args+uintptr(1)*32)).__type == Tcl_ValueType(0) {
+		if (*Tcl_Value)(unsafe.Pointer(args+uintptr(1)*32)).__type == TCL_INT {
 			var i1 int32 = int32((*Tcl_Value)(unsafe.Pointer(args + uintptr(1)*32)).intValue)
 
-			(*Tcl_Value)(unsafe.Pointer(resultPtr)).__type = Tcl_ValueType(0)
+			(*Tcl_Value)(unsafe.Pointer(resultPtr)).__type = TCL_INT
 			(*Tcl_Value)(unsafe.Pointer(resultPtr)).intValue = func() int64 {
 				if i0 > i1 {
 					return int64(i0)
 				}
 				return int64(i1)
 			}()
-		} else if (*Tcl_Value)(unsafe.Pointer(args+uintptr(1)*32)).__type == Tcl_ValueType(1) {
+		} else if (*Tcl_Value)(unsafe.Pointer(args+uintptr(1)*32)).__type == TCL_DOUBLE {
 			var d0 float64 = float64(i0)
 			var d1 float64 = (*Tcl_Value)(unsafe.Pointer(args + uintptr(1)*32)).doubleValue
 
-			(*Tcl_Value)(unsafe.Pointer(resultPtr)).__type = Tcl_ValueType(1)
+			(*Tcl_Value)(unsafe.Pointer(resultPtr)).__type = TCL_DOUBLE
 			(*Tcl_Value)(unsafe.Pointer(resultPtr)).doubleValue = func() float64 {
 				if d0 > d1 {
 					return d0
 				}
 				return d1
 			}()
-		} else if (*Tcl_Value)(unsafe.Pointer(args+uintptr(1)*32)).__type == Tcl_ValueType(3) {
+		} else if (*Tcl_Value)(unsafe.Pointer(args+uintptr(1)*32)).__type == TCL_WIDE_INT {
 			var w0 Tcl_WideInt = int64(i0)
 			var w1 Tcl_WideInt = (*Tcl_Value)(unsafe.Pointer(args + uintptr(1)*32)).wideValue
 
-			(*Tcl_Value)(unsafe.Pointer(resultPtr)).__type = Tcl_ValueType(3)
+			(*Tcl_Value)(unsafe.Pointer(resultPtr)).__type = TCL_WIDE_INT
 			(*Tcl_Value)(unsafe.Pointer(resultPtr)).wideValue = func() int64 {
 				if w0 > w1 {
 					return w0
@@ -12144,33 +15430,33 @@ func TestMathFunc2(tls *crt.TLS, clientData ClientData, interp uintptr, args uin
 			(*(*func(*crt.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1872 /* &.tcl_SetResult */))))(tls, interp, ts+4434 /* "T3: wrong type f..." */, uintptr(0))
 			result = 1
 		}
-	} else if (*Tcl_Value)(unsafe.Pointer(args+uintptr(0)*32)).__type == Tcl_ValueType(1) {
+	} else if (*Tcl_Value)(unsafe.Pointer(args+uintptr(0)*32)).__type == TCL_DOUBLE {
 		var d0 float64 = (*Tcl_Value)(unsafe.Pointer(args + uintptr(0)*32)).doubleValue
 
-		if (*Tcl_Value)(unsafe.Pointer(args+uintptr(1)*32)).__type == Tcl_ValueType(0) {
+		if (*Tcl_Value)(unsafe.Pointer(args+uintptr(1)*32)).__type == TCL_INT {
 			var d1 float64 = float64((*Tcl_Value)(unsafe.Pointer(args + uintptr(1)*32)).intValue)
 
-			(*Tcl_Value)(unsafe.Pointer(resultPtr)).__type = Tcl_ValueType(1)
+			(*Tcl_Value)(unsafe.Pointer(resultPtr)).__type = TCL_DOUBLE
 			(*Tcl_Value)(unsafe.Pointer(resultPtr)).doubleValue = func() float64 {
 				if d0 > d1 {
 					return d0
 				}
 				return d1
 			}()
-		} else if (*Tcl_Value)(unsafe.Pointer(args+uintptr(1)*32)).__type == Tcl_ValueType(1) {
+		} else if (*Tcl_Value)(unsafe.Pointer(args+uintptr(1)*32)).__type == TCL_DOUBLE {
 			var d1 float64 = (*Tcl_Value)(unsafe.Pointer(args + uintptr(1)*32)).doubleValue
 
-			(*Tcl_Value)(unsafe.Pointer(resultPtr)).__type = Tcl_ValueType(1)
+			(*Tcl_Value)(unsafe.Pointer(resultPtr)).__type = TCL_DOUBLE
 			(*Tcl_Value)(unsafe.Pointer(resultPtr)).doubleValue = func() float64 {
 				if d0 > d1 {
 					return d0
 				}
 				return d1
 			}()
-		} else if (*Tcl_Value)(unsafe.Pointer(args+uintptr(1)*32)).__type == Tcl_ValueType(3) {
+		} else if (*Tcl_Value)(unsafe.Pointer(args+uintptr(1)*32)).__type == TCL_WIDE_INT {
 			var d1 float64 = float64((*Tcl_Value)(unsafe.Pointer(args + uintptr(1)*32)).wideValue)
 
-			(*Tcl_Value)(unsafe.Pointer(resultPtr)).__type = Tcl_ValueType(1)
+			(*Tcl_Value)(unsafe.Pointer(resultPtr)).__type = TCL_DOUBLE
 			(*Tcl_Value)(unsafe.Pointer(resultPtr)).doubleValue = func() float64 {
 				if d0 > d1 {
 					return d0
@@ -12181,34 +15467,34 @@ func TestMathFunc2(tls *crt.TLS, clientData ClientData, interp uintptr, args uin
 			(*(*func(*crt.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1872 /* &.tcl_SetResult */))))(tls, interp, ts+4434 /* "T3: wrong type f..." */, uintptr(0))
 			result = 1
 		}
-	} else if (*Tcl_Value)(unsafe.Pointer(args+uintptr(0)*32)).__type == Tcl_ValueType(3) {
+	} else if (*Tcl_Value)(unsafe.Pointer(args+uintptr(0)*32)).__type == TCL_WIDE_INT {
 		var w0 Tcl_WideInt = (*Tcl_Value)(unsafe.Pointer(args + uintptr(0)*32)).wideValue
 
-		if (*Tcl_Value)(unsafe.Pointer(args+uintptr(1)*32)).__type == Tcl_ValueType(0) {
+		if (*Tcl_Value)(unsafe.Pointer(args+uintptr(1)*32)).__type == TCL_INT {
 			var w1 Tcl_WideInt = (*Tcl_Value)(unsafe.Pointer(args + uintptr(1)*32)).intValue
 
-			(*Tcl_Value)(unsafe.Pointer(resultPtr)).__type = Tcl_ValueType(3)
+			(*Tcl_Value)(unsafe.Pointer(resultPtr)).__type = TCL_WIDE_INT
 			(*Tcl_Value)(unsafe.Pointer(resultPtr)).wideValue = func() int64 {
 				if w0 > w1 {
 					return w0
 				}
 				return w1
 			}()
-		} else if (*Tcl_Value)(unsafe.Pointer(args+uintptr(1)*32)).__type == Tcl_ValueType(1) {
+		} else if (*Tcl_Value)(unsafe.Pointer(args+uintptr(1)*32)).__type == TCL_DOUBLE {
 			var d0 float64 = float64(w0)
 			var d1 float64 = (*Tcl_Value)(unsafe.Pointer(args + uintptr(1)*32)).doubleValue
 
-			(*Tcl_Value)(unsafe.Pointer(resultPtr)).__type = Tcl_ValueType(1)
+			(*Tcl_Value)(unsafe.Pointer(resultPtr)).__type = TCL_DOUBLE
 			(*Tcl_Value)(unsafe.Pointer(resultPtr)).doubleValue = func() float64 {
 				if d0 > d1 {
 					return d0
 				}
 				return d1
 			}()
-		} else if (*Tcl_Value)(unsafe.Pointer(args+uintptr(1)*32)).__type == Tcl_ValueType(3) {
+		} else if (*Tcl_Value)(unsafe.Pointer(args+uintptr(1)*32)).__type == TCL_WIDE_INT {
 			var w1 Tcl_WideInt = (*Tcl_Value)(unsafe.Pointer(args + uintptr(1)*32)).wideValue
 
-			(*Tcl_Value)(unsafe.Pointer(resultPtr)).__type = Tcl_ValueType(3)
+			(*Tcl_Value)(unsafe.Pointer(resultPtr)).__type = TCL_WIDE_INT
 			(*Tcl_Value)(unsafe.Pointer(resultPtr)).wideValue = func() int64 {
 				if w0 > w1 {
 					return w0
@@ -12621,23 +15907,23 @@ __4:
 __5:
 	;
 	switch uint32(*(*int32)(unsafe.Pointer(bp + 88 /* index */))) {
-	case uint32(0):
+	case uint32(0) /* REGEXP_INDICES */ :
 		goto __7
-	case uint32(1):
+	case uint32(1) /* REGEXP_NOCASE */ :
 		goto __8
-	case uint32(2):
+	case uint32(2) /* REGEXP_ABOUT */ :
 		goto __9
-	case uint32(3):
+	case uint32(3) /* REGEXP_EXPANDED */ :
 		goto __10
-	case uint32(4):
+	case uint32(4) /* REGEXP_MULTI */ :
 		goto __11
-	case uint32(5):
+	case uint32(5) /* REGEXP_NOCROSS */ :
 		goto __12
-	case uint32(6):
+	case uint32(6) /* REGEXP_NEWL */ :
 		goto __13
-	case uint32(7):
+	case uint32(7) /* REGEXP_XFLAGS */ :
 		goto __14
-	case uint32(8):
+	case uint32(8) /* REGEXP_LAST */ :
 		goto __15
 	}
 	goto __6
@@ -13075,9 +16361,9 @@ func TestsetplatformCmd(tls *crt.TLS, clientData ClientData, interp uintptr, arg
 
 	length = crt.Xstrlen(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*8)))
 	if crt.Xstrncmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*8)), ts+3895 /* "unix" */, length) == 0 {
-		*(*TclPlatformType)(unsafe.Pointer(platform)) = TclPlatformType(0)
+		*(*TclPlatformType)(unsafe.Pointer(platform)) = TCL_PLATFORM_UNIX
 	} else if crt.Xstrncmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*8)), ts+3904 /* "windows" */, length) == 0 {
-		*(*TclPlatformType)(unsafe.Pointer(platform)) = TclPlatformType(2)
+		*(*TclPlatformType)(unsafe.Pointer(platform)) = TCL_PLATFORM_WINDOWS
 	} else {
 		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp,
 			crt.VaList(bp+32, ts+4859 /* "unsupported plat..." */, uintptr(0)))
@@ -14032,13 +17318,6 @@ func TestsaveresultCmd(tls *crt.TLS, dummy ClientData, interp uintptr, objc int3
 	// var state Tcl_SavedResult at bp+24, 248
 
 	var objPtr uintptr
-	const ( /* tclTest.c:5188:5: */
-		RESULT_APPEND  = 0
-		RESULT_DYNAMIC = 1
-		RESULT_FREE    = 2
-		RESULT_OBJECT  = 3
-		RESULT_SMALL   = 4
-	)
 
 	// Parse arguments
 
@@ -14055,13 +17334,13 @@ func TestsaveresultCmd(tls *crt.TLS, dummy ClientData, interp uintptr, objc int3
 
 	objPtr = uintptr(0) // Lint.
 	switch uint32(*(*int32)(unsafe.Pointer(bp + 16 /* index */))) {
-	case RESULT_SMALL:
+	case uint32(4) /* RESULT_SMALL */ :
 		(*(*func(*crt.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1872 /* &.tcl_SetResult */))))(tls, interp, ts+6143 /* "small result" */, uintptr(1))
 		break
-	case RESULT_APPEND:
+	case uint32(0) /* RESULT_APPEND */ :
 		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, crt.VaList(bp, ts+6156 /* "append result" */, uintptr(0)))
 		break
-	case RESULT_FREE:
+	case uint32(2) /* RESULT_FREE */ :
 		{
 			var buf uintptr = (*(*func(*crt.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 40 /* &.tcl_Alloc */))))(tls, uint32(200))
 
@@ -14069,10 +17348,10 @@ func TestsaveresultCmd(tls *crt.TLS, dummy ClientData, interp uintptr, objc int3
 			(*(*func(*crt.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1872 /* &.tcl_SetResult */))))(tls, interp, buf, uintptr(3))
 			break
 		}
-	case RESULT_DYNAMIC:
+	case uint32(1) /* RESULT_DYNAMIC */ :
 		(*(*func(*crt.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1872 /* &.tcl_SetResult */))))(tls, interp, ts+6182 /* "dynamic result" */, *(*uintptr)(unsafe.Pointer(&struct{ f func(*crt.TLS, uintptr) }{TestsaveresultFree})))
 		break
-	case RESULT_OBJECT:
+	case uint32(3) /* RESULT_OBJECT */ :
 		objPtr = (*(*func(*crt.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 464 /* &.tcl_NewStringObj */))))(tls, ts+6197 /* "object result" */, -1)
 		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1896 /* &.tcl_SetObjResult */))))(tls, interp, objPtr)
 		break
@@ -14081,7 +17360,7 @@ func TestsaveresultCmd(tls *crt.TLS, dummy ClientData, interp uintptr, objc int3
 	freeCount = 0
 	(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 2536 /* &.tcl_SaveResult */))))(tls, interp, bp+24 /* &state */)
 
-	if (int32(uint32(*(*int32)(unsafe.Pointer(bp + 16 /* index */))))) == RESULT_OBJECT {
+	if (int32(uint32(*(*int32)(unsafe.Pointer(bp + 16 /* index */))))) == 3 /* RESULT_OBJECT */ {
 		result = (*(*func(*crt.TLS, uintptr, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 2360 /* &.tcl_EvalObjEx */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*8)), 0)
 	} else {
 		result = (*(*func(*crt.TLS, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1048 /* &.tcl_Eval */))))(tls, interp, (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 2736 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*8))))
@@ -14095,7 +17374,7 @@ func TestsaveresultCmd(tls *crt.TLS, dummy ClientData, interp uintptr, objc int3
 	}
 
 	switch uint32(*(*int32)(unsafe.Pointer(bp + 16 /* index */))) {
-	case RESULT_DYNAMIC:
+	case uint32(1) /* RESULT_DYNAMIC */ :
 		{
 			var present int32 = (crt.Bool32((*Interp)(unsafe.Pointer(iPtr)).freeProc == *(*uintptr)(unsafe.Pointer(&struct{ f func(*crt.TLS, uintptr) }{TestsaveresultFree}))))
 			var called int32 = freeCount
@@ -14114,7 +17393,7 @@ func TestsaveresultCmd(tls *crt.TLS, dummy ClientData, interp uintptr, objc int3
 			}())
 			break
 		}
-	case RESULT_OBJECT:
+	case uint32(3) /* RESULT_OBJECT */ :
 		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, func() uintptr {
 			if (*(*func(*crt.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1344 /* &.tcl_GetObjResult */))))(tls, interp) == objPtr {
 				return ts + 6244 /* "same" */
@@ -14465,20 +17744,20 @@ func TestChannelCmd(tls *crt.TLS, clientData ClientData, interp uintptr, argc in
 		} else {
 			(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, ts+6546 /* "unblocked" */)
 		}
-		if (*ChannelState)(unsafe.Pointer(statePtr)).inputTranslation == TclEolTranslation(0) {
+		if (*ChannelState)(unsafe.Pointer(statePtr)).inputTranslation == TCL_TRANSLATE_AUTO {
 			(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, ts+6556 /* "auto" */)
 			if ((*ChannelState)(unsafe.Pointer(statePtr)).flags & (int32(1) << 12)) != 0 {
 				(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, ts+6561 /* "saw_cr" */)
 			} else {
 				(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, ts+1482 /* "" */)
 			}
-		} else if (*ChannelState)(unsafe.Pointer(statePtr)).inputTranslation == TclEolTranslation(2) {
+		} else if (*ChannelState)(unsafe.Pointer(statePtr)).inputTranslation == TCL_TRANSLATE_LF {
 			(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, ts+6568 /* "lf" */)
 			(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, ts+1482 /* "" */)
-		} else if (*ChannelState)(unsafe.Pointer(statePtr)).inputTranslation == TclEolTranslation(1) {
+		} else if (*ChannelState)(unsafe.Pointer(statePtr)).inputTranslation == TCL_TRANSLATE_CR {
 			(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, ts+6571 /* "cr" */)
 			(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, ts+1482 /* "" */)
-		} else if (*ChannelState)(unsafe.Pointer(statePtr)).inputTranslation == TclEolTranslation(3) {
+		} else if (*ChannelState)(unsafe.Pointer(statePtr)).inputTranslation == TCL_TRANSLATE_CRLF {
 			(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, ts+6574 /* "crlf" */)
 			if ((*ChannelState)(unsafe.Pointer(statePtr)).flags & (int32(1) << 12)) != 0 {
 				(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, ts+6579 /* "queued_cr" */)
@@ -14486,13 +17765,13 @@ func TestChannelCmd(tls *crt.TLS, clientData ClientData, interp uintptr, argc in
 				(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, ts+1482 /* "" */)
 			}
 		}
-		if (*ChannelState)(unsafe.Pointer(statePtr)).outputTranslation == TclEolTranslation(0) {
+		if (*ChannelState)(unsafe.Pointer(statePtr)).outputTranslation == TCL_TRANSLATE_AUTO {
 			(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, ts+6556 /* "auto" */)
-		} else if (*ChannelState)(unsafe.Pointer(statePtr)).outputTranslation == TclEolTranslation(2) {
+		} else if (*ChannelState)(unsafe.Pointer(statePtr)).outputTranslation == TCL_TRANSLATE_LF {
 			(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, ts+6568 /* "lf" */)
-		} else if (*ChannelState)(unsafe.Pointer(statePtr)).outputTranslation == TclEolTranslation(1) {
+		} else if (*ChannelState)(unsafe.Pointer(statePtr)).outputTranslation == TCL_TRANSLATE_CR {
 			(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, ts+6571 /* "cr" */)
-		} else if (*ChannelState)(unsafe.Pointer(statePtr)).outputTranslation == TclEolTranslation(3) {
+		} else if (*ChannelState)(unsafe.Pointer(statePtr)).outputTranslation == TCL_TRANSLATE_CRLF {
 			(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_AppendElement */))))(tls, interp, ts+6574 /* "crlf" */)
 		}
 		IOQueued = (*(*func(*crt.TLS, Tcl_Channel) int32)(unsafe.Pointer((tclStubsPtr + 1480 /* &.tcl_InputBuffered */))))(tls, chan1)
@@ -16867,14 +20146,6 @@ func TestbignumobjCmd(tls *crt.TLS, clientData ClientData, interp uintptr, objc 
 	*(*[7]uintptr)(unsafe.Pointer(bp /* subcmds */)) = [7]uintptr{
 		ts + 4166 /* "set" */, ts + 1535 /* "get" */, ts + 9068 /* "mult10" */, ts + 9075 /* "div10" */, ts + 9081 /* "iseven" */, ts + 9088 /* "radixsize" */, uintptr(0),
 	}
-	const ( /* tclTestObj.c:157:5: */
-		BIGNUM_SET       = 0
-		BIGNUM_GET       = 1
-		BIGNUM_MULT10    = 2
-		BIGNUM_DIV10     = 3
-		BIGNUM_ISEVEN    = 4
-		BIGNUM_RADIXSIZE = 5
-	)
 	// var index int32 at bp+56, 4
 
 	// var varIndex int32 at bp+60, 4
@@ -16900,7 +20171,7 @@ func TestbignumobjCmd(tls *crt.TLS, clientData ClientData, interp uintptr, objc 
 	varPtr = GetVarPtr(tls, interp)
 
 	switch *(*int32)(unsafe.Pointer(bp + 56 /* index */)) {
-	case BIGNUM_SET:
+	case 0 /* BIGNUM_SET */ :
 		if objc != 4 {
 			(*(*func(*crt.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 2128 /* &.tcl_WrongNumArgs */))))(tls, interp, 2, objv, ts+9115 /* "var value" */)
 			return 1
@@ -16931,7 +20202,7 @@ func TestbignumobjCmd(tls *crt.TLS, clientData ClientData, interp uintptr, objc 
 		}
 		break
 
-	case BIGNUM_GET:
+	case 1 /* BIGNUM_GET */ :
 		if objc != 3 {
 			(*(*func(*crt.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 2128 /* &.tcl_WrongNumArgs */))))(tls, interp, 2, objv, ts+9165 /* "varIndex" */)
 			return 1
@@ -16941,7 +20212,7 @@ func TestbignumobjCmd(tls *crt.TLS, clientData ClientData, interp uintptr, objc 
 		}
 		break
 
-	case BIGNUM_MULT10:
+	case 2 /* BIGNUM_MULT10 */ :
 		if objc != 3 {
 			(*(*func(*crt.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 2128 /* &.tcl_WrongNumArgs */))))(tls, interp, 2, objv, ts+9165 /* "varIndex" */)
 			return 1
@@ -16969,7 +20240,7 @@ func TestbignumobjCmd(tls *crt.TLS, clientData ClientData, interp uintptr, objc 
 		}
 		break
 
-	case BIGNUM_DIV10:
+	case 3 /* BIGNUM_DIV10 */ :
 		if objc != 3 {
 			(*(*func(*crt.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 2128 /* &.tcl_WrongNumArgs */))))(tls, interp, 2, objv, ts+9165 /* "varIndex" */)
 			return 1
@@ -16997,7 +20268,7 @@ func TestbignumobjCmd(tls *crt.TLS, clientData ClientData, interp uintptr, objc 
 		}
 		break
 
-	case BIGNUM_ISEVEN:
+	case 4 /* BIGNUM_ISEVEN */ :
 		if objc != 3 {
 			(*(*func(*crt.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 2128 /* &.tcl_WrongNumArgs */))))(tls, interp, 2, objv, ts+9165 /* "varIndex" */)
 			return 1
@@ -17027,7 +20298,7 @@ func TestbignumobjCmd(tls *crt.TLS, clientData ClientData, interp uintptr, objc 
 		(*(*func(*crt.TLS, uintptr))(unsafe.Pointer((tclTomMathStubsPtr + 64 /* &.tclBN_mp_clear */))))(tls, bp+64 /* &bignumValue */)
 		break
 
-	case BIGNUM_RADIXSIZE:
+	case 5 /* BIGNUM_RADIXSIZE */ :
 		if objc != 3 {
 			(*(*func(*crt.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 2128 /* &.tcl_WrongNumArgs */))))(tls, interp, 2, objv, ts+9165 /* "varIndex" */)
 			return 1
@@ -17899,11 +21170,6 @@ func TestlistobjCmd(tls *crt.TLS, clientData ClientData, interp uintptr, objc in
 		ts + 1535, /* "get" */
 		ts + 9416, /* "replace" */
 	}
-	const ( /* tclTestObj.c:884:5: */
-		LISTOBJ_SET     = 0
-		LISTOBJ_GET     = 1
-		LISTOBJ_REPLACE = 2
-	)
 	var index uintptr // Argument giving the variable number
 	// var varIndex int32 at bp, 4
 	// Variable number converted to binary
@@ -17928,7 +21194,7 @@ func TestlistobjCmd(tls *crt.TLS, clientData ClientData, interp uintptr, objc in
 		return 1
 	}
 	switch *(*int32)(unsafe.Pointer(bp + 32 /* cmdIndex */)) {
-	case LISTOBJ_SET:
+	case 0 /* LISTOBJ_SET */ :
 		if (*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp /* varIndex */)))*8)) != (uintptr(0))) && !((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp /* varIndex */)))*8))))).refCount > 1) {
 			(*(*func(*crt.TLS, uintptr, int32, uintptr))(unsafe.Pointer((tclStubsPtr + 512 /* &.tcl_SetListObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp /* varIndex */)))*8)), (objc - 3), (objv + uintptr(3)*8))
 		} else {
@@ -17937,7 +21203,7 @@ func TestlistobjCmd(tls *crt.TLS, clientData ClientData, interp uintptr, objc in
 		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1896 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp /* varIndex */)))*8)))
 		break
 
-	case LISTOBJ_GET:
+	case 1 /* LISTOBJ_GET */ :
 		if objc != 3 {
 			(*(*func(*crt.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 2128 /* &.tcl_WrongNumArgs */))))(tls, interp, 2, objv, ts+9165 /* "varIndex" */)
 			return 1
@@ -17948,7 +21214,7 @@ func TestlistobjCmd(tls *crt.TLS, clientData ClientData, interp uintptr, objc in
 		(*(*func(*crt.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1896 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp /* varIndex */)))*8)))
 		break
 
-	case LISTOBJ_REPLACE:
+	case 2 /* LISTOBJ_REPLACE */ :
 		if objc < 5 {
 			(*(*func(*crt.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 2128 /* &.tcl_WrongNumArgs */))))(tls, interp, 2, objv,
 				ts+9444 /* "varIndex start c..." */)
@@ -19232,6 +22498,16 @@ func ProcBodyTestCheckObjCmd(tls *crt.TLS, dummy ClientData, interp uintptr, obj
 // Type for resource quantity measurement.
 type rlim_t = uint64   /* resource.h:131:18 */
 type rlim64_t = uint64 /* resource.h:136:20 */
+
+type rlimit = struct {
+	rlim_cur rlim_t
+	rlim_max rlim_t
+}
+
+type rlimit64 = struct {
+	rlim_cur rlim64_t
+	rlim_max rlim64_t
+}
 
 // The following macros convert between TclFile's and fd's. The conversion
 // simple involves shifting fd's up by one to ensure that no valid fd is ever

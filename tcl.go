@@ -4,7 +4,7 @@
 
 //go:generate go run generator.go
 //go:generate assets -package tcl
-//go:generate gofmt -l -s -w .
+//go:generate go fmt ./...
 
 package tcl
 

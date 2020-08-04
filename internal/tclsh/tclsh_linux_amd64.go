@@ -15,6 +15,58 @@ var _ = math.Pi
 var _ reflect.Kind
 var _ unsafe.Pointer
 
+// Positions to pass to Tcl_QueueEvent:
+
+const ( /* tcl.h:1387:1: */
+	TCL_QUEUE_TAIL = 0
+	TCL_QUEUE_HEAD = 1
+	TCL_QUEUE_MARK = 2
+)
+
+// The following flags determine whether the blockModeProc above should set
+// the channel into blocking or nonblocking mode. They are passed as arguments
+// to the blockModeProc function in the above structure.
+
+//----------------------------------------------------------------------------
+// Enum for different types of file paths.
+
+const ( /* tcl.h:1609:1: */
+	TCL_PATH_ABSOLUTE        = 0
+	TCL_PATH_RELATIVE        = 1
+	TCL_PATH_VOLUME_RELATIVE = 2
+)
+
+//----------------------------------------------------------------------------
+// When a TCL command returns, the interpreter contains a result from the
+// command. Programmers are strongly encouraged to use one of the functions
+// Tcl_GetObjResult() or Tcl_GetStringResult() to read the interpreter's
+// result. See the SetResult man page for details. Besides this result, the
+// command function returns an integer code, which is one of the following:
+//
+// TCL_OK		Command completed normally; the interpreter's result
+//			contains the command's result.
+// TCL_ERROR		The command couldn't be completed successfully; the
+//			interpreter's result describes what went wrong.
+// TCL_RETURN		The command requests that the current function return;
+//			the interpreter's result contains the function's
+//			return value.
+// TCL_BREAK		The command requests that the innermost loop be
+//			exited; the interpreter's result is meaningless.
+// TCL_CONTINUE		Go on to the next iteration of the current loop; the
+//			interpreter's result is meaningless.
+
+//----------------------------------------------------------------------------
+// Flags to control what substitutions are performed by Tcl_SubstObj():
+
+// Argument descriptors for math function callbacks in expressions:
+
+const ( /* tcl.h:690:1: */
+	TCL_INT      = 0
+	TCL_DOUBLE   = 1
+	TCL_EITHER   = 2
+	TCL_WIDE_INT = 3
+)
+
 type ptrdiff_t = int64 /* <builtin>:3:26 */
 
 type size_t = uint64 /* <builtin>:9:23 */

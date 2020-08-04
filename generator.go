@@ -169,8 +169,12 @@ func makeUnixLibAndShell(testWD string) {
 	}
 	args := []string{
 		"-o", filepath.Join(testWD, filepath.FromSlash(fmt.Sprintf("lib/tcl_%s_%s.go", runtime.GOOS, runtime.GOARCH))),
+		"-ccgo-export-defines", "",
+		"-ccgo-export-enums", "",
 		"-ccgo-export-externs", "X",
 		"-ccgo-export-fields", "F",
+		"-ccgo-export-structs", "",
+		"-ccgo-export-typedefs", "",
 		"-ccgo-long-double-is-double",
 		"-ccgo-pkgname", "tcl",
 		//TODO- "-ccgo-verify-structs", //TODO-

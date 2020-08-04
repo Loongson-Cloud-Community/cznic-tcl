@@ -284,17 +284,28 @@ func tclTestMain() {
 		"cmdAH-19.*",
 		"cmdAH-30.8",
 
-		//TODO fts_open
-		"safe-13.*",
-		"safe-16.3",
-		"unixFCmd-1.*",
-
 		//TODO getgrgid
 		"unixFCmd-12.2",
 		"cmdAH-7.1",
 
 		//TODO getgrnam
 		"unixFCmd-15.1",
+
+		//TODO other
+		"cmdAH-32.3",
+		"tcltest-1.1",
+		"tcltest-1.2",
+		"tcltest-6.2",
+		"tcltest-6.3",
+		"tcltest-6.4",
+		"tcltest-7.2",
+		"tcltest-7.3",
+		"tcltest-7.4",
+		"tcltest-7.5",
+		"tcltest-9.5",
+		"tcltest-12.2",
+		"tcltest-14.1",
+		"tcltest-22.1",
 	}
 	notFile := []string{
 		// Needs fork. (Not implemented)
@@ -307,17 +318,10 @@ func tclTestMain() {
 		//TODO Needs socket.
 		"socket.test",
 
-		//TODO fts_open and/or getpwnam
-		"cmdAH.test",
+		// getpwnam
 		"fCmd.test",
 		"fileName.test",
 		"fileSystem.test",
-		"msgcat.test",
-		"tcltest.test",
-
-		//TODO gethostbyname
-		"http.test",
-		"httpold.test",
 	}
 	var argv []string
 	for _, v := range os.Args {

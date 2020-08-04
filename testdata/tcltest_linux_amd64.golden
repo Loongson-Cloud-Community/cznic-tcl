@@ -1,13 +1,13 @@
-Tests running in interp:  /tmp/go-build032033860/b001/tcl.test
-Tests located in:  /tmp/tcl-test-719856264
-Tests running in:  /tmp/tcl-test-719856264
-Temporary files stored in /tmp/tcl-test-719856264
+Tests running in interp:  /tmp/go-build186880905/b001/tcl.test
+Tests located in:  /tmp/tcl-test-931042375
+Tests running in:  /tmp/tcl-test-931042375
+Temporary files stored in /tmp/tcl-test-931042375
 Test files sourced into current interpreter
-Skipping tests that match:  cmdIL-6.* trace-24.5 trace-25.* trace-34.1 basic-46.2 basic-46.3 basic-46.4 basic-46.5 chan-io-14.3 chan-io-14.4 chan-io-28.6 chan-io-28.7 chan-io-29.33 chan-io-60.1 compile-12.2 compile-13.1 encoding-24.1 encoding-24.2 env-2.1 env-2.2 env-2.3 env-2.4 env-3.1 env-4.1 env-4.3 env-4.4 env-4.5 event-13.8 event-14.8 event-7.5 exit-1.1 exit-1.2 io-14.3 io-14.4 pid-1.2 regexp-14.3 regexpComp-14.3 subst-5.10 subst-5.8 subst-5.9 unixFCmd-13.2 io-29.33 io-29.33b iocmd-32.* iocmd-31.* chan-16.9 chan-io-29.34 chan-io-29.35 chan-io-39.18 chan-io-39.19 chan-io-39.20 chan-io-39.21 chan-io-39.23 chan-io-39.24 chan-io-51.1 chan-io-53.5 chan-io-54.1 chan-io-54.2 chan-io-57.1 chan-io-57.2 event-11.5 zlib-10.0 zlib-10.1 zlib-10.2 zlib-9.* io-39.18 io-39.19 io-39.20 io-39.21 io-39.23 io-39.24 io-51.1 io-53.5 io-54.1 io-54.2 io-57.1 io-57.2 io-60.1 zlib-8.3 io-29.34 io-29.35 info-16.4 unixFCmd-16.* cmdAH-2.5 cmdAH-8.39 cmdAH-15.1 cmdAH-19.* cmdAH-30.8 safe-13.* safe-16.3 unixFCmd-1.* unixFCmd-12.2 cmdAH-7.1 unixFCmd-15.1
+Skipping tests that match:  cmdIL-6.* trace-24.5 trace-25.* trace-34.1 basic-46.2 basic-46.3 basic-46.4 basic-46.5 chan-io-14.3 chan-io-14.4 chan-io-28.6 chan-io-28.7 chan-io-29.33 chan-io-60.1 compile-12.2 compile-13.1 encoding-24.1 encoding-24.2 env-2.1 env-2.2 env-2.3 env-2.4 env-3.1 env-4.1 env-4.3 env-4.4 env-4.5 event-13.8 event-14.8 event-7.5 exit-1.1 exit-1.2 io-14.3 io-14.4 pid-1.2 regexp-14.3 regexpComp-14.3 subst-5.10 subst-5.8 subst-5.9 unixFCmd-13.2 io-29.33 io-29.33b iocmd-32.* iocmd-31.* chan-16.9 chan-io-29.34 chan-io-29.35 chan-io-39.18 chan-io-39.19 chan-io-39.20 chan-io-39.21 chan-io-39.23 chan-io-39.24 chan-io-51.1 chan-io-53.5 chan-io-54.1 chan-io-54.2 chan-io-57.1 chan-io-57.2 event-11.5 zlib-10.0 zlib-10.1 zlib-10.2 zlib-9.* io-39.18 io-39.19 io-39.20 io-39.21 io-39.23 io-39.24 io-51.1 io-53.5 io-54.1 io-54.2 io-57.1 io-57.2 io-60.1 zlib-8.3 io-29.34 io-29.35 info-16.4 unixFCmd-16.* cmdAH-2.5 cmdAH-8.39 cmdAH-15.1 cmdAH-19.* cmdAH-30.8 unixFCmd-12.2 cmdAH-7.1 unixFCmd-15.1 cmdAH-32.3 tcltest-1.1 tcltest-1.2 tcltest-6.2 tcltest-6.3 tcltest-6.4 tcltest-7.2 tcltest-7.3 tcltest-7.4 tcltest-7.5 tcltest-9.5 tcltest-12.2 tcltest-14.1 tcltest-22.1
 Running tests that match:  *
-Skipping test files that match:  exec.test http11.test ioCmd.test main.test stack.test socket.test cmdAH.test fCmd.test fileName.test fileSystem.test msgcat.test tcltest.test http.test httpold.test
+Skipping test files that match:  exec.test http11.test ioCmd.test main.test stack.test socket.test fCmd.test fileName.test fileSystem.test
 Only running test files that match:  *.test
-Tests began at Fri Jul 31 13:27:36 CEST 2020
+Tests began at Tue Aug 04 16:48:19 CEST 2020
 aaa_exit.test
 append.test
 appendComp.test
@@ -22,6 +22,7 @@ case.test
 chan.test
 chanio.test
 clock.test
+cmdAH.test
 cmdIL.test
 cmdInfo.test
 cmdMZ.test
@@ -49,7 +50,13 @@ foreach.test
 format.test
 get.test
 history.test
+http.test
+Cannot start http server, http test skipped
 httpPipeline.test
+httpold.test
+Running http 1.0 tests in slave interp
+Cannot start http server, http test skipped
+httpold.test:	Total	0	Passed	0	Skipped	0	Failed	0
 if-old.test
 if.test
 incr-old.test
@@ -80,6 +87,7 @@ macOSXFCmd.test
 macOSXLoad.test
 mathop.test
 misc.test
+msgcat.test
 namespace-old.test
 namespace.test
 notify.test
@@ -118,6 +126,7 @@ stringObj.test
 subst.test
 switch.test
 tailcall.test
+tcltest.test
 thread.test
 timer.test
 tm.test
@@ -145,17 +154,17 @@ winPipe.test
 winTime.test
 zlib.test
 
-Tests ended at Fri Jul 31 13:28:38 CEST 2020
-all.tcl:	Total	31438	Passed	28042	Skipped	3396	Failed	0
-Sourced 136 Test Files.
+Tests ended at Tue Aug 04 16:49:09 CEST 2020
+all.tcl:	Total	31997	Passed	28556	Skipped	3441	Failed	0
+Sourced 141 Test Files.
 Number of tests skipped for each constraint:
 	9	!ieeeFloatingPoint
-	11	!singleTestInterp
+	12	!singleTestInterp
 	76	bigEndian
 	5	bug-3057639
 	49	dde
 	1	dontCopyLinks
-	60	emptyTest
+	62	emptyTest
 	1	execMknod
 	1	foundGroup
 	5	fullutf
@@ -166,7 +175,7 @@ Number of tests skipped for each constraint:
 	52	longIs32bit
 	14	macosxFileAttr
 	79	memory
-	18	nonPortable
+	28	nonPortable
 	9	nt
 	19	pkgaRequired
 	20	pkguaRequired
@@ -182,5 +191,7 @@ Number of tests skipped for each constraint:
 	3	tip389
 	2	umask
 	2	wideBiggerThanInt
-	388	win
+	410	win
 	4	winVista
+Warning: files left behind:
+	unixFCmd.test:	td1
