@@ -6,19 +6,48 @@
 //go:generate assets -package tcl
 //go:generate go fmt ./...
 
+// Package Tcl is a port of the Tool Command Language.
+//
+// A sperate Tcl shell is in the gotclsh directory.
+//
+// Do not use in production.
+//
+// Changelog:
+//
+// 2020-08-04: beta2 released for linux/amd64 only. Support for threads,
+// sockets and fork is not yet implemented. Some tests still crash, those are
+// disabled at the moment.
 package tcl
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
 	"runtime"
 	"sort"
 	"strings"
+	"sync"
+	"sync/atomic"
 	"time"
+	"unsafe"
 
+	"modernc.org/crt/v3"
 	"modernc.org/httpfs"
+	"modernc.org/tcl/lib"
+)
+
+const (
+	// #define TCL_VOLATILE		((Tcl_FreeProc *) 1)
+	tclVolatile = 1
+)
+
+var (
+	fToken   uintptr
+	libOnce  sync.Once
+	objectMu sync.Mutex
+	objects  = map[uintptr]interface{}{}
 )
 
 func origin(skip int) string {
@@ -60,6 +89,37 @@ func trc(s string, args ...interface{}) string { //TODO-
 	return r
 }
 
+func token() uintptr { return atomic.AddUintptr(&fToken, 1) }
+
+func addObject(o interface{}) uintptr {
+	t := token()
+	objectMu.Lock()
+	objects[t] = o
+	objectMu.Unlock()
+	return t
+}
+
+func getObject(t uintptr) interface{} {
+	objectMu.Lock()
+	o := objects[t]
+	if o == nil {
+		panic(todo("", t))
+	}
+
+	objectMu.Unlock()
+	return o
+}
+
+func removeObject(t uintptr) {
+	objectMu.Lock()
+	if _, ok := objects[t]; !ok {
+		panic(todo(""))
+	}
+
+	delete(objects, t)
+	objectMu.Unlock()
+}
+
 // LibraryFileSystem returns a http.FileSystem containing the Tcl library.
 func LibraryFileSystem() http.FileSystem {
 	return httpfs.NewFileSystem(assets, time.Now())
@@ -97,5 +157,192 @@ func Library(directory string) error {
 			return err
 		}
 	}
+	return nil
+}
+
+// CmdProc is a Tcl command implemented in Go.
+type CmdProc func(clientData interface{}, in *Interp, args []string) int
+
+// DeleteProc is a function called when CmdProc is deleted.
+type DeleteProc func(clientData interface{})
+
+// Command represents a Tcl command.
+type Command struct {
+	cmd uintptr
+}
+
+// Interp represents a Tcl interpreter.
+type Interp struct {
+	tls    *crt.TLS
+	interp uintptr
+}
+
+// NewInterp returns a newly created Interp or an error, if any.
+func NewInterp() (*Interp, error) {
+	var err error
+	libOnce.Do(func() {
+		if os.Getenv("TCL_LIBRARY") != "" {
+			return
+		}
+
+		var dir string
+		if dir, err = ioutil.TempDir("", "tcl-library-"); err != nil {
+			return
+		}
+
+		err = Library(dir)
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	tls := crt.NewTLS()
+	interp := tcl.XTcl_CreateInterp(tls)
+	if interp == 0 {
+		tls.Close()
+		return nil, fmt.Errorf("failed to create Tcl interpreter")
+	}
+
+	return &Interp{tls, interp}, nil
+}
+
+// MustNewInterp is like NewInterp but panics on error.
+func MustNewInterp() *Interp {
+	in, err := NewInterp()
+	if err != nil {
+		panic(err)
+	}
+
+	return in
+}
+
+// Close invalidates the interpreter and releases all its associated resources.
+func (in *Interp) Close() error {
+	tcl.XTcl_DeleteInterp(in.tls, in.interp)
+	in.tls.Close()
+	in.tls = nil
+	in.interp = 0
+	return nil
+}
+
+// MustClose is like Close but panics on error.
+func (in *Interp) MustClose() {
+	if err := in.Close(); err != nil {
+		panic(err)
+	}
+}
+
+// Eval evaluates script and returns the interpreter; result and error, if any.
+func (in *Interp) Eval(script string) (string, error) {
+	s, err := crt.CString(script)
+	if err != nil {
+		return "", err
+	}
+
+	tcl.XTcl_Preserve(in.tls, in.interp)
+
+	defer func() {
+		crt.Xfree(in.tls, s)
+		tcl.XTcl_Release(in.tls, in.interp)
+	}()
+
+	rc := tcl.XTcl_Eval(in.tls, in.interp, s)
+	rs := crt.GoString(tcl.XTcl_GetStringResult(in.tls, in.interp))
+	if rc == tcl.TCL_OK {
+		return rs, nil
+	}
+
+	return rs, fmt.Errorf("Tcl return code: %d", rc)
+}
+
+// MustEval is like Eval but panics on error.
+func (in *Interp) MustEval(script string) string {
+	s, err := in.Eval(script)
+	if err != nil {
+		panic(err)
+	}
+
+	return s
+}
+
+type cmdProc struct {
+	clientData interface{}
+	del        DeleteProc
+	f          CmdProc
+	in         *Interp
+}
+
+func runCmd(tls *crt.TLS, clientData, in uintptr, argc int32, argv uintptr) int32 {
+	cmd := getObject(clientData).(*cmdProc)
+	var a []string
+	for i := int32(0); i < argc; i++ {
+		p := *(*uintptr)(unsafe.Pointer(argv))
+		argv += unsafe.Sizeof(argv)
+		a = append(a, crt.GoString(p))
+	}
+	return int32(cmd.f(cmd.clientData, cmd.in, a))
+}
+
+func delCmd(tls *crt.TLS, clientData uintptr) {
+	cmd := getObject(clientData).(*cmdProc)
+	if cmd.del != nil {
+		cmd.del(cmd.clientData)
+	}
+	removeObject(clientData)
+}
+
+var (
+	runCmdP = *(*uintptr)(unsafe.Pointer(&struct {
+		f func(tls *crt.TLS, clientData, in uintptr, argc int32, argv uintptr) int32
+	}{runCmd}))
+	delCmdP = *(*uintptr)(unsafe.Pointer(&struct {
+		f func(tls *crt.TLS, clientData uintptr)
+	}{delCmd}))
+)
+
+// NewCommand returns a newly created Tcl command or an error, if any.
+func (in *Interp) NewCommand(name string, proc CmdProc, clientData interface{}, del DeleteProc) (*Command, error) {
+	nm, err := crt.CString(name)
+	if err != nil {
+		return nil, err
+	}
+
+	tcl.XTcl_Preserve(in.tls, in.interp)
+
+	defer func() {
+		crt.Xfree(in.tls, nm)
+		tcl.XTcl_Release(in.tls, in.interp)
+	}()
+
+	p := &cmdProc{f: proc, clientData: clientData, del: del, in: in}
+	h := addObject(p)
+	cmd := tcl.XTcl_CreateCommand(in.tls, in.interp, nm, runCmdP, h, delCmdP)
+	if cmd == 0 {
+		return nil, fmt.Errorf("failed to create command: %s", name)
+	}
+
+	return &Command{cmd}, nil
+}
+
+// MustNewCommand is like NewCommand but panics on error.
+func (in *Interp) MustNewCommand(name string, proc CmdProc, clientData interface{}, del DeleteProc) *Command {
+	cmd, err := in.NewCommand(name, proc, clientData, del)
+	if err != nil {
+		panic(err)
+	}
+
+	return cmd
+}
+
+// SetResult sets the result of the interpreter.
+func (in *Interp) SetResult(s string) error {
+	cs, err := crt.CString(s)
+	if err != nil {
+		return err
+	}
+
+	defer crt.Xfree(in.tls, cs)
+
+	tcl.XTcl_SetResult(in.tls, in.interp, cs, tclVolatile)
 	return nil
 }

@@ -20,6 +20,7 @@ import (
 	"testing"
 
 	"modernc.org/tcl/internal/tcltest"
+	"modernc.org/tcl/lib"
 )
 
 func caller(s string, va ...interface{}) {
@@ -338,4 +339,116 @@ func tclTestMain() {
 	os.Args = argv
 	tcltest.Main()
 	panic("unreachable")
+}
+
+func TestEval(t *testing.T) {
+	in, err := NewInterp()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	defer func() {
+		if err := in.Close(); err != nil {
+			t.Error(err)
+		}
+	}()
+
+	s, err := in.Eval("set a 42; incr a")
+	if g, e := s, "43"; g != e {
+		t.Errorf("got %q exp %q", g, e)
+	}
+}
+
+func ExampleInterp_Eval() {
+	in := MustNewInterp()
+	s := in.MustEval(`
+
+# This is the Tcl script
+# ----------------------
+set a 42
+incr a
+# ----------------------
+
+`)
+	in.MustClose()
+	fmt.Println(s)
+	// Output:
+	// 43
+}
+
+func TestCreateCommand(t *testing.T) {
+	in, err := NewInterp()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	defer func() {
+		if in == nil {
+			return
+		}
+
+		if err := in.Close(); err != nil {
+			t.Error(err)
+		}
+	}()
+
+	var delTrace string
+	_, err = in.NewCommand(
+		"::go::echo",
+		func(clientData interface{}, in *Interp, args []string) int {
+			args = append(args[1:], fmt.Sprint(clientData))
+			in.SetResult(strings.Join(args, " "))
+			return tcl.TCL_OK
+		},
+		42,
+		func(clientData interface{}) {
+			delTrace = fmt.Sprint(clientData)
+		},
+	)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	s, err := in.Eval("::go::echo 123 foo bar")
+	if g, e := s, "123 foo bar 42"; g != e {
+		t.Errorf("got %q exp %q", g, e)
+		return
+	}
+
+	err = in.Close()
+	in = nil
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	if g, e := delTrace, "42"; g != e {
+		t.Errorf("got %q exp %q", g, e)
+	}
+}
+
+func ExampleInterp_NewCommand() {
+	in := MustNewInterp()
+	var delTrace string
+	in.MustNewCommand(
+		"::go::echo",
+		func(clientData interface{}, in *Interp, args []string) int {
+			// Go implementation of the Tcl ::go::echo command
+			args = append(args[1:], fmt.Sprint(clientData))
+			in.SetResult(strings.Join(args, " "))
+			return tcl.TCL_OK
+		},
+		42, // client data
+		func(clientData interface{}) {
+			// Go implemetation of the command delete handler
+			delTrace = fmt.Sprint(clientData)
+		},
+	)
+	fmt.Println(in.MustEval("::go::echo 123 foo bar"))
+	in.MustClose()
+	fmt.Println(delTrace)
+	// Output:
+	// 123 foo bar 42
+	// 42
 }
