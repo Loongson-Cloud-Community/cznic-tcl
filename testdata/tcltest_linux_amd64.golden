@@ -1,13 +1,13 @@
-Tests running in interp:  /tmp/go-build962921570/b001/tcl.test
-Tests located in:  /tmp/tcl-test-281872081
-Tests running in:  /tmp/tcl-test-281872081
-Temporary files stored in /tmp/tcl-test-281872081
+Tests running in interp:  /tmp/go-build415142499/b001/tcl.test
+Tests located in:  /tmp/tcl-test-082778350
+Tests running in:  /tmp/tcl-test-082778350
+Temporary files stored in /tmp/tcl-test-082778350
 Test files sourced into current interpreter
-Skipping tests that match:  cmdIL-6.* trace-24.5 trace-25.* trace-34.1 basic-46.2 basic-46.3 basic-46.4 basic-46.5 chan-io-14.3 chan-io-14.4 chan-io-28.6 chan-io-28.7 chan-io-29.33 chan-io-60.1 compile-12.2 compile-13.1 encoding-24.1 encoding-24.2 env-2.1 env-2.2 env-2.3 env-2.4 env-3.1 env-4.1 env-4.3 env-4.4 env-4.5 event-13.8 event-14.8 event-7.5 exit-1.1 exit-1.2 io-14.3 io-14.4 pid-1.2 regexp-14.3 regexpComp-14.3 subst-5.10 subst-5.8 subst-5.9 unixFCmd-13.2 io-29.33 io-29.33b iocmd-32.* iocmd-31.* chan-16.9 chan-io-29.34 chan-io-29.35 chan-io-39.18 chan-io-39.19 chan-io-39.20 chan-io-39.21 chan-io-39.23 chan-io-39.24 chan-io-51.1 chan-io-53.5 chan-io-54.1 chan-io-54.2 chan-io-57.1 chan-io-57.2 event-11.5 zlib-10.0 zlib-10.1 zlib-10.2 zlib-9.* io-39.18 io-39.19 io-39.20 io-39.21 io-39.23 io-39.24 io-51.1 io-53.5 io-54.1 io-54.2 io-57.1 io-57.2 io-60.1 zlib-8.3 io-29.34 io-29.35 info-16.4 unixFCmd-16.* cmdAH-2.5 cmdAH-8.39 cmdAH-15.1 cmdAH-19.* cmdAH-30.8 unixFCmd-12.2 cmdAH-7.1 unixFCmd-15.1 cmdAH-32.3 tcltest-1.1 tcltest-1.2 tcltest-6.2 tcltest-6.3 tcltest-6.4 tcltest-7.2 tcltest-7.3 tcltest-7.4 tcltest-7.5 tcltest-9.5 tcltest-12.2 tcltest-14.1 tcltest-22.1
+Skipping tests that match:  cmdIL-6.* trace-24.5 trace-25.* trace-34.1 basic-46.2 basic-46.3 basic-46.4 basic-46.5 chan-io-14.3 chan-io-14.4 chan-io-28.6 chan-io-28.7 chan-io-29.33 chan-io-60.1 compile-12.2 compile-13.1 encoding-24.1 encoding-24.2 env-2.1 env-2.2 env-2.3 env-2.4 env-3.1 env-4.1 env-4.3 env-4.4 env-4.5 event-13.8 event-14.8 event-7.5 exit-1.1 exit-1.2 io-14.3 io-14.4 io-29.33 io-29.33b iocmd-31.* iocmd-32.* pid-1.2 regexp-14.3 regexpComp-14.3 subst-5.10 subst-5.8 subst-5.9 unixFCmd-13.2 unixFCmd-16.1 chan-16.9 chan-io-29.34 chan-io-29.35 chan-io-39.18 chan-io-39.19 chan-io-39.20 chan-io-39.21 chan-io-39.23 chan-io-39.24 chan-io-51.1 chan-io-53.5 chan-io-54.1 chan-io-54.2 chan-io-57.1 chan-io-57.2 event-11.5 io-29.34 io-29.35 io-39.18 io-39.19 io-39.20 io-39.21 io-39.23 io-39.24 io-51.1 io-53.5 io-54.1 io-54.2 io-57.1 io-57.2 io-60.1 zlib-10.0 zlib-10.1 zlib-10.2 zlib-8.3 zlib-9.* cmdAH-32.3 fCmd-10.3 fCmd-10.5 fCmd-10.6 fCmd-10.7 fCmd-10.8 fCmd-21.9 fCmd-3.12 fCmd-3.13 fCmd-3.16 fCmd-4.13 fCmd-5.4 fCmd-5.5 fCmd-5.9 fCmd-6.21 fCmd-6.24 fCmd-6.26 fCmd-8.3 fCmd-9.11 fCmd-9.14 filename-14.9 filesystem-1.26 filesystem-1.28 msgcat-14.2 tcltest-1.1 tcltest-1.2 tcltest-12.2 tcltest-14.1 tcltest-22.1 tcltest-6.2 tcltest-6.3 tcltest-6.4 tcltest-7.2 tcltest-7.3 tcltest-7.4 tcltest-7.5 tcltest-9.5 unixFCmd-1.5
 Running tests that match:  *
-Skipping test files that match:  exec.test http11.test ioCmd.test main.test stack.test socket.test fCmd.test fileName.test fileSystem.test
+Skipping test files that match:  exec.test http11.test ioCmd.test main.test stack.test socket.test
 Only running test files that match:  *.test
-Tests began at Tue Aug 04 21:37:46 CEST 2020
+Tests began at Mon Aug 10 22:15:37 CEST 2020
 aaa_exit.test
 append.test
 appendComp.test
@@ -43,6 +43,9 @@ event.test
 execute.test
 expr-old.test
 expr.test
+fCmd.test
+fileName.test
+fileSystem.test
 fileSystemEncoding.test
 for-old.test
 for.test
@@ -154,28 +157,29 @@ winPipe.test
 winTime.test
 zlib.test
 
-Tests ended at Tue Aug 04 21:38:34 CEST 2020
-all.tcl:	Total	31997	Passed	28556	Skipped	3441	Failed	0
-Sourced 141 Test Files.
+Tests ended at Mon Aug 10 22:16:27 CEST 2020
+all.tcl:	Total	32687	Passed	29145	Skipped	3542	Failed	0
+Sourced 144 Test Files.
 Number of tests skipped for each constraint:
 	9	!ieeeFloatingPoint
 	12	!singleTestInterp
 	76	bigEndian
 	5	bug-3057639
 	49	dde
-	1	dontCopyLinks
-	62	emptyTest
+	4	dontCopyLinks
+	64	emptyTest
 	1	execMknod
-	1	foundGroup
+	3	foundGroup
 	5	fullutf
 	2	hasIsoLocale
 	1	knownBadTest
-	38	knownBug
+	39	knownBug
 	100	localeRegexp
 	52	longIs32bit
 	14	macosxFileAttr
 	79	memory
-	28	nonPortable
+	36	nonPortable
+	5	notNetworkFilesystem
 	9	nt
 	19	pkgaRequired
 	20	pkguaRequired
@@ -191,7 +195,8 @@ Number of tests skipped for each constraint:
 	3	tip389
 	2	umask
 	2	wideBiggerThanInt
-	410	win
+	481	win
 	4	winVista
+	6	xdev
 Warning: files left behind:
-	unixFCmd.test:	td1
+	fCmd.test:	td1 td2 tdd1 tdd2

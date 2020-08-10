@@ -226,6 +226,10 @@ func tclTestMain() {
 		"exit-1.2",
 		"io-14.3",
 		"io-14.4",
+		"io-29.33",
+		"io-29.33b",
+		"iocmd-31.*",
+		"iocmd-32.*",
 		"pid-1.2",
 		"regexp-14.3",
 		"regexpComp-14.3",
@@ -233,10 +237,7 @@ func tclTestMain() {
 		"subst-5.8",
 		"subst-5.9",
 		"unixFCmd-13.2",
-		"io-29.33",
-		"io-29.33b",
-		"iocmd-32.*",
-		"iocmd-31.*",
+		"unixFCmd-16.1",
 
 		//TODO Needs socket.
 		"chan-16.9",
@@ -255,10 +256,8 @@ func tclTestMain() {
 		"chan-io-57.1",
 		"chan-io-57.2",
 		"event-11.5",
-		"zlib-10.0",
-		"zlib-10.1",
-		"zlib-10.2",
-		"zlib-9.*",
+		"io-29.34",
+		"io-29.35",
 		"io-39.18",
 		"io-39.19",
 		"io-39.20",
@@ -272,30 +271,42 @@ func tclTestMain() {
 		"io-57.1",
 		"io-57.2",
 		"io-60.1",
+		"zlib-10.0",
+		"zlib-10.1",
+		"zlib-10.2",
 		"zlib-8.3",
-		"io-29.34",
-		"io-29.35",
-
-		//TODO getpwnam
-		"info-16.4",
-		"unixFCmd-16.*",
-		"cmdAH-2.5",
-		"cmdAH-8.39",
-		"cmdAH-15.1",
-		"cmdAH-19.*",
-		"cmdAH-30.8",
-
-		//TODO getgrgid
-		"unixFCmd-12.2",
-		"cmdAH-7.1",
-
-		//TODO getgrnam
-		"unixFCmd-15.1",
+		"zlib-9.*",
 
 		//TODO other
 		"cmdAH-32.3",
+		"fCmd-10.3",
+		"fCmd-10.5",
+		"fCmd-10.6",
+		"fCmd-10.7",
+		"fCmd-10.8",
+		"fCmd-21.9",
+		"fCmd-3.12",
+		"fCmd-3.13",
+		"fCmd-3.16",
+		"fCmd-4.13",
+		"fCmd-5.4",
+		"fCmd-5.5",
+		"fCmd-5.9",
+		"fCmd-6.21",
+		"fCmd-6.24",
+		"fCmd-6.26",
+		"fCmd-8.3",
+		"fCmd-9.11",
+		"fCmd-9.14",
+		"filename-14.9",
+		"filesystem-1.26",
+		"filesystem-1.28",
+		"msgcat-14.2",
 		"tcltest-1.1",
 		"tcltest-1.2",
+		"tcltest-12.2",
+		"tcltest-14.1",
+		"tcltest-22.1",
 		"tcltest-6.2",
 		"tcltest-6.3",
 		"tcltest-6.4",
@@ -304,9 +315,7 @@ func tclTestMain() {
 		"tcltest-7.4",
 		"tcltest-7.5",
 		"tcltest-9.5",
-		"tcltest-12.2",
-		"tcltest-14.1",
-		"tcltest-22.1",
+		"unixFCmd-1.5",
 	}
 	notFile := []string{
 		// Needs fork. (Not implemented)
@@ -318,11 +327,6 @@ func tclTestMain() {
 
 		//TODO Needs socket.
 		"socket.test",
-
-		// getpwnam
-		"fCmd.test",
-		"fileName.test",
-		"fileSystem.test",
 	}
 	var argv []string
 	for _, v := range os.Args {
