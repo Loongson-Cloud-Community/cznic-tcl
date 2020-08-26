@@ -5,9 +5,9 @@
 package tclsh
 
 import (
-	"modernc.org/crt/v3"
+	"modernc.org/libc"
 )
 
-func Main(tls *crt.TLS, argc int32, argv uintptr) int32 {
+func Main(tls *libc.TLS, argc int32, argv uintptr) int32 {
 	return main(tls, argc, argv)
 }

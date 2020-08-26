@@ -53,10 +53,15 @@ func origin(skip int) string {
 }
 
 func main() {
+	env := os.Getenv("GO_GENERATE")
+	var more []string
+	if env != "" {
+		more = strings.Split(env, ",")
+	}
 	download()
 	switch runtime.GOOS {
 	case "linux":
-		makeUnix()
+		makeUnix(more)
 		if err := newCmd(nil, nil, "sh", "-c", fmt.Sprintf("cp -r %s %s", filepath.FromSlash(tclDir+"/library/*"), "assets/")).Run(); err != nil {
 			fail("error copying tcl library: %v", err)
 		}
@@ -100,7 +105,7 @@ func copyFile(src, dest string) {
 	}
 }
 
-func makeUnix() {
+func makeUnix(more []string) {
 	testWD, err := os.Getwd()
 	if err != nil {
 		fail("%s\n", err)
@@ -117,17 +122,16 @@ func makeUnix() {
 		"--disable-dll-unload",
 		"--disable-load",
 		"--disable-threads",
-		//TODO- "--enable-symbols=mem", //TODO- adds TCL_MEM_DEBUG
 	)
 	if err = cmd.Run(); err != nil {
 		fail("%s\n", err)
 	}
 
-	makeUnixLibAndShell(testWD)
-	makeUnixTclTest(testWD)
+	makeUnixLibAndShell(testWD, more)
+	makeUnixTclTest(testWD, more)
 }
 
-func makeUnixLibAndShell(testWD string) {
+func makeUnixLibAndShell(testWD string, more []string) {
 	var stdout strings.Builder
 	cmd := newCmd(&stdout, nil, "make")
 	err := cmd.Run()
@@ -168,16 +172,16 @@ func makeUnixLibAndShell(testWD string) {
 		}
 	}
 	args := []string{
-		"-o", filepath.Join(testWD, filepath.FromSlash(fmt.Sprintf("lib/tcl_%s_%s.go", runtime.GOOS, runtime.GOARCH))),
 		"-ccgo-export-defines", "",
 		"-ccgo-export-enums", "",
 		"-ccgo-export-externs", "X",
 		"-ccgo-export-fields", "F",
 		"-ccgo-export-structs", "",
 		"-ccgo-export-typedefs", "",
+		"-ccgo-hide", "TclpCreateProcess",
 		"-ccgo-long-double-is-double",
 		"-ccgo-pkgname", "tcl",
-		//TODO- "-ccgo-verify-structs", //TODO-
+		"-o", filepath.Join(testWD, filepath.FromSlash(fmt.Sprintf("lib/tcl_%s_%s.go", runtime.GOOS, runtime.GOARCH))),
 		"../compat/zlib/adler32.c",
 		"../compat/zlib/compress.c",
 		"../compat/zlib/crc32.c",
@@ -190,6 +194,7 @@ func makeUnixLibAndShell(testWD string) {
 		"../compat/zlib/uncompr.c",
 		"../compat/zlib/zutil.c",
 	}
+	args = append(args, more...)
 	args = append(args, opts...)
 	for _, v := range objectFiles {
 		args = append(args, cFiles[v])
@@ -208,7 +213,6 @@ func makeUnixLibAndShell(testWD string) {
 		"-o", filepath.Join(testWD, filepath.FromSlash(fmt.Sprintf("internal/tclsh/tclsh_%s_%s.go", runtime.GOOS, runtime.GOARCH))),
 		"-ccgo-long-double-is-double",
 		"-ccgo-pkgname", "tclsh",
-		//TODO- "-ccgo-verify-structs", //TODO-
 		"tclAppInit.c",
 		"-lmodernc.org/tcl/lib",
 	}
@@ -224,7 +228,7 @@ func makeUnixLibAndShell(testWD string) {
 	}
 }
 
-func makeUnixTclTest(testWD string) {
+func makeUnixTclTest(testWD string, more []string) {
 	var stdout strings.Builder
 	cmd := newCmd(&stdout, nil, "make", "tcltest")
 	err := cmd.Run()
@@ -251,13 +255,12 @@ func makeUnixTclTest(testWD string) {
 	args := []string{
 		"-o", filepath.Join(testWD, filepath.FromSlash(fmt.Sprintf("internal/tcltest/tcltest_%s_%s.go", runtime.GOOS, runtime.GOARCH))),
 		"-ccgo-long-double-is-double",
-		"-ccgo-pkgname", "tcltest",
-		//TODO- "-ccgo-verify-structs", //TODO-
 		"../generic/tclOOStubLib.c",
 		"../generic/tclStubLib.c",
 		"../generic/tclTomMathStubLib.c",
 		"-lmodernc.org/tcl/lib",
 	}
+	args = append(args, more...)
 	args = append(args, opts...)
 	args = append(args, cPaths...)
 	fmt.Println("====\nccgo")

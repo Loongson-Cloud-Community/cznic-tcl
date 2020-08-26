@@ -9,7 +9,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"modernc.org/crt/v3"
+	"modernc.org/libc"
 	"modernc.org/tcl"
 	"modernc.org/tcl/internal/tclsh"
 )
@@ -27,5 +27,5 @@ func main() {
 	}
 
 	os.Setenv("TCL_LIBRARY", dir)
-	crt.Start(tclsh.Main)
+	libc.Start(tclsh.Main)
 }

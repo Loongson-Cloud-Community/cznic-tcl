@@ -5,7 +5,7 @@
 .PHONY:	all clean cover cpu editor internalError later mem nuke todo edit tcl
 
 grep=--include=*.go --include=*.l --include=*.y --include=*.yy
-ngrep='TODOOK\|internal\/vfs\|internal\/bin\|internal\/mptest\|.*stringer.*\.go'
+ngrep='TODOOK\|internal\|.*stringer.*\.go\|assets\.go'
 
 all: editor
 	date
@@ -23,11 +23,12 @@ all: editor
 	go vet 2>&1 | grep -v $(ngrep) || true
 	golint 2>&1 | grep -v $(ngrep) || true
 	#make todo
-	misspell *.go
+	misspell *.go | grep -v $(ngrep) || true
 	staticcheck
 	maligned || true
 	grep -n 'FAIL\|PASS' log 
 	git diff --unified=0 testdata *.golden
+	grep -n Passed log 
 	go version
 	date 2>&1 | tee -a log
 

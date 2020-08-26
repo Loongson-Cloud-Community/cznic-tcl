@@ -6,7 +6,7 @@
 //go:generate assets -package tcl
 //go:generate go fmt ./...
 
-// Package Tcl is a port of the Tool Command Language.
+// Package tcl is a port of the Tool Command Language.
 //
 // A sperate Tcl shell is in the gotclsh directory.
 //
@@ -33,8 +33,8 @@ import (
 	"time"
 	"unsafe"
 
-	"modernc.org/crt/v3"
 	"modernc.org/httpfs"
+	"modernc.org/libc"
 	"modernc.org/tcl/lib"
 )
 
@@ -48,6 +48,8 @@ var (
 	libOnce  sync.Once
 	objectMu sync.Mutex
 	objects  = map[uintptr]interface{}{}
+
+	_ = trc
 )
 
 func origin(skip int) string {
@@ -173,7 +175,7 @@ type Command struct {
 
 // Interp represents a Tcl interpreter.
 type Interp struct {
-	tls    *crt.TLS
+	tls    *libc.TLS
 	interp uintptr
 }
 
@@ -196,7 +198,7 @@ func NewInterp() (*Interp, error) {
 		return nil, err
 	}
 
-	tls := crt.NewTLS()
+	tls := libc.NewTLS()
 	interp := tcl.XTcl_CreateInterp(tls)
 	if interp == 0 {
 		tls.Close()
@@ -234,7 +236,7 @@ func (in *Interp) MustClose() {
 
 // Eval evaluates script and returns the interpreter; result and error, if any.
 func (in *Interp) Eval(script string) (string, error) {
-	s, err := crt.CString(script)
+	s, err := libc.CString(script)
 	if err != nil {
 		return "", err
 	}
@@ -242,17 +244,17 @@ func (in *Interp) Eval(script string) (string, error) {
 	tcl.XTcl_Preserve(in.tls, in.interp)
 
 	defer func() {
-		crt.Xfree(in.tls, s)
+		libc.Xfree(in.tls, s)
 		tcl.XTcl_Release(in.tls, in.interp)
 	}()
 
 	rc := tcl.XTcl_Eval(in.tls, in.interp, s)
-	rs := crt.GoString(tcl.XTcl_GetStringResult(in.tls, in.interp))
+	rs := libc.GoString(tcl.XTcl_GetStringResult(in.tls, in.interp))
 	if rc == tcl.TCL_OK {
 		return rs, nil
 	}
 
-	return rs, fmt.Errorf("Tcl return code: %d", rc)
+	return rs, fmt.Errorf("return code: %d", rc)
 }
 
 // MustEval is like Eval but panics on error.
@@ -272,18 +274,18 @@ type cmdProc struct {
 	in         *Interp
 }
 
-func runCmd(tls *crt.TLS, clientData, in uintptr, argc int32, argv uintptr) int32 {
+func runCmd(tls *libc.TLS, clientData, in uintptr, argc int32, argv uintptr) int32 {
 	cmd := getObject(clientData).(*cmdProc)
 	var a []string
 	for i := int32(0); i < argc; i++ {
-		p := *(*uintptr)(unsafe.Pointer(argv))
+		p := *(*uintptr)(unsafe.Pointer(argv)) //TODOOK
 		argv += unsafe.Sizeof(argv)
-		a = append(a, crt.GoString(p))
+		a = append(a, libc.GoString(p))
 	}
 	return int32(cmd.f(cmd.clientData, cmd.in, a))
 }
 
-func delCmd(tls *crt.TLS, clientData uintptr) {
+func delCmd(tls *libc.TLS, clientData uintptr) {
 	cmd := getObject(clientData).(*cmdProc)
 	if cmd.del != nil {
 		cmd.del(cmd.clientData)
@@ -293,16 +295,16 @@ func delCmd(tls *crt.TLS, clientData uintptr) {
 
 var (
 	runCmdP = *(*uintptr)(unsafe.Pointer(&struct {
-		f func(tls *crt.TLS, clientData, in uintptr, argc int32, argv uintptr) int32
+		f func(tls *libc.TLS, clientData, in uintptr, argc int32, argv uintptr) int32
 	}{runCmd}))
 	delCmdP = *(*uintptr)(unsafe.Pointer(&struct {
-		f func(tls *crt.TLS, clientData uintptr)
+		f func(tls *libc.TLS, clientData uintptr)
 	}{delCmd}))
 )
 
 // NewCommand returns a newly created Tcl command or an error, if any.
 func (in *Interp) NewCommand(name string, proc CmdProc, clientData interface{}, del DeleteProc) (*Command, error) {
-	nm, err := crt.CString(name)
+	nm, err := libc.CString(name)
 	if err != nil {
 		return nil, err
 	}
@@ -310,7 +312,7 @@ func (in *Interp) NewCommand(name string, proc CmdProc, clientData interface{}, 
 	tcl.XTcl_Preserve(in.tls, in.interp)
 
 	defer func() {
-		crt.Xfree(in.tls, nm)
+		libc.Xfree(in.tls, nm)
 		tcl.XTcl_Release(in.tls, in.interp)
 	}()
 
@@ -336,12 +338,12 @@ func (in *Interp) MustNewCommand(name string, proc CmdProc, clientData interface
 
 // SetResult sets the result of the interpreter.
 func (in *Interp) SetResult(s string) error {
-	cs, err := crt.CString(s)
+	cs, err := libc.CString(s)
 	if err != nil {
 		return err
 	}
 
-	defer crt.Xfree(in.tls, cs)
+	defer libc.Xfree(in.tls, cs)
 
 	tcl.XTcl_SetResult(in.tls, in.interp, cs, tclVolatile)
 	return nil
