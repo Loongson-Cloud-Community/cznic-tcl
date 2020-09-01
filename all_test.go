@@ -93,12 +93,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestTclTest(t *testing.T) {
-	skip := []string{
-		"fCmd-6.24", //TODO CopyRenameOneFile: error uses original name FAILED
-		"fCmd-6.26", //TODO CopyRenameOneFile: doesn't use original name FAILED
-		"fCmd-8.3",  //TODO file copy and path translation: ensure correct error FAILED
-		"fCmd-21.9", //TODO TclCopyFilesCmd: copy dir with a link in it FAILED
-	}
+	skip := []string{}
 	notFile := []string{}
 
 	wd, err := os.Getwd()
