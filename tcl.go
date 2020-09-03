@@ -14,6 +14,8 @@
 //
 // Changelog:
 //
+// 2020-09-03 v1.2.0 is now completelely CGo-free.
+//
 // 2020-08-04: beta2 released for linux/amd64 only. Support for threads,
 // sockets and fork is not yet implemented. Some tests still crash, those are
 // disabled at the moment.
