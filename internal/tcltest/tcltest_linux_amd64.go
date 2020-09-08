@@ -1660,7 +1660,7 @@ type flock = struct {
 	l_len    int64
 	l_pid    int32
 	_        [4]byte
-}
+} /* fcntl.h:35:1 */
 
 type flock64 = struct {
 	l_type   int16
@@ -1669,7 +1669,7 @@ type flock64 = struct {
 	l_len    int64
 	l_pid    int32
 	_        [4]byte
-}
+} /* fcntl.h:50:1 */
 
 // Include generic Linux declarations.
 // O_*, F_*, FD_* bit values for Linux.
@@ -1746,7 +1746,7 @@ type flock64 = struct {
 //   by any POSIX header, so we don't conditionalize the definitions here.
 type mode_t = uint32 /* fcntl.h:50:18 */
 
-type off_t = int64 /* fcntl.h:56:17 */
+type off_t = int64 /* fcntl.h:58:19 */
 
 type off64_t = int64 /* fcntl.h:64:19 */
 
@@ -1780,7 +1780,7 @@ type pid_t = int32 /* fcntl.h:69:17 */
 type timespec = struct {
 	tv_sec  int64
 	tv_nsec int64
-}
+} /* struct_timespec.h:9:1 */
 
 // Copyright (C) 1999-2018 Free Software Foundation, Inc.
 //   This file is part of the GNU C Library.
@@ -1828,7 +1828,7 @@ type stat = struct {
 		tv_nsec int64
 	}
 	__glibc_reserved [3]int64
-}
+} /* stat.h:46:1 */
 
 // Note stat64 has the same shape as stat for x86-64.
 type stat64 = struct {
@@ -1856,7 +1856,7 @@ type stat64 = struct {
 		tv_nsec int64
 	}
 	__glibc_reserved [3]int64
-}
+} /* stat.h:119:1 */
 
 // Wide character type.
 //   Locale-writers should change this as necessary to
@@ -1888,7 +1888,7 @@ type passwd = struct {
 	pw_gecos  uintptr
 	pw_dir    uintptr
 	pw_shell  uintptr
-}
+} /* pwd.h:49:1 */
 
 type _IO_FILE = struct {
 	_flags          int32
@@ -1920,7 +1920,7 @@ type _IO_FILE = struct {
 	__pad5          size_t
 	_mode           int32
 	_unused2        [20]int8
-}
+} /* FILE.h:4:1 */
 
 // The opaque type of streams.  This is the definition used elsewhere.
 type FILE = _IO_FILE /* FILE.h:7:25 */
@@ -2129,7 +2129,7 @@ type sigval = struct {
 	_         [0]uint64
 	sival_int int32
 	_         [4]byte
-}
+} /* __sigval_t.h:24:1 */
 
 // Some fields of siginfo_t have architecture-specific variations.
 // Architecture-specific adjustments to siginfo_t.  x86 version.
@@ -2220,7 +2220,7 @@ type sigval_t = sigval /* sigval_t.h:16:20 */
 type pthread_attr_t1 = struct {
 	_      [0]uint64
 	__size [56]int8
-}
+} /* sigevent_t.h:17:9 */
 
 // Determine the wordsize from the preprocessor defines.
 
@@ -2279,7 +2279,7 @@ type sigevent = struct {
 		_    [0]uint64
 		_pad [12]int32
 	}
-}
+} /* sigevent_t.h:22:9 */
 
 // Structure to transport application-defined values with signals.
 type sigevent_t = sigevent /* sigevent_t.h:42:5 */
@@ -2313,7 +2313,7 @@ type sigaction = struct {
 	sa_mask             struct{ __val [16]uint64 }
 	sa_flags            int32
 	sa_restorer         uintptr
-}
+} /* sigaction.h:27:1 */
 
 // Get machine-dependent `struct sigcontext' and signal subcodes.
 // Copyright (C) 2002-2018 Free Software Foundation, Inc.
@@ -2359,20 +2359,20 @@ type _fpx_sw_bytes = struct {
 	xstate_bv         uint64
 	xstate_size       uint32
 	__glibc_reserved1 [7]uint32
-}
+} /* sigcontext.h:31:1 */
 
 type _fpreg = struct {
 	significand [4]uint16
 	exponent    uint16
-}
+} /* sigcontext.h:40:1 */
 
 type _fpxreg = struct {
 	significand       [4]uint16
 	exponent          uint16
 	__glibc_reserved1 [3]uint16
-}
+} /* sigcontext.h:46:1 */
 
-type _xmmreg = struct{ element [4]uint32 }
+type _xmmreg = struct{ element [4]uint32 } /* sigcontext.h:53:1 */
 
 type _fpstate = struct {
 	cwd       uint16
@@ -2390,7 +2390,7 @@ type _fpstate = struct {
 	}
 	_xmm              [16]struct{ element [4]uint32 }
 	__glibc_reserved1 [24]uint32
-}
+} /* sigcontext.h:123:1 */
 
 type sigcontext = struct {
 	r8          uint64
@@ -2421,15 +2421,15 @@ type sigcontext = struct {
 	cr2         uint64
 	__184       struct{ fpstate uintptr }
 	__reserved1 [8]uint64
-}
+} /* sigcontext.h:139:1 */
 
 type _xsave_hdr = struct {
 	xstate_bv         uint64
 	__glibc_reserved1 [2]uint64
 	__glibc_reserved2 [5]uint64
-}
+} /* sigcontext.h:177:1 */
 
-type _ymmh_state = struct{ ymmh_space [64]uint32 }
+type _ymmh_state = struct{ ymmh_space [64]uint32 } /* sigcontext.h:184:1 */
 
 type _xstate = struct {
 	fpstate struct {
@@ -2455,7 +2455,7 @@ type _xstate = struct {
 		__glibc_reserved2 [5]uint64
 	}
 	ymmh struct{ ymmh_space [64]uint32 }
-}
+} /* sigcontext.h:189:1 */
 
 // Copyright (C) 1989-2018 Free Software Foundation, Inc.
 //
@@ -2731,9 +2731,9 @@ type _libc_fpxreg = struct {
 	significand       [4]uint16
 	exponent          uint16
 	__glibc_reserved1 [3]uint16
-}
+} /* ucontext.h:101:1 */
 
-type _libc_xmmreg = struct{ element [4]uint32 }
+type _libc_xmmreg = struct{ element [4]uint32 } /* ucontext.h:108:1 */
 
 type _libc_fpstate = struct {
 	cwd       uint16
@@ -2751,7 +2751,7 @@ type _libc_fpstate = struct {
 	}
 	_xmm              [16]struct{ element [4]uint32 }
 	__glibc_reserved1 [24]uint32
-}
+} /* ucontext.h:113:1 */
 
 // Structure to describe FPU registers.
 type fpregset_t = uintptr /* ucontext.h:130:30 */
@@ -2788,7 +2788,7 @@ type ucontext_t1 = struct {
 		__glibc_reserved1 [24]uint32
 	}
 	__ssp [4]uint64
-}
+} /* ucontext.h:142:9 */
 
 // Userlevel context.
 type ucontext_t = ucontext_t1 /* ucontext.h:151:5 */
@@ -2816,7 +2816,7 @@ type sigstack = struct {
 	ss_sp      uintptr
 	ss_onstack int32
 	_          [4]byte
-}
+} /* struct_sigstack.h:23:1 */
 
 // Some of the functions for handling signals in threaded programs must
 //   be defined here.
@@ -2949,14 +2949,14 @@ type __pthread_rwlock_arch_t = struct {
 	__pad2          uint64
 	__flags         uint32
 	_               [4]byte
-}
+} /* pthreadtypes-arch.h:65:1 */
 
 // Common definition of pthread_mutex_t.
 
 type __pthread_internal_list = struct {
 	__prev uintptr
 	__next uintptr
-}
+} /* thread-shared-types.h:82:9 */
 
 // Lock elision support.
 
@@ -2972,7 +2972,7 @@ type __pthread_mutex_s = struct {
 		__prev uintptr
 		__next uintptr
 	}
-}
+} /* thread-shared-types.h:118:1 */
 
 // Common definition of pthread_cond_t.
 
@@ -2984,7 +2984,7 @@ type __pthread_cond_s = struct {
 	__g1_orig_size uint32
 	__wrefs        uint32
 	__g_signals    [2]uint32
-}
+} /* thread-shared-types.h:171:1 */
 
 // Thread identifiers.  The structure of the attribute type is not
 //   exposed on purpose.
@@ -3203,7 +3203,7 @@ type u_quad_t = uint64                 /* types.h:38:20 */
 type fsid_t = struct{ __val [2]int32 } /* types.h:39:18 */
 type loff_t = int64                    /* types.h:42:18 */
 
-type ino_t = uint64   /* types.h:47:17 */
+type ino_t = uint64   /* types.h:49:19 */
 type ino64_t = uint64 /* types.h:54:19 */
 
 type dev_t = uint64 /* types.h:59:17 */
@@ -3564,7 +3564,7 @@ type register_t = int32 /* types.h:169:13 */
 type timeval = struct {
 	tv_sec  int64
 	tv_usec int64
-}
+} /* struct_timeval.h:8:1 */
 
 // NB: Include guard matches what <linux/time.h> uses.
 
@@ -3586,9 +3586,9 @@ type fd_mask = int64 /* select.h:77:19 */
 type blksize_t = int64 /* types.h:202:21 */
 
 // Types from the Large File Support interface.
-type blkcnt_t = int64    /* types.h:209:20 */ // Type to count number of disk blocks.
-type fsblkcnt_t = uint64 /* types.h:213:22 */ // Type to count file system blocks.
-type fsfilcnt_t = uint64 /* types.h:217:22 */ // Type to count file system inodes.
+type blkcnt_t = int64    /* types.h:222:22 */ // Type to count number of disk blocks.
+type fsblkcnt_t = uint64 /* types.h:226:24 */ // Type to count file system blocks.
+type fsfilcnt_t = uint64 /* types.h:230:24 */ // Type to count file system inodes.
 
 type blkcnt64_t = int64    /* types.h:236:22 */ // Type to count number of disk blocks.
 type fsblkcnt64_t = uint64 /* types.h:237:24 */ // Type to count file system blocks.
@@ -4231,7 +4231,7 @@ type dirent = struct {
 	d_type   uint8
 	d_name   [256]int8
 	_        [5]byte
-}
+} /* dirent.h:22:1 */
 
 type dirent64 = struct {
 	d_ino    uint64
@@ -4240,7 +4240,7 @@ type dirent64 = struct {
 	d_type   uint8
 	d_name   [256]int8
 	_        [5]byte
-}
+} /* dirent.h:37:1 */
 
 //---------------------------------------------------------------------------
 // Parameterize for 64-bit filesystem support.
@@ -4329,7 +4329,7 @@ type Tcl_SeekOffset = off_t /* tclUnixPort.h:83:16 */
 type timezone = struct {
 	tz_minuteswest int32
 	tz_dsttime     int32
-}
+} /* time.h:52:1 */
 
 // Type of the second argument to `getitimer' and
 //   the second and third arguments `setitimer'.
@@ -4342,7 +4342,7 @@ type itimerval = struct {
 		tv_sec  int64
 		tv_usec int64
 	}
-}
+} /* time.h:104:1 */
 
 // Convenience macros for operations on timevals.
 //   NOTE: `timercmp' does not work for >= or <=.
@@ -4564,7 +4564,7 @@ type tm = struct {
 	tm_isdst  int32
 	tm_gmtoff int64
 	tm_zone   uintptr
-}
+} /* struct_tm.h:7:1 */
 
 // NB: Include guard matches what <linux/time.h> uses.
 
@@ -4600,7 +4600,7 @@ type itimerspec = struct {
 		tv_sec  int64
 		tv_nsec int64
 	}
-}
+} /* struct_itimerspec.h:8:1 */
 
 // Definition of locale_t.
 //   Copyright (C) 2017-2018 Free Software Foundation, Inc.
@@ -4650,7 +4650,7 @@ type __locale_struct = struct {
 	__ctype_tolower uintptr
 	__ctype_toupper uintptr
 	__names         [13]uintptr
-}
+} /* __locale_t.h:28:1 */
 
 type locale_t = uintptr /* locale_t.h:24:20 */
 
@@ -4786,7 +4786,7 @@ type rusage = struct {
 	__120 struct{ ru_nsignals int64 }
 	__128 struct{ ru_nvcsw int64 }
 	__136 struct{ ru_nivcsw int64 }
-}
+} /* wait.h:129:1 */
 
 // Copyright (C) 1997-2018 Free Software Foundation, Inc.
 //   This file is part of the GNU C Library.
@@ -5629,7 +5629,7 @@ type socklen_t = uint32 /* unistd.h:274:21 */
 type utimbuf = struct {
 	actime  int64
 	modtime int64
-}
+} /* utime.h:36:1 */
 
 //---------------------------------------------------------------------------
 // Socket support stuff: This likely needs more work to parameterize for each
@@ -5775,7 +5775,7 @@ type utimbuf = struct {
 type iovec = struct {
 	iov_base uintptr
 	iov_len  size_t
-}
+} /* struct_iovec.h:26:1 */
 
 // Protocol families.
 
@@ -5822,7 +5822,7 @@ type sa_family_t = uint16 /* sockaddr.h:28:28 */
 type sockaddr = struct {
 	sa_family sa_family_t
 	sa_data   [14]int8
-}
+} /* socket.h:175:1 */
 
 // Structure large enough to hold any socket address (with the historical
 //   exception of AF_UNIX).
@@ -5831,7 +5831,7 @@ type sockaddr_storage = struct {
 	ss_family    sa_family_t
 	__ss_padding [118]int8
 	__ss_align   uint64
-}
+} /* socket.h:188:1 */
 
 // Structure describing messages sent by
 //   `sendmsg' and received by `recvmsg'.
@@ -5844,7 +5844,7 @@ type msghdr = struct {
 	msg_controllen size_t
 	msg_flags      int32
 	_              [4]byte
-}
+} /* socket.h:254:1 */
 
 // Structure used for storage of ancillary data object information.
 type cmsghdr = struct {
@@ -5852,7 +5852,7 @@ type cmsghdr = struct {
 	cmsg_len   size_t
 	cmsg_level int32
 	cmsg_type  int32
-}
+} /* socket.h:272:1 */
 
 // Ugly workaround for unclean kernel headers.
 
@@ -5875,14 +5875,14 @@ type cmsghdr = struct {
 type linger = struct {
 	l_onoff  int32
 	l_linger int32
-}
+} /* socket.h:444:1 */
 
 // This is the 4.3 BSD `struct sockaddr' format, which is used as wire
 //   format in the grotty old 4.3 `talk' protocol.
 type osockaddr = struct {
 	sa_family uint16
 	sa_data   [14]uint8
-}
+} /* struct_osockaddr.h:6:1 */
 
 // Define some macros helping to catch buffer overflows.
 
@@ -5953,7 +5953,7 @@ type utsname = struct {
 	version      [65]int8
 	machine      [65]int8
 	__domainname [65]int8
-}
+} /* utsname.h:48:1 */
 
 // Copyright (C) 1991-2018 Free Software Foundation, Inc.
 //   This file is part of the GNU C Library.
@@ -6046,8 +6046,8 @@ type utsname = struct {
 // Never include this file directly; use <sys/types.h> instead.
 
 // Internet address.
-type in_addr_t = uint32_t /* in.h:30:18 */
-type in_addr = struct{ s_addr in_addr_t }
+type in_addr_t = uint32_t                 /* in.h:30:18 */
+type in_addr = struct{ s_addr in_addr_t } /* in.h:31:1 */
 
 // Get system-specific definitions.
 // Copyright (C) 1991-2018 Free Software Foundation, Inc.
@@ -6099,21 +6099,21 @@ type in_addr = struct{ s_addr in_addr_t }
 type ip_opts = struct {
 	ip_dst  struct{ s_addr in_addr_t }
 	ip_opts [40]int8
-}
+} /* in.h:142:1 */
 
 // Like `struct ip_mreq' but including interface specification by index.
 type ip_mreqn = struct {
 	imr_multiaddr struct{ s_addr in_addr_t }
 	imr_address   struct{ s_addr in_addr_t }
 	imr_ifindex   int32
-}
+} /* in.h:149:1 */
 
 // Structure used for IP_PKTINFO.
 type in_pktinfo = struct {
 	ipi_ifindex  int32
 	ipi_spec_dst struct{ s_addr in_addr_t }
 	ipi_addr     struct{ s_addr in_addr_t }
-}
+} /* in.h:157:1 */
 
 // Type to represent a port.
 type in_port_t = uint16_t /* in.h:119:18 */
@@ -6138,7 +6138,7 @@ type in6_addr = struct {
 		_          [0]uint32
 		__u6_addr8 [16]uint8_t
 	}
-}
+} /* in.h:211:1 */
 
 // ::1
 
@@ -6148,7 +6148,7 @@ type sockaddr_in = struct {
 	sin_port   in_port_t
 	sin_addr   struct{ s_addr in_addr_t }
 	sin_zero   [8]uint8
-}
+} /* in.h:237:1 */
 
 // Ditto, for IPv6.
 type sockaddr_in6 = struct {
@@ -6162,19 +6162,19 @@ type sockaddr_in6 = struct {
 		}
 	}
 	sin6_scope_id uint32_t
-}
+} /* in.h:252:1 */
 
 // IPv4 multicast request.
 type ip_mreq = struct {
 	imr_multiaddr struct{ s_addr in_addr_t }
 	imr_interface struct{ s_addr in_addr_t }
-}
+} /* in.h:264:1 */
 
 type ip_mreq_source = struct {
 	imr_multiaddr  struct{ s_addr in_addr_t }
 	imr_interface  struct{ s_addr in_addr_t }
 	imr_sourceaddr struct{ s_addr in_addr_t }
-}
+} /* in.h:273:1 */
 
 // Likewise, for IPv6.
 type ipv6_mreq = struct {
@@ -6185,7 +6185,7 @@ type ipv6_mreq = struct {
 		}
 	}
 	ipv6mr_interface uint32
-}
+} /* in.h:288:1 */
 
 // Multicast group request.
 type group_req = struct {
@@ -6195,7 +6195,7 @@ type group_req = struct {
 		__ss_padding [118]int8
 		__ss_align   uint64
 	}
-}
+} /* in.h:300:1 */
 
 type group_source_req = struct {
 	gsr_interface uint32_t
@@ -6209,7 +6209,7 @@ type group_source_req = struct {
 		__ss_padding [118]int8
 		__ss_align   uint64
 	}
-}
+} /* in.h:309:1 */
 
 // Full-state filter operations.
 type ip_msfilter = struct {
@@ -6218,7 +6218,7 @@ type ip_msfilter = struct {
 	imsf_fmode     uint32_t
 	imsf_numsrc    uint32_t
 	imsf_slist     [1]struct{ s_addr in_addr_t }
-}
+} /* in.h:323:1 */
 
 type group_filter = struct {
 	gf_interface uint32_t
@@ -6234,7 +6234,7 @@ type group_filter = struct {
 		__ss_padding [118]int8
 		__ss_align   uint64
 	}
-}
+} /* in.h:344:1 */
 
 // Copyright (C) 1996-2018 Free Software Foundation, Inc.
 //   This file is part of the GNU C Library.
@@ -6448,7 +6448,7 @@ type rpcent = struct {
 	r_aliases uintptr
 	r_number  int32
 	_         [4]byte
-}
+} /* netdb.h:46:1 */
 
 // Copyright (C) 1996-2018 Free Software Foundation, Inc.
 //   This file is part of the GNU C Library.
@@ -6475,7 +6475,7 @@ type netent = struct {
 	n_aliases  uintptr
 	n_addrtype int32
 	n_net      uint32_t
-}
+} /* netdb.h:26:1 */
 
 // Description of data base entry for a single host.
 type hostent = struct {
@@ -6484,7 +6484,7 @@ type hostent = struct {
 	h_addrtype  int32
 	h_length    int32
 	h_addr_list uintptr
-}
+} /* netdb.h:98:1 */
 
 // Description of data base entry for a single service.
 type servent = struct {
@@ -6492,7 +6492,7 @@ type servent = struct {
 	s_aliases uintptr
 	s_port    int32
 	s_proto   uintptr
-}
+} /* netdb.h:255:1 */
 
 // Description of data base entry for a single service.
 type protoent = struct {
@@ -6500,7 +6500,7 @@ type protoent = struct {
 	p_aliases uintptr
 	p_proto   int32
 	_         [4]byte
-}
+} /* netdb.h:324:1 */
 
 // Extension from POSIX.1:2001.
 // Structure to contain information about address of a service provider.
@@ -6513,7 +6513,7 @@ type addrinfo = struct {
 	ai_addr      uintptr
 	ai_canonname uintptr
 	ai_next      uintptr
-}
+} /* netdb.h:565:1 */
 
 //---------------------------------------------------------------------------
 // Darwin specifc configure overrides.
@@ -6713,7 +6713,7 @@ type group = struct {
 	gr_passwd uintptr
 	gr_gid    uint32
 	gr_mem    uintptr
-}
+} /* grp.h:42:1 */
 
 // The tag name of this struct is _G_fpos_t to preserve historic
 //   C++ mangled names for functions taking fpos_t arguments.
@@ -6724,7 +6724,7 @@ type _G_fpos_t = struct {
 		__count int32
 		__value struct{ __wch uint32 }
 	}
-}
+} /* __fpos_t.h:10:9 */
 
 // bits/types.h -- definitions of __*_t types underlying *_t types.
 //   Copyright (C) 2002-2018 Free Software Foundation, Inc.
@@ -6755,7 +6755,7 @@ type _G_fpos64_t = struct {
 		__count int32
 		__value struct{ __wch uint32 }
 	}
-}
+} /* __fpos64_t.h:10:9 */
 
 // These macros are used by bits/stdio.h and internal headers.
 
@@ -6809,7 +6809,7 @@ type _G_fpos64_t = struct {
 type va_list = uintptr /* stdarg.h:99:24 */
 
 // The type of the second argument to `fgetpos' and `fsetpos'.
-type fpos_t = _G_fpos_t     /* stdio.h:84:18 */
+type fpos_t = _G_fpos64_t   /* stdio.h:86:20 */
 type fpos64_t = _G_fpos64_t /* stdio.h:89:20 */
 
 // If we are compiling with optimizing read this file.  It contains
@@ -6928,7 +6928,7 @@ type ClientData = uintptr /* tcl.h:340:15 */
 type Tcl_WideInt = int64   /* tcl.h:415:28 */
 type Tcl_WideUInt = uint64 /* tcl.h:416:36 */
 
-type Tcl_StatBuf = stat /* tcl.h:470:25 */
+type Tcl_StatBuf = stat64 /* tcl.h:470:25 */
 
 //----------------------------------------------------------------------------
 // Data structures defined opaquely in this module. The definitions below just
@@ -6953,7 +6953,7 @@ type Tcl_Interp1 = struct {
 	freeProcDontUse  uintptr
 	errorLineDontUse int32
 	_                [4]byte
-}
+} /* tcl.h:493:9 */
 
 //----------------------------------------------------------------------------
 // Data structures defined opaquely in this module. The definitions below just
@@ -6986,7 +6986,7 @@ type Tcl_Encoding = uintptr           /* tcl.h:534:30 */
 type Tcl_Event1 = struct {
 	proc    uintptr
 	nextPtr uintptr
-}
+} /* tcl.h:535:9 */
 
 type Tcl_Event = Tcl_Event1    /* tcl.h:535:26 */
 type Tcl_InterpState = uintptr /* tcl.h:536:33 */
@@ -6994,7 +6994,7 @@ type Tcl_LoadHandle_ = struct {
 	clientData        ClientData
 	findSymbolProcPtr uintptr
 	unloadFileProcPtr uintptr
-}
+} /* tcl.h:537:9 */
 
 type Tcl_LoadHandle = uintptr    /* tcl.h:537:32 */
 type Tcl_Mutex = uintptr         /* tcl.h:538:27 */
@@ -7027,7 +7027,7 @@ type Tcl_ZlibStream = uintptr    /* tcl.h:546:32 */
 type Tcl_RegExpIndices1 = struct {
 	start int64
 	end   int64
-}
+} /* tcl.h:623:9 */
 
 // Threading function return types used for abstracting away platform
 // differences when writing a Tcl_ThreadCreateProc. See the NewThread function
@@ -7053,7 +7053,7 @@ type Tcl_RegExpInfo1 = struct {
 	matches     uintptr
 	extendStart int64
 	reserved    int64
-}
+} /* tcl.h:630:9 */
 
 type Tcl_RegExpInfo = Tcl_RegExpInfo1 /* tcl.h:637:3 */
 
@@ -7094,7 +7094,7 @@ type Tcl_Value1 = struct {
 	intValue    int64
 	doubleValue float64
 	wideValue   Tcl_WideInt
-}
+} /* tcl.h:694:9 */
 
 type Tcl_Value = Tcl_Value1 /* tcl.h:700:3 */
 
@@ -7110,7 +7110,7 @@ type Tcl_Obj1 = struct {
 		longValue int64
 		_         [8]byte
 	}
-}
+} /* tcl.h:707:1 */
 
 //----------------------------------------------------------------------------
 // The following structure represents a type of object, which is a particular
@@ -7123,7 +7123,7 @@ type Tcl_ObjType1 = struct {
 	dupIntRepProc    uintptr
 	updateStringProc uintptr
 	setFromAnyProc   uintptr
-}
+} /* tcl.h:707:1 */
 
 //----------------------------------------------------------------------------
 // The following structure represents a type of object, which is a particular
@@ -7152,7 +7152,7 @@ type Tcl_SavedResult1 = struct {
 	appendUsed   int32
 	resultSpace  [201]int8
 	_            [7]byte
-}
+} /* tcl.h:864:9 */
 
 //----------------------------------------------------------------------------
 // The following structure contains the state needed by Tcl_SaveResult. No-one
@@ -7172,7 +7172,7 @@ type Tcl_Namespace1 = struct {
 	clientData ClientData
 	deleteProc uintptr
 	parentPtr  uintptr
-}
+} /* tcl.h:881:9 */
 
 //----------------------------------------------------------------------------
 // The following definitions support Tcl's namespace facility. Note: the first
@@ -7217,7 +7217,7 @@ type Tcl_CallFrame1 = struct {
 	dummy11 uintptr
 	dummy12 uintptr
 	dummy13 uintptr
-}
+} /* tcl.h:922:9 */
 
 //----------------------------------------------------------------------------
 // The following structure represents a call frame, or activation record. A
@@ -7264,7 +7264,7 @@ type Tcl_CmdInfo1 = struct {
 	deleteProc         uintptr
 	deleteData         ClientData
 	namespacePtr       uintptr
-}
+} /* tcl.h:954:9 */
 
 //----------------------------------------------------------------------------
 // Information about commands that is returned by Tcl_GetCommandInfo and
@@ -7291,7 +7291,7 @@ type Tcl_DString1 = struct {
 	length      int32
 	spaceAvl    int32
 	staticSpace [200]int8
-}
+} /* tcl.h:983:9 */
 
 //----------------------------------------------------------------------------
 // The structure defined below is used to hold dynamic strings. The only
@@ -7370,7 +7370,7 @@ type Tcl_HashKeyType1 = struct {
 	compareKeysProc uintptr
 	allocEntryProc  uintptr
 	freeEntryProc   uintptr
-}
+} /* tcl.h:1152:9 */
 
 // Definitions for the maximum number of digits of precision that may be
 // specified in the "tcl_precision" variable, and the number of bytes of
@@ -7448,7 +7448,7 @@ type Tcl_HashTable1 = struct {
 	findProc      uintptr
 	createProc    uintptr
 	typePtr       uintptr
-}
+} /* tcl.h:1153:9 */
 
 type Tcl_HashTable = Tcl_HashTable1 /* tcl.h:1153:30 */
 type Tcl_HashEntry1 = struct {
@@ -7457,7 +7457,7 @@ type Tcl_HashEntry1 = struct {
 	hash       uintptr
 	clientData ClientData
 	key        struct{ oneWordValue uintptr }
-}
+} /* tcl.h:1153:9 */
 
 type Tcl_HashEntry = Tcl_HashEntry1 /* tcl.h:1154:30 */
 
@@ -7468,7 +7468,7 @@ type Tcl_HashSearch1 = struct {
 	tablePtr     uintptr
 	nextIndex    int32
 	nextEntryPtr uintptr
-}
+} /* tcl.h:1308:9 */
 
 // Structure definition for information used to keep track of searches through
 // hash tables:
@@ -7518,7 +7518,7 @@ type Tcl_QueuePosition = uint32 /* tcl.h:1389:3 */
 type Tcl_Time1 = struct {
 	sec  int64
 	usec int64
-}
+} /* tcl.h:1405:9 */
 
 // Values to pass to Tcl_SetServiceMode to specify the behavior of notifier
 // event routines.
@@ -7556,7 +7556,7 @@ type Tcl_ChannelType1 = struct {
 	wideSeekProc     uintptr
 	threadActionProc uintptr
 	truncateProc     uintptr
-}
+} /* tcl.h:1524:9 */
 
 // struct Tcl_ChannelType:
 //
@@ -7586,7 +7586,7 @@ type Tcl_GlobTypeData1 = struct {
 	perm       int32
 	macType    uintptr
 	macCreator uintptr
-}
+} /* tcl.h:1620:9 */
 
 // The following structure is used to pass glob type data amongst the various
 // glob routines and Tcl_FSMatchInDirectory.
@@ -7643,7 +7643,7 @@ type Tcl_Filesystem1 = struct {
 	loadFileProc             uintptr
 	getCwdProc               uintptr
 	chdirProc                uintptr
-}
+} /* tcl.h:1726:9 */
 
 //----------------------------------------------------------------------------
 // Data structures related to hooking into the filesystem
@@ -7684,7 +7684,7 @@ type Tcl_NotifierProcs1 = struct {
 	finalizeNotifierProc  uintptr
 	alertNotifierProc     uintptr
 	serviceModeHookProc   uintptr
-}
+} /* tcl.h:1894:9 */
 
 // The following definitions are used as values for the 'linkAction' flag to
 // Tcl_FSLink, or the linkProc of any filesystem. Any combination of flags can
@@ -7712,7 +7712,7 @@ type Tcl_Token1 = struct {
 	start         uintptr
 	size          int32
 	numComponents int32
-}
+} /* tcl.h:1914:9 */
 
 //----------------------------------------------------------------------------
 // The following data structures and declarations are for the new Tcl parser.
@@ -7814,7 +7814,7 @@ type Tcl_Parse1 = struct {
 	term            uintptr
 	incomplete      int32
 	staticTokens    [20]Tcl_Token
-}
+} /* tcl.h:2030:9 */
 
 // Type values defined for Tcl_Token structures. These values are defined as
 // mask bits so that it's easy to check for collections of types.
@@ -7905,7 +7905,7 @@ type Tcl_EncodingType1 = struct {
 	clientData   ClientData
 	nullSize     int32
 	_            [4]byte
-}
+} /* tcl.h:2091:9 */
 
 //----------------------------------------------------------------------------
 // The following structure represents a user-defined encoding. It collects
@@ -8002,7 +8002,7 @@ type Tcl_UniChar = uint16 /* tcl.h:2228:24 */
 type Tcl_Config1 = struct {
 	key   uintptr
 	value uintptr
-}
+} /* tcl.h:2237:9 */
 
 //----------------------------------------------------------------------------
 // TIP #59: The following structure is used in calls 'Tcl_RegisterConfig' to
@@ -8018,7 +8018,7 @@ type mp_int1 = struct {
 	alloc int32
 	sign  mp_sign
 	dp    uintptr
-}
+} /* tcl.h:2266:9 */
 
 //----------------------------------------------------------------------------
 // Override definitions for libtommath.
@@ -8043,7 +8043,7 @@ type Tcl_ArgvInfo = struct {
 type TclPlatStubs1 = struct {
 	magic int32
 	hooks uintptr
-}
+} /* tclDecls.h:1840:11 */
 
 type TclIntStubs1 = struct {
 	magic                        int32
@@ -8307,7 +8307,7 @@ type TclIntStubs1 = struct {
 	tclPtrUnsetVar               uintptr
 	reserved257                  uintptr
 	tclUnusedStubEntry           uintptr
-}
+} /* tclDecls.h:1841:11 */
 
 type TclIntPlatStubs1 = struct {
 	magic                    int32
@@ -8343,13 +8343,2914 @@ type TclIntPlatStubs1 = struct {
 	reserved28               uintptr
 	tclWinCPUID              uintptr
 	tclUnixOpenTemporaryFile uintptr
-}
+} /* tclDecls.h:1842:11 */
 
 type TclStubHooks = struct {
 	tclPlatStubs    uintptr
 	tclIntStubs     uintptr
 	tclIntPlatStubs uintptr
 } /* tclDecls.h:1843:3 */
+
+type TclStubs = struct {
+	magic                                  int32
+	hooks                                  uintptr
+	tcl_PkgProvideEx                       uintptr
+	tcl_PkgRequireEx                       uintptr
+	tcl_Panic                              uintptr
+	tcl_Alloc                              uintptr
+	tcl_Free                               uintptr
+	tcl_Realloc                            uintptr
+	tcl_DbCkalloc                          uintptr
+	tcl_DbCkfree                           uintptr
+	tcl_DbCkrealloc                        uintptr
+	tcl_CreateFileHandler                  uintptr
+	tcl_DeleteFileHandler                  uintptr
+	tcl_SetTimer                           uintptr
+	tcl_Sleep                              uintptr
+	tcl_WaitForEvent                       uintptr
+	tcl_AppendAllObjTypes                  uintptr
+	tcl_AppendStringsToObj                 uintptr
+	tcl_AppendToObj                        uintptr
+	tcl_ConcatObj                          uintptr
+	tcl_ConvertToType                      uintptr
+	tcl_DbDecrRefCount                     uintptr
+	tcl_DbIncrRefCount                     uintptr
+	tcl_DbIsShared                         uintptr
+	tcl_DbNewBooleanObj                    uintptr
+	tcl_DbNewByteArrayObj                  uintptr
+	tcl_DbNewDoubleObj                     uintptr
+	tcl_DbNewListObj                       uintptr
+	tcl_DbNewLongObj                       uintptr
+	tcl_DbNewObj                           uintptr
+	tcl_DbNewStringObj                     uintptr
+	tcl_DuplicateObj                       uintptr
+	tclFreeObj                             uintptr
+	tcl_GetBoolean                         uintptr
+	tcl_GetBooleanFromObj                  uintptr
+	tcl_GetByteArrayFromObj                uintptr
+	tcl_GetDouble                          uintptr
+	tcl_GetDoubleFromObj                   uintptr
+	tcl_GetIndexFromObj                    uintptr
+	tcl_GetInt                             uintptr
+	tcl_GetIntFromObj                      uintptr
+	tcl_GetLongFromObj                     uintptr
+	tcl_GetObjType                         uintptr
+	tcl_GetStringFromObj                   uintptr
+	tcl_InvalidateStringRep                uintptr
+	tcl_ListObjAppendList                  uintptr
+	tcl_ListObjAppendElement               uintptr
+	tcl_ListObjGetElements                 uintptr
+	tcl_ListObjIndex                       uintptr
+	tcl_ListObjLength                      uintptr
+	tcl_ListObjReplace                     uintptr
+	tcl_NewBooleanObj                      uintptr
+	tcl_NewByteArrayObj                    uintptr
+	tcl_NewDoubleObj                       uintptr
+	tcl_NewIntObj                          uintptr
+	tcl_NewListObj                         uintptr
+	tcl_NewLongObj                         uintptr
+	tcl_NewObj                             uintptr
+	tcl_NewStringObj                       uintptr
+	tcl_SetBooleanObj                      uintptr
+	tcl_SetByteArrayLength                 uintptr
+	tcl_SetByteArrayObj                    uintptr
+	tcl_SetDoubleObj                       uintptr
+	tcl_SetIntObj                          uintptr
+	tcl_SetListObj                         uintptr
+	tcl_SetLongObj                         uintptr
+	tcl_SetObjLength                       uintptr
+	tcl_SetStringObj                       uintptr
+	tcl_AddErrorInfo                       uintptr
+	tcl_AddObjErrorInfo                    uintptr
+	tcl_AllowExceptions                    uintptr
+	tcl_AppendElement                      uintptr
+	tcl_AppendResult                       uintptr
+	tcl_AsyncCreate                        uintptr
+	tcl_AsyncDelete                        uintptr
+	tcl_AsyncInvoke                        uintptr
+	tcl_AsyncMark                          uintptr
+	tcl_AsyncReady                         uintptr
+	tcl_BackgroundError                    uintptr
+	tcl_Backslash                          uintptr
+	tcl_BadChannelOption                   uintptr
+	tcl_CallWhenDeleted                    uintptr
+	tcl_CancelIdleCall                     uintptr
+	tcl_Close                              uintptr
+	tcl_CommandComplete                    uintptr
+	tcl_Concat                             uintptr
+	tcl_ConvertElement                     uintptr
+	tcl_ConvertCountedElement              uintptr
+	tcl_CreateAlias                        uintptr
+	tcl_CreateAliasObj                     uintptr
+	tcl_CreateChannel                      uintptr
+	tcl_CreateChannelHandler               uintptr
+	tcl_CreateCloseHandler                 uintptr
+	tcl_CreateCommand                      uintptr
+	tcl_CreateEventSource                  uintptr
+	tcl_CreateExitHandler                  uintptr
+	tcl_CreateInterp                       uintptr
+	tcl_CreateMathFunc                     uintptr
+	tcl_CreateObjCommand                   uintptr
+	tcl_CreateSlave                        uintptr
+	tcl_CreateTimerHandler                 uintptr
+	tcl_CreateTrace                        uintptr
+	tcl_DeleteAssocData                    uintptr
+	tcl_DeleteChannelHandler               uintptr
+	tcl_DeleteCloseHandler                 uintptr
+	tcl_DeleteCommand                      uintptr
+	tcl_DeleteCommandFromToken             uintptr
+	tcl_DeleteEvents                       uintptr
+	tcl_DeleteEventSource                  uintptr
+	tcl_DeleteExitHandler                  uintptr
+	tcl_DeleteHashEntry                    uintptr
+	tcl_DeleteHashTable                    uintptr
+	tcl_DeleteInterp                       uintptr
+	tcl_DetachPids                         uintptr
+	tcl_DeleteTimerHandler                 uintptr
+	tcl_DeleteTrace                        uintptr
+	tcl_DontCallWhenDeleted                uintptr
+	tcl_DoOneEvent                         uintptr
+	tcl_DoWhenIdle                         uintptr
+	tcl_DStringAppend                      uintptr
+	tcl_DStringAppendElement               uintptr
+	tcl_DStringEndSublist                  uintptr
+	tcl_DStringFree                        uintptr
+	tcl_DStringGetResult                   uintptr
+	tcl_DStringInit                        uintptr
+	tcl_DStringResult                      uintptr
+	tcl_DStringSetLength                   uintptr
+	tcl_DStringStartSublist                uintptr
+	tcl_Eof                                uintptr
+	tcl_ErrnoId                            uintptr
+	tcl_ErrnoMsg                           uintptr
+	tcl_Eval                               uintptr
+	tcl_EvalFile                           uintptr
+	tcl_EvalObj                            uintptr
+	tcl_EventuallyFree                     uintptr
+	tcl_Exit                               uintptr
+	tcl_ExposeCommand                      uintptr
+	tcl_ExprBoolean                        uintptr
+	tcl_ExprBooleanObj                     uintptr
+	tcl_ExprDouble                         uintptr
+	tcl_ExprDoubleObj                      uintptr
+	tcl_ExprLong                           uintptr
+	tcl_ExprLongObj                        uintptr
+	tcl_ExprObj                            uintptr
+	tcl_ExprString                         uintptr
+	tcl_Finalize                           uintptr
+	tcl_FindExecutable                     uintptr
+	tcl_FirstHashEntry                     uintptr
+	tcl_Flush                              uintptr
+	tcl_FreeResult                         uintptr
+	tcl_GetAlias                           uintptr
+	tcl_GetAliasObj                        uintptr
+	tcl_GetAssocData                       uintptr
+	tcl_GetChannel                         uintptr
+	tcl_GetChannelBufferSize               uintptr
+	tcl_GetChannelHandle                   uintptr
+	tcl_GetChannelInstanceData             uintptr
+	tcl_GetChannelMode                     uintptr
+	tcl_GetChannelName                     uintptr
+	tcl_GetChannelOption                   uintptr
+	tcl_GetChannelType                     uintptr
+	tcl_GetCommandInfo                     uintptr
+	tcl_GetCommandName                     uintptr
+	tcl_GetErrno                           uintptr
+	tcl_GetHostName                        uintptr
+	tcl_GetInterpPath                      uintptr
+	tcl_GetMaster                          uintptr
+	tcl_GetNameOfExecutable                uintptr
+	tcl_GetObjResult                       uintptr
+	tcl_GetOpenFile                        uintptr
+	tcl_GetPathType                        uintptr
+	tcl_Gets                               uintptr
+	tcl_GetsObj                            uintptr
+	tcl_GetServiceMode                     uintptr
+	tcl_GetSlave                           uintptr
+	tcl_GetStdChannel                      uintptr
+	tcl_GetStringResult                    uintptr
+	tcl_GetVar                             uintptr
+	tcl_GetVar2                            uintptr
+	tcl_GlobalEval                         uintptr
+	tcl_GlobalEvalObj                      uintptr
+	tcl_HideCommand                        uintptr
+	tcl_Init                               uintptr
+	tcl_InitHashTable                      uintptr
+	tcl_InputBlocked                       uintptr
+	tcl_InputBuffered                      uintptr
+	tcl_InterpDeleted                      uintptr
+	tcl_IsSafe                             uintptr
+	tcl_JoinPath                           uintptr
+	tcl_LinkVar                            uintptr
+	reserved188                            uintptr
+	tcl_MakeFileChannel                    uintptr
+	tcl_MakeSafe                           uintptr
+	tcl_MakeTcpClientChannel               uintptr
+	tcl_Merge                              uintptr
+	tcl_NextHashEntry                      uintptr
+	tcl_NotifyChannel                      uintptr
+	tcl_ObjGetVar2                         uintptr
+	tcl_ObjSetVar2                         uintptr
+	tcl_OpenCommandChannel                 uintptr
+	tcl_OpenFileChannel                    uintptr
+	tcl_OpenTcpClient                      uintptr
+	tcl_OpenTcpServer                      uintptr
+	tcl_Preserve                           uintptr
+	tcl_PrintDouble                        uintptr
+	tcl_PutEnv                             uintptr
+	tcl_PosixError                         uintptr
+	tcl_QueueEvent                         uintptr
+	tcl_Read                               uintptr
+	tcl_ReapDetachedProcs                  uintptr
+	tcl_RecordAndEval                      uintptr
+	tcl_RecordAndEvalObj                   uintptr
+	tcl_RegisterChannel                    uintptr
+	tcl_RegisterObjType                    uintptr
+	tcl_RegExpCompile                      uintptr
+	tcl_RegExpExec                         uintptr
+	tcl_RegExpMatch                        uintptr
+	tcl_RegExpRange                        uintptr
+	tcl_Release                            uintptr
+	tcl_ResetResult                        uintptr
+	tcl_ScanElement                        uintptr
+	tcl_ScanCountedElement                 uintptr
+	tcl_SeekOld                            uintptr
+	tcl_ServiceAll                         uintptr
+	tcl_ServiceEvent                       uintptr
+	tcl_SetAssocData                       uintptr
+	tcl_SetChannelBufferSize               uintptr
+	tcl_SetChannelOption                   uintptr
+	tcl_SetCommandInfo                     uintptr
+	tcl_SetErrno                           uintptr
+	tcl_SetErrorCode                       uintptr
+	tcl_SetMaxBlockTime                    uintptr
+	tcl_SetPanicProc                       uintptr
+	tcl_SetRecursionLimit                  uintptr
+	tcl_SetResult                          uintptr
+	tcl_SetServiceMode                     uintptr
+	tcl_SetObjErrorCode                    uintptr
+	tcl_SetObjResult                       uintptr
+	tcl_SetStdChannel                      uintptr
+	tcl_SetVar                             uintptr
+	tcl_SetVar2                            uintptr
+	tcl_SignalId                           uintptr
+	tcl_SignalMsg                          uintptr
+	tcl_SourceRCFile                       uintptr
+	tcl_SplitList                          uintptr
+	tcl_SplitPath                          uintptr
+	tcl_StaticPackage                      uintptr
+	tcl_StringMatch                        uintptr
+	tcl_TellOld                            uintptr
+	tcl_TraceVar                           uintptr
+	tcl_TraceVar2                          uintptr
+	tcl_TranslateFileName                  uintptr
+	tcl_Ungets                             uintptr
+	tcl_UnlinkVar                          uintptr
+	tcl_UnregisterChannel                  uintptr
+	tcl_UnsetVar                           uintptr
+	tcl_UnsetVar2                          uintptr
+	tcl_UntraceVar                         uintptr
+	tcl_UntraceVar2                        uintptr
+	tcl_UpdateLinkedVar                    uintptr
+	tcl_UpVar                              uintptr
+	tcl_UpVar2                             uintptr
+	tcl_VarEval                            uintptr
+	tcl_VarTraceInfo                       uintptr
+	tcl_VarTraceInfo2                      uintptr
+	tcl_Write                              uintptr
+	tcl_WrongNumArgs                       uintptr
+	tcl_DumpActiveMemory                   uintptr
+	tcl_ValidateAllMemory                  uintptr
+	tcl_AppendResultVA                     uintptr
+	tcl_AppendStringsToObjVA               uintptr
+	tcl_HashStats                          uintptr
+	tcl_ParseVar                           uintptr
+	tcl_PkgPresent                         uintptr
+	tcl_PkgPresentEx                       uintptr
+	tcl_PkgProvide                         uintptr
+	tcl_PkgRequire                         uintptr
+	tcl_SetErrorCodeVA                     uintptr
+	tcl_VarEvalVA                          uintptr
+	tcl_WaitPid                            uintptr
+	tcl_PanicVA                            uintptr
+	tcl_GetVersion                         uintptr
+	tcl_InitMemory                         uintptr
+	tcl_StackChannel                       uintptr
+	tcl_UnstackChannel                     uintptr
+	tcl_GetStackedChannel                  uintptr
+	tcl_SetMainLoop                        uintptr
+	reserved285                            uintptr
+	tcl_AppendObjToObj                     uintptr
+	tcl_CreateEncoding                     uintptr
+	tcl_CreateThreadExitHandler            uintptr
+	tcl_DeleteThreadExitHandler            uintptr
+	tcl_DiscardResult                      uintptr
+	tcl_EvalEx                             uintptr
+	tcl_EvalObjv                           uintptr
+	tcl_EvalObjEx                          uintptr
+	tcl_ExitThread                         uintptr
+	tcl_ExternalToUtf                      uintptr
+	tcl_ExternalToUtfDString               uintptr
+	tcl_FinalizeThread                     uintptr
+	tcl_FinalizeNotifier                   uintptr
+	tcl_FreeEncoding                       uintptr
+	tcl_GetCurrentThread                   uintptr
+	tcl_GetEncoding                        uintptr
+	tcl_GetEncodingName                    uintptr
+	tcl_GetEncodingNames                   uintptr
+	tcl_GetIndexFromObjStruct              uintptr
+	tcl_GetThreadData                      uintptr
+	tcl_GetVar2Ex                          uintptr
+	tcl_InitNotifier                       uintptr
+	tcl_MutexLock                          uintptr
+	tcl_MutexUnlock                        uintptr
+	tcl_ConditionNotify                    uintptr
+	tcl_ConditionWait                      uintptr
+	tcl_NumUtfChars                        uintptr
+	tcl_ReadChars                          uintptr
+	tcl_RestoreResult                      uintptr
+	tcl_SaveResult                         uintptr
+	tcl_SetSystemEncoding                  uintptr
+	tcl_SetVar2Ex                          uintptr
+	tcl_ThreadAlert                        uintptr
+	tcl_ThreadQueueEvent                   uintptr
+	tcl_UniCharAtIndex                     uintptr
+	tcl_UniCharToLower                     uintptr
+	tcl_UniCharToTitle                     uintptr
+	tcl_UniCharToUpper                     uintptr
+	tcl_UniCharToUtf                       uintptr
+	tcl_UtfAtIndex                         uintptr
+	tcl_UtfCharComplete                    uintptr
+	tcl_UtfBackslash                       uintptr
+	tcl_UtfFindFirst                       uintptr
+	tcl_UtfFindLast                        uintptr
+	tcl_UtfNext                            uintptr
+	tcl_UtfPrev                            uintptr
+	tcl_UtfToExternal                      uintptr
+	tcl_UtfToExternalDString               uintptr
+	tcl_UtfToLower                         uintptr
+	tcl_UtfToTitle                         uintptr
+	tcl_UtfToUniChar                       uintptr
+	tcl_UtfToUpper                         uintptr
+	tcl_WriteChars                         uintptr
+	tcl_WriteObj                           uintptr
+	tcl_GetString                          uintptr
+	tcl_GetDefaultEncodingDir              uintptr
+	tcl_SetDefaultEncodingDir              uintptr
+	tcl_AlertNotifier                      uintptr
+	tcl_ServiceModeHook                    uintptr
+	tcl_UniCharIsAlnum                     uintptr
+	tcl_UniCharIsAlpha                     uintptr
+	tcl_UniCharIsDigit                     uintptr
+	tcl_UniCharIsLower                     uintptr
+	tcl_UniCharIsSpace                     uintptr
+	tcl_UniCharIsUpper                     uintptr
+	tcl_UniCharIsWordChar                  uintptr
+	tcl_UniCharLen                         uintptr
+	tcl_UniCharNcmp                        uintptr
+	tcl_UniCharToUtfDString                uintptr
+	tcl_UtfToUniCharDString                uintptr
+	tcl_GetRegExpFromObj                   uintptr
+	tcl_EvalTokens                         uintptr
+	tcl_FreeParse                          uintptr
+	tcl_LogCommandInfo                     uintptr
+	tcl_ParseBraces                        uintptr
+	tcl_ParseCommand                       uintptr
+	tcl_ParseExpr                          uintptr
+	tcl_ParseQuotedString                  uintptr
+	tcl_ParseVarName                       uintptr
+	tcl_GetCwd                             uintptr
+	tcl_Chdir                              uintptr
+	tcl_Access                             uintptr
+	tcl_Stat                               uintptr
+	tcl_UtfNcmp                            uintptr
+	tcl_UtfNcasecmp                        uintptr
+	tcl_StringCaseMatch                    uintptr
+	tcl_UniCharIsControl                   uintptr
+	tcl_UniCharIsGraph                     uintptr
+	tcl_UniCharIsPrint                     uintptr
+	tcl_UniCharIsPunct                     uintptr
+	tcl_RegExpExecObj                      uintptr
+	tcl_RegExpGetInfo                      uintptr
+	tcl_NewUnicodeObj                      uintptr
+	tcl_SetUnicodeObj                      uintptr
+	tcl_GetCharLength                      uintptr
+	tcl_GetUniChar                         uintptr
+	tcl_GetUnicode                         uintptr
+	tcl_GetRange                           uintptr
+	tcl_AppendUnicodeToObj                 uintptr
+	tcl_RegExpMatchObj                     uintptr
+	tcl_SetNotifier                        uintptr
+	tcl_GetAllocMutex                      uintptr
+	tcl_GetChannelNames                    uintptr
+	tcl_GetChannelNamesEx                  uintptr
+	tcl_ProcObjCmd                         uintptr
+	tcl_ConditionFinalize                  uintptr
+	tcl_MutexFinalize                      uintptr
+	tcl_CreateThread                       uintptr
+	tcl_ReadRaw                            uintptr
+	tcl_WriteRaw                           uintptr
+	tcl_GetTopChannel                      uintptr
+	tcl_ChannelBuffered                    uintptr
+	tcl_ChannelName                        uintptr
+	tcl_ChannelVersion                     uintptr
+	tcl_ChannelBlockModeProc               uintptr
+	tcl_ChannelCloseProc                   uintptr
+	tcl_ChannelClose2Proc                  uintptr
+	tcl_ChannelInputProc                   uintptr
+	tcl_ChannelOutputProc                  uintptr
+	tcl_ChannelSeekProc                    uintptr
+	tcl_ChannelSetOptionProc               uintptr
+	tcl_ChannelGetOptionProc               uintptr
+	tcl_ChannelWatchProc                   uintptr
+	tcl_ChannelGetHandleProc               uintptr
+	tcl_ChannelFlushProc                   uintptr
+	tcl_ChannelHandlerProc                 uintptr
+	tcl_JoinThread                         uintptr
+	tcl_IsChannelShared                    uintptr
+	tcl_IsChannelRegistered                uintptr
+	tcl_CutChannel                         uintptr
+	tcl_SpliceChannel                      uintptr
+	tcl_ClearChannelHandlers               uintptr
+	tcl_IsChannelExisting                  uintptr
+	tcl_UniCharNcasecmp                    uintptr
+	tcl_UniCharCaseMatch                   uintptr
+	tcl_FindHashEntry                      uintptr
+	tcl_CreateHashEntry                    uintptr
+	tcl_InitCustomHashTable                uintptr
+	tcl_InitObjHashTable                   uintptr
+	tcl_CommandTraceInfo                   uintptr
+	tcl_TraceCommand                       uintptr
+	tcl_UntraceCommand                     uintptr
+	tcl_AttemptAlloc                       uintptr
+	tcl_AttemptDbCkalloc                   uintptr
+	tcl_AttemptRealloc                     uintptr
+	tcl_AttemptDbCkrealloc                 uintptr
+	tcl_AttemptSetObjLength                uintptr
+	tcl_GetChannelThread                   uintptr
+	tcl_GetUnicodeFromObj                  uintptr
+	tcl_GetMathFuncInfo                    uintptr
+	tcl_ListMathFuncs                      uintptr
+	tcl_SubstObj                           uintptr
+	tcl_DetachChannel                      uintptr
+	tcl_IsStandardChannel                  uintptr
+	tcl_FSCopyFile                         uintptr
+	tcl_FSCopyDirectory                    uintptr
+	tcl_FSCreateDirectory                  uintptr
+	tcl_FSDeleteFile                       uintptr
+	tcl_FSLoadFile                         uintptr
+	tcl_FSMatchInDirectory                 uintptr
+	tcl_FSLink                             uintptr
+	tcl_FSRemoveDirectory                  uintptr
+	tcl_FSRenameFile                       uintptr
+	tcl_FSLstat                            uintptr
+	tcl_FSUtime                            uintptr
+	tcl_FSFileAttrsGet                     uintptr
+	tcl_FSFileAttrsSet                     uintptr
+	tcl_FSFileAttrStrings                  uintptr
+	tcl_FSStat                             uintptr
+	tcl_FSAccess                           uintptr
+	tcl_FSOpenFileChannel                  uintptr
+	tcl_FSGetCwd                           uintptr
+	tcl_FSChdir                            uintptr
+	tcl_FSConvertToPathType                uintptr
+	tcl_FSJoinPath                         uintptr
+	tcl_FSSplitPath                        uintptr
+	tcl_FSEqualPaths                       uintptr
+	tcl_FSGetNormalizedPath                uintptr
+	tcl_FSJoinToPath                       uintptr
+	tcl_FSGetInternalRep                   uintptr
+	tcl_FSGetTranslatedPath                uintptr
+	tcl_FSEvalFile                         uintptr
+	tcl_FSNewNativePath                    uintptr
+	tcl_FSGetNativePath                    uintptr
+	tcl_FSFileSystemInfo                   uintptr
+	tcl_FSPathSeparator                    uintptr
+	tcl_FSListVolumes                      uintptr
+	tcl_FSRegister                         uintptr
+	tcl_FSUnregister                       uintptr
+	tcl_FSData                             uintptr
+	tcl_FSGetTranslatedStringPath          uintptr
+	tcl_FSGetFileSystemForPath             uintptr
+	tcl_FSGetPathType                      uintptr
+	tcl_OutputBuffered                     uintptr
+	tcl_FSMountsChanged                    uintptr
+	tcl_EvalTokensStandard                 uintptr
+	tcl_GetTime                            uintptr
+	tcl_CreateObjTrace                     uintptr
+	tcl_GetCommandInfoFromToken            uintptr
+	tcl_SetCommandInfoFromToken            uintptr
+	tcl_DbNewWideIntObj                    uintptr
+	tcl_GetWideIntFromObj                  uintptr
+	tcl_NewWideIntObj                      uintptr
+	tcl_SetWideIntObj                      uintptr
+	tcl_AllocStatBuf                       uintptr
+	tcl_Seek                               uintptr
+	tcl_Tell                               uintptr
+	tcl_ChannelWideSeekProc                uintptr
+	tcl_DictObjPut                         uintptr
+	tcl_DictObjGet                         uintptr
+	tcl_DictObjRemove                      uintptr
+	tcl_DictObjSize                        uintptr
+	tcl_DictObjFirst                       uintptr
+	tcl_DictObjNext                        uintptr
+	tcl_DictObjDone                        uintptr
+	tcl_DictObjPutKeyList                  uintptr
+	tcl_DictObjRemoveKeyList               uintptr
+	tcl_NewDictObj                         uintptr
+	tcl_DbNewDictObj                       uintptr
+	tcl_RegisterConfig                     uintptr
+	tcl_CreateNamespace                    uintptr
+	tcl_DeleteNamespace                    uintptr
+	tcl_AppendExportList                   uintptr
+	tcl_Export                             uintptr
+	tcl_Import                             uintptr
+	tcl_ForgetImport                       uintptr
+	tcl_GetCurrentNamespace                uintptr
+	tcl_GetGlobalNamespace                 uintptr
+	tcl_FindNamespace                      uintptr
+	tcl_FindCommand                        uintptr
+	tcl_GetCommandFromObj                  uintptr
+	tcl_GetCommandFullName                 uintptr
+	tcl_FSEvalFileEx                       uintptr
+	tcl_SetExitProc                        uintptr
+	tcl_LimitAddHandler                    uintptr
+	tcl_LimitRemoveHandler                 uintptr
+	tcl_LimitReady                         uintptr
+	tcl_LimitCheck                         uintptr
+	tcl_LimitExceeded                      uintptr
+	tcl_LimitSetCommands                   uintptr
+	tcl_LimitSetTime                       uintptr
+	tcl_LimitSetGranularity                uintptr
+	tcl_LimitTypeEnabled                   uintptr
+	tcl_LimitTypeExceeded                  uintptr
+	tcl_LimitTypeSet                       uintptr
+	tcl_LimitTypeReset                     uintptr
+	tcl_LimitGetCommands                   uintptr
+	tcl_LimitGetTime                       uintptr
+	tcl_LimitGetGranularity                uintptr
+	tcl_SaveInterpState                    uintptr
+	tcl_RestoreInterpState                 uintptr
+	tcl_DiscardInterpState                 uintptr
+	tcl_SetReturnOptions                   uintptr
+	tcl_GetReturnOptions                   uintptr
+	tcl_IsEnsemble                         uintptr
+	tcl_CreateEnsemble                     uintptr
+	tcl_FindEnsemble                       uintptr
+	tcl_SetEnsembleSubcommandList          uintptr
+	tcl_SetEnsembleMappingDict             uintptr
+	tcl_SetEnsembleUnknownHandler          uintptr
+	tcl_SetEnsembleFlags                   uintptr
+	tcl_GetEnsembleSubcommandList          uintptr
+	tcl_GetEnsembleMappingDict             uintptr
+	tcl_GetEnsembleUnknownHandler          uintptr
+	tcl_GetEnsembleFlags                   uintptr
+	tcl_GetEnsembleNamespace               uintptr
+	tcl_SetTimeProc                        uintptr
+	tcl_QueryTimeProc                      uintptr
+	tcl_ChannelThreadActionProc            uintptr
+	tcl_NewBignumObj                       uintptr
+	tcl_DbNewBignumObj                     uintptr
+	tcl_SetBignumObj                       uintptr
+	tcl_GetBignumFromObj                   uintptr
+	tcl_TakeBignumFromObj                  uintptr
+	tcl_TruncateChannel                    uintptr
+	tcl_ChannelTruncateProc                uintptr
+	tcl_SetChannelErrorInterp              uintptr
+	tcl_GetChannelErrorInterp              uintptr
+	tcl_SetChannelError                    uintptr
+	tcl_GetChannelError                    uintptr
+	tcl_InitBignumFromDouble               uintptr
+	tcl_GetNamespaceUnknownHandler         uintptr
+	tcl_SetNamespaceUnknownHandler         uintptr
+	tcl_GetEncodingFromObj                 uintptr
+	tcl_GetEncodingSearchPath              uintptr
+	tcl_SetEncodingSearchPath              uintptr
+	tcl_GetEncodingNameFromEnvironment     uintptr
+	tcl_PkgRequireProc                     uintptr
+	tcl_AppendObjToErrorInfo               uintptr
+	tcl_AppendLimitedToObj                 uintptr
+	tcl_Format                             uintptr
+	tcl_AppendFormatToObj                  uintptr
+	tcl_ObjPrintf                          uintptr
+	tcl_AppendPrintfToObj                  uintptr
+	tcl_CancelEval                         uintptr
+	tcl_Canceled                           uintptr
+	tcl_CreatePipe                         uintptr
+	tcl_NRCreateCommand                    uintptr
+	tcl_NREvalObj                          uintptr
+	tcl_NREvalObjv                         uintptr
+	tcl_NRCmdSwap                          uintptr
+	tcl_NRAddCallback                      uintptr
+	tcl_NRCallObjProc                      uintptr
+	tcl_GetFSDeviceFromStat                uintptr
+	tcl_GetFSInodeFromStat                 uintptr
+	tcl_GetModeFromStat                    uintptr
+	tcl_GetLinkCountFromStat               uintptr
+	tcl_GetUserIdFromStat                  uintptr
+	tcl_GetGroupIdFromStat                 uintptr
+	tcl_GetDeviceTypeFromStat              uintptr
+	tcl_GetAccessTimeFromStat              uintptr
+	tcl_GetModificationTimeFromStat        uintptr
+	tcl_GetChangeTimeFromStat              uintptr
+	tcl_GetSizeFromStat                    uintptr
+	tcl_GetBlocksFromStat                  uintptr
+	tcl_GetBlockSizeFromStat               uintptr
+	tcl_SetEnsembleParameterList           uintptr
+	tcl_GetEnsembleParameterList           uintptr
+	tcl_ParseArgsObjv                      uintptr
+	tcl_GetErrorLine                       uintptr
+	tcl_SetErrorLine                       uintptr
+	tcl_TransferResult                     uintptr
+	tcl_InterpActive                       uintptr
+	tcl_BackgroundException                uintptr
+	tcl_ZlibDeflate                        uintptr
+	tcl_ZlibInflate                        uintptr
+	tcl_ZlibCRC32                          uintptr
+	tcl_ZlibAdler32                        uintptr
+	tcl_ZlibStreamInit                     uintptr
+	tcl_ZlibStreamGetCommandName           uintptr
+	tcl_ZlibStreamEof                      uintptr
+	tcl_ZlibStreamChecksum                 uintptr
+	tcl_ZlibStreamPut                      uintptr
+	tcl_ZlibStreamGet                      uintptr
+	tcl_ZlibStreamClose                    uintptr
+	tcl_ZlibStreamReset                    uintptr
+	tcl_SetStartupScript                   uintptr
+	tcl_GetStartupScript                   uintptr
+	tcl_CloseEx                            uintptr
+	tcl_NRExprObj                          uintptr
+	tcl_NRSubstObj                         uintptr
+	tcl_LoadFile                           uintptr
+	tcl_FindSymbol                         uintptr
+	tcl_FSUnloadFile                       uintptr
+	tcl_ZlibStreamSetCompressionDictionary uintptr
+	reserved631                            uintptr
+	reserved632                            uintptr
+	reserved633                            uintptr
+	reserved634                            uintptr
+	reserved635                            uintptr
+	reserved636                            uintptr
+	reserved637                            uintptr
+	reserved638                            uintptr
+	reserved639                            uintptr
+	reserved640                            uintptr
+	reserved641                            uintptr
+	reserved642                            uintptr
+	reserved643                            uintptr
+	reserved644                            uintptr
+	reserved645                            uintptr
+	reserved646                            uintptr
+	reserved647                            uintptr
+	tclUnusedStubEntry                     uintptr
+} /* tclDecls.h:2522:3 */
+
+// !END!: Do not edit above this line.
+
+// Deprecated Tcl procedures:
+
+// Include platform specific public function declarations that are accessible
+// via the stubs table. Make all TclOO symbols MODULE_SCOPE (which only
+// has effect on building it as a shared library). See ticket [3010352].
+
+// tclPlatDecls.h --
+//
+//	Declarations of platform specific Tcl APIs.
+//
+// Copyright (c) 1998-1999 by Scriptics Corporation.
+// All rights reserved.
+
+// WARNING: This file is automatically generated by the tools/genStubs.tcl
+// script.  Any modifications to the function declarations below should be made
+// in the generic/tcl.decls script.
+
+// TCHAR is needed here for win32, so if it is not defined yet do it here.
+// This way, we don't need to include <tchar.h> just for one define.
+
+// !BEGIN!: Do not edit below this line.
+
+// Exported function declarations:
+
+type TclPlatStubs = TclPlatStubs1 /* tclPlatDecls.h:86:3 */
+
+// Returned by `div'.
+type div_t = struct {
+	quot int32
+	rem  int32
+} /* stdlib.h:62:5 */
+
+// Returned by `ldiv'.
+type ldiv_t = struct {
+	quot int64
+	rem  int64
+} /* stdlib.h:70:5 */
+
+// Returned by `lldiv'.
+type lldiv_t = struct {
+	quot int64
+	rem  int64
+} /* stdlib.h:80:5 */
+
+// Reentrant versions of the `random' family of functions.
+//   These functions all use the following data structure to contain
+//   state, rather than global state variables.
+
+type random_data = struct {
+	fptr      uintptr
+	rptr      uintptr
+	state     uintptr
+	rand_type int32
+	rand_deg  int32
+	rand_sep  int32
+	end_ptr   uintptr
+} /* stdlib.h:423:1 */
+
+// Data structure for communication with thread safe versions.  This
+//   type is to be regarded as opaque.  It's only exported because users
+//   have to allocate objects of this type.
+type drand48_data = struct {
+	__x     [3]uint16
+	__old_x [3]uint16
+	__c     uint16
+	__init  uint16
+	__a     uint64
+} /* stdlib.h:490:1 */
+
+// If this symbol has done its job, get rid of it.
+
+// Unsigned type of `sizeof' something.
+
+// Define this type if we are doing the whole job,
+//   or if we want this type in particular.
+
+// Wide character type.
+//   Locale-writers should change this as necessary to
+//   be big enough to hold unique values not between 0 and 127,
+//   and not (wchar_t) -1, for each defined multibyte character.
+
+// Define this type if we are doing the whole job,
+//   or if we want this type in particular.
+
+//  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
+//    are already defined.
+//  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.
+//  NetBSD 5 requires the I386_ANSI_H and X86_64_ANSI_H checks here.
+
+// A null pointer constant.
+
+// Offset of member MEMBER in a struct of type TYPE.
+
+// Type whose alignment is supported in every context and is at least
+//   as great as that of any standard type not using alignment
+//   specifiers.
+type max_align_t = struct {
+	__max_align_ll int64
+	__max_align_ld float64
+} /* stddef.h:437:3 */
+
+// Ensure WORDS_BIGENDIAN is defined correctly:
+// Needs to happen here in addition to configure to work with fat compiles on
+// Darwin (where configure runs only once for multiple architectures).
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+//	POSIX Standard: 2.6 Primitive System Data Types	<sys/types.h>
+
+// Compatibility header for old-style Unix parameters and limits.
+//   Copyright (C) 1995-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Used to tag functions that are only to be visible within the module being
+// built and not outside it (where this is supported by the linker).
+
+// Macros used to cast between pointers and integers (e.g. when storing an int
+// in ClientData), on 64-bit architectures they avoid gcc warning about "cast
+// to/from pointer from/to integer of different size".
+
+// The following procedures allow namespaces to be customized to support
+// special name resolution rules for commands/variables.
+
+type Tcl_ResolvedVarInfo1 = struct {
+	fetchProc  uintptr
+	deleteProc uintptr
+} /* tclInt.h:131:1 */
+
+// The following structure encapsulates the routines needed to resolve a
+// variable reference at runtime. Any variable specific state will typically
+// be appended to this structure.
+
+type Tcl_ResolvedVarInfo = Tcl_ResolvedVarInfo1 /* tclInt.h:147:3 */
+
+type Tcl_ResolverInfo1 = struct {
+	cmdResProc         uintptr
+	varResProc         uintptr
+	compiledVarResProc uintptr
+} /* tclInt.h:159:9 */
+
+type Tcl_ResolverInfo = Tcl_ResolverInfo1 /* tclInt.h:170:3 */
+type NamespacePathEntry1 = struct {
+	nsPtr        uintptr
+	creatorNsPtr uintptr
+	prevPtr      uintptr
+	nextPtr      uintptr
+} /* tclInt.h:194:9 */
+
+type NamespacePathEntry = NamespacePathEntry1 /* tclInt.h:194:35 */
+
+// Special hashtable for variables: this is just a Tcl_HashTable with an nsPtr
+// field added at the end: in this way variables can find their namespace
+// without having to copy a pointer in their struct: they can access it via
+// their hPtr->tablePtr.
+
+type TclVarHashTable1 = struct {
+	table Tcl_HashTable
+	nsPtr uintptr
+} /* tclInt.h:194:9 */
+
+// Special hashtable for variables: this is just a Tcl_HashTable with an nsPtr
+// field added at the end: in this way variables can find their namespace
+// without having to copy a pointer in their struct: they can access it via
+// their hPtr->tablePtr.
+
+type Namespace1 = struct {
+	name                  uintptr
+	fullName              uintptr
+	clientData            ClientData
+	deleteProc            uintptr
+	parentPtr             uintptr
+	childTable            Tcl_HashTable
+	nsId                  int64
+	interp                uintptr
+	flags                 int32
+	activationCount       int32
+	refCount              int32
+	cmdTable              Tcl_HashTable
+	varTable              TclVarHashTable
+	exportArrayPtr        uintptr
+	numExportPatterns     int32
+	maxExportPatterns     int32
+	cmdRefEpoch           int32
+	resolverEpoch         int32
+	cmdResProc            uintptr
+	varResProc            uintptr
+	compiledVarResProc    uintptr
+	exportLookupEpoch     int32
+	ensembles             uintptr
+	unknownHandlerPtr     uintptr
+	commandPathLength     int32
+	commandPathArray      uintptr
+	commandPathSourceList uintptr
+	earlyDeleteProc       uintptr
+} /* tclInt.h:194:9 */
+
+// Special hashtable for variables: this is just a Tcl_HashTable with an nsPtr
+// field added at the end: in this way variables can find their namespace
+// without having to copy a pointer in their struct: they can access it via
+// their hPtr->tablePtr.
+
+type TclVarHashTable = TclVarHashTable1 /* tclInt.h:206:3 */
+
+// This is for itcl - it likes to search our varTables directly :(
+
+// Define this to reduce the amount of space that the average namespace
+// consumes by only allocating the table of child namespaces when necessary.
+// Defining it breaks compatibility for Tcl extensions (e.g., itcl) which
+// reach directly into the Namespace structure.
+
+// The structure below defines a namespace.
+// Note: the first five fields must match exactly the fields in a
+// Tcl_Namespace structure (see tcl.h). If you change one, be sure to change
+// the other.
+
+type Namespace = Namespace1 /* tclInt.h:345:3 */
+
+// Flags used to represent the status of a namespace:
+//
+// NS_DYING -	1 means Tcl_DeleteNamespace has been called to delete the
+//		namespace but there are still active call frames on the Tcl
+//		stack that refer to the namespace. When the last call frame
+//		referring to it has been popped, it's variables and command
+//		will be destroyed and it will be marked "dead" (NS_DEAD). The
+//		namespace can no longer be looked up by name.
+// NS_DEAD -	1 means Tcl_DeleteNamespace has been called to delete the
+//		namespace and no call frames still refer to it. Its variables
+//		and command have already been destroyed. This bit allows the
+//		namespace resolution code to recognize that the namespace is
+//		"deleted". When the last namespaceName object in any byte code
+//		unit that refers to the namespace has been freed (i.e., when
+//		the namespace's refCount is 0), the namespace's storage will
+//		be freed.
+// NS_KILLED -	1 means that TclTeardownNamespace has already been called on
+//		this namespace and it should not be called again [Bug 1355942]
+// NS_SUPPRESS_COMPILATION -
+//		Marks the commands in this namespace for not being compiled,
+//		forcing them to be looked up every time.
+
+// Flags passed to TclGetNamespaceForQualName:
+//
+// TCL_GLOBAL_ONLY		- (see tcl.h) Look only in the global ns.
+// TCL_NAMESPACE_ONLY		- (see tcl.h) Look only in the context ns.
+// TCL_CREATE_NS_IF_UNKNOWN	- Create unknown namespaces.
+// TCL_FIND_ONLY_NS		- The name sought is a namespace name.
+
+// The client data for an ensemble command. This consists of the table of
+// commands that are actually exported by the namespace, and an epoch counter
+// that, combined with the exportLookupEpoch field of the namespace structure,
+// defines whether the table contains valid data or will need to be recomputed
+// next time the ensemble command is called.
+
+type EnsembleConfig1 = struct {
+	nsPtr              uintptr
+	token              Tcl_Command
+	epoch              int32
+	subcommandArrayPtr uintptr
+	subcommandTable    Tcl_HashTable
+	next               uintptr
+	flags              int32
+	subcommandDict     uintptr
+	subcmdList         uintptr
+	unknownHandler     uintptr
+	parameterList      uintptr
+	numParameters      int32
+	_                  [4]byte
+} /* tclInt.h:415:9 */
+
+// Flags used to represent the status of a namespace:
+//
+// NS_DYING -	1 means Tcl_DeleteNamespace has been called to delete the
+//		namespace but there are still active call frames on the Tcl
+//		stack that refer to the namespace. When the last call frame
+//		referring to it has been popped, it's variables and command
+//		will be destroyed and it will be marked "dead" (NS_DEAD). The
+//		namespace can no longer be looked up by name.
+// NS_DEAD -	1 means Tcl_DeleteNamespace has been called to delete the
+//		namespace and no call frames still refer to it. Its variables
+//		and command have already been destroyed. This bit allows the
+//		namespace resolution code to recognize that the namespace is
+//		"deleted". When the last namespaceName object in any byte code
+//		unit that refers to the namespace has been freed (i.e., when
+//		the namespace's refCount is 0), the namespace's storage will
+//		be freed.
+// NS_KILLED -	1 means that TclTeardownNamespace has already been called on
+//		this namespace and it should not be called again [Bug 1355942]
+// NS_SUPPRESS_COMPILATION -
+//		Marks the commands in this namespace for not being compiled,
+//		forcing them to be looked up every time.
+
+// Flags passed to TclGetNamespaceForQualName:
+//
+// TCL_GLOBAL_ONLY		- (see tcl.h) Look only in the global ns.
+// TCL_NAMESPACE_ONLY		- (see tcl.h) Look only in the context ns.
+// TCL_CREATE_NS_IF_UNKNOWN	- Create unknown namespaces.
+// TCL_FIND_ONLY_NS		- The name sought is a namespace name.
+
+// The client data for an ensemble command. This consists of the table of
+// commands that are actually exported by the namespace, and an epoch counter
+// that, combined with the exportLookupEpoch field of the namespace structure,
+// defines whether the table contains valid data or will need to be recomputed
+// next time the ensemble command is called.
+
+type EnsembleConfig = EnsembleConfig1 /* tclInt.h:483:3 */
+
+// Various bits for the EnsembleConfig.flags field.
+
+//----------------------------------------------------------------
+// Data structures related to variables. These are used primarily in tclVar.c
+//----------------------------------------------------------------
+
+// The following structure defines a variable trace, which is used to invoke a
+// specific C procedure whenever certain operations are performed on a
+// variable.
+
+type VarTrace1 = struct {
+	traceProc  uintptr
+	clientData ClientData
+	flags      int32
+	nextPtr    uintptr
+} /* tclInt.h:506:9 */
+
+// Various bits for the EnsembleConfig.flags field.
+
+//----------------------------------------------------------------
+// Data structures related to variables. These are used primarily in tclVar.c
+//----------------------------------------------------------------
+
+// The following structure defines a variable trace, which is used to invoke a
+// specific C procedure whenever certain operations are performed on a
+// variable.
+
+type VarTrace = VarTrace1 /* tclInt.h:516:3 */
+
+// The following structure defines a command trace, which is used to invoke a
+// specific C procedure whenever certain operations are performed on a
+// command.
+
+type CommandTrace1 = struct {
+	traceProc  uintptr
+	clientData ClientData
+	flags      int32
+	nextPtr    uintptr
+	refCount   int32
+	_          [4]byte
+} /* tclInt.h:524:9 */
+
+// The following structure defines a command trace, which is used to invoke a
+// specific C procedure whenever certain operations are performed on a
+// command.
+
+type CommandTrace = CommandTrace1 /* tclInt.h:539:3 */
+
+// When a command trace is active (i.e. its associated procedure is executing)
+// one of the following structures is linked into a list associated with the
+// command's interpreter. The information in the structure is needed in order
+// for Tcl to behave reasonably if traces are deleted while traces are active.
+
+type ActiveCommandTrace1 = struct {
+	cmdPtr       uintptr
+	nextPtr      uintptr
+	nextTracePtr uintptr
+	reverseScan  int32
+	_            [4]byte
+} /* tclInt.h:548:9 */
+
+// When a command trace is active (i.e. its associated procedure is executing)
+// one of the following structures is linked into a list associated with the
+// command's interpreter. The information in the structure is needed in order
+// for Tcl to behave reasonably if traces are deleted while traces are active.
+
+type Command1 = struct {
+	hPtr          uintptr
+	nsPtr         uintptr
+	refCount      int32
+	cmdEpoch      int32
+	compileProc   uintptr
+	objProc       uintptr
+	objClientData ClientData
+	proc          uintptr
+	clientData    ClientData
+	deleteProc    uintptr
+	deleteData    ClientData
+	flags         int32
+	importRefPtr  uintptr
+	tracePtr      uintptr
+	nreProc       uintptr
+} /* tclInt.h:548:9 */
+
+// When a command trace is active (i.e. its associated procedure is executing)
+// one of the following structures is linked into a list associated with the
+// command's interpreter. The information in the structure is needed in order
+// for Tcl to behave reasonably if traces are deleted while traces are active.
+
+type ActiveCommandTrace = ActiveCommandTrace1 /* tclInt.h:559:3 */
+
+// When a variable trace is active (i.e. its associated procedure is
+// executing) one of the following structures is linked into a list associated
+// with the variable's interpreter. The information in the structure is needed
+// in order for Tcl to behave reasonably if traces are deleted while traces
+// are active.
+
+type ActiveVarTrace1 = struct {
+	varPtr       uintptr
+	nextPtr      uintptr
+	nextTracePtr uintptr
+} /* tclInt.h:569:9 */
+
+// When a variable trace is active (i.e. its associated procedure is
+// executing) one of the following structures is linked into a list associated
+// with the variable's interpreter. The information in the structure is needed
+// in order for Tcl to behave reasonably if traces are deleted while traces
+// are active.
+
+type Var1 = struct {
+	flags int32
+	value struct{ objPtr uintptr }
+} /* tclInt.h:569:9 */
+
+// When a variable trace is active (i.e. its associated procedure is
+// executing) one of the following structures is linked into a list associated
+// with the variable's interpreter. The information in the structure is needed
+// in order for Tcl to behave reasonably if traces are deleted while traces
+// are active.
+
+type ActiveVarTrace = ActiveVarTrace1 /* tclInt.h:578:3 */
+
+// The structure below defines a variable, which associates a string name with
+// a Tcl_Obj value. These structures are kept in procedure call frames (for
+// local variables recognized by the compiler) or in the heap (for global
+// variables and any variable not known to the compiler). For each Var
+// structure in the heap, a hash table entry holds the variable name and a
+// pointer to the Var structure.
+
+type Var = Var1 /* tclInt.h:604:3 */
+
+type VarInHash1 = struct {
+	__var    Var
+	refCount int32
+	entry    Tcl_HashEntry
+} /* tclInt.h:606:9 */
+
+type VarInHash = VarInHash1 /* tclInt.h:621:3 */
+
+// The variable-length structure below describes a local variable of a
+// procedure that was recognized by the compiler. These variables have a name,
+// an element in the array of compiler-assigned local variables in the
+// procedure's call frame, and various other items of information. If the
+// local variable is a formal argument, it may also have a default value. The
+// compiler can't recognize local variables whose names are expressions (these
+// names are only known at runtime when the expressions are evaluated) or
+// local variables that are created as a result of an "upvar" or "uplevel"
+// command. These other local variables are kept separately in a hash table in
+// the call frame.
+
+type CompiledLocal1 = struct {
+	nextPtr     uintptr
+	nameLength  int32
+	frameIndex  int32
+	flags       int32
+	defValuePtr uintptr
+	resolveInfo uintptr
+	name        [1]int8
+	_           [7]byte
+} /* tclInt.h:900:9 */
+
+// The variable-length structure below describes a local variable of a
+// procedure that was recognized by the compiler. These variables have a name,
+// an element in the array of compiler-assigned local variables in the
+// procedure's call frame, and various other items of information. If the
+// local variable is a formal argument, it may also have a default value. The
+// compiler can't recognize local variables whose names are expressions (these
+// names are only known at runtime when the expressions are evaluated) or
+// local variables that are created as a result of an "upvar" or "uplevel"
+// command. These other local variables are kept separately in a hash table in
+// the call frame.
+
+type CompiledLocal = CompiledLocal1 /* tclInt.h:928:3 */
+
+// The structure below defines a command procedure, which consists of a
+// collection of Tcl commands plus information about arguments and other local
+// variables recognized at compile time.
+
+type Proc1 = struct {
+	iPtr              uintptr
+	refCount          int32
+	cmdPtr            uintptr
+	bodyPtr           uintptr
+	numArgs           int32
+	numCompiledLocals int32
+	firstLocalPtr     uintptr
+	lastLocalPtr      uintptr
+} /* tclInt.h:936:9 */
+
+// The structure below defines a command procedure, which consists of a
+// collection of Tcl commands plus information about arguments and other local
+// variables recognized at compile time.
+
+type Interp1 = struct {
+	result            uintptr
+	freeProc          uintptr
+	errorLine         int32
+	stubTable         uintptr
+	handle            TclHandle
+	globalNsPtr       uintptr
+	hiddenCmdTablePtr uintptr
+	interpInfo        ClientData
+	extra             struct {
+		optimizer uintptr
+		_         [80]byte
+	}
+	numLevels              int32
+	maxNestingDepth        int32
+	framePtr               uintptr
+	varFramePtr            uintptr
+	activeVarTracePtr      uintptr
+	returnCode             int32
+	rootFramePtr           uintptr
+	lookupNsPtr            uintptr
+	appendResult           uintptr
+	appendAvl              int32
+	appendUsed             int32
+	packageTable           Tcl_HashTable
+	packageUnknown         uintptr
+	cmdCount               int32
+	evalFlags              int32
+	unused1                int32
+	literalTable           LiteralTable
+	compileEpoch           int32
+	compiledProcPtr        uintptr
+	resolverPtr            uintptr
+	scriptFile             uintptr
+	flags                  int32
+	randSeed               int64
+	tracePtr               uintptr
+	assocData              uintptr
+	execEnvPtr             uintptr
+	emptyObjPtr            uintptr
+	resultSpace            [201]int8
+	objResultPtr           uintptr
+	threadId               Tcl_ThreadId
+	activeCmdTracePtr      uintptr
+	activeInterpTracePtr   uintptr
+	tracesForbiddingInline int32
+	returnOpts             uintptr
+	errorInfo              uintptr
+	eiVar                  uintptr
+	errorCode              uintptr
+	ecVar                  uintptr
+	returnLevel            int32
+	limit                  struct {
+		active            int32
+		granularityTicker int32
+		exceeded          int32
+		cmdCount          int32
+		cmdHandlers       uintptr
+		cmdGranularity    int32
+		time              Tcl_Time
+		timeHandlers      uintptr
+		timeGranularity   int32
+		timeEvent         Tcl_TimerToken
+		callbacks         Tcl_HashTable
+	}
+	ensembleRewrite struct {
+		sourceObjs      uintptr
+		numRemovedObjs  int32
+		numInsertedObjs int32
+	}
+	chanMsg           uintptr
+	cmdFramePtr       uintptr
+	invokeCmdFramePtr uintptr
+	invokeWord        int32
+	linePBodyPtr      uintptr
+	lineBCPtr         uintptr
+	lineLABCPtr       uintptr
+	lineLAPtr         uintptr
+	scriptCLLocPtr    uintptr
+	packagePrefer     int32
+	varTraces         Tcl_HashTable
+	varSearches       Tcl_HashTable
+	allocCache        uintptr
+	pendingObjDataPtr uintptr
+	asyncReadyPtr     uintptr
+	objectFoundation  uintptr
+	deferredCallbacks uintptr
+	asyncCancel       Tcl_AsyncHandler
+	asyncCancelMsg    uintptr
+	errorStack        uintptr
+	upLiteral         uintptr
+	callLiteral       uintptr
+	innerLiteral      uintptr
+	innerContext      uintptr
+	resetErrorStack   int32
+	_                 [4]byte
+} /* tclInt.h:936:9 */
+
+// The structure below defines a command procedure, which consists of a
+// collection of Tcl commands plus information about arguments and other local
+// variables recognized at compile time.
+
+type Proc = Proc1 /* tclInt.h:963:3 */
+
+// The structure below defines a command trace. This is used to allow Tcl
+// clients to find out whenever a command is about to be executed.
+
+type Trace1 = struct {
+	level      int32
+	proc       uintptr
+	clientData ClientData
+	nextPtr    uintptr
+	flags      int32
+	delProc    uintptr
+} /* tclInt.h:936:9 */
+
+// The structure below defines a command trace. This is used to allow Tcl
+// clients to find out whenever a command is about to be executed.
+
+type Trace = Trace1 /* tclInt.h:987:3 */
+
+// When an interpreter trace is active (i.e. its associated procedure is
+// executing), one of the following structures is linked into a list
+// associated with the interpreter. The information in the structure is needed
+// in order for Tcl to behave reasonably if traces are deleted while traces
+// are active.
+
+type ActiveInterpTrace1 = struct {
+	nextPtr      uintptr
+	nextTracePtr uintptr
+	reverseScan  int32
+	_            [4]byte
+} /* tclInt.h:936:9 */
+
+// When an interpreter trace is active (i.e. its associated procedure is
+// executing), one of the following structures is linked into a list
+// associated with the interpreter. The information in the structure is needed
+// in order for Tcl to behave reasonably if traces are deleted while traces
+// are active.
+
+type ActiveInterpTrace = ActiveInterpTrace1 /* tclInt.h:1007:3 */
+
+// Flag values designating types of execution traces. See tclTrace.c for
+// related flag values.
+//
+// TCL_TRACE_ENTER_EXEC		- triggers enter/enterstep traces.
+// 				- passed to Tcl_CreateObjTrace to set up
+//				  "enterstep" traces.
+// TCL_TRACE_LEAVE_EXEC		- triggers leave/leavestep traces.
+// 				- passed to Tcl_CreateObjTrace to set up
+//				  "leavestep" traces.
+
+// The structure below defines an entry in the assocData hash table which is
+// associated with an interpreter. The entry contains a pointer to a function
+// to call when the interpreter is deleted, and a pointer to a user-defined
+// piece of data.
+
+type AssocData1 = struct {
+	proc       uintptr
+	clientData ClientData
+} /* tclInt.h:1031:9 */
+
+// Flag values designating types of execution traces. See tclTrace.c for
+// related flag values.
+//
+// TCL_TRACE_ENTER_EXEC		- triggers enter/enterstep traces.
+// 				- passed to Tcl_CreateObjTrace to set up
+//				  "enterstep" traces.
+// TCL_TRACE_LEAVE_EXEC		- triggers leave/leavestep traces.
+// 				- passed to Tcl_CreateObjTrace to set up
+//				  "leavestep" traces.
+
+// The structure below defines an entry in the assocData hash table which is
+// associated with an interpreter. The entry contains a pointer to a function
+// to call when the interpreter is deleted, and a pointer to a user-defined
+// piece of data.
+
+type AssocData = AssocData1 /* tclInt.h:1034:3 */
+
+// The structure below defines a call frame. A call frame defines a naming
+// context for a procedure call: its local naming scope (for local variables)
+// and its global naming scope (a namespace, perhaps the global :: namespace).
+// A call frame can also define the naming context for a namespace eval or
+// namespace inscope command: the namespace in which the command's code should
+// execute. The Tcl_CallFrame structures exist only while procedures or
+// namespace eval/inscope's are being executed, and provide a kind of Tcl call
+// stack.
+//
+// WARNING!! The structure definition must be kept consistent with the
+// Tcl_CallFrame structure in tcl.h. If you change one, change the other.
+
+// Will be grown to contain: pointers to the varnames (allocated at the end),
+// plus the init values for each variable (suitable to be memcopied on init)
+
+type LocalCache1 = struct {
+	refCount int32
+	numVars  int32
+	varName0 uintptr
+} /* tclInt.h:936:9 */
+
+// The structure below defines a call frame. A call frame defines a naming
+// context for a procedure call: its local naming scope (for local variables)
+// and its global naming scope (a namespace, perhaps the global :: namespace).
+// A call frame can also define the naming context for a namespace eval or
+// namespace inscope command: the namespace in which the command's code should
+// execute. The Tcl_CallFrame structures exist only while procedures or
+// namespace eval/inscope's are being executed, and provide a kind of Tcl call
+// stack.
+//
+// WARNING!! The structure definition must be kept consistent with the
+// Tcl_CallFrame structure in tcl.h. If you change one, change the other.
+
+// Will be grown to contain: pointers to the varnames (allocated at the end),
+// plus the init values for each variable (suitable to be memcopied on init)
+
+type LocalCache = LocalCache1 /* tclInt.h:1059:3 */
+
+type CallFrame1 = struct {
+	nsPtr             uintptr
+	isProcCallFrame   int32
+	objc              int32
+	objv              uintptr
+	callerPtr         uintptr
+	callerVarPtr      uintptr
+	level             int32
+	procPtr           uintptr
+	varTablePtr       uintptr
+	numCompiledLocals int32
+	compiledLocals    uintptr
+	clientData        ClientData
+	localCachePtr     uintptr
+	tailcallPtr       uintptr
+} /* tclInt.h:936:9 */
+
+type CallFrame = CallFrame1 /* tclInt.h:1123:3 */
+
+// TIP #280
+// The structure below defines a command frame. A command frame provides
+// location information for all commands executing a tcl script (source, eval,
+// uplevel, procedure bodies, ...). The runtime structure essentially contains
+// the stack trace as it would be if the currently executing command were to
+// throw an error.
+//
+// For commands where it makes sense it refers to the associated CallFrame as
+// well.
+//
+// The structures are chained in a single list, with the top of the stack
+// anchored in the Interp structure.
+//
+// Instances can be allocated on the C stack, or the heap, the former making
+// cleanup a bit simpler.
+
+type CmdFrame1 = struct {
+	__type   int32
+	level    int32
+	line     uintptr
+	nline    int32
+	framePtr uintptr
+	nextPtr  uintptr
+	data     struct {
+		eval struct{ path uintptr }
+		_    [8]byte
+	}
+	cmdObj uintptr
+	cmd    uintptr
+	len    int32
+	litarg uintptr
+} /* tclInt.h:936:9 */
+
+// TIP #280
+// The structure below defines a command frame. A command frame provides
+// location information for all commands executing a tcl script (source, eval,
+// uplevel, procedure bodies, ...). The runtime structure essentially contains
+// the stack trace as it would be if the currently executing command were to
+// throw an error.
+//
+// For commands where it makes sense it refers to the associated CallFrame as
+// well.
+//
+// The structures are chained in a single list, with the top of the stack
+// anchored in the Interp structure.
+//
+// Instances can be allocated on the C stack, or the heap, the former making
+// cleanup a bit simpler.
+
+type CFWordBC1 = struct {
+	framePtr uintptr
+	pc       int32
+	word     int32
+	prevPtr  uintptr
+	nextPtr  uintptr
+	obj      uintptr
+} /* tclInt.h:936:9 */
+
+// TIP #280
+// The structure below defines a command frame. A command frame provides
+// location information for all commands executing a tcl script (source, eval,
+// uplevel, procedure bodies, ...). The runtime structure essentially contains
+// the stack trace as it would be if the currently executing command were to
+// throw an error.
+//
+// For commands where it makes sense it refers to the associated CallFrame as
+// well.
+//
+// The structures are chained in a single list, with the top of the stack
+// anchored in the Interp structure.
+//
+// Instances can be allocated on the C stack, or the heap, the former making
+// cleanup a bit simpler.
+
+type CmdFrame = CmdFrame1 /* tclInt.h:1213:3 */
+
+type CFWord1 = struct {
+	framePtr uintptr
+	word     int32
+	refCount int32
+} /* tclInt.h:1215:9 */
+
+type CFWord = CFWord1 /* tclInt.h:1220:3 */
+
+type CFWordBC = CFWordBC1 /* tclInt.h:1232:3 */
+
+// Structure to record the locations of invisible continuation lines in
+// literal scripts, as character offset from the beginning of the script. Both
+// compiler and direct evaluator use this information to adjust their line
+// counters when tracking through the script, because when it is invoked the
+// continuation line marker as a whole has been removed already, meaning that
+// the \n which was part of it is gone as well, breaking regular line
+// tracking.
+//
+// These structures are allocated and filled by both the function
+// TclSubstTokens() in the file "tclParse.c" and its caller TclEvalEx() in the
+// file "tclBasic.c", and stored in the thread-global hashtable "lineCLPtr" in
+// file "tclObj.c". They are used by the functions TclSetByteCodeFromAny() and
+// TclCompileScript(), both found in the file "tclCompile.c". Their memory is
+// released by the function TclFreeObj(), in the file "tclObj.c", and also by
+// the function TclThreadFinalizeObjects(), in the same file.
+
+type ContLineLoc1 = struct {
+	num int32
+	loc [1]int32
+} /* tclInt.h:936:9 */
+
+// Structure to record the locations of invisible continuation lines in
+// literal scripts, as character offset from the beginning of the script. Both
+// compiler and direct evaluator use this information to adjust their line
+// counters when tracking through the script, because when it is invoked the
+// continuation line marker as a whole has been removed already, meaning that
+// the \n which was part of it is gone as well, breaking regular line
+// tracking.
+//
+// These structures are allocated and filled by both the function
+// TclSubstTokens() in the file "tclParse.c" and its caller TclEvalEx() in the
+// file "tclBasic.c", and stored in the thread-global hashtable "lineCLPtr" in
+// file "tclObj.c". They are used by the functions TclSetByteCodeFromAny() and
+// TclCompileScript(), both found in the file "tclCompile.c". Their memory is
+// released by the function TclFreeObj(), in the file "tclObj.c", and also by
+// the function TclThreadFinalizeObjects(), in the same file.
+
+type ContLineLoc = ContLineLoc1 /* tclInt.h:1263:3 */
+type ExtraFrameInfoField = struct {
+	name       uintptr
+	proc       uintptr
+	clientData ClientData
+} /* tclInt.h:1303:3 */
+type ExtraFrameInfo = struct {
+	length int32
+	fields [2]ExtraFrameInfoField
+} /* tclInt.h:1309:3 */
+
+//----------------------------------------------------------------
+// Data structures and procedures related to TclHandles, which are a very
+// lightweight method of preserving enough information to determine if an
+// arbitrary malloc'd block has been deleted.
+//----------------------------------------------------------------
+
+type TclHandle = uintptr /* tclInt.h:1319:14 */
+
+// The data structure for a (linked list of) execution stacks.
+
+type ExecStack1 = struct {
+	prevPtr    uintptr
+	nextPtr    uintptr
+	markerPtr  uintptr
+	endPtr     uintptr
+	tosPtr     uintptr
+	stackWords [1]uintptr
+} /* tclInt.h:936:9 */
+
+// The data structure for a (linked list of) execution stacks.
+
+type ExecStack = ExecStack1 /* tclInt.h:1407:3 */
+
+// The data structure defining the execution environment for ByteCode's.
+// There is one ExecEnv structure per Tcl interpreter. It holds the evaluation
+// stack that holds command operands and results. The stack grows towards
+// increasing addresses. The member stackPtr points to the stackItems of the
+// currently active execution stack.
+
+type CorContext1 = struct {
+	framePtr    uintptr
+	varFramePtr uintptr
+	cmdFramePtr uintptr
+	lineLABCPtr uintptr
+} /* tclInt.h:936:9 */
+
+// The data structure defining the execution environment for ByteCode's.
+// There is one ExecEnv structure per Tcl interpreter. It holds the evaluation
+// stack that holds command operands and results. The stack grows towards
+// increasing addresses. The member stackPtr points to the stackItems of the
+// currently active execution stack.
+
+type CorContext = CorContext1 /* tclInt.h:1422:3 */
+
+type CoroutineData1 = struct {
+	cmdPtr       uintptr
+	eePtr        uintptr
+	callerEEPtr  uintptr
+	caller       CorContext
+	running      CorContext
+	lineLABCPtr  uintptr
+	stackLevel   uintptr
+	auxNumLevels int32
+	nargs        int32
+} /* tclInt.h:936:9 */
+
+type ExecEnv1 = struct {
+	execStackPtr uintptr
+	constants    [2]uintptr
+	interp       uintptr
+	callbackPtr  uintptr
+	corPtr       uintptr
+	rewind       int32
+	_            [4]byte
+} /* tclInt.h:936:9 */
+
+type CoroutineData = CoroutineData1 /* tclInt.h:1443:3 */
+
+type NRE_callback1 = struct {
+	procPtr uintptr
+	data    [4]ClientData
+	nextPtr uintptr
+} /* tclInt.h:936:9 */
+
+type ExecEnv = ExecEnv1 /* tclInt.h:1454:3 */
+
+// The definitions for the LiteralTable and LiteralEntry structures. Each
+// interpreter contains a LiteralTable. It is used to reduce the storage
+// needed for all the Tcl objects that hold the literals of scripts compiled
+// by the interpreter. A literal's object is shared by all the ByteCodes that
+// refer to the literal. Each distinct literal has one LiteralEntry entry in
+// the LiteralTable. A literal table is a specialized hash table that is
+// indexed by the literal's string representation, which may contain null
+// characters.
+//
+// Note that we reduce the space needed for literals by sharing literal
+// objects both within a ByteCode (each ByteCode contains a local
+// LiteralTable) and across all an interpreter's ByteCodes (with the
+// interpreter's global LiteralTable).
+
+type LiteralEntry1 = struct {
+	nextPtr  uintptr
+	objPtr   uintptr
+	refCount int32
+	nsPtr    uintptr
+} /* tclInt.h:936:9 */
+
+// The definitions for the LiteralTable and LiteralEntry structures. Each
+// interpreter contains a LiteralTable. It is used to reduce the storage
+// needed for all the Tcl objects that hold the literals of scripts compiled
+// by the interpreter. A literal's object is shared by all the ByteCodes that
+// refer to the literal. Each distinct literal has one LiteralEntry entry in
+// the LiteralTable. A literal table is a specialized hash table that is
+// indexed by the literal's string representation, which may contain null
+// characters.
+//
+// Note that we reduce the space needed for literals by sharing literal
+// objects both within a ByteCode (each ByteCode contains a local
+// LiteralTable) and across all an interpreter's ByteCodes (with the
+// interpreter's global LiteralTable).
+
+type LiteralEntry = LiteralEntry1 /* tclInt.h:1490:3 */
+
+type LiteralTable1 = struct {
+	buckets       uintptr
+	staticBuckets [4]uintptr
+	numBuckets    int32
+	numEntries    int32
+	rebuildSize   int32
+	mask          int32
+} /* tclInt.h:936:9 */
+
+type LiteralTable = LiteralTable1 /* tclInt.h:1506:3 */
+
+// The following structure defines for each Tcl interpreter various
+// statistics-related information about the bytecode compiler and
+// interpreter's operation in that interpreter.
+
+// Structure used in implementation of those core ensembles which are
+// partially compiled. Used as an array of these, with a terminating field
+// whose 'name' is NULL.
+
+type EnsembleImplMap = struct {
+	name        uintptr
+	proc        uintptr
+	compileProc uintptr
+	nreProc     uintptr
+	clientData  ClientData
+	unsafe      int32
+	_           [4]byte
+} /* tclInt.h:1560:3 */
+
+//----------------------------------------------------------------
+// Data structures related to commands.
+//----------------------------------------------------------------
+
+// An imported command is created in an namespace when it imports a "real"
+// command from another namespace. An imported command has a Command structure
+// that points (via its ClientData value) to the "real" Command structure in
+// the source namespace's command table. The real command records all the
+// imported commands that refer to it in a list of ImportRef structures so
+// that they can be deleted when the real command is deleted.
+
+type ImportRef1 = struct {
+	importedCmdPtr uintptr
+	nextPtr        uintptr
+} /* tclInt.h:548:9 */
+
+//----------------------------------------------------------------
+// Data structures related to commands.
+//----------------------------------------------------------------
+
+// An imported command is created in an namespace when it imports a "real"
+// command from another namespace. An imported command has a Command structure
+// that points (via its ClientData value) to the "real" Command structure in
+// the source namespace's command table. The real command records all the
+// imported commands that refer to it in a list of ImportRef structures so
+// that they can be deleted when the real command is deleted.
+
+type ImportRef = ImportRef1 /* tclInt.h:1588:3 */
+
+// Data structure used as the ClientData of imported commands: commands
+// created in an namespace when it imports a "real" command from another
+// namespace.
+
+type ImportedCmdData1 = struct {
+	realCmdPtr uintptr
+	selfPtr    uintptr
+} /* tclInt.h:1596:9 */
+
+// Data structure used as the ClientData of imported commands: commands
+// created in an namespace when it imports a "real" command from another
+// namespace.
+
+type ImportedCmdData = ImportedCmdData1 /* tclInt.h:1603:3 */
+
+// A Command structure exists for each command in a namespace. The Tcl_Command
+// opaque type actually refers to these structures.
+
+type Command = Command1 /* tclInt.h:1653:3 */
+
+// Flag bits for commands.
+//
+// CMD_IS_DELETED -		Means that the command is in the process of
+//				being deleted (its deleteProc is currently
+//				executing). Other attempts to delete the
+//				command should be ignored.
+// CMD_TRACE_ACTIVE -		1 means that trace processing is currently
+//				underway for a rename/delete change. See the
+//				two flags below for which is currently being
+//				processed.
+// CMD_HAS_EXEC_TRACES -	1 means that this command has at least one
+//				execution trace (as opposed to simple
+//				delete/rename traces) in its tracePtr list.
+// CMD_COMPILES_EXPANDED -	1 means that this command has a compiler that
+//				can handle expansion (provided it is not the
+//				first word).
+// TCL_TRACE_RENAME -		A rename trace is in progress. Further
+//				recursive renames will not be traced.
+// TCL_TRACE_DELETE -		A delete trace is in progress. Further
+//				recursive deletes will not be traced.
+// (these last two flags are defined in tcl.h)
+
+//----------------------------------------------------------------
+// Data structures related to name resolution procedures.
+//----------------------------------------------------------------
+
+// The interpreter keeps a linked list of name resolution schemes. The scheme
+// for a namespace is consulted first, followed by the list of schemes in an
+// interpreter, followed by the default name resolution in Tcl. Schemes are
+// added/removed from the interpreter's list by calling Tcl_AddInterpResolver
+// and Tcl_RemoveInterpResolver.
+
+type ResolverScheme1 = struct {
+	name               uintptr
+	cmdResProc         uintptr
+	varResProc         uintptr
+	compiledVarResProc uintptr
+	nextPtr            uintptr
+} /* tclInt.h:936:9 */
+
+// Flag bits for commands.
+//
+// CMD_IS_DELETED -		Means that the command is in the process of
+//				being deleted (its deleteProc is currently
+//				executing). Other attempts to delete the
+//				command should be ignored.
+// CMD_TRACE_ACTIVE -		1 means that trace processing is currently
+//				underway for a rename/delete change. See the
+//				two flags below for which is currently being
+//				processed.
+// CMD_HAS_EXEC_TRACES -	1 means that this command has at least one
+//				execution trace (as opposed to simple
+//				delete/rename traces) in its tracePtr list.
+// CMD_COMPILES_EXPANDED -	1 means that this command has a compiler that
+//				can handle expansion (provided it is not the
+//				first word).
+// TCL_TRACE_RENAME -		A rename trace is in progress. Further
+//				recursive renames will not be traced.
+// TCL_TRACE_DELETE -		A delete trace is in progress. Further
+//				recursive deletes will not be traced.
+// (these last two flags are defined in tcl.h)
+
+//----------------------------------------------------------------
+// Data structures related to name resolution procedures.
+//----------------------------------------------------------------
+
+// The interpreter keeps a linked list of name resolution schemes. The scheme
+// for a namespace is consulted first, followed by the list of schemes in an
+// interpreter, followed by the default name resolution in Tcl. Schemes are
+// added/removed from the interpreter's list by calling Tcl_AddInterpResolver
+// and Tcl_RemoveInterpResolver.
+
+type ResolverScheme = ResolverScheme1 /* tclInt.h:1716:3 */
+
+//----------------------------------------------------------------
+// This structure shadows the first few fields of the memory cache for the
+// allocator defined in tclThreadAlloc.c; it has to be kept in sync with the
+// definition there.
+// Some macros require knowledge of some fields in the struct in order to
+// avoid hitting the TSD unnecessarily. In order to facilitate this, a pointer
+// to the relevant fields is kept in the allocCache field in struct Interp.
+//----------------------------------------------------------------
+
+type AllocCache1 = struct {
+	nextPtr     uintptr
+	owner       Tcl_ThreadId
+	firstObjPtr uintptr
+	numObjects  int32
+	_           [4]byte
+} /* tclInt.h:936:9 */
+
+//----------------------------------------------------------------
+// This structure shadows the first few fields of the memory cache for the
+// allocator defined in tclThreadAlloc.c; it has to be kept in sync with the
+// definition there.
+// Some macros require knowledge of some fields in the struct in order to
+// avoid hitting the TSD unnecessarily. In order to facilitate this, a pointer
+// to the relevant fields is kept in the allocCache field in struct Interp.
+//----------------------------------------------------------------
+
+type AllocCache = AllocCache1 /* tclInt.h:1749:3 */
+
+//----------------------------------------------------------------
+// This structure defines an interpreter, which is a collection of commands
+// plus other state information related to interpreting commands, such as
+// variable storage. Primary responsibility for this data structure is in
+// tclBasic.c, but almost every Tcl source file uses something in here.
+//----------------------------------------------------------------
+
+type Interp = Interp1 /* tclInt.h:2145:3 */
+
+// Macros that use the TSD-ekeko.
+
+// Macros for script cancellation support (TIP #285).
+
+// Macros for splicing into and out of doubly linked lists. They assume
+// existence of struct items 'prevPtr' and 'nextPtr'.
+//
+// a = element to add or remove.
+// b = list head.
+//
+// TclSpliceIn adds to the head of the list.
+
+// EvalFlag bits for Interp structures:
+//
+// TCL_ALLOW_EXCEPTIONS	1 means it's OK for the script to terminate with a
+//			code other than TCL_OK or TCL_ERROR; 0 means codes
+//			other than these should be turned into errors.
+
+// Flag bits for Interp structures:
+//
+// DELETED:		Non-zero means the interpreter has been deleted:
+//			don't process any more commands for it, and destroy
+//			the structure as soon as all nested invocations of
+//			Tcl_Eval are done.
+// ERR_ALREADY_LOGGED:	Non-zero means information has already been logged in
+//			iPtr->errorInfo for the current Tcl_Eval instance, so
+//			Tcl_Eval needn't log it (used to implement the "error
+//			message log" command).
+// DONT_COMPILE_CMDS_INLINE: Non-zero means that the bytecode compiler should
+//			not compile any commands into an inline sequence of
+//			instructions. This is set 1, for example, when command
+//			traces are requested.
+// RAND_SEED_INITIALIZED: Non-zero means that the randSeed value of the interp
+//			has not be initialized. This is set 1 when we first
+//			use the rand() or srand() functions.
+// SAFE_INTERP:		Non zero means that the current interp is a safe
+//			interp (i.e. it has only the safe commands installed,
+//			less privilege than a regular interp).
+// INTERP_DEBUG_FRAME:	Used for switching on various extra interpreter
+//			debug/info mechanisms (e.g. info frame eval/uplevel
+//			tracing) which are performance intensive.
+// INTERP_TRACE_IN_PROGRESS: Non-zero means that an interp trace is currently
+//			active; so no further trace callbacks should be
+//			invoked.
+// INTERP_ALTERNATE_WRONG_ARGS: Used for listing second and subsequent forms
+//			of the wrong-num-args string in Tcl_WrongNumArgs.
+//			Makes it append instead of replacing and uses
+//			different intermediate text.
+// CANCELED:		Non-zero means that the script in progress should be
+//			canceled as soon as possible. This can be checked by
+//			extensions (and the core itself) by calling
+//			Tcl_Canceled and checking if TCL_ERROR is returned.
+//			This is a one-shot flag that is reset immediately upon
+//			being detected; however, if the TCL_CANCEL_UNWIND flag
+//			is set Tcl_Canceled will continue to report that the
+//			script in progress has been canceled thereby allowing
+//			the evaluation stack for the interp to be fully
+//			unwound.
+//
+// WARNING: For the sake of some extensions that have made use of former
+// internal values, do not re-use the flag values 2 (formerly ERR_IN_PROGRESS)
+// or 8 (formerly ERROR_CODE_SET).
+
+// Maximum number of levels of nesting permitted in Tcl commands (used to
+// catch infinite recursion).
+
+// The macro below is used to modify a "char" value (e.g. by casting it to an
+// unsigned character) so that it can be used safely with macros such as
+// isspace.
+
+// This macro is used to properly align the memory allocated by Tcl, giving
+// the same alignment as the native malloc.
+
+// This macro is used to determine the offset needed to safely allocate any
+// data structure in memory. Given a starting offset or size, it "rounds up"
+// or "aligns" the offset to the next 8-byte boundary so that any data
+// structure can be placed at the resulting offset without fear of an
+// alignment error.
+//
+// WARNING!! DO NOT USE THIS MACRO TO ALIGN POINTERS: it will produce the
+// wrong result on platforms that allocate addresses that are divisible by 4
+// or 2. Only use it for offsets or sizes.
+//
+// This macro is only used by tclCompile.c in the core (Bug 926445). It
+// however not be made file static, as extensions that touch bytecodes
+// (notably tbcload) require it.
+
+// The following enum values are used to specify the runtime platform setting
+// of the tclPlatform variable.
+
+type TclPlatformType = uint32 /* tclInt.h:2321:3 */
+
+// The following enum values are used to indicate the translation of a Tcl
+// channel. Declared here so that each platform can define
+// TCL_PLATFORM_TRANSLATION to the native translation on that platform.
+
+type TclEolTranslation = uint32 /* tclInt.h:2334:3 */
+
+// Flags for TclInvoke:
+//
+// TCL_INVOKE_HIDDEN		Invoke a hidden command; if not set, invokes
+//				an exposed command.
+// TCL_INVOKE_NO_UNKNOWN	If set, "unknown" is not invoked if the
+//				command to be invoked is not found. Only has
+//				an effect if invoking an exposed command,
+//				i.e. if TCL_INVOKE_HIDDEN is not also set.
+// TCL_INVOKE_NO_TRACEBACK	Does not record traceback information if the
+//				invoked command returns an error. Used if the
+//				caller plans on recording its own traceback
+//				information.
+
+// The structure used as the internal representation of Tcl list objects. This
+// struct is grown (reallocated and copied) as necessary to hold all the
+// list's element pointers. The struct might contain more slots than currently
+// used to hold all element pointers. This is done to make append operations
+// faster.
+
+type List1 = struct {
+	refCount      int32
+	maxElemCount  int32
+	elemCount     int32
+	canonicalFlag int32
+	elements      uintptr
+} /* tclInt.h:2363:9 */
+
+// Flags for TclInvoke:
+//
+// TCL_INVOKE_HIDDEN		Invoke a hidden command; if not set, invokes
+//				an exposed command.
+// TCL_INVOKE_NO_UNKNOWN	If set, "unknown" is not invoked if the
+//				command to be invoked is not found. Only has
+//				an effect if invoking an exposed command,
+//				i.e. if TCL_INVOKE_HIDDEN is not also set.
+// TCL_INVOKE_NO_TRACEBACK	Does not record traceback information if the
+//				invoked command returns an error. Used if the
+//				caller plans on recording its own traceback
+//				information.
+
+// The structure used as the internal representation of Tcl list objects. This
+// struct is grown (reallocated and copied) as necessary to hold all the
+// list's element pointers. The struct might contain more slots than currently
+// used to hold all element pointers. This is done to make append operations
+// faster.
+
+type List = List1 /* tclInt.h:2373:3 */
+
+type TclFileAttrProcs1 = struct {
+	getProc uintptr
+	setProc uintptr
+} /* tclInt.h:2542:9 */
+
+type TclFileAttrProcs = TclFileAttrProcs1 /* tclInt.h:2545:3 */
+
+// Opaque handle used in pipeline routines to encapsulate platform-dependent
+// state.
+
+type TclFile = uintptr /* tclInt.h:2552:25 */
+
+// The "globParameters" argument of the function TclGlob is an or'ed
+// combination of the following values:
+
+type Tcl_PathPart = uint32 /* tclInt.h:2569:3 */
+
+//----------------------------------------------------------------
+// Data structures related to procedures
+//----------------------------------------------------------------
+
+type TclCmdProcType = uintptr    /* tclInt.h:2588:21 */
+type TclObjCmdProcType = uintptr /* tclInt.h:2589:24 */
+
+// A ProcessGlobalValue struct exists for each internal value in Tcl that is
+// to be shared among several threads. Each thread sees a (Tcl_Obj) copy of
+// the value, and the master is kept as a counted string, with epoch and mutex
+// control. Each ProcessGlobalValue struct should be a static variable in some
+// file.
+
+type ProcessGlobalValue1 = struct {
+	epoch    int32
+	numBytes int32
+	value    uintptr
+	encoding Tcl_Encoding
+	proc     uintptr
+	mutex    Tcl_Mutex
+	key      Tcl_ThreadDataKey
+} /* tclInt.h:2608:9 */
+
+// A ProcessGlobalValue struct exists for each internal value in Tcl that is
+// to be shared among several threads. Each thread sees a (Tcl_Obj) copy of
+// the value, and the master is kept as a counted string, with epoch and mutex
+// control. Each ProcessGlobalValue struct should be a static variable in some
+// file.
+
+type ProcessGlobalValue = ProcessGlobalValue1 /* tclInt.h:2623:3 */
+
+// This structure holds the data for the various iteration callbacks used to
+// NRE the 'for' and 'while' commands. We need a separate structure because we
+// have more than the 4 client data entries we can provide directly thorugh
+// the callback API. It is the 'word' information which puts us over the
+// limit. It is needed because the loop body is argument 4 of 'for' and
+// argument 2 of 'while'. Not providing the correct index confuses the #280
+// code. We TclSmallAlloc/Free this.
+
+type ForIterData1 = struct {
+	cond uintptr
+	body uintptr
+	next uintptr
+	msg  uintptr
+	word int32
+	_    [4]byte
+} /* tclInt.h:2793:9 */
+
+// This structure holds the data for the various iteration callbacks used to
+// NRE the 'for' and 'while' commands. We need a separate structure because we
+// have more than the 4 client data entries we can provide directly thorugh
+// the callback API. It is the 'word' information which puts us over the
+// limit. It is needed because the loop body is argument 4 of 'for' and
+// argument 2 of 'while'. Not providing the correct index confuses the #280
+// code. We TclSmallAlloc/Free this.
+
+type ForIterData = ForIterData1 /* tclInt.h:2799:3 */
+
+type memCmpFn_t = uintptr /* tclInt.h:3162:13 */
+
+//----------------------------------------------------------------
+// Macro used by the Tcl core to check whether a pattern has any characters
+// special to [string match]. The ANSI C "prototype" for this macro is:
+//
+// MODULE_SCOPE int	TclMatchIsTrivial(const char *pattern);
+//----------------------------------------------------------------
+
+//----------------------------------------------------------------
+// Macros used by the Tcl core to set a Tcl_Obj's numeric representation
+// avoiding the corresponding function calls in time critical parts of the
+// core. They should only be called on unshared objects. The ANSI C
+// "prototypes" for these macros are:
+//
+// MODULE_SCOPE void	TclSetIntObj(Tcl_Obj *objPtr, int intValue);
+// MODULE_SCOPE void	TclSetLongObj(Tcl_Obj *objPtr, long longValue);
+// MODULE_SCOPE void	TclSetBooleanObj(Tcl_Obj *objPtr, long boolValue);
+// MODULE_SCOPE void	TclSetWideIntObj(Tcl_Obj *objPtr, Tcl_WideInt w);
+// MODULE_SCOPE void	TclSetDoubleObj(Tcl_Obj *objPtr, double d);
+//----------------------------------------------------------------
+
+// NOTE: There is to be no such thing as a "pure" boolean. Boolean values set
+// programmatically go straight to being "int" Tcl_Obj's, with value 0 or 1.
+// The only "boolean" Tcl_Obj's shall be those holding the cached boolean
+// value of strings like: "yes", "no", "true", "false", "on", "off".
+
+//----------------------------------------------------------------
+// Macros used by the Tcl core to create and initialise objects of standard
+// types, avoiding the corresponding function calls in time critical parts of
+// the core. The ANSI C "prototypes" for these macros are:
+//
+// MODULE_SCOPE void	TclNewIntObj(Tcl_Obj *objPtr, int i);
+// MODULE_SCOPE void	TclNewLongObj(Tcl_Obj *objPtr, long l);
+// MODULE_SCOPE void	TclNewBooleanObj(Tcl_Obj *objPtr, int b);
+// MODULE_SCOPE void	TclNewWideObj(Tcl_Obj *objPtr, Tcl_WideInt w);
+// MODULE_SCOPE void	TclNewDoubleObj(Tcl_Obj *objPtr, double d);
+// MODULE_SCOPE void	TclNewStringObj(Tcl_Obj *objPtr, char *s, int len);
+// MODULE_SCOPE void	TclNewLiteralStringObj(Tcl_Obj*objPtr, char*sLiteral);
+//
+//----------------------------------------------------------------
+
+// NOTE: There is to be no such thing as a "pure" boolean.
+// See comment above TclSetBooleanObj macro above.
+
+// The sLiteral argument *must* be a string literal; the incantation with
+// sizeof(sLiteral "") will fail to compile otherwise.
+
+//----------------------------------------------------------------
+// Convenience macros for DStrings.
+// The ANSI C "prototypes" for these macros are:
+//
+// MODULE_SCOPE char * TclDStringAppendLiteral(Tcl_DString *dsPtr,
+//			const char *sLiteral);
+// MODULE_SCOPE void   TclDStringClear(Tcl_DString *dsPtr);
+
+//----------------------------------------------------------------
+// Macros used by the Tcl core to test for some special double values.
+// The ANSI C "prototypes" for these macros are:
+//
+// MODULE_SCOPE int	TclIsInfinite(double d);
+// MODULE_SCOPE int	TclIsNaN(double d);
+
+// ----------------------------------------------------------------------
+// Macro to use to find the offset of a field in a structure. Computes number
+// of bytes from beginning of structure to a given field.
+
+//----------------------------------------------------------------
+// Inline version of Tcl_GetCurrentNamespace and Tcl_GetGlobalNamespace.
+
+//----------------------------------------------------------------
+// Inline version of TclCleanupCommand; still need the function as it is in
+// the internal stubs, but the core can use the macro instead.
+
+//----------------------------------------------------------------
+// Inline versions of Tcl_LimitReady() and Tcl_LimitExceeded to limit number
+// of calls out of the critical path. Note that this code isn't particularly
+// readable; the non-inline version (in tclInterp.c) is much easier to
+// understand. Note also that these macros takes different args (iPtr->limit)
+// to the non-inline version.
+
+// Compile-time assertions: these produce a compile time error if the
+// expression is not known to be true at compile time. If the assertion is
+// known to be false, the compiler (or optimizer?) will error out with
+// "division by zero". If the assertion cannot be evaluated at compile time,
+// the compiler will error out with "non-static initializer".
+//
+// Adapted with permission from
+// http://www.pixelbeat.org/programming/gcc/static_assert.html
+
+//----------------------------------------------------------------
+// Allocator for small structs (<=sizeof(Tcl_Obj)) using the Tcl_Obj pool.
+// Only checked at compile time.
+//
+// ONLY USE FOR CONSTANT nBytes.
+//
+// DO NOT LET THEM CROSS THREAD BOUNDARIES
+//----------------------------------------------------------------
+
+// Support for Clang Static Analyzer <http://clang-analyzer.llvm.org>
+
+//----------------------------------------------------------------
+// Parameters, structs and macros for the non-recursive engine (NRE)
+//----------------------------------------------------------------
+
+// This is the main data struct for representing NR commands. It is designed
+// to fit in sizeof(Tcl_Obj) in order to exploit the fastest memory allocator
+// available.
+
+type NRE_callback = NRE_callback1 /* tclInt.h:4891:3 */
+
+type TclIntStubs = TclIntStubs1 /* tclIntDecls.h:908:3 */
+
+type TclIntPlatStubs = TclIntPlatStubs1 /* tclIntPlatDecls.h:355:3 */
+
+// !END!: Do not edit above this line.
+
+//----------------------------------------------------------------------
+//
+// tclTomMathDecls.h --
+//
+//	This file contains the declarations for the 'libtommath'
+//	functions that are exported by the Tcl library.
+//
+// Copyright (c) 2005 by Kevin B. Kenny.  All rights reserved.
+//
+// See the file "license.terms" for information on usage and redistribution
+// of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+
+// tcl.h --
+//
+//	This header file describes the externally-visible facilities of the
+//	Tcl interpreter.
+//
+// Copyright (c) 1987-1994 The Regents of the University of California.
+// Copyright (c) 1993-1996 Lucent Technologies.
+// Copyright (c) 1994-1998 Sun Microsystems, Inc.
+// Copyright (c) 1998-2000 by Scriptics Corporation.
+// Copyright (c) 2002 by Kevin B. Kenny.  All rights reserved.
+//
+// See the file "license.terms" for information on usage and redistribution of
+// this file, and for a DISCLAIMER OF ALL WARRANTIES.
+
+// Local Variables:
+// mode: c
+// c-basic-offset: 4
+// fill-column: 78
+// End:
+// LibTomMath, multiple-precision integer library -- Tom St Denis
+// SPDX-License-Identifier: Unlicense
+
+// MS Visual C++ doesn't have a 128bit type for words, so fall back to 32bit MPI's (where words are 64bit)
+
+// detect 64-bit mode if possible
+
+// some default configurations.
+//
+// A "mp_digit" must be able to hold MP_DIGIT_BIT + 1 bits
+// A "mp_word" must be able to hold 2*MP_DIGIT_BIT + 1 bits
+//
+// At the very least a mp_digit must be able to hold 7 bits
+// [any size beyond that is ok provided it doesn't overflow the data type]
+
+// this is the default case, 28-bit digits
+
+// this is to make porting into LibTomCrypt easier :-)
+type private_mp_word = uint64 /* tclTomMath.h:94:30 */
+
+// default case is 28-bit digits, defines MP_28BIT as a handy macro to test
+
+// otherwise the bits per digit is calculated automatically from the size of a mp_digit
+
+// Primality generation flags
+
+type mp_sign = int32   /* tclTomMath.h:163:13 */
+type mp_ord = int32    /* tclTomMath.h:166:13 */
+type mp_bool = int32   /* tclTomMath.h:170:13 */
+type mp_err = int32    /* tclTomMath.h:173:13 */
+type mp_order = int32  /* tclTomMath.h:181:13 */
+type mp_endian = int32 /* tclTomMath.h:184:13 */
+
+type TclTomMathStubs1 = struct {
+	magic                       int32
+	hooks                       uintptr
+	tclBN_epoch                 uintptr
+	tclBN_revision              uintptr
+	tclBN_mp_add                uintptr
+	tclBN_mp_add_d              uintptr
+	tclBN_mp_and                uintptr
+	tclBN_mp_clamp              uintptr
+	tclBN_mp_clear              uintptr
+	tclBN_mp_clear_multi        uintptr
+	tclBN_mp_cmp                uintptr
+	tclBN_mp_cmp_d              uintptr
+	tclBN_mp_cmp_mag            uintptr
+	tclBN_mp_copy               uintptr
+	tclBN_mp_count_bits         uintptr
+	tclBN_mp_div                uintptr
+	tclBN_mp_div_d              uintptr
+	tclBN_mp_div_2              uintptr
+	tclBN_mp_div_2d             uintptr
+	tclBN_mp_div_3              uintptr
+	tclBN_mp_exch               uintptr
+	tclBN_mp_expt_d             uintptr
+	tclBN_mp_grow               uintptr
+	tclBN_mp_init               uintptr
+	tclBN_mp_init_copy          uintptr
+	tclBN_mp_init_multi         uintptr
+	tclBN_mp_init_set           uintptr
+	tclBN_mp_init_size          uintptr
+	tclBN_mp_lshd               uintptr
+	tclBN_mp_mod                uintptr
+	tclBN_mp_mod_2d             uintptr
+	tclBN_mp_mul                uintptr
+	tclBN_mp_mul_d              uintptr
+	tclBN_mp_mul_2              uintptr
+	tclBN_mp_mul_2d             uintptr
+	tclBN_mp_neg                uintptr
+	tclBN_mp_or                 uintptr
+	tclBN_mp_radix_size         uintptr
+	tclBN_mp_read_radix         uintptr
+	tclBN_mp_rshd               uintptr
+	tclBN_mp_shrink             uintptr
+	tclBN_mp_set                uintptr
+	tclBN_mp_sqr                uintptr
+	tclBN_mp_sqrt               uintptr
+	tclBN_mp_sub                uintptr
+	tclBN_mp_sub_d              uintptr
+	tclBN_mp_to_unsigned_bin    uintptr
+	tclBN_mp_to_unsigned_bin_n  uintptr
+	tclBN_mp_toradix_n          uintptr
+	tclBN_mp_unsigned_bin_size  uintptr
+	tclBN_mp_xor                uintptr
+	tclBN_mp_zero               uintptr
+	tclBN_reverse               uintptr
+	tclBN_fast_s_mp_mul_digs    uintptr
+	tclBN_fast_s_mp_sqr         uintptr
+	tclBN_mp_karatsuba_mul      uintptr
+	tclBN_mp_karatsuba_sqr      uintptr
+	tclBN_mp_toom_mul           uintptr
+	tclBN_mp_toom_sqr           uintptr
+	tclBN_s_mp_add              uintptr
+	tclBN_s_mp_mul_digs         uintptr
+	tclBN_s_mp_sqr              uintptr
+	tclBN_s_mp_sub              uintptr
+	tclBN_mp_init_set_int       uintptr
+	tclBN_mp_set_int            uintptr
+	tclBN_mp_cnt_lsb            uintptr
+	tclBNInitBignumFromLong     uintptr
+	tclBNInitBignumFromWideInt  uintptr
+	tclBNInitBignumFromWideUInt uintptr
+	tclBN_mp_expt_d_ex          uintptr
+	tclBN_mp_set_ull            uintptr
+	reserved69                  uintptr
+	reserved70                  uintptr
+	reserved71                  uintptr
+	reserved72                  uintptr
+	tclBN_mp_tc_and             uintptr
+	tclBN_mp_tc_or              uintptr
+	tclBN_mp_tc_xor             uintptr
+	tclBN_mp_signed_rsh         uintptr
+	reserved77                  uintptr
+	tclBN_mp_to_ubin            uintptr
+	reserved79                  uintptr
+	tclBN_mp_to_radix           uintptr
+} /* tclTomMathDecls.h:351:9 */
+
+type TclTomMathStubs = TclTomMathStubs1 /* tclTomMathDecls.h:436:3 */
+
+// These are opaque types.
+
+type Tcl_Class = uintptr         /* tclOO.h:52:27 */
+type Tcl_Method = uintptr        /* tclOO.h:53:28 */
+type Tcl_Object = uintptr        /* tclOO.h:54:28 */
+type Tcl_ObjectContext = uintptr /* tclOO.h:55:35 */
+
+// The type of a method implementation. This describes how to call the method
+// implementation, how to delete it (when the object or class is deleted) and
+// how to create a clone of it (when the object or class is copied).
+
+type Tcl_MethodType = struct {
+	version    int32
+	name       uintptr
+	callProc   uintptr
+	deleteProc uintptr
+	cloneProc  uintptr
+} /* tclOO.h:93:3 */
+
+// The correct value for the version field of the Tcl_MethodType structure.
+// This allows new versions of the structure to be introduced without breaking
+// binary compatability.
+
+// The type of some object (or class) metadata. This describes how to delete
+// the metadata (when the object or class is deleted) and how to create a
+// clone of it (when the object or class is copied).
+
+type Tcl_ObjectMetadataType = struct {
+	version    int32
+	name       uintptr
+	deleteProc uintptr
+	cloneProc  uintptr
+} /* tclOO.h:120:3 */
+
+type TclOOIntStubs1 = struct {
+	magic                         int32
+	hooks                         uintptr
+	tclOOGetDefineCmdContext      uintptr
+	tclOOMakeProcInstanceMethod   uintptr
+	tclOOMakeProcMethod           uintptr
+	tclOONewProcInstanceMethod    uintptr
+	tclOONewProcMethod            uintptr
+	tclOOObjectCmdCore            uintptr
+	tclOOIsReachable              uintptr
+	tclOONewForwardMethod         uintptr
+	tclOONewForwardInstanceMethod uintptr
+	tclOONewProcInstanceMethodEx  uintptr
+	tclOONewProcMethodEx          uintptr
+	tclOOInvokeObject             uintptr
+	tclOOObjectSetFilters         uintptr
+	tclOOClassSetFilters          uintptr
+	tclOOObjectSetMixins          uintptr
+	tclOOClassSetMixins           uintptr
+} /* tclOODecls.h:121:11 */
+
+type TclOOStubHooks = struct{ tclOOIntStubs uintptr } /* tclOODecls.h:122:3 */
+
+type TclOOStubs1 = struct {
+	magic                         int32
+	hooks                         uintptr
+	tcl_CopyObjectInstance        uintptr
+	tcl_GetClassAsObject          uintptr
+	tcl_GetObjectAsClass          uintptr
+	tcl_GetObjectCommand          uintptr
+	tcl_GetObjectFromObj          uintptr
+	tcl_GetObjectNamespace        uintptr
+	tcl_MethodDeclarerClass       uintptr
+	tcl_MethodDeclarerObject      uintptr
+	tcl_MethodIsPublic            uintptr
+	tcl_MethodIsType              uintptr
+	tcl_MethodName                uintptr
+	tcl_NewInstanceMethod         uintptr
+	tcl_NewMethod                 uintptr
+	tcl_NewObjectInstance         uintptr
+	tcl_ObjectDeleted             uintptr
+	tcl_ObjectContextIsFiltering  uintptr
+	tcl_ObjectContextMethod       uintptr
+	tcl_ObjectContextObject       uintptr
+	tcl_ObjectContextSkippedArgs  uintptr
+	tcl_ClassGetMetadata          uintptr
+	tcl_ClassSetMetadata          uintptr
+	tcl_ObjectGetMetadata         uintptr
+	tcl_ObjectSetMetadata         uintptr
+	tcl_ObjectContextInvokeNext   uintptr
+	tcl_ObjectGetMethodNameMapper uintptr
+	tcl_ObjectSetMethodNameMapper uintptr
+	tcl_ClassSetConstructor       uintptr
+	tcl_ClassSetDestructor        uintptr
+	tcl_GetObjectName             uintptr
+} /* tclOODecls.h:124:9 */
+
+type TclOOStubs = TclOOStubs1 /* tclOODecls.h:157:3 */
+
+// !END!: Do not edit above this line.
+
+// Local Variables:
+// mode: c
+// c-basic-offset: 4
+// fill-column: 78
+// End:
+
+// Hack to make things work with Objective C. Note that ObjC isn't really
+// supported, but we don't want to to be actively hostile to it. [Bug 2163447]
+
+// Forward declarations.
+
+type CallChain1 = struct {
+	objectCreationEpoch int32
+	objectEpoch         int32
+	epoch               int32
+	flags               int32
+	refCount            int32
+	numChain            int32
+	chain               uintptr
+	staticChain         [4]struct {
+		mPtr           uintptr
+		isFilter       int32
+		filterDeclarer uintptr
+	}
+} /* tclOOInt.h:33:1 */
+
+type Class1 = struct {
+	thisPtr      uintptr
+	flags        int32
+	superclasses struct {
+		num  int32
+		list uintptr
+	}
+	subclasses struct {
+		num  int32
+		size int32
+		list uintptr
+	}
+	instances struct {
+		num  int32
+		size int32
+		list uintptr
+	}
+	filters struct {
+		num  int32
+		list uintptr
+	}
+	mixins struct {
+		num  int32
+		list uintptr
+	}
+	mixinSubs struct {
+		num  int32
+		size int32
+		list uintptr
+	}
+	classMethods        Tcl_HashTable
+	constructorPtr      uintptr
+	destructorPtr       uintptr
+	metadataPtr         uintptr
+	constructorChainPtr uintptr
+	destructorChainPtr  uintptr
+	classChainCache     uintptr
+	variables           struct {
+		num  int32
+		list uintptr
+	}
+} /* tclOOInt.h:33:1 */
+
+type Foundation1 = struct {
+	interp               uintptr
+	objectCls            uintptr
+	classCls             uintptr
+	ooNs                 uintptr
+	defineNs             uintptr
+	objdefNs             uintptr
+	helpersNs            uintptr
+	epoch                int32
+	tsdPtr               uintptr
+	unknownMethodNameObj uintptr
+	constructorName      uintptr
+	destructorName       uintptr
+	clonedName           uintptr
+	defineName           uintptr
+} /* tclOOInt.h:33:1 */
+
+type Object1 = struct {
+	fPtr         uintptr
+	namespacePtr uintptr
+	command      Tcl_Command
+	myCommand    Tcl_Command
+	selfCls      uintptr
+	methodsPtr   uintptr
+	mixins       struct {
+		num  int32
+		list uintptr
+	}
+	filters struct {
+		num  int32
+		list uintptr
+	}
+	classPtr          uintptr
+	refCount          int32
+	flags             int32
+	creationEpoch     int32
+	epoch             int32
+	metadataPtr       uintptr
+	cachedNameObj     uintptr
+	chainCache        uintptr
+	mapMethodNameProc uintptr
+	variables         struct {
+		num  int32
+		list uintptr
+	}
+} /* tclOOInt.h:33:1 */
+
+// The data that needs to be stored per method. This record is used to collect
+// information about all sorts of methods, including forwards, constructors
+// and destructors.
+
+type Method1 = struct {
+	typePtr            uintptr
+	refCount           int32
+	clientData         ClientData
+	namePtr            uintptr
+	declaringObjectPtr uintptr
+	declaringClassPtr  uintptr
+	flags              int32
+	_                  [4]byte
+} /* tclOOInt.h:33:1 */
+
+// The data that needs to be stored per method. This record is used to collect
+// information about all sorts of methods, including forwards, constructors
+// and destructors.
+
+type Method = Method1 /* tclOOInt.h:61:3 */
+
+// Procedure-like methods have the following extra information.
+
+type ProcedureMethod1 = struct {
+	version              int32
+	procPtr              uintptr
+	flags                int32
+	refCount             int32
+	clientData           ClientData
+	deleteClientdataProc uintptr
+	cloneClientdataProc  uintptr
+	errProc              uintptr
+	preCallProc          uintptr
+	postCallProc         uintptr
+	gfivProc             uintptr
+} /* tclOOInt.h:79:9 */
+
+// Procedure-like methods have the following extra information.
+
+type ProcedureMethod = ProcedureMethod1 /* tclOOInt.h:100:3 */
+
+// Flags for use in a ProcedureMethod.
+//
+// When the USE_DECLARER_NS flag is set, the method will use the namespace of
+// the object or class that declared it (or the clone of it, if it was from
+// such that the implementation of the method came to the particular use)
+// instead of the namespace of the object on which the method was invoked.
+// This flag must be distinct from all others that are associated with
+// methods.
+
+// Forwarded methods have the following extra information.
+
+type ForwardMethod1 = struct{ prefixObj uintptr } /* tclOOInt.h:121:9 */
+
+// Flags for use in a ProcedureMethod.
+//
+// When the USE_DECLARER_NS flag is set, the method will use the namespace of
+// the object or class that declared it (or the clone of it, if it was from
+// such that the implementation of the method came to the particular use)
+// instead of the namespace of the object on which the method was invoked.
+// This flag must be distinct from all others that are associated with
+// methods.
+
+// Forwarded methods have the following extra information.
+
+type ForwardMethod = ForwardMethod1 /* tclOOInt.h:125:3 */
+
+// Helper definitions that declare a "list" array. The two varieties are
+// either optimized for simplicity (in the case that the whole array is
+// typically assigned at once) or efficiency (in the case that the array is
+// expected to be expanded over time). These lists are designed to be iterated
+// over with the help of the FOREACH macro (see later in this file).
+//
+// The "num" field always counts the number of listType_t elements used in the
+// "list" field. When a "size" field exists, it describes how many elements
+// are present in the list; when absent, exactly "num" elements are present.
+
+// Now, the definition of what an object actually is.
+
+type Object = Object1 /* tclOOInt.h:190:3 */
+
+// And the definition of a class. Note that every class also has an associated
+// object, through which it is manipulated.
+
+type Class = Class1 /* tclOOInt.h:270:3 */
+
+// The foundation of the object system within an interpreter contains
+// references to the key classes and namespaces, together with a few other
+// useful bits and pieces. Probably ought to eventually go in the Interp
+// structure itself.
+
+type ThreadLocalData1 = struct{ nsCount int32 } /* tclOOInt.h:33:1 */
+
+// The foundation of the object system within an interpreter contains
+// references to the key classes and namespaces, together with a few other
+// useful bits and pieces. Probably ought to eventually go in the Interp
+// structure itself.
+
+type ThreadLocalData = ThreadLocalData1 /* tclOOInt.h:286:3 */
+
+type Foundation = Foundation1 /* tclOOInt.h:318:3 */
+
+// A call context structure is built when a method is called. It contains the
+// chain of method implementations that are to be invoked by a particular
+// call, and the process of calling walks the chain, with the [next] command
+// proceeding to the next entry in the chain.
+
+type MInvoke = struct {
+	mPtr           uintptr
+	isFilter       int32
+	filterDeclarer uintptr
+} /* tclOOInt.h:33:1 */
+
+type CallChain = CallChain1 /* tclOOInt.h:352:3 */
+
+type CallContext1 = struct {
+	oPtr    uintptr
+	index   int32
+	skip    int32
+	callPtr uintptr
+} /* tclOOInt.h:354:9 */
+
+type CallContext = CallContext1 /* tclOOInt.h:363:3 */
+
+// Bits for the 'flags' field of the call chain.
+
+// Structure containing definition information about basic class methods.
+
+type DeclaredClassMethod = struct {
+	name       uintptr
+	isPublic   int32
+	definition Tcl_MethodType
+} /* tclOOInt.h:384:3 */
+
+type TclOOIntStubs = TclOOIntStubs1 /* tclOOIntDecls.h:115:3 */
+
+var tclOOStubsPtr uintptr = uintptr(0)    /* tclOOStubLib.c:10:18 */
+var tclOOIntStubsPtr uintptr = uintptr(0) /* tclOOStubLib.c:11:21 */
+
+//----------------------------------------------------------------------
+//
+// TclOOInitializeStubs --
+//	Load the tclOO package, initialize stub table pointer. Do not call
+//	this function directly, use Tcl_OOInitStubs() macro instead.
+//
+// Results:
+//	The actual version of the package that satisfies the request, or NULL
+//	to indicate that an error occurred.
+//
+// Side effects:
+//	Sets the stub table pointers.
+//
+//----------------------------------------------------------------------
+
+func TclOOInitializeStubs(tls *libc.TLS, interp uintptr, version uintptr) uintptr { /* tclOOStubLib.c:32:25: */
+	bp := tls.Alloc(80)
+	defer tls.Free(80)
+
+	var exact int32 = 0
+	var packageName uintptr = ts /* "TclOO" */
+	var errMsg uintptr = uintptr(0)
+	*(*uintptr)(unsafe.Pointer(bp + 72 /* stubsPtr */)) = uintptr(0)
+	var actualVersion uintptr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_PkgRequireEx */))))(tls, interp,
+		packageName, version, exact, bp+72 /* &stubsPtr */)
+
+	if actualVersion == (uintptr(0)) {
+		return uintptr(0)
+	}
+	if *(*uintptr)(unsafe.Pointer(bp + 72 /* stubsPtr */)) == (uintptr(0)) {
+		errMsg = ts + 6 /* "missing stub tab..." */
+	} else {
+		tclOOStubsPtr = *(*uintptr)(unsafe.Pointer(bp + 72 /* stubsPtr */))
+		if (*TclOOStubs)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(bp + 72 /* stubsPtr */)))).hooks != 0 {
+			tclOOIntStubsPtr = (*TclOOStubHooks)(unsafe.Pointer((*TclOOStubs)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(bp + 72 /* stubsPtr */)))).hooks)).tclOOIntStubs
+		} else {
+			tclOOIntStubsPtr = uintptr(0)
+		}
+		return actualVersion
+	}
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1752 /* &.tcl_ResetResult */))))(tls, interp)
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+33 /* "Error loading " */, packageName,
+		ts+48 /* " (requested vers..." */, version, ts+69, /* ", actual version..." */
+		actualVersion, ts+87 /* "): " */, errMsg, uintptr(0)))
+	return uintptr(0)
+}
+
+// Local Variables:
+// mode: c
+// c-basic-offset: 4
+// fill-column: 78
+// End:
+
+var tclStubsPtr uintptr = uintptr(0)        /* tclStubLib.c:21:16 */
+var tclPlatStubsPtr uintptr = uintptr(0)    /* tclStubLib.c:22:20 */
+var tclIntStubsPtr uintptr = uintptr(0)     /* tclStubLib.c:23:19 */
+var tclIntPlatStubsPtr uintptr = uintptr(0) /* tclStubLib.c:24:23 */
+
+// Use our own isDigit to avoid linking to libc on windows
+
+func isDigit(tls *libc.TLS, c int32) int32 { /* tclStubLib.c:30:12: */
+	return (libc.Bool32((c >= '0') && (c <= '9')))
+}
+
+//----------------------------------------------------------------------
+//
+// Tcl_InitStubs --
+//
+//	Tries to initialise the stub table pointers and ensures that the
+//	correct version of Tcl is loaded.
+//
+// Results:
+//	The actual version of Tcl that satisfies the request, or NULL to
+//	indicate that an error occurred.
+//
+// Side effects:
+//	Sets the stub table pointers.
+//
+//----------------------------------------------------------------------
+func Tcl_InitStubs(tls *libc.TLS, interp uintptr, version uintptr, exact int32) uintptr { /* tclStubLib.c:53:25: */
+	bp := tls.Alloc(8)
+	defer tls.Free(8)
+
+	var iPtr uintptr = interp
+	var actualVersion uintptr = uintptr(0)
+	*(*ClientData)(unsafe.Pointer(bp /* pkgData */)) = uintptr(0)
+	var stubsPtr uintptr = (*Interp)(unsafe.Pointer(iPtr)).stubTable
+
+	// We can't optimize this check by caching tclStubsPtr because that
+	// prevents apps from being able to load/unload Tcl dynamically multiple
+	// times. [Bug 615304]
+
+	if !(stubsPtr != 0) || ((*TclStubs)(unsafe.Pointer(stubsPtr)).magic != (libc.Int32FromUint32(0xFCA3BACF))) {
+		(*Interp)(unsafe.Pointer(iPtr)).result = ts + 91 /* "interpreter uses..." */
+		(*Interp)(unsafe.Pointer(iPtr)).freeProc = uintptr(0)
+		return uintptr(0)
+	}
+
+	actualVersion = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr) uintptr)(unsafe.Pointer((stubsPtr + 24 /* &.tcl_PkgRequireEx */))))(tls, interp, ts+140 /* "Tcl" */, version, 0, bp /* &pkgData */)
+	if actualVersion == (uintptr(0)) {
+		return uintptr(0)
+	}
+	if exact != 0 {
+		var p uintptr = version
+		var count int32 = 0
+
+		for *(*int8)(unsafe.Pointer(p)) != 0 {
+			count = count + (libc.BoolInt32(!(isDigit(tls, int32(*(*int8)(unsafe.Pointer(libc.PostIncUintptr(&p, 1))))) != 0)))
+		}
+		if count == 1 {
+			var q uintptr = actualVersion
+
+			p = version
+			for (*(*int8)(unsafe.Pointer(p)) != 0) && (int32(*(*int8)(unsafe.Pointer(p))) == int32(*(*int8)(unsafe.Pointer(q)))) {
+				p++
+				q++
+			}
+			if (*(*int8)(unsafe.Pointer(p)) != 0) || (isDigit(tls, int32(*(*int8)(unsafe.Pointer(q)))) != 0) {
+				// Construct error message
+				(*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr) uintptr)(unsafe.Pointer((stubsPtr + 24 /* &.tcl_PkgRequireEx */))))(tls, interp, ts+140 /* "Tcl" */, version, 1, uintptr(0))
+				return uintptr(0)
+			}
+		} else {
+			actualVersion = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr) uintptr)(unsafe.Pointer((stubsPtr + 24 /* &.tcl_PkgRequireEx */))))(tls, interp, ts+140 /* "Tcl" */, version, 1, uintptr(0))
+			if actualVersion == (uintptr(0)) {
+				return uintptr(0)
+			}
+		}
+	}
+	tclStubsPtr = *(*ClientData)(unsafe.Pointer(bp /* pkgData */))
+
+	if (*TclStubs)(unsafe.Pointer(tclStubsPtr)).hooks != 0 {
+		tclPlatStubsPtr = (*TclStubHooks)(unsafe.Pointer((*TclStubs)(unsafe.Pointer(tclStubsPtr)).hooks)).tclPlatStubs
+		tclIntStubsPtr = (*TclStubHooks)(unsafe.Pointer((*TclStubs)(unsafe.Pointer(tclStubsPtr)).hooks)).tclIntStubs
+		tclIntPlatStubsPtr = (*TclStubHooks)(unsafe.Pointer((*TclStubs)(unsafe.Pointer(tclStubsPtr)).hooks)).tclIntPlatStubs
+	} else {
+		tclPlatStubsPtr = uintptr(0)
+		tclIntStubsPtr = uintptr(0)
+		tclIntPlatStubsPtr = uintptr(0)
+	}
+
+	return actualVersion
+}
+
+// Local Variables:
+// mode: c
+// c-basic-offset: 4
+// fill-column: 78
+// End:
+
+var tclTomMathStubsPtr uintptr = uintptr(0) /* tclTomMathStubLib.c:18:23 */
+
+//----------------------------------------------------------------------
+//
+// TclTomMathInitStubs --
+//
+//	Initializes the Stubs table for Tcl's subset of libtommath
+//
+// Results:
+//	Returns a standard Tcl result.
+//
+// This procedure should not be called directly, but rather through
+// the TclTomMath_InitStubs macro, to insure that the Stubs table
+// matches the header files used in compilation.
+//
+//----------------------------------------------------------------------
+
+func TclTomMathInitializeStubs(tls *libc.TLS, interp uintptr, version uintptr, epoch int32, revision int32) uintptr { /* tclTomMathStubLib.c:38:25: */
+	bp := tls.Alloc(80)
+	defer tls.Free(80)
+
+	var exact int32 = 0
+	var packageName uintptr = ts + 144 /* "tcl::tommath" */
+	var errMsg uintptr = uintptr(0)
+	*(*uintptr)(unsafe.Pointer(bp + 72 /* stubsPtr */)) = uintptr(0)
+	var actualVersion uintptr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_PkgRequireEx */))))(tls, interp,
+		packageName, version, exact, bp+72 /* &stubsPtr */)
+
+	if actualVersion == (uintptr(0)) {
+		return uintptr(0)
+	}
+	if *(*uintptr)(unsafe.Pointer(bp + 72 /* stubsPtr */)) == (uintptr(0)) {
+		errMsg = ts + 6 /* "missing stub tab..." */
+	} else if (*(*func(*libc.TLS) int32)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(bp + 72 /* stubsPtr */)) + 16 /* &.tclBN_epoch */))))(tls) != epoch {
+		errMsg = ts + 157 /* "epoch number mis..." */
+	} else if (*(*func(*libc.TLS) int32)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(bp + 72 /* stubsPtr */)) + 24 /* &.tclBN_revision */))))(tls) != revision {
+		errMsg = ts + 179 /* "requires a later..." */
+	} else {
+		tclTomMathStubsPtr = *(*uintptr)(unsafe.Pointer(bp + 72 /* stubsPtr */))
+		return actualVersion
+	}
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1752 /* &.tcl_ResetResult */))))(tls, interp)
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+33 /* "Error loading " */, packageName,
+		ts+48 /* " (requested vers..." */, version, ts+69, /* ", actual version..." */
+		actualVersion, ts+87 /* "): " */, errMsg, uintptr(0)))
+	return uintptr(0)
+}
+
+// Local Variables:
+// mode: c
+// c-basic-offset: 4
+// fill-column: 78
+// End:
+
+type Tcl_OldStat_1 = uintptr /* tcl.h:645:21 */
 
 type TclStubs1 = struct {
 	magic                                  int32
@@ -9003,2254 +11904,7 @@ type TclStubs1 = struct {
 	reserved646                            uintptr
 	reserved647                            uintptr
 	tclUnusedStubEntry                     uintptr
-}
-
-type TclStubs = TclStubs1 /* tclDecls.h:2522:3 */
-
-// !END!: Do not edit above this line.
-
-// Deprecated Tcl procedures:
-
-// Include platform specific public function declarations that are accessible
-// via the stubs table. Make all TclOO symbols MODULE_SCOPE (which only
-// has effect on building it as a shared library). See ticket [3010352].
-
-// tclPlatDecls.h --
-//
-//	Declarations of platform specific Tcl APIs.
-//
-// Copyright (c) 1998-1999 by Scriptics Corporation.
-// All rights reserved.
-
-// WARNING: This file is automatically generated by the tools/genStubs.tcl
-// script.  Any modifications to the function declarations below should be made
-// in the generic/tcl.decls script.
-
-// TCHAR is needed here for win32, so if it is not defined yet do it here.
-// This way, we don't need to include <tchar.h> just for one define.
-
-// !BEGIN!: Do not edit below this line.
-
-// Exported function declarations:
-
-type TclPlatStubs = TclPlatStubs1 /* tclPlatDecls.h:86:3 */
-
-// Returned by `div'.
-type div_t = struct {
-	quot int32
-	rem  int32
-} /* stdlib.h:62:5 */
-
-// Returned by `ldiv'.
-type ldiv_t = struct {
-	quot int64
-	rem  int64
-} /* stdlib.h:70:5 */
-
-// Returned by `lldiv'.
-type lldiv_t = struct {
-	quot int64
-	rem  int64
-} /* stdlib.h:80:5 */
-
-// Reentrant versions of the `random' family of functions.
-//   These functions all use the following data structure to contain
-//   state, rather than global state variables.
-
-type random_data = struct {
-	fptr      uintptr
-	rptr      uintptr
-	state     uintptr
-	rand_type int32
-	rand_deg  int32
-	rand_sep  int32
-	end_ptr   uintptr
-}
-
-// Data structure for communication with thread safe versions.  This
-//   type is to be regarded as opaque.  It's only exported because users
-//   have to allocate objects of this type.
-type drand48_data = struct {
-	__x     [3]uint16
-	__old_x [3]uint16
-	__c     uint16
-	__init  uint16
-	__a     uint64
-}
-
-// If this symbol has done its job, get rid of it.
-
-// Unsigned type of `sizeof' something.
-
-// Define this type if we are doing the whole job,
-//   or if we want this type in particular.
-
-// Wide character type.
-//   Locale-writers should change this as necessary to
-//   be big enough to hold unique values not between 0 and 127,
-//   and not (wchar_t) -1, for each defined multibyte character.
-
-// Define this type if we are doing the whole job,
-//   or if we want this type in particular.
-
-//  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
-//    are already defined.
-//  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.
-//  NetBSD 5 requires the I386_ANSI_H and X86_64_ANSI_H checks here.
-
-// A null pointer constant.
-
-// Offset of member MEMBER in a struct of type TYPE.
-
-// Type whose alignment is supported in every context and is at least
-//   as great as that of any standard type not using alignment
-//   specifiers.
-type max_align_t = struct {
-	__max_align_ll int64
-	__max_align_ld float64
-} /* stddef.h:437:3 */
-
-// Ensure WORDS_BIGENDIAN is defined correctly:
-// Needs to happen here in addition to configure to work with fat compiles on
-// Darwin (where configure runs only once for multiple architectures).
-
-// Copyright (C) 1991-2018 Free Software Foundation, Inc.
-//   This file is part of the GNU C Library.
-//
-//   The GNU C Library is free software; you can redistribute it and/or
-//   modify it under the terms of the GNU Lesser General Public
-//   License as published by the Free Software Foundation; either
-//   version 2.1 of the License, or (at your option) any later version.
-//
-//   The GNU C Library is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-//   Lesser General Public License for more details.
-//
-//   You should have received a copy of the GNU Lesser General Public
-//   License along with the GNU C Library; if not, see
-//   <http://www.gnu.org/licenses/>.
-
-//	POSIX Standard: 2.6 Primitive System Data Types	<sys/types.h>
-
-// Compatibility header for old-style Unix parameters and limits.
-//   Copyright (C) 1995-2018 Free Software Foundation, Inc.
-//   This file is part of the GNU C Library.
-//
-//   The GNU C Library is free software; you can redistribute it and/or
-//   modify it under the terms of the GNU Lesser General Public
-//   License as published by the Free Software Foundation; either
-//   version 2.1 of the License, or (at your option) any later version.
-//
-//   The GNU C Library is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-//   Lesser General Public License for more details.
-//
-//   You should have received a copy of the GNU Lesser General Public
-//   License along with the GNU C Library; if not, see
-//   <http://www.gnu.org/licenses/>.
-
-// Used to tag functions that are only to be visible within the module being
-// built and not outside it (where this is supported by the linker).
-
-// Macros used to cast between pointers and integers (e.g. when storing an int
-// in ClientData), on 64-bit architectures they avoid gcc warning about "cast
-// to/from pointer from/to integer of different size".
-
-// The following procedures allow namespaces to be customized to support
-// special name resolution rules for commands/variables.
-
-type Tcl_ResolvedVarInfo1 = struct {
-	fetchProc  uintptr
-	deleteProc uintptr
-}
-
-// The following structure encapsulates the routines needed to resolve a
-// variable reference at runtime. Any variable specific state will typically
-// be appended to this structure.
-
-type Tcl_ResolvedVarInfo = Tcl_ResolvedVarInfo1 /* tclInt.h:147:3 */
-
-type Tcl_ResolverInfo1 = struct {
-	cmdResProc         uintptr
-	varResProc         uintptr
-	compiledVarResProc uintptr
-}
-
-type Tcl_ResolverInfo = Tcl_ResolverInfo1 /* tclInt.h:170:3 */
-type NamespacePathEntry1 = struct {
-	nsPtr        uintptr
-	creatorNsPtr uintptr
-	prevPtr      uintptr
-	nextPtr      uintptr
-}
-
-type NamespacePathEntry = NamespacePathEntry1 /* tclInt.h:194:35 */
-
-// Special hashtable for variables: this is just a Tcl_HashTable with an nsPtr
-// field added at the end: in this way variables can find their namespace
-// without having to copy a pointer in their struct: they can access it via
-// their hPtr->tablePtr.
-
-type TclVarHashTable1 = struct {
-	table Tcl_HashTable
-	nsPtr uintptr
-}
-
-// Special hashtable for variables: this is just a Tcl_HashTable with an nsPtr
-// field added at the end: in this way variables can find their namespace
-// without having to copy a pointer in their struct: they can access it via
-// their hPtr->tablePtr.
-
-type Namespace1 = struct {
-	name                  uintptr
-	fullName              uintptr
-	clientData            ClientData
-	deleteProc            uintptr
-	parentPtr             uintptr
-	childTable            Tcl_HashTable
-	nsId                  int64
-	interp                uintptr
-	flags                 int32
-	activationCount       int32
-	refCount              int32
-	cmdTable              Tcl_HashTable
-	varTable              TclVarHashTable
-	exportArrayPtr        uintptr
-	numExportPatterns     int32
-	maxExportPatterns     int32
-	cmdRefEpoch           int32
-	resolverEpoch         int32
-	cmdResProc            uintptr
-	varResProc            uintptr
-	compiledVarResProc    uintptr
-	exportLookupEpoch     int32
-	ensembles             uintptr
-	unknownHandlerPtr     uintptr
-	commandPathLength     int32
-	commandPathArray      uintptr
-	commandPathSourceList uintptr
-	earlyDeleteProc       uintptr
-}
-
-// Special hashtable for variables: this is just a Tcl_HashTable with an nsPtr
-// field added at the end: in this way variables can find their namespace
-// without having to copy a pointer in their struct: they can access it via
-// their hPtr->tablePtr.
-
-type TclVarHashTable = TclVarHashTable1 /* tclInt.h:206:3 */
-
-// This is for itcl - it likes to search our varTables directly :(
-
-// Define this to reduce the amount of space that the average namespace
-// consumes by only allocating the table of child namespaces when necessary.
-// Defining it breaks compatibility for Tcl extensions (e.g., itcl) which
-// reach directly into the Namespace structure.
-
-// The structure below defines a namespace.
-// Note: the first five fields must match exactly the fields in a
-// Tcl_Namespace structure (see tcl.h). If you change one, be sure to change
-// the other.
-
-type Namespace = Namespace1 /* tclInt.h:345:3 */
-
-// Flags used to represent the status of a namespace:
-//
-// NS_DYING -	1 means Tcl_DeleteNamespace has been called to delete the
-//		namespace but there are still active call frames on the Tcl
-//		stack that refer to the namespace. When the last call frame
-//		referring to it has been popped, it's variables and command
-//		will be destroyed and it will be marked "dead" (NS_DEAD). The
-//		namespace can no longer be looked up by name.
-// NS_DEAD -	1 means Tcl_DeleteNamespace has been called to delete the
-//		namespace and no call frames still refer to it. Its variables
-//		and command have already been destroyed. This bit allows the
-//		namespace resolution code to recognize that the namespace is
-//		"deleted". When the last namespaceName object in any byte code
-//		unit that refers to the namespace has been freed (i.e., when
-//		the namespace's refCount is 0), the namespace's storage will
-//		be freed.
-// NS_KILLED -	1 means that TclTeardownNamespace has already been called on
-//		this namespace and it should not be called again [Bug 1355942]
-// NS_SUPPRESS_COMPILATION -
-//		Marks the commands in this namespace for not being compiled,
-//		forcing them to be looked up every time.
-
-// Flags passed to TclGetNamespaceForQualName:
-//
-// TCL_GLOBAL_ONLY		- (see tcl.h) Look only in the global ns.
-// TCL_NAMESPACE_ONLY		- (see tcl.h) Look only in the context ns.
-// TCL_CREATE_NS_IF_UNKNOWN	- Create unknown namespaces.
-// TCL_FIND_ONLY_NS		- The name sought is a namespace name.
-
-// The client data for an ensemble command. This consists of the table of
-// commands that are actually exported by the namespace, and an epoch counter
-// that, combined with the exportLookupEpoch field of the namespace structure,
-// defines whether the table contains valid data or will need to be recomputed
-// next time the ensemble command is called.
-
-type EnsembleConfig1 = struct {
-	nsPtr              uintptr
-	token              Tcl_Command
-	epoch              int32
-	subcommandArrayPtr uintptr
-	subcommandTable    Tcl_HashTable
-	next               uintptr
-	flags              int32
-	subcommandDict     uintptr
-	subcmdList         uintptr
-	unknownHandler     uintptr
-	parameterList      uintptr
-	numParameters      int32
-	_                  [4]byte
-}
-
-// Flags used to represent the status of a namespace:
-//
-// NS_DYING -	1 means Tcl_DeleteNamespace has been called to delete the
-//		namespace but there are still active call frames on the Tcl
-//		stack that refer to the namespace. When the last call frame
-//		referring to it has been popped, it's variables and command
-//		will be destroyed and it will be marked "dead" (NS_DEAD). The
-//		namespace can no longer be looked up by name.
-// NS_DEAD -	1 means Tcl_DeleteNamespace has been called to delete the
-//		namespace and no call frames still refer to it. Its variables
-//		and command have already been destroyed. This bit allows the
-//		namespace resolution code to recognize that the namespace is
-//		"deleted". When the last namespaceName object in any byte code
-//		unit that refers to the namespace has been freed (i.e., when
-//		the namespace's refCount is 0), the namespace's storage will
-//		be freed.
-// NS_KILLED -	1 means that TclTeardownNamespace has already been called on
-//		this namespace and it should not be called again [Bug 1355942]
-// NS_SUPPRESS_COMPILATION -
-//		Marks the commands in this namespace for not being compiled,
-//		forcing them to be looked up every time.
-
-// Flags passed to TclGetNamespaceForQualName:
-//
-// TCL_GLOBAL_ONLY		- (see tcl.h) Look only in the global ns.
-// TCL_NAMESPACE_ONLY		- (see tcl.h) Look only in the context ns.
-// TCL_CREATE_NS_IF_UNKNOWN	- Create unknown namespaces.
-// TCL_FIND_ONLY_NS		- The name sought is a namespace name.
-
-// The client data for an ensemble command. This consists of the table of
-// commands that are actually exported by the namespace, and an epoch counter
-// that, combined with the exportLookupEpoch field of the namespace structure,
-// defines whether the table contains valid data or will need to be recomputed
-// next time the ensemble command is called.
-
-type EnsembleConfig = EnsembleConfig1 /* tclInt.h:483:3 */
-
-// Various bits for the EnsembleConfig.flags field.
-
-//----------------------------------------------------------------
-// Data structures related to variables. These are used primarily in tclVar.c
-//----------------------------------------------------------------
-
-// The following structure defines a variable trace, which is used to invoke a
-// specific C procedure whenever certain operations are performed on a
-// variable.
-
-type VarTrace1 = struct {
-	traceProc  uintptr
-	clientData ClientData
-	flags      int32
-	nextPtr    uintptr
-}
-
-// Various bits for the EnsembleConfig.flags field.
-
-//----------------------------------------------------------------
-// Data structures related to variables. These are used primarily in tclVar.c
-//----------------------------------------------------------------
-
-// The following structure defines a variable trace, which is used to invoke a
-// specific C procedure whenever certain operations are performed on a
-// variable.
-
-type VarTrace = VarTrace1 /* tclInt.h:516:3 */
-
-// The following structure defines a command trace, which is used to invoke a
-// specific C procedure whenever certain operations are performed on a
-// command.
-
-type CommandTrace1 = struct {
-	traceProc  uintptr
-	clientData ClientData
-	flags      int32
-	nextPtr    uintptr
-	refCount   int32
-	_          [4]byte
-}
-
-// The following structure defines a command trace, which is used to invoke a
-// specific C procedure whenever certain operations are performed on a
-// command.
-
-type CommandTrace = CommandTrace1 /* tclInt.h:539:3 */
-
-// When a command trace is active (i.e. its associated procedure is executing)
-// one of the following structures is linked into a list associated with the
-// command's interpreter. The information in the structure is needed in order
-// for Tcl to behave reasonably if traces are deleted while traces are active.
-
-type ActiveCommandTrace1 = struct {
-	cmdPtr       uintptr
-	nextPtr      uintptr
-	nextTracePtr uintptr
-	reverseScan  int32
-	_            [4]byte
-}
-
-// When a command trace is active (i.e. its associated procedure is executing)
-// one of the following structures is linked into a list associated with the
-// command's interpreter. The information in the structure is needed in order
-// for Tcl to behave reasonably if traces are deleted while traces are active.
-
-type Command1 = struct {
-	hPtr          uintptr
-	nsPtr         uintptr
-	refCount      int32
-	cmdEpoch      int32
-	compileProc   uintptr
-	objProc       uintptr
-	objClientData ClientData
-	proc          uintptr
-	clientData    ClientData
-	deleteProc    uintptr
-	deleteData    ClientData
-	flags         int32
-	importRefPtr  uintptr
-	tracePtr      uintptr
-	nreProc       uintptr
-}
-
-// When a command trace is active (i.e. its associated procedure is executing)
-// one of the following structures is linked into a list associated with the
-// command's interpreter. The information in the structure is needed in order
-// for Tcl to behave reasonably if traces are deleted while traces are active.
-
-type ActiveCommandTrace = ActiveCommandTrace1 /* tclInt.h:559:3 */
-
-// When a variable trace is active (i.e. its associated procedure is
-// executing) one of the following structures is linked into a list associated
-// with the variable's interpreter. The information in the structure is needed
-// in order for Tcl to behave reasonably if traces are deleted while traces
-// are active.
-
-type ActiveVarTrace1 = struct {
-	varPtr       uintptr
-	nextPtr      uintptr
-	nextTracePtr uintptr
-}
-
-// When a variable trace is active (i.e. its associated procedure is
-// executing) one of the following structures is linked into a list associated
-// with the variable's interpreter. The information in the structure is needed
-// in order for Tcl to behave reasonably if traces are deleted while traces
-// are active.
-
-type Var1 = struct {
-	flags int32
-	value struct{ objPtr uintptr }
-}
-
-// When a variable trace is active (i.e. its associated procedure is
-// executing) one of the following structures is linked into a list associated
-// with the variable's interpreter. The information in the structure is needed
-// in order for Tcl to behave reasonably if traces are deleted while traces
-// are active.
-
-type ActiveVarTrace = ActiveVarTrace1 /* tclInt.h:578:3 */
-
-// The structure below defines a variable, which associates a string name with
-// a Tcl_Obj value. These structures are kept in procedure call frames (for
-// local variables recognized by the compiler) or in the heap (for global
-// variables and any variable not known to the compiler). For each Var
-// structure in the heap, a hash table entry holds the variable name and a
-// pointer to the Var structure.
-
-type Var = Var1 /* tclInt.h:604:3 */
-
-type VarInHash1 = struct {
-	__var    Var
-	refCount int32
-	entry    Tcl_HashEntry
-}
-
-type VarInHash = VarInHash1 /* tclInt.h:621:3 */
-
-// The variable-length structure below describes a local variable of a
-// procedure that was recognized by the compiler. These variables have a name,
-// an element in the array of compiler-assigned local variables in the
-// procedure's call frame, and various other items of information. If the
-// local variable is a formal argument, it may also have a default value. The
-// compiler can't recognize local variables whose names are expressions (these
-// names are only known at runtime when the expressions are evaluated) or
-// local variables that are created as a result of an "upvar" or "uplevel"
-// command. These other local variables are kept separately in a hash table in
-// the call frame.
-
-type CompiledLocal1 = struct {
-	nextPtr     uintptr
-	nameLength  int32
-	frameIndex  int32
-	flags       int32
-	defValuePtr uintptr
-	resolveInfo uintptr
-	name        [1]int8
-	_           [7]byte
-}
-
-// The variable-length structure below describes a local variable of a
-// procedure that was recognized by the compiler. These variables have a name,
-// an element in the array of compiler-assigned local variables in the
-// procedure's call frame, and various other items of information. If the
-// local variable is a formal argument, it may also have a default value. The
-// compiler can't recognize local variables whose names are expressions (these
-// names are only known at runtime when the expressions are evaluated) or
-// local variables that are created as a result of an "upvar" or "uplevel"
-// command. These other local variables are kept separately in a hash table in
-// the call frame.
-
-type CompiledLocal = CompiledLocal1 /* tclInt.h:928:3 */
-
-// The structure below defines a command procedure, which consists of a
-// collection of Tcl commands plus information about arguments and other local
-// variables recognized at compile time.
-
-type Proc1 = struct {
-	iPtr              uintptr
-	refCount          int32
-	cmdPtr            uintptr
-	bodyPtr           uintptr
-	numArgs           int32
-	numCompiledLocals int32
-	firstLocalPtr     uintptr
-	lastLocalPtr      uintptr
-}
-
-// The structure below defines a command procedure, which consists of a
-// collection of Tcl commands plus information about arguments and other local
-// variables recognized at compile time.
-
-type Interp1 = struct {
-	result            uintptr
-	freeProc          uintptr
-	errorLine         int32
-	stubTable         uintptr
-	handle            TclHandle
-	globalNsPtr       uintptr
-	hiddenCmdTablePtr uintptr
-	interpInfo        ClientData
-	extra             struct {
-		optimizer uintptr
-		_         [80]byte
-	}
-	numLevels              int32
-	maxNestingDepth        int32
-	framePtr               uintptr
-	varFramePtr            uintptr
-	activeVarTracePtr      uintptr
-	returnCode             int32
-	rootFramePtr           uintptr
-	lookupNsPtr            uintptr
-	appendResult           uintptr
-	appendAvl              int32
-	appendUsed             int32
-	packageTable           Tcl_HashTable
-	packageUnknown         uintptr
-	cmdCount               int32
-	evalFlags              int32
-	unused1                int32
-	literalTable           LiteralTable
-	compileEpoch           int32
-	compiledProcPtr        uintptr
-	resolverPtr            uintptr
-	scriptFile             uintptr
-	flags                  int32
-	randSeed               int64
-	tracePtr               uintptr
-	assocData              uintptr
-	execEnvPtr             uintptr
-	emptyObjPtr            uintptr
-	resultSpace            [201]int8
-	objResultPtr           uintptr
-	threadId               Tcl_ThreadId
-	activeCmdTracePtr      uintptr
-	activeInterpTracePtr   uintptr
-	tracesForbiddingInline int32
-	returnOpts             uintptr
-	errorInfo              uintptr
-	eiVar                  uintptr
-	errorCode              uintptr
-	ecVar                  uintptr
-	returnLevel            int32
-	limit                  struct {
-		active            int32
-		granularityTicker int32
-		exceeded          int32
-		cmdCount          int32
-		cmdHandlers       uintptr
-		cmdGranularity    int32
-		time              Tcl_Time
-		timeHandlers      uintptr
-		timeGranularity   int32
-		timeEvent         Tcl_TimerToken
-		callbacks         Tcl_HashTable
-	}
-	ensembleRewrite struct {
-		sourceObjs      uintptr
-		numRemovedObjs  int32
-		numInsertedObjs int32
-	}
-	chanMsg           uintptr
-	cmdFramePtr       uintptr
-	invokeCmdFramePtr uintptr
-	invokeWord        int32
-	linePBodyPtr      uintptr
-	lineBCPtr         uintptr
-	lineLABCPtr       uintptr
-	lineLAPtr         uintptr
-	scriptCLLocPtr    uintptr
-	packagePrefer     int32
-	varTraces         Tcl_HashTable
-	varSearches       Tcl_HashTable
-	allocCache        uintptr
-	pendingObjDataPtr uintptr
-	asyncReadyPtr     uintptr
-	objectFoundation  uintptr
-	deferredCallbacks uintptr
-	asyncCancel       Tcl_AsyncHandler
-	asyncCancelMsg    uintptr
-	errorStack        uintptr
-	upLiteral         uintptr
-	callLiteral       uintptr
-	innerLiteral      uintptr
-	innerContext      uintptr
-	resetErrorStack   int32
-	_                 [4]byte
-}
-
-// The structure below defines a command procedure, which consists of a
-// collection of Tcl commands plus information about arguments and other local
-// variables recognized at compile time.
-
-type Proc = Proc1 /* tclInt.h:963:3 */
-
-// The structure below defines a command trace. This is used to allow Tcl
-// clients to find out whenever a command is about to be executed.
-
-type Trace1 = struct {
-	level      int32
-	proc       uintptr
-	clientData ClientData
-	nextPtr    uintptr
-	flags      int32
-	delProc    uintptr
-}
-
-// The structure below defines a command trace. This is used to allow Tcl
-// clients to find out whenever a command is about to be executed.
-
-type Trace = Trace1 /* tclInt.h:987:3 */
-
-// When an interpreter trace is active (i.e. its associated procedure is
-// executing), one of the following structures is linked into a list
-// associated with the interpreter. The information in the structure is needed
-// in order for Tcl to behave reasonably if traces are deleted while traces
-// are active.
-
-type ActiveInterpTrace1 = struct {
-	nextPtr      uintptr
-	nextTracePtr uintptr
-	reverseScan  int32
-	_            [4]byte
-}
-
-// When an interpreter trace is active (i.e. its associated procedure is
-// executing), one of the following structures is linked into a list
-// associated with the interpreter. The information in the structure is needed
-// in order for Tcl to behave reasonably if traces are deleted while traces
-// are active.
-
-type ActiveInterpTrace = ActiveInterpTrace1 /* tclInt.h:1007:3 */
-
-// Flag values designating types of execution traces. See tclTrace.c for
-// related flag values.
-//
-// TCL_TRACE_ENTER_EXEC		- triggers enter/enterstep traces.
-// 				- passed to Tcl_CreateObjTrace to set up
-//				  "enterstep" traces.
-// TCL_TRACE_LEAVE_EXEC		- triggers leave/leavestep traces.
-// 				- passed to Tcl_CreateObjTrace to set up
-//				  "leavestep" traces.
-
-// The structure below defines an entry in the assocData hash table which is
-// associated with an interpreter. The entry contains a pointer to a function
-// to call when the interpreter is deleted, and a pointer to a user-defined
-// piece of data.
-
-type AssocData1 = struct {
-	proc       uintptr
-	clientData ClientData
-}
-
-// Flag values designating types of execution traces. See tclTrace.c for
-// related flag values.
-//
-// TCL_TRACE_ENTER_EXEC		- triggers enter/enterstep traces.
-// 				- passed to Tcl_CreateObjTrace to set up
-//				  "enterstep" traces.
-// TCL_TRACE_LEAVE_EXEC		- triggers leave/leavestep traces.
-// 				- passed to Tcl_CreateObjTrace to set up
-//				  "leavestep" traces.
-
-// The structure below defines an entry in the assocData hash table which is
-// associated with an interpreter. The entry contains a pointer to a function
-// to call when the interpreter is deleted, and a pointer to a user-defined
-// piece of data.
-
-type AssocData = AssocData1 /* tclInt.h:1034:3 */
-
-// The structure below defines a call frame. A call frame defines a naming
-// context for a procedure call: its local naming scope (for local variables)
-// and its global naming scope (a namespace, perhaps the global :: namespace).
-// A call frame can also define the naming context for a namespace eval or
-// namespace inscope command: the namespace in which the command's code should
-// execute. The Tcl_CallFrame structures exist only while procedures or
-// namespace eval/inscope's are being executed, and provide a kind of Tcl call
-// stack.
-//
-// WARNING!! The structure definition must be kept consistent with the
-// Tcl_CallFrame structure in tcl.h. If you change one, change the other.
-
-// Will be grown to contain: pointers to the varnames (allocated at the end),
-// plus the init values for each variable (suitable to be memcopied on init)
-
-type LocalCache1 = struct {
-	refCount int32
-	numVars  int32
-	varName0 uintptr
-}
-
-// The structure below defines a call frame. A call frame defines a naming
-// context for a procedure call: its local naming scope (for local variables)
-// and its global naming scope (a namespace, perhaps the global :: namespace).
-// A call frame can also define the naming context for a namespace eval or
-// namespace inscope command: the namespace in which the command's code should
-// execute. The Tcl_CallFrame structures exist only while procedures or
-// namespace eval/inscope's are being executed, and provide a kind of Tcl call
-// stack.
-//
-// WARNING!! The structure definition must be kept consistent with the
-// Tcl_CallFrame structure in tcl.h. If you change one, change the other.
-
-// Will be grown to contain: pointers to the varnames (allocated at the end),
-// plus the init values for each variable (suitable to be memcopied on init)
-
-type LocalCache = LocalCache1 /* tclInt.h:1059:3 */
-
-type CallFrame1 = struct {
-	nsPtr             uintptr
-	isProcCallFrame   int32
-	objc              int32
-	objv              uintptr
-	callerPtr         uintptr
-	callerVarPtr      uintptr
-	level             int32
-	procPtr           uintptr
-	varTablePtr       uintptr
-	numCompiledLocals int32
-	compiledLocals    uintptr
-	clientData        ClientData
-	localCachePtr     uintptr
-	tailcallPtr       uintptr
-}
-
-type CallFrame = CallFrame1 /* tclInt.h:1123:3 */
-
-// TIP #280
-// The structure below defines a command frame. A command frame provides
-// location information for all commands executing a tcl script (source, eval,
-// uplevel, procedure bodies, ...). The runtime structure essentially contains
-// the stack trace as it would be if the currently executing command were to
-// throw an error.
-//
-// For commands where it makes sense it refers to the associated CallFrame as
-// well.
-//
-// The structures are chained in a single list, with the top of the stack
-// anchored in the Interp structure.
-//
-// Instances can be allocated on the C stack, or the heap, the former making
-// cleanup a bit simpler.
-
-type CmdFrame1 = struct {
-	__type   int32
-	level    int32
-	line     uintptr
-	nline    int32
-	framePtr uintptr
-	nextPtr  uintptr
-	data     struct {
-		eval struct{ path uintptr }
-		_    [8]byte
-	}
-	cmdObj uintptr
-	cmd    uintptr
-	len    int32
-	litarg uintptr
-}
-
-// TIP #280
-// The structure below defines a command frame. A command frame provides
-// location information for all commands executing a tcl script (source, eval,
-// uplevel, procedure bodies, ...). The runtime structure essentially contains
-// the stack trace as it would be if the currently executing command were to
-// throw an error.
-//
-// For commands where it makes sense it refers to the associated CallFrame as
-// well.
-//
-// The structures are chained in a single list, with the top of the stack
-// anchored in the Interp structure.
-//
-// Instances can be allocated on the C stack, or the heap, the former making
-// cleanup a bit simpler.
-
-type CFWordBC1 = struct {
-	framePtr uintptr
-	pc       int32
-	word     int32
-	prevPtr  uintptr
-	nextPtr  uintptr
-	obj      uintptr
-}
-
-// TIP #280
-// The structure below defines a command frame. A command frame provides
-// location information for all commands executing a tcl script (source, eval,
-// uplevel, procedure bodies, ...). The runtime structure essentially contains
-// the stack trace as it would be if the currently executing command were to
-// throw an error.
-//
-// For commands where it makes sense it refers to the associated CallFrame as
-// well.
-//
-// The structures are chained in a single list, with the top of the stack
-// anchored in the Interp structure.
-//
-// Instances can be allocated on the C stack, or the heap, the former making
-// cleanup a bit simpler.
-
-type CmdFrame = CmdFrame1 /* tclInt.h:1213:3 */
-
-type CFWord1 = struct {
-	framePtr uintptr
-	word     int32
-	refCount int32
-}
-
-type CFWord = CFWord1 /* tclInt.h:1220:3 */
-
-type CFWordBC = CFWordBC1 /* tclInt.h:1232:3 */
-
-// Structure to record the locations of invisible continuation lines in
-// literal scripts, as character offset from the beginning of the script. Both
-// compiler and direct evaluator use this information to adjust their line
-// counters when tracking through the script, because when it is invoked the
-// continuation line marker as a whole has been removed already, meaning that
-// the \n which was part of it is gone as well, breaking regular line
-// tracking.
-//
-// These structures are allocated and filled by both the function
-// TclSubstTokens() in the file "tclParse.c" and its caller TclEvalEx() in the
-// file "tclBasic.c", and stored in the thread-global hashtable "lineCLPtr" in
-// file "tclObj.c". They are used by the functions TclSetByteCodeFromAny() and
-// TclCompileScript(), both found in the file "tclCompile.c". Their memory is
-// released by the function TclFreeObj(), in the file "tclObj.c", and also by
-// the function TclThreadFinalizeObjects(), in the same file.
-
-type ContLineLoc1 = struct {
-	num int32
-	loc [1]int32
-}
-
-// Structure to record the locations of invisible continuation lines in
-// literal scripts, as character offset from the beginning of the script. Both
-// compiler and direct evaluator use this information to adjust their line
-// counters when tracking through the script, because when it is invoked the
-// continuation line marker as a whole has been removed already, meaning that
-// the \n which was part of it is gone as well, breaking regular line
-// tracking.
-//
-// These structures are allocated and filled by both the function
-// TclSubstTokens() in the file "tclParse.c" and its caller TclEvalEx() in the
-// file "tclBasic.c", and stored in the thread-global hashtable "lineCLPtr" in
-// file "tclObj.c". They are used by the functions TclSetByteCodeFromAny() and
-// TclCompileScript(), both found in the file "tclCompile.c". Their memory is
-// released by the function TclFreeObj(), in the file "tclObj.c", and also by
-// the function TclThreadFinalizeObjects(), in the same file.
-
-type ContLineLoc = ContLineLoc1 /* tclInt.h:1263:3 */
-type ExtraFrameInfoField = struct {
-	name       uintptr
-	proc       uintptr
-	clientData ClientData
-} /* tclInt.h:1303:3 */
-type ExtraFrameInfo = struct {
-	length int32
-	fields [2]ExtraFrameInfoField
-} /* tclInt.h:1309:3 */
-
-//----------------------------------------------------------------
-// Data structures and procedures related to TclHandles, which are a very
-// lightweight method of preserving enough information to determine if an
-// arbitrary malloc'd block has been deleted.
-//----------------------------------------------------------------
-
-type TclHandle = uintptr /* tclInt.h:1319:14 */
-
-// The data structure for a (linked list of) execution stacks.
-
-type ExecStack1 = struct {
-	prevPtr    uintptr
-	nextPtr    uintptr
-	markerPtr  uintptr
-	endPtr     uintptr
-	tosPtr     uintptr
-	stackWords [1]uintptr
-}
-
-// The data structure for a (linked list of) execution stacks.
-
-type ExecStack = ExecStack1 /* tclInt.h:1407:3 */
-
-// The data structure defining the execution environment for ByteCode's.
-// There is one ExecEnv structure per Tcl interpreter. It holds the evaluation
-// stack that holds command operands and results. The stack grows towards
-// increasing addresses. The member stackPtr points to the stackItems of the
-// currently active execution stack.
-
-type CorContext1 = struct {
-	framePtr    uintptr
-	varFramePtr uintptr
-	cmdFramePtr uintptr
-	lineLABCPtr uintptr
-}
-
-// The data structure defining the execution environment for ByteCode's.
-// There is one ExecEnv structure per Tcl interpreter. It holds the evaluation
-// stack that holds command operands and results. The stack grows towards
-// increasing addresses. The member stackPtr points to the stackItems of the
-// currently active execution stack.
-
-type CorContext = CorContext1 /* tclInt.h:1422:3 */
-
-type CoroutineData1 = struct {
-	cmdPtr       uintptr
-	eePtr        uintptr
-	callerEEPtr  uintptr
-	caller       CorContext
-	running      CorContext
-	lineLABCPtr  uintptr
-	stackLevel   uintptr
-	auxNumLevels int32
-	nargs        int32
-}
-
-type ExecEnv1 = struct {
-	execStackPtr uintptr
-	constants    [2]uintptr
-	interp       uintptr
-	callbackPtr  uintptr
-	corPtr       uintptr
-	rewind       int32
-	_            [4]byte
-}
-
-type CoroutineData = CoroutineData1 /* tclInt.h:1443:3 */
-
-type NRE_callback1 = struct {
-	procPtr uintptr
-	data    [4]ClientData
-	nextPtr uintptr
-}
-
-type ExecEnv = ExecEnv1 /* tclInt.h:1454:3 */
-
-// The definitions for the LiteralTable and LiteralEntry structures. Each
-// interpreter contains a LiteralTable. It is used to reduce the storage
-// needed for all the Tcl objects that hold the literals of scripts compiled
-// by the interpreter. A literal's object is shared by all the ByteCodes that
-// refer to the literal. Each distinct literal has one LiteralEntry entry in
-// the LiteralTable. A literal table is a specialized hash table that is
-// indexed by the literal's string representation, which may contain null
-// characters.
-//
-// Note that we reduce the space needed for literals by sharing literal
-// objects both within a ByteCode (each ByteCode contains a local
-// LiteralTable) and across all an interpreter's ByteCodes (with the
-// interpreter's global LiteralTable).
-
-type LiteralEntry1 = struct {
-	nextPtr  uintptr
-	objPtr   uintptr
-	refCount int32
-	nsPtr    uintptr
-}
-
-// The definitions for the LiteralTable and LiteralEntry structures. Each
-// interpreter contains a LiteralTable. It is used to reduce the storage
-// needed for all the Tcl objects that hold the literals of scripts compiled
-// by the interpreter. A literal's object is shared by all the ByteCodes that
-// refer to the literal. Each distinct literal has one LiteralEntry entry in
-// the LiteralTable. A literal table is a specialized hash table that is
-// indexed by the literal's string representation, which may contain null
-// characters.
-//
-// Note that we reduce the space needed for literals by sharing literal
-// objects both within a ByteCode (each ByteCode contains a local
-// LiteralTable) and across all an interpreter's ByteCodes (with the
-// interpreter's global LiteralTable).
-
-type LiteralEntry = LiteralEntry1 /* tclInt.h:1490:3 */
-
-type LiteralTable1 = struct {
-	buckets       uintptr
-	staticBuckets [4]uintptr
-	numBuckets    int32
-	numEntries    int32
-	rebuildSize   int32
-	mask          int32
-}
-
-type LiteralTable = LiteralTable1 /* tclInt.h:1506:3 */
-
-// The following structure defines for each Tcl interpreter various
-// statistics-related information about the bytecode compiler and
-// interpreter's operation in that interpreter.
-
-// Structure used in implementation of those core ensembles which are
-// partially compiled. Used as an array of these, with a terminating field
-// whose 'name' is NULL.
-
-type EnsembleImplMap = struct {
-	name        uintptr
-	proc        uintptr
-	compileProc uintptr
-	nreProc     uintptr
-	clientData  ClientData
-	unsafe      int32
-	_           [4]byte
-} /* tclInt.h:1560:3 */
-
-//----------------------------------------------------------------
-// Data structures related to commands.
-//----------------------------------------------------------------
-
-// An imported command is created in an namespace when it imports a "real"
-// command from another namespace. An imported command has a Command structure
-// that points (via its ClientData value) to the "real" Command structure in
-// the source namespace's command table. The real command records all the
-// imported commands that refer to it in a list of ImportRef structures so
-// that they can be deleted when the real command is deleted.
-
-type ImportRef1 = struct {
-	importedCmdPtr uintptr
-	nextPtr        uintptr
-}
-
-//----------------------------------------------------------------
-// Data structures related to commands.
-//----------------------------------------------------------------
-
-// An imported command is created in an namespace when it imports a "real"
-// command from another namespace. An imported command has a Command structure
-// that points (via its ClientData value) to the "real" Command structure in
-// the source namespace's command table. The real command records all the
-// imported commands that refer to it in a list of ImportRef structures so
-// that they can be deleted when the real command is deleted.
-
-type ImportRef = ImportRef1 /* tclInt.h:1588:3 */
-
-// Data structure used as the ClientData of imported commands: commands
-// created in an namespace when it imports a "real" command from another
-// namespace.
-
-type ImportedCmdData1 = struct {
-	realCmdPtr uintptr
-	selfPtr    uintptr
-}
-
-// Data structure used as the ClientData of imported commands: commands
-// created in an namespace when it imports a "real" command from another
-// namespace.
-
-type ImportedCmdData = ImportedCmdData1 /* tclInt.h:1603:3 */
-
-// A Command structure exists for each command in a namespace. The Tcl_Command
-// opaque type actually refers to these structures.
-
-type Command = Command1 /* tclInt.h:1653:3 */
-
-// Flag bits for commands.
-//
-// CMD_IS_DELETED -		Means that the command is in the process of
-//				being deleted (its deleteProc is currently
-//				executing). Other attempts to delete the
-//				command should be ignored.
-// CMD_TRACE_ACTIVE -		1 means that trace processing is currently
-//				underway for a rename/delete change. See the
-//				two flags below for which is currently being
-//				processed.
-// CMD_HAS_EXEC_TRACES -	1 means that this command has at least one
-//				execution trace (as opposed to simple
-//				delete/rename traces) in its tracePtr list.
-// CMD_COMPILES_EXPANDED -	1 means that this command has a compiler that
-//				can handle expansion (provided it is not the
-//				first word).
-// TCL_TRACE_RENAME -		A rename trace is in progress. Further
-//				recursive renames will not be traced.
-// TCL_TRACE_DELETE -		A delete trace is in progress. Further
-//				recursive deletes will not be traced.
-// (these last two flags are defined in tcl.h)
-
-//----------------------------------------------------------------
-// Data structures related to name resolution procedures.
-//----------------------------------------------------------------
-
-// The interpreter keeps a linked list of name resolution schemes. The scheme
-// for a namespace is consulted first, followed by the list of schemes in an
-// interpreter, followed by the default name resolution in Tcl. Schemes are
-// added/removed from the interpreter's list by calling Tcl_AddInterpResolver
-// and Tcl_RemoveInterpResolver.
-
-type ResolverScheme1 = struct {
-	name               uintptr
-	cmdResProc         uintptr
-	varResProc         uintptr
-	compiledVarResProc uintptr
-	nextPtr            uintptr
-}
-
-// Flag bits for commands.
-//
-// CMD_IS_DELETED -		Means that the command is in the process of
-//				being deleted (its deleteProc is currently
-//				executing). Other attempts to delete the
-//				command should be ignored.
-// CMD_TRACE_ACTIVE -		1 means that trace processing is currently
-//				underway for a rename/delete change. See the
-//				two flags below for which is currently being
-//				processed.
-// CMD_HAS_EXEC_TRACES -	1 means that this command has at least one
-//				execution trace (as opposed to simple
-//				delete/rename traces) in its tracePtr list.
-// CMD_COMPILES_EXPANDED -	1 means that this command has a compiler that
-//				can handle expansion (provided it is not the
-//				first word).
-// TCL_TRACE_RENAME -		A rename trace is in progress. Further
-//				recursive renames will not be traced.
-// TCL_TRACE_DELETE -		A delete trace is in progress. Further
-//				recursive deletes will not be traced.
-// (these last two flags are defined in tcl.h)
-
-//----------------------------------------------------------------
-// Data structures related to name resolution procedures.
-//----------------------------------------------------------------
-
-// The interpreter keeps a linked list of name resolution schemes. The scheme
-// for a namespace is consulted first, followed by the list of schemes in an
-// interpreter, followed by the default name resolution in Tcl. Schemes are
-// added/removed from the interpreter's list by calling Tcl_AddInterpResolver
-// and Tcl_RemoveInterpResolver.
-
-type ResolverScheme = ResolverScheme1 /* tclInt.h:1716:3 */
-
-//----------------------------------------------------------------
-// This structure shadows the first few fields of the memory cache for the
-// allocator defined in tclThreadAlloc.c; it has to be kept in sync with the
-// definition there.
-// Some macros require knowledge of some fields in the struct in order to
-// avoid hitting the TSD unnecessarily. In order to facilitate this, a pointer
-// to the relevant fields is kept in the allocCache field in struct Interp.
-//----------------------------------------------------------------
-
-type AllocCache1 = struct {
-	nextPtr     uintptr
-	owner       Tcl_ThreadId
-	firstObjPtr uintptr
-	numObjects  int32
-	_           [4]byte
-}
-
-//----------------------------------------------------------------
-// This structure shadows the first few fields of the memory cache for the
-// allocator defined in tclThreadAlloc.c; it has to be kept in sync with the
-// definition there.
-// Some macros require knowledge of some fields in the struct in order to
-// avoid hitting the TSD unnecessarily. In order to facilitate this, a pointer
-// to the relevant fields is kept in the allocCache field in struct Interp.
-//----------------------------------------------------------------
-
-type AllocCache = AllocCache1 /* tclInt.h:1749:3 */
-
-//----------------------------------------------------------------
-// This structure defines an interpreter, which is a collection of commands
-// plus other state information related to interpreting commands, such as
-// variable storage. Primary responsibility for this data structure is in
-// tclBasic.c, but almost every Tcl source file uses something in here.
-//----------------------------------------------------------------
-
-type Interp = Interp1 /* tclInt.h:2145:3 */
-
-// Macros that use the TSD-ekeko.
-
-// Macros for script cancellation support (TIP #285).
-
-// Macros for splicing into and out of doubly linked lists. They assume
-// existence of struct items 'prevPtr' and 'nextPtr'.
-//
-// a = element to add or remove.
-// b = list head.
-//
-// TclSpliceIn adds to the head of the list.
-
-// EvalFlag bits for Interp structures:
-//
-// TCL_ALLOW_EXCEPTIONS	1 means it's OK for the script to terminate with a
-//			code other than TCL_OK or TCL_ERROR; 0 means codes
-//			other than these should be turned into errors.
-
-// Flag bits for Interp structures:
-//
-// DELETED:		Non-zero means the interpreter has been deleted:
-//			don't process any more commands for it, and destroy
-//			the structure as soon as all nested invocations of
-//			Tcl_Eval are done.
-// ERR_ALREADY_LOGGED:	Non-zero means information has already been logged in
-//			iPtr->errorInfo for the current Tcl_Eval instance, so
-//			Tcl_Eval needn't log it (used to implement the "error
-//			message log" command).
-// DONT_COMPILE_CMDS_INLINE: Non-zero means that the bytecode compiler should
-//			not compile any commands into an inline sequence of
-//			instructions. This is set 1, for example, when command
-//			traces are requested.
-// RAND_SEED_INITIALIZED: Non-zero means that the randSeed value of the interp
-//			has not be initialized. This is set 1 when we first
-//			use the rand() or srand() functions.
-// SAFE_INTERP:		Non zero means that the current interp is a safe
-//			interp (i.e. it has only the safe commands installed,
-//			less privilege than a regular interp).
-// INTERP_DEBUG_FRAME:	Used for switching on various extra interpreter
-//			debug/info mechanisms (e.g. info frame eval/uplevel
-//			tracing) which are performance intensive.
-// INTERP_TRACE_IN_PROGRESS: Non-zero means that an interp trace is currently
-//			active; so no further trace callbacks should be
-//			invoked.
-// INTERP_ALTERNATE_WRONG_ARGS: Used for listing second and subsequent forms
-//			of the wrong-num-args string in Tcl_WrongNumArgs.
-//			Makes it append instead of replacing and uses
-//			different intermediate text.
-// CANCELED:		Non-zero means that the script in progress should be
-//			canceled as soon as possible. This can be checked by
-//			extensions (and the core itself) by calling
-//			Tcl_Canceled and checking if TCL_ERROR is returned.
-//			This is a one-shot flag that is reset immediately upon
-//			being detected; however, if the TCL_CANCEL_UNWIND flag
-//			is set Tcl_Canceled will continue to report that the
-//			script in progress has been canceled thereby allowing
-//			the evaluation stack for the interp to be fully
-//			unwound.
-//
-// WARNING: For the sake of some extensions that have made use of former
-// internal values, do not re-use the flag values 2 (formerly ERR_IN_PROGRESS)
-// or 8 (formerly ERROR_CODE_SET).
-
-// Maximum number of levels of nesting permitted in Tcl commands (used to
-// catch infinite recursion).
-
-// The macro below is used to modify a "char" value (e.g. by casting it to an
-// unsigned character) so that it can be used safely with macros such as
-// isspace.
-
-// This macro is used to properly align the memory allocated by Tcl, giving
-// the same alignment as the native malloc.
-
-// This macro is used to determine the offset needed to safely allocate any
-// data structure in memory. Given a starting offset or size, it "rounds up"
-// or "aligns" the offset to the next 8-byte boundary so that any data
-// structure can be placed at the resulting offset without fear of an
-// alignment error.
-//
-// WARNING!! DO NOT USE THIS MACRO TO ALIGN POINTERS: it will produce the
-// wrong result on platforms that allocate addresses that are divisible by 4
-// or 2. Only use it for offsets or sizes.
-//
-// This macro is only used by tclCompile.c in the core (Bug 926445). It
-// however not be made file static, as extensions that touch bytecodes
-// (notably tbcload) require it.
-
-// The following enum values are used to specify the runtime platform setting
-// of the tclPlatform variable.
-
-type TclPlatformType = uint32 /* tclInt.h:2321:3 */
-
-// The following enum values are used to indicate the translation of a Tcl
-// channel. Declared here so that each platform can define
-// TCL_PLATFORM_TRANSLATION to the native translation on that platform.
-
-type TclEolTranslation = uint32 /* tclInt.h:2334:3 */
-
-// Flags for TclInvoke:
-//
-// TCL_INVOKE_HIDDEN		Invoke a hidden command; if not set, invokes
-//				an exposed command.
-// TCL_INVOKE_NO_UNKNOWN	If set, "unknown" is not invoked if the
-//				command to be invoked is not found. Only has
-//				an effect if invoking an exposed command,
-//				i.e. if TCL_INVOKE_HIDDEN is not also set.
-// TCL_INVOKE_NO_TRACEBACK	Does not record traceback information if the
-//				invoked command returns an error. Used if the
-//				caller plans on recording its own traceback
-//				information.
-
-// The structure used as the internal representation of Tcl list objects. This
-// struct is grown (reallocated and copied) as necessary to hold all the
-// list's element pointers. The struct might contain more slots than currently
-// used to hold all element pointers. This is done to make append operations
-// faster.
-
-type List1 = struct {
-	refCount      int32
-	maxElemCount  int32
-	elemCount     int32
-	canonicalFlag int32
-	elements      uintptr
-}
-
-// Flags for TclInvoke:
-//
-// TCL_INVOKE_HIDDEN		Invoke a hidden command; if not set, invokes
-//				an exposed command.
-// TCL_INVOKE_NO_UNKNOWN	If set, "unknown" is not invoked if the
-//				command to be invoked is not found. Only has
-//				an effect if invoking an exposed command,
-//				i.e. if TCL_INVOKE_HIDDEN is not also set.
-// TCL_INVOKE_NO_TRACEBACK	Does not record traceback information if the
-//				invoked command returns an error. Used if the
-//				caller plans on recording its own traceback
-//				information.
-
-// The structure used as the internal representation of Tcl list objects. This
-// struct is grown (reallocated and copied) as necessary to hold all the
-// list's element pointers. The struct might contain more slots than currently
-// used to hold all element pointers. This is done to make append operations
-// faster.
-
-type List = List1 /* tclInt.h:2373:3 */
-
-type TclFileAttrProcs1 = struct {
-	getProc uintptr
-	setProc uintptr
-}
-
-type TclFileAttrProcs = TclFileAttrProcs1 /* tclInt.h:2545:3 */
-
-// Opaque handle used in pipeline routines to encapsulate platform-dependent
-// state.
-
-type TclFile = uintptr /* tclInt.h:2552:25 */
-
-// The "globParameters" argument of the function TclGlob is an or'ed
-// combination of the following values:
-
-type Tcl_PathPart = uint32 /* tclInt.h:2569:3 */
-
-//----------------------------------------------------------------
-// Data structures related to procedures
-//----------------------------------------------------------------
-
-type TclCmdProcType = uintptr    /* tclInt.h:2588:21 */
-type TclObjCmdProcType = uintptr /* tclInt.h:2589:24 */
-
-// A ProcessGlobalValue struct exists for each internal value in Tcl that is
-// to be shared among several threads. Each thread sees a (Tcl_Obj) copy of
-// the value, and the master is kept as a counted string, with epoch and mutex
-// control. Each ProcessGlobalValue struct should be a static variable in some
-// file.
-
-type ProcessGlobalValue1 = struct {
-	epoch    int32
-	numBytes int32
-	value    uintptr
-	encoding Tcl_Encoding
-	proc     uintptr
-	mutex    Tcl_Mutex
-	key      Tcl_ThreadDataKey
-}
-
-// A ProcessGlobalValue struct exists for each internal value in Tcl that is
-// to be shared among several threads. Each thread sees a (Tcl_Obj) copy of
-// the value, and the master is kept as a counted string, with epoch and mutex
-// control. Each ProcessGlobalValue struct should be a static variable in some
-// file.
-
-type ProcessGlobalValue = ProcessGlobalValue1 /* tclInt.h:2623:3 */
-
-// This structure holds the data for the various iteration callbacks used to
-// NRE the 'for' and 'while' commands. We need a separate structure because we
-// have more than the 4 client data entries we can provide directly thorugh
-// the callback API. It is the 'word' information which puts us over the
-// limit. It is needed because the loop body is argument 4 of 'for' and
-// argument 2 of 'while'. Not providing the correct index confuses the #280
-// code. We TclSmallAlloc/Free this.
-
-type ForIterData1 = struct {
-	cond uintptr
-	body uintptr
-	next uintptr
-	msg  uintptr
-	word int32
-	_    [4]byte
-}
-
-// This structure holds the data for the various iteration callbacks used to
-// NRE the 'for' and 'while' commands. We need a separate structure because we
-// have more than the 4 client data entries we can provide directly thorugh
-// the callback API. It is the 'word' information which puts us over the
-// limit. It is needed because the loop body is argument 4 of 'for' and
-// argument 2 of 'while'. Not providing the correct index confuses the #280
-// code. We TclSmallAlloc/Free this.
-
-type ForIterData = ForIterData1 /* tclInt.h:2799:3 */
-
-type memCmpFn_t = uintptr /* tclInt.h:3162:13 */
-
-//----------------------------------------------------------------
-// Macro used by the Tcl core to check whether a pattern has any characters
-// special to [string match]. The ANSI C "prototype" for this macro is:
-//
-// MODULE_SCOPE int	TclMatchIsTrivial(const char *pattern);
-//----------------------------------------------------------------
-
-//----------------------------------------------------------------
-// Macros used by the Tcl core to set a Tcl_Obj's numeric representation
-// avoiding the corresponding function calls in time critical parts of the
-// core. They should only be called on unshared objects. The ANSI C
-// "prototypes" for these macros are:
-//
-// MODULE_SCOPE void	TclSetIntObj(Tcl_Obj *objPtr, int intValue);
-// MODULE_SCOPE void	TclSetLongObj(Tcl_Obj *objPtr, long longValue);
-// MODULE_SCOPE void	TclSetBooleanObj(Tcl_Obj *objPtr, long boolValue);
-// MODULE_SCOPE void	TclSetWideIntObj(Tcl_Obj *objPtr, Tcl_WideInt w);
-// MODULE_SCOPE void	TclSetDoubleObj(Tcl_Obj *objPtr, double d);
-//----------------------------------------------------------------
-
-// NOTE: There is to be no such thing as a "pure" boolean. Boolean values set
-// programmatically go straight to being "int" Tcl_Obj's, with value 0 or 1.
-// The only "boolean" Tcl_Obj's shall be those holding the cached boolean
-// value of strings like: "yes", "no", "true", "false", "on", "off".
-
-//----------------------------------------------------------------
-// Macros used by the Tcl core to create and initialise objects of standard
-// types, avoiding the corresponding function calls in time critical parts of
-// the core. The ANSI C "prototypes" for these macros are:
-//
-// MODULE_SCOPE void	TclNewIntObj(Tcl_Obj *objPtr, int i);
-// MODULE_SCOPE void	TclNewLongObj(Tcl_Obj *objPtr, long l);
-// MODULE_SCOPE void	TclNewBooleanObj(Tcl_Obj *objPtr, int b);
-// MODULE_SCOPE void	TclNewWideObj(Tcl_Obj *objPtr, Tcl_WideInt w);
-// MODULE_SCOPE void	TclNewDoubleObj(Tcl_Obj *objPtr, double d);
-// MODULE_SCOPE void	TclNewStringObj(Tcl_Obj *objPtr, char *s, int len);
-// MODULE_SCOPE void	TclNewLiteralStringObj(Tcl_Obj*objPtr, char*sLiteral);
-//
-//----------------------------------------------------------------
-
-// NOTE: There is to be no such thing as a "pure" boolean.
-// See comment above TclSetBooleanObj macro above.
-
-// The sLiteral argument *must* be a string literal; the incantation with
-// sizeof(sLiteral "") will fail to compile otherwise.
-
-//----------------------------------------------------------------
-// Convenience macros for DStrings.
-// The ANSI C "prototypes" for these macros are:
-//
-// MODULE_SCOPE char * TclDStringAppendLiteral(Tcl_DString *dsPtr,
-//			const char *sLiteral);
-// MODULE_SCOPE void   TclDStringClear(Tcl_DString *dsPtr);
-
-//----------------------------------------------------------------
-// Macros used by the Tcl core to test for some special double values.
-// The ANSI C "prototypes" for these macros are:
-//
-// MODULE_SCOPE int	TclIsInfinite(double d);
-// MODULE_SCOPE int	TclIsNaN(double d);
-
-// ----------------------------------------------------------------------
-// Macro to use to find the offset of a field in a structure. Computes number
-// of bytes from beginning of structure to a given field.
-
-//----------------------------------------------------------------
-// Inline version of Tcl_GetCurrentNamespace and Tcl_GetGlobalNamespace.
-
-//----------------------------------------------------------------
-// Inline version of TclCleanupCommand; still need the function as it is in
-// the internal stubs, but the core can use the macro instead.
-
-//----------------------------------------------------------------
-// Inline versions of Tcl_LimitReady() and Tcl_LimitExceeded to limit number
-// of calls out of the critical path. Note that this code isn't particularly
-// readable; the non-inline version (in tclInterp.c) is much easier to
-// understand. Note also that these macros takes different args (iPtr->limit)
-// to the non-inline version.
-
-// Compile-time assertions: these produce a compile time error if the
-// expression is not known to be true at compile time. If the assertion is
-// known to be false, the compiler (or optimizer?) will error out with
-// "division by zero". If the assertion cannot be evaluated at compile time,
-// the compiler will error out with "non-static initializer".
-//
-// Adapted with permission from
-// http://www.pixelbeat.org/programming/gcc/static_assert.html
-
-//----------------------------------------------------------------
-// Allocator for small structs (<=sizeof(Tcl_Obj)) using the Tcl_Obj pool.
-// Only checked at compile time.
-//
-// ONLY USE FOR CONSTANT nBytes.
-//
-// DO NOT LET THEM CROSS THREAD BOUNDARIES
-//----------------------------------------------------------------
-
-// Support for Clang Static Analyzer <http://clang-analyzer.llvm.org>
-
-//----------------------------------------------------------------
-// Parameters, structs and macros for the non-recursive engine (NRE)
-//----------------------------------------------------------------
-
-// This is the main data struct for representing NR commands. It is designed
-// to fit in sizeof(Tcl_Obj) in order to exploit the fastest memory allocator
-// available.
-
-type NRE_callback = NRE_callback1 /* tclInt.h:4891:3 */
-
-type TclIntStubs = TclIntStubs1 /* tclIntDecls.h:908:3 */
-
-type TclIntPlatStubs = TclIntPlatStubs1 /* tclIntPlatDecls.h:355:3 */
-
-// !END!: Do not edit above this line.
-
-//----------------------------------------------------------------------
-//
-// tclTomMathDecls.h --
-//
-//	This file contains the declarations for the 'libtommath'
-//	functions that are exported by the Tcl library.
-//
-// Copyright (c) 2005 by Kevin B. Kenny.  All rights reserved.
-//
-// See the file "license.terms" for information on usage and redistribution
-// of this file, and for a DISCLAIMER OF ALL WARRANTIES.
-
-// tcl.h --
-//
-//	This header file describes the externally-visible facilities of the
-//	Tcl interpreter.
-//
-// Copyright (c) 1987-1994 The Regents of the University of California.
-// Copyright (c) 1993-1996 Lucent Technologies.
-// Copyright (c) 1994-1998 Sun Microsystems, Inc.
-// Copyright (c) 1998-2000 by Scriptics Corporation.
-// Copyright (c) 2002 by Kevin B. Kenny.  All rights reserved.
-//
-// See the file "license.terms" for information on usage and redistribution of
-// this file, and for a DISCLAIMER OF ALL WARRANTIES.
-
-// Local Variables:
-// mode: c
-// c-basic-offset: 4
-// fill-column: 78
-// End:
-// LibTomMath, multiple-precision integer library -- Tom St Denis
-// SPDX-License-Identifier: Unlicense
-
-// MS Visual C++ doesn't have a 128bit type for words, so fall back to 32bit MPI's (where words are 64bit)
-
-// detect 64-bit mode if possible
-
-// some default configurations.
-//
-// A "mp_digit" must be able to hold MP_DIGIT_BIT + 1 bits
-// A "mp_word" must be able to hold 2*MP_DIGIT_BIT + 1 bits
-//
-// At the very least a mp_digit must be able to hold 7 bits
-// [any size beyond that is ok provided it doesn't overflow the data type]
-
-// this is the default case, 28-bit digits
-
-// this is to make porting into LibTomCrypt easier :-)
-type private_mp_word = uint64 /* tclTomMath.h:94:30 */
-
-// default case is 28-bit digits, defines MP_28BIT as a handy macro to test
-
-// otherwise the bits per digit is calculated automatically from the size of a mp_digit
-
-// Primality generation flags
-
-type mp_sign = int32   /* tclTomMath.h:163:13 */
-type mp_ord = int32    /* tclTomMath.h:166:13 */
-type mp_bool = int32   /* tclTomMath.h:170:13 */
-type mp_err = int32    /* tclTomMath.h:173:13 */
-type mp_order = int32  /* tclTomMath.h:181:13 */
-type mp_endian = int32 /* tclTomMath.h:184:13 */
-
-type TclTomMathStubs1 = struct {
-	magic                       int32
-	hooks                       uintptr
-	tclBN_epoch                 uintptr
-	tclBN_revision              uintptr
-	tclBN_mp_add                uintptr
-	tclBN_mp_add_d              uintptr
-	tclBN_mp_and                uintptr
-	tclBN_mp_clamp              uintptr
-	tclBN_mp_clear              uintptr
-	tclBN_mp_clear_multi        uintptr
-	tclBN_mp_cmp                uintptr
-	tclBN_mp_cmp_d              uintptr
-	tclBN_mp_cmp_mag            uintptr
-	tclBN_mp_copy               uintptr
-	tclBN_mp_count_bits         uintptr
-	tclBN_mp_div                uintptr
-	tclBN_mp_div_d              uintptr
-	tclBN_mp_div_2              uintptr
-	tclBN_mp_div_2d             uintptr
-	tclBN_mp_div_3              uintptr
-	tclBN_mp_exch               uintptr
-	tclBN_mp_expt_d             uintptr
-	tclBN_mp_grow               uintptr
-	tclBN_mp_init               uintptr
-	tclBN_mp_init_copy          uintptr
-	tclBN_mp_init_multi         uintptr
-	tclBN_mp_init_set           uintptr
-	tclBN_mp_init_size          uintptr
-	tclBN_mp_lshd               uintptr
-	tclBN_mp_mod                uintptr
-	tclBN_mp_mod_2d             uintptr
-	tclBN_mp_mul                uintptr
-	tclBN_mp_mul_d              uintptr
-	tclBN_mp_mul_2              uintptr
-	tclBN_mp_mul_2d             uintptr
-	tclBN_mp_neg                uintptr
-	tclBN_mp_or                 uintptr
-	tclBN_mp_radix_size         uintptr
-	tclBN_mp_read_radix         uintptr
-	tclBN_mp_rshd               uintptr
-	tclBN_mp_shrink             uintptr
-	tclBN_mp_set                uintptr
-	tclBN_mp_sqr                uintptr
-	tclBN_mp_sqrt               uintptr
-	tclBN_mp_sub                uintptr
-	tclBN_mp_sub_d              uintptr
-	tclBN_mp_to_unsigned_bin    uintptr
-	tclBN_mp_to_unsigned_bin_n  uintptr
-	tclBN_mp_toradix_n          uintptr
-	tclBN_mp_unsigned_bin_size  uintptr
-	tclBN_mp_xor                uintptr
-	tclBN_mp_zero               uintptr
-	tclBN_reverse               uintptr
-	tclBN_fast_s_mp_mul_digs    uintptr
-	tclBN_fast_s_mp_sqr         uintptr
-	tclBN_mp_karatsuba_mul      uintptr
-	tclBN_mp_karatsuba_sqr      uintptr
-	tclBN_mp_toom_mul           uintptr
-	tclBN_mp_toom_sqr           uintptr
-	tclBN_s_mp_add              uintptr
-	tclBN_s_mp_mul_digs         uintptr
-	tclBN_s_mp_sqr              uintptr
-	tclBN_s_mp_sub              uintptr
-	tclBN_mp_init_set_int       uintptr
-	tclBN_mp_set_int            uintptr
-	tclBN_mp_cnt_lsb            uintptr
-	tclBNInitBignumFromLong     uintptr
-	tclBNInitBignumFromWideInt  uintptr
-	tclBNInitBignumFromWideUInt uintptr
-	tclBN_mp_expt_d_ex          uintptr
-	tclBN_mp_set_ull            uintptr
-	reserved69                  uintptr
-	reserved70                  uintptr
-	reserved71                  uintptr
-	reserved72                  uintptr
-	tclBN_mp_tc_and             uintptr
-	tclBN_mp_tc_or              uintptr
-	tclBN_mp_tc_xor             uintptr
-	tclBN_mp_signed_rsh         uintptr
-	reserved77                  uintptr
-	tclBN_mp_to_ubin            uintptr
-	reserved79                  uintptr
-	tclBN_mp_to_radix           uintptr
-}
-
-type TclTomMathStubs = TclTomMathStubs1 /* tclTomMathDecls.h:436:3 */
-
-// These are opaque types.
-
-type Tcl_Class = uintptr         /* tclOO.h:52:27 */
-type Tcl_Method = uintptr        /* tclOO.h:53:28 */
-type Tcl_Object = uintptr        /* tclOO.h:54:28 */
-type Tcl_ObjectContext = uintptr /* tclOO.h:55:35 */
-
-// The type of a method implementation. This describes how to call the method
-// implementation, how to delete it (when the object or class is deleted) and
-// how to create a clone of it (when the object or class is copied).
-
-type Tcl_MethodType = struct {
-	version    int32
-	name       uintptr
-	callProc   uintptr
-	deleteProc uintptr
-	cloneProc  uintptr
-} /* tclOO.h:93:3 */
-
-// The correct value for the version field of the Tcl_MethodType structure.
-// This allows new versions of the structure to be introduced without breaking
-// binary compatability.
-
-// The type of some object (or class) metadata. This describes how to delete
-// the metadata (when the object or class is deleted) and how to create a
-// clone of it (when the object or class is copied).
-
-type Tcl_ObjectMetadataType = struct {
-	version    int32
-	name       uintptr
-	deleteProc uintptr
-	cloneProc  uintptr
-} /* tclOO.h:120:3 */
-
-type TclOOIntStubs1 = struct {
-	magic                         int32
-	hooks                         uintptr
-	tclOOGetDefineCmdContext      uintptr
-	tclOOMakeProcInstanceMethod   uintptr
-	tclOOMakeProcMethod           uintptr
-	tclOONewProcInstanceMethod    uintptr
-	tclOONewProcMethod            uintptr
-	tclOOObjectCmdCore            uintptr
-	tclOOIsReachable              uintptr
-	tclOONewForwardMethod         uintptr
-	tclOONewForwardInstanceMethod uintptr
-	tclOONewProcInstanceMethodEx  uintptr
-	tclOONewProcMethodEx          uintptr
-	tclOOInvokeObject             uintptr
-	tclOOObjectSetFilters         uintptr
-	tclOOClassSetFilters          uintptr
-	tclOOObjectSetMixins          uintptr
-	tclOOClassSetMixins           uintptr
-}
-
-type TclOOStubHooks = struct{ tclOOIntStubs uintptr } /* tclOODecls.h:122:3 */
-
-type TclOOStubs1 = struct {
-	magic                         int32
-	hooks                         uintptr
-	tcl_CopyObjectInstance        uintptr
-	tcl_GetClassAsObject          uintptr
-	tcl_GetObjectAsClass          uintptr
-	tcl_GetObjectCommand          uintptr
-	tcl_GetObjectFromObj          uintptr
-	tcl_GetObjectNamespace        uintptr
-	tcl_MethodDeclarerClass       uintptr
-	tcl_MethodDeclarerObject      uintptr
-	tcl_MethodIsPublic            uintptr
-	tcl_MethodIsType              uintptr
-	tcl_MethodName                uintptr
-	tcl_NewInstanceMethod         uintptr
-	tcl_NewMethod                 uintptr
-	tcl_NewObjectInstance         uintptr
-	tcl_ObjectDeleted             uintptr
-	tcl_ObjectContextIsFiltering  uintptr
-	tcl_ObjectContextMethod       uintptr
-	tcl_ObjectContextObject       uintptr
-	tcl_ObjectContextSkippedArgs  uintptr
-	tcl_ClassGetMetadata          uintptr
-	tcl_ClassSetMetadata          uintptr
-	tcl_ObjectGetMetadata         uintptr
-	tcl_ObjectSetMetadata         uintptr
-	tcl_ObjectContextInvokeNext   uintptr
-	tcl_ObjectGetMethodNameMapper uintptr
-	tcl_ObjectSetMethodNameMapper uintptr
-	tcl_ClassSetConstructor       uintptr
-	tcl_ClassSetDestructor        uintptr
-	tcl_GetObjectName             uintptr
-}
-
-type TclOOStubs = TclOOStubs1 /* tclOODecls.h:157:3 */
-
-// !END!: Do not edit above this line.
-
-// Local Variables:
-// mode: c
-// c-basic-offset: 4
-// fill-column: 78
-// End:
-
-// Hack to make things work with Objective C. Note that ObjC isn't really
-// supported, but we don't want to to be actively hostile to it. [Bug 2163447]
-
-// Forward declarations.
-
-type CallChain1 = struct {
-	objectCreationEpoch int32
-	objectEpoch         int32
-	epoch               int32
-	flags               int32
-	refCount            int32
-	numChain            int32
-	chain               uintptr
-	staticChain         [4]struct {
-		mPtr           uintptr
-		isFilter       int32
-		filterDeclarer uintptr
-	}
-}
-
-type Class1 = struct {
-	thisPtr      uintptr
-	flags        int32
-	superclasses struct {
-		num  int32
-		list uintptr
-	}
-	subclasses struct {
-		num  int32
-		size int32
-		list uintptr
-	}
-	instances struct {
-		num  int32
-		size int32
-		list uintptr
-	}
-	filters struct {
-		num  int32
-		list uintptr
-	}
-	mixins struct {
-		num  int32
-		list uintptr
-	}
-	mixinSubs struct {
-		num  int32
-		size int32
-		list uintptr
-	}
-	classMethods        Tcl_HashTable
-	constructorPtr      uintptr
-	destructorPtr       uintptr
-	metadataPtr         uintptr
-	constructorChainPtr uintptr
-	destructorChainPtr  uintptr
-	classChainCache     uintptr
-	variables           struct {
-		num  int32
-		list uintptr
-	}
-}
-
-type Foundation1 = struct {
-	interp               uintptr
-	objectCls            uintptr
-	classCls             uintptr
-	ooNs                 uintptr
-	defineNs             uintptr
-	objdefNs             uintptr
-	helpersNs            uintptr
-	epoch                int32
-	tsdPtr               uintptr
-	unknownMethodNameObj uintptr
-	constructorName      uintptr
-	destructorName       uintptr
-	clonedName           uintptr
-	defineName           uintptr
-}
-
-type Object1 = struct {
-	fPtr         uintptr
-	namespacePtr uintptr
-	command      Tcl_Command
-	myCommand    Tcl_Command
-	selfCls      uintptr
-	methodsPtr   uintptr
-	mixins       struct {
-		num  int32
-		list uintptr
-	}
-	filters struct {
-		num  int32
-		list uintptr
-	}
-	classPtr          uintptr
-	refCount          int32
-	flags             int32
-	creationEpoch     int32
-	epoch             int32
-	metadataPtr       uintptr
-	cachedNameObj     uintptr
-	chainCache        uintptr
-	mapMethodNameProc uintptr
-	variables         struct {
-		num  int32
-		list uintptr
-	}
-}
-
-// The data that needs to be stored per method. This record is used to collect
-// information about all sorts of methods, including forwards, constructors
-// and destructors.
-
-type Method1 = struct {
-	typePtr            uintptr
-	refCount           int32
-	clientData         ClientData
-	namePtr            uintptr
-	declaringObjectPtr uintptr
-	declaringClassPtr  uintptr
-	flags              int32
-	_                  [4]byte
-}
-
-// The data that needs to be stored per method. This record is used to collect
-// information about all sorts of methods, including forwards, constructors
-// and destructors.
-
-type Method = Method1 /* tclOOInt.h:61:3 */
-
-// Procedure-like methods have the following extra information.
-
-type ProcedureMethod1 = struct {
-	version              int32
-	procPtr              uintptr
-	flags                int32
-	refCount             int32
-	clientData           ClientData
-	deleteClientdataProc uintptr
-	cloneClientdataProc  uintptr
-	errProc              uintptr
-	preCallProc          uintptr
-	postCallProc         uintptr
-	gfivProc             uintptr
-}
-
-// Procedure-like methods have the following extra information.
-
-type ProcedureMethod = ProcedureMethod1 /* tclOOInt.h:100:3 */
-
-// Flags for use in a ProcedureMethod.
-//
-// When the USE_DECLARER_NS flag is set, the method will use the namespace of
-// the object or class that declared it (or the clone of it, if it was from
-// such that the implementation of the method came to the particular use)
-// instead of the namespace of the object on which the method was invoked.
-// This flag must be distinct from all others that are associated with
-// methods.
-
-// Forwarded methods have the following extra information.
-
-type ForwardMethod1 = struct{ prefixObj uintptr }
-
-// Flags for use in a ProcedureMethod.
-//
-// When the USE_DECLARER_NS flag is set, the method will use the namespace of
-// the object or class that declared it (or the clone of it, if it was from
-// such that the implementation of the method came to the particular use)
-// instead of the namespace of the object on which the method was invoked.
-// This flag must be distinct from all others that are associated with
-// methods.
-
-// Forwarded methods have the following extra information.
-
-type ForwardMethod = ForwardMethod1 /* tclOOInt.h:125:3 */
-
-// Helper definitions that declare a "list" array. The two varieties are
-// either optimized for simplicity (in the case that the whole array is
-// typically assigned at once) or efficiency (in the case that the array is
-// expected to be expanded over time). These lists are designed to be iterated
-// over with the help of the FOREACH macro (see later in this file).
-//
-// The "num" field always counts the number of listType_t elements used in the
-// "list" field. When a "size" field exists, it describes how many elements
-// are present in the list; when absent, exactly "num" elements are present.
-
-// Now, the definition of what an object actually is.
-
-type Object = Object1 /* tclOOInt.h:190:3 */
-
-// And the definition of a class. Note that every class also has an associated
-// object, through which it is manipulated.
-
-type Class = Class1 /* tclOOInt.h:270:3 */
-
-// The foundation of the object system within an interpreter contains
-// references to the key classes and namespaces, together with a few other
-// useful bits and pieces. Probably ought to eventually go in the Interp
-// structure itself.
-
-type ThreadLocalData1 = struct{ nsCount int32 }
-
-// The foundation of the object system within an interpreter contains
-// references to the key classes and namespaces, together with a few other
-// useful bits and pieces. Probably ought to eventually go in the Interp
-// structure itself.
-
-type ThreadLocalData = ThreadLocalData1 /* tclOOInt.h:286:3 */
-
-type Foundation = Foundation1 /* tclOOInt.h:318:3 */
-
-// A call context structure is built when a method is called. It contains the
-// chain of method implementations that are to be invoked by a particular
-// call, and the process of calling walks the chain, with the [next] command
-// proceeding to the next entry in the chain.
-
-type MInvoke = struct {
-	mPtr           uintptr
-	isFilter       int32
-	filterDeclarer uintptr
-}
-
-type CallChain = CallChain1 /* tclOOInt.h:352:3 */
-
-type CallContext1 = struct {
-	oPtr    uintptr
-	index   int32
-	skip    int32
-	callPtr uintptr
-}
-
-type CallContext = CallContext1 /* tclOOInt.h:363:3 */
-
-// Bits for the 'flags' field of the call chain.
-
-// Structure containing definition information about basic class methods.
-
-type DeclaredClassMethod = struct {
-	name       uintptr
-	isPublic   int32
-	definition Tcl_MethodType
-} /* tclOOInt.h:384:3 */
-
-type TclOOIntStubs = TclOOIntStubs1 /* tclOOIntDecls.h:115:3 */
-
-var tclOOStubsPtr uintptr = uintptr(0)    /* tclOOStubLib.c:10:18 */
-var tclOOIntStubsPtr uintptr = uintptr(0) /* tclOOStubLib.c:11:21 */
-
-//----------------------------------------------------------------------
-//
-// TclOOInitializeStubs --
-//	Load the tclOO package, initialize stub table pointer. Do not call
-//	this function directly, use Tcl_OOInitStubs() macro instead.
-//
-// Results:
-//	The actual version of the package that satisfies the request, or NULL
-//	to indicate that an error occurred.
-//
-// Side effects:
-//	Sets the stub table pointers.
-//
-//----------------------------------------------------------------------
-
-func TclOOInitializeStubs(tls *libc.TLS, interp uintptr, version uintptr) uintptr { /* tclOOStubLib.c:32:25: */
-	bp := tls.Alloc(80)
-	defer tls.Free(80)
-
-	var exact int32 = 0
-	var packageName uintptr = ts /* "TclOO" */
-	var errMsg uintptr = uintptr(0)
-	*(*uintptr)(unsafe.Pointer(bp + 72 /* stubsPtr */)) = uintptr(0)
-	var actualVersion uintptr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_PkgRequireEx */))))(tls, interp,
-		packageName, version, exact, bp+72 /* &stubsPtr */)
-
-	if actualVersion == (uintptr(0)) {
-		return uintptr(0)
-	}
-	if *(*uintptr)(unsafe.Pointer(bp + 72 /* stubsPtr */)) == (uintptr(0)) {
-		errMsg = ts + 6 /* "missing stub tab..." */
-	} else {
-		tclOOStubsPtr = *(*uintptr)(unsafe.Pointer(bp + 72 /* stubsPtr */))
-		if (*TclOOStubs)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(bp + 72 /* stubsPtr */)))).hooks != 0 {
-			tclOOIntStubsPtr = (*TclOOStubHooks)(unsafe.Pointer((*TclOOStubs)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(bp + 72 /* stubsPtr */)))).hooks)).tclOOIntStubs
-		} else {
-			tclOOIntStubsPtr = uintptr(0)
-		}
-		return actualVersion
-	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1752 /* &.tcl_ResetResult */))))(tls, interp)
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+33 /* "Error loading " */, packageName,
-		ts+48 /* " (requested vers..." */, version, ts+69, /* ", actual version..." */
-		actualVersion, ts+87 /* "): " */, errMsg, uintptr(0)))
-	return uintptr(0)
-}
-
-// Local Variables:
-// mode: c
-// c-basic-offset: 4
-// fill-column: 78
-// End:
-
-var tclStubsPtr uintptr = uintptr(0)        /* tclStubLib.c:21:16 */
-var tclPlatStubsPtr uintptr = uintptr(0)    /* tclStubLib.c:22:20 */
-var tclIntStubsPtr uintptr = uintptr(0)     /* tclStubLib.c:23:19 */
-var tclIntPlatStubsPtr uintptr = uintptr(0) /* tclStubLib.c:24:23 */
-
-// Use our own isDigit to avoid linking to libc on windows
-
-func isDigit(tls *libc.TLS, c int32) int32 { /* tclStubLib.c:30:12: */
-	return (libc.Bool32((c >= '0') && (c <= '9')))
-}
-
-//----------------------------------------------------------------------
-//
-// Tcl_InitStubs --
-//
-//	Tries to initialise the stub table pointers and ensures that the
-//	correct version of Tcl is loaded.
-//
-// Results:
-//	The actual version of Tcl that satisfies the request, or NULL to
-//	indicate that an error occurred.
-//
-// Side effects:
-//	Sets the stub table pointers.
-//
-//----------------------------------------------------------------------
-func Tcl_InitStubs(tls *libc.TLS, interp uintptr, version uintptr, exact int32) uintptr { /* tclStubLib.c:53:25: */
-	bp := tls.Alloc(8)
-	defer tls.Free(8)
-
-	var iPtr uintptr = interp
-	var actualVersion uintptr = uintptr(0)
-	*(*ClientData)(unsafe.Pointer(bp /* pkgData */)) = uintptr(0)
-	var stubsPtr uintptr = (*Interp)(unsafe.Pointer(iPtr)).stubTable
-
-	// We can't optimize this check by caching tclStubsPtr because that
-	// prevents apps from being able to load/unload Tcl dynamically multiple
-	// times. [Bug 615304]
-
-	if !(stubsPtr != 0) || ((*TclStubs)(unsafe.Pointer(stubsPtr)).magic != (libc.Int32FromUint32(0xFCA3BACF))) {
-		(*Interp)(unsafe.Pointer(iPtr)).result = ts + 91 /* "interpreter uses..." */
-		(*Interp)(unsafe.Pointer(iPtr)).freeProc = uintptr(0)
-		return uintptr(0)
-	}
-
-	actualVersion = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr) uintptr)(unsafe.Pointer((stubsPtr + 24 /* &.tcl_PkgRequireEx */))))(tls, interp, ts+140 /* "Tcl" */, version, 0, bp /* &pkgData */)
-	if actualVersion == (uintptr(0)) {
-		return uintptr(0)
-	}
-	if exact != 0 {
-		var p uintptr = version
-		var count int32 = 0
-
-		for *(*int8)(unsafe.Pointer(p)) != 0 {
-			count = count + (libc.BoolInt32(!(isDigit(tls, int32(*(*int8)(unsafe.Pointer(libc.PostIncUintptr(&p, 1))))) != 0)))
-		}
-		if count == 1 {
-			var q uintptr = actualVersion
-
-			p = version
-			for (*(*int8)(unsafe.Pointer(p)) != 0) && (int32(*(*int8)(unsafe.Pointer(p))) == int32(*(*int8)(unsafe.Pointer(q)))) {
-				p++
-				q++
-			}
-			if (*(*int8)(unsafe.Pointer(p)) != 0) || (isDigit(tls, int32(*(*int8)(unsafe.Pointer(q)))) != 0) {
-				// Construct error message
-				(*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr) uintptr)(unsafe.Pointer((stubsPtr + 24 /* &.tcl_PkgRequireEx */))))(tls, interp, ts+140 /* "Tcl" */, version, 1, uintptr(0))
-				return uintptr(0)
-			}
-		} else {
-			actualVersion = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr) uintptr)(unsafe.Pointer((stubsPtr + 24 /* &.tcl_PkgRequireEx */))))(tls, interp, ts+140 /* "Tcl" */, version, 1, uintptr(0))
-			if actualVersion == (uintptr(0)) {
-				return uintptr(0)
-			}
-		}
-	}
-	tclStubsPtr = *(*ClientData)(unsafe.Pointer(bp /* pkgData */))
-
-	if (*TclStubs)(unsafe.Pointer(tclStubsPtr)).hooks != 0 {
-		tclPlatStubsPtr = (*TclStubHooks)(unsafe.Pointer((*TclStubs)(unsafe.Pointer(tclStubsPtr)).hooks)).tclPlatStubs
-		tclIntStubsPtr = (*TclStubHooks)(unsafe.Pointer((*TclStubs)(unsafe.Pointer(tclStubsPtr)).hooks)).tclIntStubs
-		tclIntPlatStubsPtr = (*TclStubHooks)(unsafe.Pointer((*TclStubs)(unsafe.Pointer(tclStubsPtr)).hooks)).tclIntPlatStubs
-	} else {
-		tclPlatStubsPtr = uintptr(0)
-		tclIntStubsPtr = uintptr(0)
-		tclIntPlatStubsPtr = uintptr(0)
-	}
-
-	return actualVersion
-}
-
-// Local Variables:
-// mode: c
-// c-basic-offset: 4
-// fill-column: 78
-// End:
-
-var tclTomMathStubsPtr uintptr = uintptr(0) /* tclTomMathStubLib.c:18:23 */
-
-//----------------------------------------------------------------------
-//
-// TclTomMathInitStubs --
-//
-//	Initializes the Stubs table for Tcl's subset of libtommath
-//
-// Results:
-//	Returns a standard Tcl result.
-//
-// This procedure should not be called directly, but rather through
-// the TclTomMath_InitStubs macro, to insure that the Stubs table
-// matches the header files used in compilation.
-//
-//----------------------------------------------------------------------
-
-func TclTomMathInitializeStubs(tls *libc.TLS, interp uintptr, version uintptr, epoch int32, revision int32) uintptr { /* tclTomMathStubLib.c:38:25: */
-	bp := tls.Alloc(80)
-	defer tls.Free(80)
-
-	var exact int32 = 0
-	var packageName uintptr = ts + 144 /* "tcl::tommath" */
-	var errMsg uintptr = uintptr(0)
-	*(*uintptr)(unsafe.Pointer(bp + 72 /* stubsPtr */)) = uintptr(0)
-	var actualVersion uintptr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_PkgRequireEx */))))(tls, interp,
-		packageName, version, exact, bp+72 /* &stubsPtr */)
-
-	if actualVersion == (uintptr(0)) {
-		return uintptr(0)
-	}
-	if *(*uintptr)(unsafe.Pointer(bp + 72 /* stubsPtr */)) == (uintptr(0)) {
-		errMsg = ts + 6 /* "missing stub tab..." */
-	} else if (*(*func(*libc.TLS) int32)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(bp + 72 /* stubsPtr */)) + 16 /* &.tclBN_epoch */))))(tls) != epoch {
-		errMsg = ts + 157 /* "epoch number mis..." */
-	} else if (*(*func(*libc.TLS) int32)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(bp + 72 /* stubsPtr */)) + 24 /* &.tclBN_revision */))))(tls) != revision {
-		errMsg = ts + 179 /* "requires a later..." */
-	} else {
-		tclTomMathStubsPtr = *(*uintptr)(unsafe.Pointer(bp + 72 /* stubsPtr */))
-		return actualVersion
-	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1752 /* &.tcl_ResetResult */))))(tls, interp)
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+33 /* "Error loading " */, packageName,
-		ts+48 /* " (requested vers..." */, version, ts+69, /* ", actual version..." */
-		actualVersion, ts+87 /* "): " */, errMsg, uintptr(0)))
-	return uintptr(0)
-}
-
-// Local Variables:
-// mode: c
-// c-basic-offset: 4
-// fill-column: 78
-// End:
+} /* tclDecls.h:2522:3 */
 
 // The following #if block allows you to change how Tcl finds the startup
 // script, prime the library or encoding paths, fiddle with the argv, etc.,
@@ -11339,6 +11993,662 @@ func Tcl_AppInit(tls *libc.TLS, interp uintptr) int32 { /* tclAppInit.c:108:1: *
 // c-basic-offset: 4
 // fill-column: 78
 // End:
+
+type Tcl_OldStat_2 = uintptr /* tcl.h:645:21 */
+
+type TclStubs2 = struct {
+	magic                                  int32
+	hooks                                  uintptr
+	tcl_PkgProvideEx                       uintptr
+	tcl_PkgRequireEx                       uintptr
+	tcl_Panic                              uintptr
+	tcl_Alloc                              uintptr
+	tcl_Free                               uintptr
+	tcl_Realloc                            uintptr
+	tcl_DbCkalloc                          uintptr
+	tcl_DbCkfree                           uintptr
+	tcl_DbCkrealloc                        uintptr
+	tcl_CreateFileHandler                  uintptr
+	tcl_DeleteFileHandler                  uintptr
+	tcl_SetTimer                           uintptr
+	tcl_Sleep                              uintptr
+	tcl_WaitForEvent                       uintptr
+	tcl_AppendAllObjTypes                  uintptr
+	tcl_AppendStringsToObj                 uintptr
+	tcl_AppendToObj                        uintptr
+	tcl_ConcatObj                          uintptr
+	tcl_ConvertToType                      uintptr
+	tcl_DbDecrRefCount                     uintptr
+	tcl_DbIncrRefCount                     uintptr
+	tcl_DbIsShared                         uintptr
+	tcl_DbNewBooleanObj                    uintptr
+	tcl_DbNewByteArrayObj                  uintptr
+	tcl_DbNewDoubleObj                     uintptr
+	tcl_DbNewListObj                       uintptr
+	tcl_DbNewLongObj                       uintptr
+	tcl_DbNewObj                           uintptr
+	tcl_DbNewStringObj                     uintptr
+	tcl_DuplicateObj                       uintptr
+	tclFreeObj                             uintptr
+	tcl_GetBoolean                         uintptr
+	tcl_GetBooleanFromObj                  uintptr
+	tcl_GetByteArrayFromObj                uintptr
+	tcl_GetDouble                          uintptr
+	tcl_GetDoubleFromObj                   uintptr
+	tcl_GetIndexFromObj                    uintptr
+	tcl_GetInt                             uintptr
+	tcl_GetIntFromObj                      uintptr
+	tcl_GetLongFromObj                     uintptr
+	tcl_GetObjType                         uintptr
+	tcl_GetStringFromObj                   uintptr
+	tcl_InvalidateStringRep                uintptr
+	tcl_ListObjAppendList                  uintptr
+	tcl_ListObjAppendElement               uintptr
+	tcl_ListObjGetElements                 uintptr
+	tcl_ListObjIndex                       uintptr
+	tcl_ListObjLength                      uintptr
+	tcl_ListObjReplace                     uintptr
+	tcl_NewBooleanObj                      uintptr
+	tcl_NewByteArrayObj                    uintptr
+	tcl_NewDoubleObj                       uintptr
+	tcl_NewIntObj                          uintptr
+	tcl_NewListObj                         uintptr
+	tcl_NewLongObj                         uintptr
+	tcl_NewObj                             uintptr
+	tcl_NewStringObj                       uintptr
+	tcl_SetBooleanObj                      uintptr
+	tcl_SetByteArrayLength                 uintptr
+	tcl_SetByteArrayObj                    uintptr
+	tcl_SetDoubleObj                       uintptr
+	tcl_SetIntObj                          uintptr
+	tcl_SetListObj                         uintptr
+	tcl_SetLongObj                         uintptr
+	tcl_SetObjLength                       uintptr
+	tcl_SetStringObj                       uintptr
+	tcl_AddErrorInfo                       uintptr
+	tcl_AddObjErrorInfo                    uintptr
+	tcl_AllowExceptions                    uintptr
+	tcl_AppendElement                      uintptr
+	tcl_AppendResult                       uintptr
+	tcl_AsyncCreate                        uintptr
+	tcl_AsyncDelete                        uintptr
+	tcl_AsyncInvoke                        uintptr
+	tcl_AsyncMark                          uintptr
+	tcl_AsyncReady                         uintptr
+	tcl_BackgroundError                    uintptr
+	tcl_Backslash                          uintptr
+	tcl_BadChannelOption                   uintptr
+	tcl_CallWhenDeleted                    uintptr
+	tcl_CancelIdleCall                     uintptr
+	tcl_Close                              uintptr
+	tcl_CommandComplete                    uintptr
+	tcl_Concat                             uintptr
+	tcl_ConvertElement                     uintptr
+	tcl_ConvertCountedElement              uintptr
+	tcl_CreateAlias                        uintptr
+	tcl_CreateAliasObj                     uintptr
+	tcl_CreateChannel                      uintptr
+	tcl_CreateChannelHandler               uintptr
+	tcl_CreateCloseHandler                 uintptr
+	tcl_CreateCommand                      uintptr
+	tcl_CreateEventSource                  uintptr
+	tcl_CreateExitHandler                  uintptr
+	tcl_CreateInterp                       uintptr
+	tcl_CreateMathFunc                     uintptr
+	tcl_CreateObjCommand                   uintptr
+	tcl_CreateSlave                        uintptr
+	tcl_CreateTimerHandler                 uintptr
+	tcl_CreateTrace                        uintptr
+	tcl_DeleteAssocData                    uintptr
+	tcl_DeleteChannelHandler               uintptr
+	tcl_DeleteCloseHandler                 uintptr
+	tcl_DeleteCommand                      uintptr
+	tcl_DeleteCommandFromToken             uintptr
+	tcl_DeleteEvents                       uintptr
+	tcl_DeleteEventSource                  uintptr
+	tcl_DeleteExitHandler                  uintptr
+	tcl_DeleteHashEntry                    uintptr
+	tcl_DeleteHashTable                    uintptr
+	tcl_DeleteInterp                       uintptr
+	tcl_DetachPids                         uintptr
+	tcl_DeleteTimerHandler                 uintptr
+	tcl_DeleteTrace                        uintptr
+	tcl_DontCallWhenDeleted                uintptr
+	tcl_DoOneEvent                         uintptr
+	tcl_DoWhenIdle                         uintptr
+	tcl_DStringAppend                      uintptr
+	tcl_DStringAppendElement               uintptr
+	tcl_DStringEndSublist                  uintptr
+	tcl_DStringFree                        uintptr
+	tcl_DStringGetResult                   uintptr
+	tcl_DStringInit                        uintptr
+	tcl_DStringResult                      uintptr
+	tcl_DStringSetLength                   uintptr
+	tcl_DStringStartSublist                uintptr
+	tcl_Eof                                uintptr
+	tcl_ErrnoId                            uintptr
+	tcl_ErrnoMsg                           uintptr
+	tcl_Eval                               uintptr
+	tcl_EvalFile                           uintptr
+	tcl_EvalObj                            uintptr
+	tcl_EventuallyFree                     uintptr
+	tcl_Exit                               uintptr
+	tcl_ExposeCommand                      uintptr
+	tcl_ExprBoolean                        uintptr
+	tcl_ExprBooleanObj                     uintptr
+	tcl_ExprDouble                         uintptr
+	tcl_ExprDoubleObj                      uintptr
+	tcl_ExprLong                           uintptr
+	tcl_ExprLongObj                        uintptr
+	tcl_ExprObj                            uintptr
+	tcl_ExprString                         uintptr
+	tcl_Finalize                           uintptr
+	tcl_FindExecutable                     uintptr
+	tcl_FirstHashEntry                     uintptr
+	tcl_Flush                              uintptr
+	tcl_FreeResult                         uintptr
+	tcl_GetAlias                           uintptr
+	tcl_GetAliasObj                        uintptr
+	tcl_GetAssocData                       uintptr
+	tcl_GetChannel                         uintptr
+	tcl_GetChannelBufferSize               uintptr
+	tcl_GetChannelHandle                   uintptr
+	tcl_GetChannelInstanceData             uintptr
+	tcl_GetChannelMode                     uintptr
+	tcl_GetChannelName                     uintptr
+	tcl_GetChannelOption                   uintptr
+	tcl_GetChannelType                     uintptr
+	tcl_GetCommandInfo                     uintptr
+	tcl_GetCommandName                     uintptr
+	tcl_GetErrno                           uintptr
+	tcl_GetHostName                        uintptr
+	tcl_GetInterpPath                      uintptr
+	tcl_GetMaster                          uintptr
+	tcl_GetNameOfExecutable                uintptr
+	tcl_GetObjResult                       uintptr
+	tcl_GetOpenFile                        uintptr
+	tcl_GetPathType                        uintptr
+	tcl_Gets                               uintptr
+	tcl_GetsObj                            uintptr
+	tcl_GetServiceMode                     uintptr
+	tcl_GetSlave                           uintptr
+	tcl_GetStdChannel                      uintptr
+	tcl_GetStringResult                    uintptr
+	tcl_GetVar                             uintptr
+	tcl_GetVar2                            uintptr
+	tcl_GlobalEval                         uintptr
+	tcl_GlobalEvalObj                      uintptr
+	tcl_HideCommand                        uintptr
+	tcl_Init                               uintptr
+	tcl_InitHashTable                      uintptr
+	tcl_InputBlocked                       uintptr
+	tcl_InputBuffered                      uintptr
+	tcl_InterpDeleted                      uintptr
+	tcl_IsSafe                             uintptr
+	tcl_JoinPath                           uintptr
+	tcl_LinkVar                            uintptr
+	reserved188                            uintptr
+	tcl_MakeFileChannel                    uintptr
+	tcl_MakeSafe                           uintptr
+	tcl_MakeTcpClientChannel               uintptr
+	tcl_Merge                              uintptr
+	tcl_NextHashEntry                      uintptr
+	tcl_NotifyChannel                      uintptr
+	tcl_ObjGetVar2                         uintptr
+	tcl_ObjSetVar2                         uintptr
+	tcl_OpenCommandChannel                 uintptr
+	tcl_OpenFileChannel                    uintptr
+	tcl_OpenTcpClient                      uintptr
+	tcl_OpenTcpServer                      uintptr
+	tcl_Preserve                           uintptr
+	tcl_PrintDouble                        uintptr
+	tcl_PutEnv                             uintptr
+	tcl_PosixError                         uintptr
+	tcl_QueueEvent                         uintptr
+	tcl_Read                               uintptr
+	tcl_ReapDetachedProcs                  uintptr
+	tcl_RecordAndEval                      uintptr
+	tcl_RecordAndEvalObj                   uintptr
+	tcl_RegisterChannel                    uintptr
+	tcl_RegisterObjType                    uintptr
+	tcl_RegExpCompile                      uintptr
+	tcl_RegExpExec                         uintptr
+	tcl_RegExpMatch                        uintptr
+	tcl_RegExpRange                        uintptr
+	tcl_Release                            uintptr
+	tcl_ResetResult                        uintptr
+	tcl_ScanElement                        uintptr
+	tcl_ScanCountedElement                 uintptr
+	tcl_SeekOld                            uintptr
+	tcl_ServiceAll                         uintptr
+	tcl_ServiceEvent                       uintptr
+	tcl_SetAssocData                       uintptr
+	tcl_SetChannelBufferSize               uintptr
+	tcl_SetChannelOption                   uintptr
+	tcl_SetCommandInfo                     uintptr
+	tcl_SetErrno                           uintptr
+	tcl_SetErrorCode                       uintptr
+	tcl_SetMaxBlockTime                    uintptr
+	tcl_SetPanicProc                       uintptr
+	tcl_SetRecursionLimit                  uintptr
+	tcl_SetResult                          uintptr
+	tcl_SetServiceMode                     uintptr
+	tcl_SetObjErrorCode                    uintptr
+	tcl_SetObjResult                       uintptr
+	tcl_SetStdChannel                      uintptr
+	tcl_SetVar                             uintptr
+	tcl_SetVar2                            uintptr
+	tcl_SignalId                           uintptr
+	tcl_SignalMsg                          uintptr
+	tcl_SourceRCFile                       uintptr
+	tcl_SplitList                          uintptr
+	tcl_SplitPath                          uintptr
+	tcl_StaticPackage                      uintptr
+	tcl_StringMatch                        uintptr
+	tcl_TellOld                            uintptr
+	tcl_TraceVar                           uintptr
+	tcl_TraceVar2                          uintptr
+	tcl_TranslateFileName                  uintptr
+	tcl_Ungets                             uintptr
+	tcl_UnlinkVar                          uintptr
+	tcl_UnregisterChannel                  uintptr
+	tcl_UnsetVar                           uintptr
+	tcl_UnsetVar2                          uintptr
+	tcl_UntraceVar                         uintptr
+	tcl_UntraceVar2                        uintptr
+	tcl_UpdateLinkedVar                    uintptr
+	tcl_UpVar                              uintptr
+	tcl_UpVar2                             uintptr
+	tcl_VarEval                            uintptr
+	tcl_VarTraceInfo                       uintptr
+	tcl_VarTraceInfo2                      uintptr
+	tcl_Write                              uintptr
+	tcl_WrongNumArgs                       uintptr
+	tcl_DumpActiveMemory                   uintptr
+	tcl_ValidateAllMemory                  uintptr
+	tcl_AppendResultVA                     uintptr
+	tcl_AppendStringsToObjVA               uintptr
+	tcl_HashStats                          uintptr
+	tcl_ParseVar                           uintptr
+	tcl_PkgPresent                         uintptr
+	tcl_PkgPresentEx                       uintptr
+	tcl_PkgProvide                         uintptr
+	tcl_PkgRequire                         uintptr
+	tcl_SetErrorCodeVA                     uintptr
+	tcl_VarEvalVA                          uintptr
+	tcl_WaitPid                            uintptr
+	tcl_PanicVA                            uintptr
+	tcl_GetVersion                         uintptr
+	tcl_InitMemory                         uintptr
+	tcl_StackChannel                       uintptr
+	tcl_UnstackChannel                     uintptr
+	tcl_GetStackedChannel                  uintptr
+	tcl_SetMainLoop                        uintptr
+	reserved285                            uintptr
+	tcl_AppendObjToObj                     uintptr
+	tcl_CreateEncoding                     uintptr
+	tcl_CreateThreadExitHandler            uintptr
+	tcl_DeleteThreadExitHandler            uintptr
+	tcl_DiscardResult                      uintptr
+	tcl_EvalEx                             uintptr
+	tcl_EvalObjv                           uintptr
+	tcl_EvalObjEx                          uintptr
+	tcl_ExitThread                         uintptr
+	tcl_ExternalToUtf                      uintptr
+	tcl_ExternalToUtfDString               uintptr
+	tcl_FinalizeThread                     uintptr
+	tcl_FinalizeNotifier                   uintptr
+	tcl_FreeEncoding                       uintptr
+	tcl_GetCurrentThread                   uintptr
+	tcl_GetEncoding                        uintptr
+	tcl_GetEncodingName                    uintptr
+	tcl_GetEncodingNames                   uintptr
+	tcl_GetIndexFromObjStruct              uintptr
+	tcl_GetThreadData                      uintptr
+	tcl_GetVar2Ex                          uintptr
+	tcl_InitNotifier                       uintptr
+	tcl_MutexLock                          uintptr
+	tcl_MutexUnlock                        uintptr
+	tcl_ConditionNotify                    uintptr
+	tcl_ConditionWait                      uintptr
+	tcl_NumUtfChars                        uintptr
+	tcl_ReadChars                          uintptr
+	tcl_RestoreResult                      uintptr
+	tcl_SaveResult                         uintptr
+	tcl_SetSystemEncoding                  uintptr
+	tcl_SetVar2Ex                          uintptr
+	tcl_ThreadAlert                        uintptr
+	tcl_ThreadQueueEvent                   uintptr
+	tcl_UniCharAtIndex                     uintptr
+	tcl_UniCharToLower                     uintptr
+	tcl_UniCharToTitle                     uintptr
+	tcl_UniCharToUpper                     uintptr
+	tcl_UniCharToUtf                       uintptr
+	tcl_UtfAtIndex                         uintptr
+	tcl_UtfCharComplete                    uintptr
+	tcl_UtfBackslash                       uintptr
+	tcl_UtfFindFirst                       uintptr
+	tcl_UtfFindLast                        uintptr
+	tcl_UtfNext                            uintptr
+	tcl_UtfPrev                            uintptr
+	tcl_UtfToExternal                      uintptr
+	tcl_UtfToExternalDString               uintptr
+	tcl_UtfToLower                         uintptr
+	tcl_UtfToTitle                         uintptr
+	tcl_UtfToUniChar                       uintptr
+	tcl_UtfToUpper                         uintptr
+	tcl_WriteChars                         uintptr
+	tcl_WriteObj                           uintptr
+	tcl_GetString                          uintptr
+	tcl_GetDefaultEncodingDir              uintptr
+	tcl_SetDefaultEncodingDir              uintptr
+	tcl_AlertNotifier                      uintptr
+	tcl_ServiceModeHook                    uintptr
+	tcl_UniCharIsAlnum                     uintptr
+	tcl_UniCharIsAlpha                     uintptr
+	tcl_UniCharIsDigit                     uintptr
+	tcl_UniCharIsLower                     uintptr
+	tcl_UniCharIsSpace                     uintptr
+	tcl_UniCharIsUpper                     uintptr
+	tcl_UniCharIsWordChar                  uintptr
+	tcl_UniCharLen                         uintptr
+	tcl_UniCharNcmp                        uintptr
+	tcl_UniCharToUtfDString                uintptr
+	tcl_UtfToUniCharDString                uintptr
+	tcl_GetRegExpFromObj                   uintptr
+	tcl_EvalTokens                         uintptr
+	tcl_FreeParse                          uintptr
+	tcl_LogCommandInfo                     uintptr
+	tcl_ParseBraces                        uintptr
+	tcl_ParseCommand                       uintptr
+	tcl_ParseExpr                          uintptr
+	tcl_ParseQuotedString                  uintptr
+	tcl_ParseVarName                       uintptr
+	tcl_GetCwd                             uintptr
+	tcl_Chdir                              uintptr
+	tcl_Access                             uintptr
+	tcl_Stat                               uintptr
+	tcl_UtfNcmp                            uintptr
+	tcl_UtfNcasecmp                        uintptr
+	tcl_StringCaseMatch                    uintptr
+	tcl_UniCharIsControl                   uintptr
+	tcl_UniCharIsGraph                     uintptr
+	tcl_UniCharIsPrint                     uintptr
+	tcl_UniCharIsPunct                     uintptr
+	tcl_RegExpExecObj                      uintptr
+	tcl_RegExpGetInfo                      uintptr
+	tcl_NewUnicodeObj                      uintptr
+	tcl_SetUnicodeObj                      uintptr
+	tcl_GetCharLength                      uintptr
+	tcl_GetUniChar                         uintptr
+	tcl_GetUnicode                         uintptr
+	tcl_GetRange                           uintptr
+	tcl_AppendUnicodeToObj                 uintptr
+	tcl_RegExpMatchObj                     uintptr
+	tcl_SetNotifier                        uintptr
+	tcl_GetAllocMutex                      uintptr
+	tcl_GetChannelNames                    uintptr
+	tcl_GetChannelNamesEx                  uintptr
+	tcl_ProcObjCmd                         uintptr
+	tcl_ConditionFinalize                  uintptr
+	tcl_MutexFinalize                      uintptr
+	tcl_CreateThread                       uintptr
+	tcl_ReadRaw                            uintptr
+	tcl_WriteRaw                           uintptr
+	tcl_GetTopChannel                      uintptr
+	tcl_ChannelBuffered                    uintptr
+	tcl_ChannelName                        uintptr
+	tcl_ChannelVersion                     uintptr
+	tcl_ChannelBlockModeProc               uintptr
+	tcl_ChannelCloseProc                   uintptr
+	tcl_ChannelClose2Proc                  uintptr
+	tcl_ChannelInputProc                   uintptr
+	tcl_ChannelOutputProc                  uintptr
+	tcl_ChannelSeekProc                    uintptr
+	tcl_ChannelSetOptionProc               uintptr
+	tcl_ChannelGetOptionProc               uintptr
+	tcl_ChannelWatchProc                   uintptr
+	tcl_ChannelGetHandleProc               uintptr
+	tcl_ChannelFlushProc                   uintptr
+	tcl_ChannelHandlerProc                 uintptr
+	tcl_JoinThread                         uintptr
+	tcl_IsChannelShared                    uintptr
+	tcl_IsChannelRegistered                uintptr
+	tcl_CutChannel                         uintptr
+	tcl_SpliceChannel                      uintptr
+	tcl_ClearChannelHandlers               uintptr
+	tcl_IsChannelExisting                  uintptr
+	tcl_UniCharNcasecmp                    uintptr
+	tcl_UniCharCaseMatch                   uintptr
+	tcl_FindHashEntry                      uintptr
+	tcl_CreateHashEntry                    uintptr
+	tcl_InitCustomHashTable                uintptr
+	tcl_InitObjHashTable                   uintptr
+	tcl_CommandTraceInfo                   uintptr
+	tcl_TraceCommand                       uintptr
+	tcl_UntraceCommand                     uintptr
+	tcl_AttemptAlloc                       uintptr
+	tcl_AttemptDbCkalloc                   uintptr
+	tcl_AttemptRealloc                     uintptr
+	tcl_AttemptDbCkrealloc                 uintptr
+	tcl_AttemptSetObjLength                uintptr
+	tcl_GetChannelThread                   uintptr
+	tcl_GetUnicodeFromObj                  uintptr
+	tcl_GetMathFuncInfo                    uintptr
+	tcl_ListMathFuncs                      uintptr
+	tcl_SubstObj                           uintptr
+	tcl_DetachChannel                      uintptr
+	tcl_IsStandardChannel                  uintptr
+	tcl_FSCopyFile                         uintptr
+	tcl_FSCopyDirectory                    uintptr
+	tcl_FSCreateDirectory                  uintptr
+	tcl_FSDeleteFile                       uintptr
+	tcl_FSLoadFile                         uintptr
+	tcl_FSMatchInDirectory                 uintptr
+	tcl_FSLink                             uintptr
+	tcl_FSRemoveDirectory                  uintptr
+	tcl_FSRenameFile                       uintptr
+	tcl_FSLstat                            uintptr
+	tcl_FSUtime                            uintptr
+	tcl_FSFileAttrsGet                     uintptr
+	tcl_FSFileAttrsSet                     uintptr
+	tcl_FSFileAttrStrings                  uintptr
+	tcl_FSStat                             uintptr
+	tcl_FSAccess                           uintptr
+	tcl_FSOpenFileChannel                  uintptr
+	tcl_FSGetCwd                           uintptr
+	tcl_FSChdir                            uintptr
+	tcl_FSConvertToPathType                uintptr
+	tcl_FSJoinPath                         uintptr
+	tcl_FSSplitPath                        uintptr
+	tcl_FSEqualPaths                       uintptr
+	tcl_FSGetNormalizedPath                uintptr
+	tcl_FSJoinToPath                       uintptr
+	tcl_FSGetInternalRep                   uintptr
+	tcl_FSGetTranslatedPath                uintptr
+	tcl_FSEvalFile                         uintptr
+	tcl_FSNewNativePath                    uintptr
+	tcl_FSGetNativePath                    uintptr
+	tcl_FSFileSystemInfo                   uintptr
+	tcl_FSPathSeparator                    uintptr
+	tcl_FSListVolumes                      uintptr
+	tcl_FSRegister                         uintptr
+	tcl_FSUnregister                       uintptr
+	tcl_FSData                             uintptr
+	tcl_FSGetTranslatedStringPath          uintptr
+	tcl_FSGetFileSystemForPath             uintptr
+	tcl_FSGetPathType                      uintptr
+	tcl_OutputBuffered                     uintptr
+	tcl_FSMountsChanged                    uintptr
+	tcl_EvalTokensStandard                 uintptr
+	tcl_GetTime                            uintptr
+	tcl_CreateObjTrace                     uintptr
+	tcl_GetCommandInfoFromToken            uintptr
+	tcl_SetCommandInfoFromToken            uintptr
+	tcl_DbNewWideIntObj                    uintptr
+	tcl_GetWideIntFromObj                  uintptr
+	tcl_NewWideIntObj                      uintptr
+	tcl_SetWideIntObj                      uintptr
+	tcl_AllocStatBuf                       uintptr
+	tcl_Seek                               uintptr
+	tcl_Tell                               uintptr
+	tcl_ChannelWideSeekProc                uintptr
+	tcl_DictObjPut                         uintptr
+	tcl_DictObjGet                         uintptr
+	tcl_DictObjRemove                      uintptr
+	tcl_DictObjSize                        uintptr
+	tcl_DictObjFirst                       uintptr
+	tcl_DictObjNext                        uintptr
+	tcl_DictObjDone                        uintptr
+	tcl_DictObjPutKeyList                  uintptr
+	tcl_DictObjRemoveKeyList               uintptr
+	tcl_NewDictObj                         uintptr
+	tcl_DbNewDictObj                       uintptr
+	tcl_RegisterConfig                     uintptr
+	tcl_CreateNamespace                    uintptr
+	tcl_DeleteNamespace                    uintptr
+	tcl_AppendExportList                   uintptr
+	tcl_Export                             uintptr
+	tcl_Import                             uintptr
+	tcl_ForgetImport                       uintptr
+	tcl_GetCurrentNamespace                uintptr
+	tcl_GetGlobalNamespace                 uintptr
+	tcl_FindNamespace                      uintptr
+	tcl_FindCommand                        uintptr
+	tcl_GetCommandFromObj                  uintptr
+	tcl_GetCommandFullName                 uintptr
+	tcl_FSEvalFileEx                       uintptr
+	tcl_SetExitProc                        uintptr
+	tcl_LimitAddHandler                    uintptr
+	tcl_LimitRemoveHandler                 uintptr
+	tcl_LimitReady                         uintptr
+	tcl_LimitCheck                         uintptr
+	tcl_LimitExceeded                      uintptr
+	tcl_LimitSetCommands                   uintptr
+	tcl_LimitSetTime                       uintptr
+	tcl_LimitSetGranularity                uintptr
+	tcl_LimitTypeEnabled                   uintptr
+	tcl_LimitTypeExceeded                  uintptr
+	tcl_LimitTypeSet                       uintptr
+	tcl_LimitTypeReset                     uintptr
+	tcl_LimitGetCommands                   uintptr
+	tcl_LimitGetTime                       uintptr
+	tcl_LimitGetGranularity                uintptr
+	tcl_SaveInterpState                    uintptr
+	tcl_RestoreInterpState                 uintptr
+	tcl_DiscardInterpState                 uintptr
+	tcl_SetReturnOptions                   uintptr
+	tcl_GetReturnOptions                   uintptr
+	tcl_IsEnsemble                         uintptr
+	tcl_CreateEnsemble                     uintptr
+	tcl_FindEnsemble                       uintptr
+	tcl_SetEnsembleSubcommandList          uintptr
+	tcl_SetEnsembleMappingDict             uintptr
+	tcl_SetEnsembleUnknownHandler          uintptr
+	tcl_SetEnsembleFlags                   uintptr
+	tcl_GetEnsembleSubcommandList          uintptr
+	tcl_GetEnsembleMappingDict             uintptr
+	tcl_GetEnsembleUnknownHandler          uintptr
+	tcl_GetEnsembleFlags                   uintptr
+	tcl_GetEnsembleNamespace               uintptr
+	tcl_SetTimeProc                        uintptr
+	tcl_QueryTimeProc                      uintptr
+	tcl_ChannelThreadActionProc            uintptr
+	tcl_NewBignumObj                       uintptr
+	tcl_DbNewBignumObj                     uintptr
+	tcl_SetBignumObj                       uintptr
+	tcl_GetBignumFromObj                   uintptr
+	tcl_TakeBignumFromObj                  uintptr
+	tcl_TruncateChannel                    uintptr
+	tcl_ChannelTruncateProc                uintptr
+	tcl_SetChannelErrorInterp              uintptr
+	tcl_GetChannelErrorInterp              uintptr
+	tcl_SetChannelError                    uintptr
+	tcl_GetChannelError                    uintptr
+	tcl_InitBignumFromDouble               uintptr
+	tcl_GetNamespaceUnknownHandler         uintptr
+	tcl_SetNamespaceUnknownHandler         uintptr
+	tcl_GetEncodingFromObj                 uintptr
+	tcl_GetEncodingSearchPath              uintptr
+	tcl_SetEncodingSearchPath              uintptr
+	tcl_GetEncodingNameFromEnvironment     uintptr
+	tcl_PkgRequireProc                     uintptr
+	tcl_AppendObjToErrorInfo               uintptr
+	tcl_AppendLimitedToObj                 uintptr
+	tcl_Format                             uintptr
+	tcl_AppendFormatToObj                  uintptr
+	tcl_ObjPrintf                          uintptr
+	tcl_AppendPrintfToObj                  uintptr
+	tcl_CancelEval                         uintptr
+	tcl_Canceled                           uintptr
+	tcl_CreatePipe                         uintptr
+	tcl_NRCreateCommand                    uintptr
+	tcl_NREvalObj                          uintptr
+	tcl_NREvalObjv                         uintptr
+	tcl_NRCmdSwap                          uintptr
+	tcl_NRAddCallback                      uintptr
+	tcl_NRCallObjProc                      uintptr
+	tcl_GetFSDeviceFromStat                uintptr
+	tcl_GetFSInodeFromStat                 uintptr
+	tcl_GetModeFromStat                    uintptr
+	tcl_GetLinkCountFromStat               uintptr
+	tcl_GetUserIdFromStat                  uintptr
+	tcl_GetGroupIdFromStat                 uintptr
+	tcl_GetDeviceTypeFromStat              uintptr
+	tcl_GetAccessTimeFromStat              uintptr
+	tcl_GetModificationTimeFromStat        uintptr
+	tcl_GetChangeTimeFromStat              uintptr
+	tcl_GetSizeFromStat                    uintptr
+	tcl_GetBlocksFromStat                  uintptr
+	tcl_GetBlockSizeFromStat               uintptr
+	tcl_SetEnsembleParameterList           uintptr
+	tcl_GetEnsembleParameterList           uintptr
+	tcl_ParseArgsObjv                      uintptr
+	tcl_GetErrorLine                       uintptr
+	tcl_SetErrorLine                       uintptr
+	tcl_TransferResult                     uintptr
+	tcl_InterpActive                       uintptr
+	tcl_BackgroundException                uintptr
+	tcl_ZlibDeflate                        uintptr
+	tcl_ZlibInflate                        uintptr
+	tcl_ZlibCRC32                          uintptr
+	tcl_ZlibAdler32                        uintptr
+	tcl_ZlibStreamInit                     uintptr
+	tcl_ZlibStreamGetCommandName           uintptr
+	tcl_ZlibStreamEof                      uintptr
+	tcl_ZlibStreamChecksum                 uintptr
+	tcl_ZlibStreamPut                      uintptr
+	tcl_ZlibStreamGet                      uintptr
+	tcl_ZlibStreamClose                    uintptr
+	tcl_ZlibStreamReset                    uintptr
+	tcl_SetStartupScript                   uintptr
+	tcl_GetStartupScript                   uintptr
+	tcl_CloseEx                            uintptr
+	tcl_NRExprObj                          uintptr
+	tcl_NRSubstObj                         uintptr
+	tcl_LoadFile                           uintptr
+	tcl_FindSymbol                         uintptr
+	tcl_FSUnloadFile                       uintptr
+	tcl_ZlibStreamSetCompressionDictionary uintptr
+	reserved631                            uintptr
+	reserved632                            uintptr
+	reserved633                            uintptr
+	reserved634                            uintptr
+	reserved635                            uintptr
+	reserved636                            uintptr
+	reserved637                            uintptr
+	reserved638                            uintptr
+	reserved639                            uintptr
+	reserved640                            uintptr
+	reserved641                            uintptr
+	reserved642                            uintptr
+	reserved643                            uintptr
+	reserved644                            uintptr
+	reserved645                            uintptr
+	reserved646                            uintptr
+	reserved647                            uintptr
+	tclUnusedStubEntry                     uintptr
+} /* tclDecls.h:2522:3 */
 
 // Inline function declarations:
 
@@ -11754,7 +13064,7 @@ type TclRegexp1 = struct {
 	details    rm_detail_t
 	refCount   int32
 	_          [4]byte
-}
+} /* tclRegexp.h:27:9 */
 
 // automatically gathered by fwd; do not hand-edit
 // =====^!^===== end forwards =====^!^=====
@@ -11952,7 +13262,7 @@ type lconv = struct {
 	int_p_sign_posn    int8
 	int_n_sign_posn    int8
 	_                  [2]byte
-}
+} /* locale.h:51:1 */
 
 // This value can be passed to `uselocale' and may be returned by it.
 //   Passing this value to any other function has undefined behavior.
@@ -11987,7 +13297,7 @@ type ChannelBuffer1 = struct {
 	nextPtr     uintptr
 	buf         [1]int8
 	_           [7]byte
-}
+} /* tclIO.h:38:9 */
 
 // This value can be passed to `uselocale' and may be returned by it.
 //   Passing this value to any other function has undefined behavior.
@@ -12032,7 +13342,7 @@ type EventScriptRecord1 = struct {
 	interp    uintptr
 	mask      int32
 	nextPtr   uintptr
-}
+} /* tclIO.h:75:9 */
 
 // How much extra space to allocate in buffer to hold bytes from previous
 // buffer (when converting to UTF-8) or to hold bytes that will go to next
@@ -12054,7 +13364,7 @@ type Channel1 = struct {
 	inQueueTail  uintptr
 	refCount     int32
 	_            [4]byte
-}
+} /* tclIO.h:75:9 */
 
 // How much extra space to allocate in buffer to hold bytes from previous
 // buffer (when converting to UTF-8) or to hold bytes that will go to next
@@ -12112,7 +13422,7 @@ type ChannelState1 = struct {
 	unreportedMsg       uintptr
 	epoch               int32
 	_                   [4]byte
-}
+} /* tclIO.h:75:9 */
 
 // struct Channel:
 //
@@ -12146,7 +13456,7 @@ type TestAsyncHandler1 = struct {
 	handler Tcl_AsyncHandler
 	command uintptr
 	nextPtr uintptr
-}
+} /* tclTest.c:69:9 */
 
 // One of the following structures exists for each asynchronous handler
 // created by the "testasync" command".
@@ -12171,7 +13481,7 @@ var cmdTrace Tcl_Trace /* tclTest.c:94:18: */
 type DelCmd1 = struct {
 	interp    uintptr
 	deleteCmd uintptr
-}
+} /* tclTest.c:101:9 */
 
 // One of the following structures exists for each command created by
 // TestdelCmd:
@@ -12185,7 +13495,7 @@ type TclEncoding1 = struct {
 	interp     uintptr
 	toUtfCmd   uintptr
 	fromUtfCmd uintptr
-}
+} /* tclTest.c:112:9 */
 
 // The following is used to keep track of an encoding that invokes a Tcl
 // command.
@@ -12208,7 +13518,7 @@ type TestEvent1 = struct {
 	interp  uintptr
 	command uintptr
 	tag     uintptr
-}
+} /* tclTest.c:135:9 */
 
 // Event structure used in testing the event queue management procedures.
 
@@ -12220,7 +13530,7 @@ type TestEvent = TestEvent1 /* tclTest.c:140:3 */
 type TestChannel1 = struct {
 	__chan  Tcl_Channel
 	nextPtr uintptr
-}
+} /* tclTest.c:147:9 */
 
 // Simple detach/attach facility for testchannel cut|splice. Allow testing of
 // channel transfer in core testsuite.
@@ -19601,7 +20911,7 @@ type MyResolvedVarInfo1 = struct {
 	vInfo   Tcl_ResolvedVarInfo
 	__var   Tcl_Var
 	nameObj uintptr
-}
+} /* tclTest.c:7518:9 */
 
 type MyResolvedVarInfo = MyResolvedVarInfo1 /* tclTest.c:7522:3 */
 
@@ -19890,7 +21200,7 @@ type String1 = struct {
 	hasUnicode int32
 	unicode    [1]Tcl_UniChar
 	_          [2]byte
-}
+} /* tclStringRep.h:49:9 */
 
 // Inline function declarations:
 
@@ -20789,7 +22099,7 @@ type IndexRep = struct {
 	tablePtr uintptr
 	offset   int32
 	index    int32
-}
+} /* tclTestObj.c:577:5 */
 
 var tablePtr = [4]uintptr{ts + 5902 /* "a" */, ts + 7417 /* "b" */, ts + 9301 /* "check" */, uintptr(0)} /* tclTestObj.c:573:23 */
 
@@ -22214,7 +23524,7 @@ type CmdTable1 = struct {
 	proc     uintptr
 	exportIt int32
 	_        [4]byte
-}
+} /* tclTestProcBodyObj.c:38:9 */
 
 // this struct describes an entry in the table of command names and command
 // procs
@@ -22508,18 +23818,18 @@ func ProcBodyTestCheckObjCmd(tls *libc.TLS, dummy ClientData, interp uintptr, ob
 // We can represent all limits.
 
 // Type for resource quantity measurement.
-type rlim_t = uint64   /* resource.h:131:18 */
+type rlim_t = uint64   /* resource.h:133:20 */
 type rlim64_t = uint64 /* resource.h:136:20 */
 
 type rlimit = struct {
 	rlim_cur rlim_t
 	rlim_max rlim_t
-}
+} /* resource.h:139:1 */
 
 type rlimit64 = struct {
 	rlim_cur rlim64_t
 	rlim_max rlim64_t
-}
+} /* resource.h:148:1 */
 
 // The following macros convert between TclFile's and fd's. The conversion
 // simple involves shifting fd's up by one to ensure that no valid fd is ever
@@ -22533,7 +23843,7 @@ type Pipe1 = struct {
 	writeFile  TclFile
 	readCount  int32
 	writeCount int32
-}
+} /* tclUnixTest.c:40:9 */
 
 // The following macros convert between TclFile's and fd's. The conversion
 // simple involves shifting fd's up by one to ensure that no valid fd is ever
@@ -22703,8 +24013,8 @@ func TestfilehandlerCmd(tls *libc.TLS, clientData ClientData, interp uintptr, ar
 					(*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1648 /* &.tcl_PosixError */))))(tls, interp), uintptr(0)))
 				return 1
 			}
-			libc.Xfcntl(tls, ((int32((*Pipe)(unsafe.Pointer(pipePtr)).readFile)) - 1), 4, libc.VaList(bp+208, 04000))
-			libc.Xfcntl(tls, ((int32((*Pipe)(unsafe.Pointer(pipePtr)).writeFile)) - 1), 4, libc.VaList(bp+216, 04000))
+			libc.Xfcntl64(tls, ((int32((*Pipe)(unsafe.Pointer(pipePtr)).readFile)) - 1), 4, libc.VaList(bp+208, 04000))
+			libc.Xfcntl64(tls, ((int32((*Pipe)(unsafe.Pointer(pipePtr)).writeFile)) - 1), 4, libc.VaList(bp+216, 04000))
 		}
 		(*Pipe)(unsafe.Pointer(pipePtr)).readCount = 0
 		(*Pipe)(unsafe.Pointer(pipePtr)).writeCount = 0

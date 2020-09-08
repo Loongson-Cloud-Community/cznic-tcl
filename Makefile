@@ -6,31 +6,49 @@
 
 grep=--include=*.go --include=*.l --include=*.y --include=*.yy
 ngrep='TODOOK\|internal\|.*stringer.*\.go\|assets\.go'
+log=log-$(shell go env GOOS)-$(shell go env GOARCH)
 
 all: editor
 	date
-	go version 2>&1 | tee log
+	go version 2>&1 | tee $(log)
 	./unconvert.sh
 	gofmt -l -s -w *.go
 	go test -i
-	go test 2>&1 -timeout 1h | tee -a log
-	#TODO GOOS=linux GOARCH=arm go build
-	#TODO GOOS=linux GOARCH=arm64 go build
-	#TODO GOOS=linux GOARCH=386 go build
-	GOOS=linux GOARCH=amd64 go build
-	#TODO GOOS=windows GOARCH=386 go build
-	#TODO GOOS=windows GOARCH=amd64 go build
+	go test 2>&1 -timeout 1h | tee -a $(log)
+	#TODO GOOS=linux GOARCH=arm go build -o /dev/null
+	#TODO GOOS=linux GOARCH=arm64 go build -o /dev/null
+	GOOS=linux GOARCH=386 go build -o /dev/null
+	GOOS=linux GOARCH=amd64 go build -o /dev/null
+	#TODO GOOS=windows GOARCH=386 go build -o /dev/null
+	#TODO GOOS=windows GOARCH=amd64 go build -o /dev/null
 	go vet 2>&1 | grep -v $(ngrep) || true
 	golint 2>&1 | grep -v $(ngrep) || true
 	#make todo
 	misspell *.go | grep -v $(ngrep) || true
 	staticcheck
 	maligned || true
-	grep -n 'FAIL\|PASS' log 
-	git diff --unified=0 testdata *.golden
-	grep -n Passed log 
+	grep -n 'FAIL\|PASS' $(log) 
+	git diff --unified=0 testdata/*.golden || true
+	grep -n Passed $(log) 
 	go version
-	date 2>&1 | tee -a log
+	date 2>&1 | tee -a $(log)
+
+linux_386:
+	\
+		CCGO_CPP=i686-linux-gnu-cpp \
+		GO_GENERATE_CC=i686-linux-gnu-gcc \
+		TARGET_GOARCH=386 \
+		TARGET_GOOS=linux \
+		go generate 2>&1 | tee /tmp/log-generate-tcl-linux-386
+	GOOS=linux GOARCH=386 go build -v ./...
+
+linux_amd64:
+	\
+		TARGET_GOOS=linux \
+		TARGET_GOARCH=amd64 \
+		go generate 2>&1 | tee /tmp/log-generate-tcl-linux-amd64
+	GOOS=linux GOARCH=amd64 go build -v ./...
+
 
 clean:
 	go clean
