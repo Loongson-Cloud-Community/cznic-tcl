@@ -1656,6 +1656,7 @@ type wchar_t = int32 /* <builtin>:15:24 */
 type flock = struct {
 	l_type   int16
 	l_whence int16
+	_        [4]byte
 	l_start  int64
 	l_len    int64
 	l_pid    int32
@@ -1665,6 +1666,7 @@ type flock = struct {
 type flock64 = struct {
 	l_type   int16
 	l_whence int16
+	_        [4]byte
 	l_start  int64
 	l_len    int64
 	l_pid    int32
@@ -1892,6 +1894,7 @@ type passwd = struct {
 
 type _IO_FILE = struct {
 	_flags          int32
+	_               [4]byte
 	_IO_read_ptr    uintptr
 	_IO_read_end    uintptr
 	_IO_read_base   uintptr
@@ -1911,6 +1914,7 @@ type _IO_FILE = struct {
 	_cur_column     uint16
 	_vtable_offset  int8
 	_shortbuf       [1]int8
+	_               [4]byte
 	_lock           uintptr
 	_offset         int64
 	_codecvt        uintptr
@@ -2312,6 +2316,7 @@ type sigaction = struct {
 	__sigaction_handler struct{ sa_handler uintptr }
 	sa_mask             struct{ __val [16]uint64 }
 	sa_flags            int32
+	_                   [4]byte
 	sa_restorer         uintptr
 } /* sigaction.h:27:1 */
 
@@ -2643,6 +2648,7 @@ type _xstate = struct {
 type stack_t = struct {
 	ss_sp    uintptr
 	ss_flags int32
+	_        [4]byte
 	ss_size  size_t
 } /* stack_t.h:31:5 */
 
@@ -4562,6 +4568,7 @@ type tm = struct {
 	tm_wday   int32
 	tm_yday   int32
 	tm_isdst  int32
+	_         [4]byte
 	tm_gmtoff int64
 	tm_zone   uintptr
 } /* struct_tm.h:7:1 */
@@ -5838,6 +5845,7 @@ type sockaddr_storage = struct {
 type msghdr = struct {
 	msg_name       uintptr
 	msg_namelen    socklen_t
+	_              [4]byte
 	msg_iov        uintptr
 	msg_iovlen     size_t
 	msg_control    uintptr
@@ -6190,6 +6198,7 @@ type ipv6_mreq = struct {
 // Multicast group request.
 type group_req = struct {
 	gr_interface uint32_t
+	_            [4]byte
 	gr_group     struct {
 		ss_family    sa_family_t
 		__ss_padding [118]int8
@@ -6199,6 +6208,7 @@ type group_req = struct {
 
 type group_source_req = struct {
 	gsr_interface uint32_t
+	_             [4]byte
 	gsr_group     struct {
 		ss_family    sa_family_t
 		__ss_padding [118]int8
@@ -6222,6 +6232,7 @@ type ip_msfilter = struct {
 
 type group_filter = struct {
 	gf_interface uint32_t
+	_            [4]byte
 	gf_group     struct {
 		ss_family    sa_family_t
 		__ss_padding [118]int8
@@ -6491,6 +6502,7 @@ type servent = struct {
 	s_name    uintptr
 	s_aliases uintptr
 	s_port    int32
+	_         [4]byte
 	s_proto   uintptr
 } /* netdb.h:255:1 */
 
@@ -6510,6 +6522,7 @@ type addrinfo = struct {
 	ai_socktype  int32
 	ai_protocol  int32
 	ai_addrlen   socklen_t
+	_            [4]byte
 	ai_addr      uintptr
 	ai_canonname uintptr
 	ai_next      uintptr
@@ -6712,6 +6725,7 @@ type group = struct {
 	gr_name   uintptr
 	gr_passwd uintptr
 	gr_gid    uint32
+	_         [4]byte
 	gr_mem    uintptr
 } /* grp.h:42:1 */
 
@@ -7050,6 +7064,7 @@ type Tcl_RegExpIndices = Tcl_RegExpIndices1 /* tcl.h:628:3 */
 
 type Tcl_RegExpInfo1 = struct {
 	nsubs       int32
+	_           [4]byte
 	matches     uintptr
 	extendStart int64
 	reserved    int64
@@ -7091,6 +7106,7 @@ type Tcl_ValueType = uint32 /* tcl.h:692:3 */
 
 type Tcl_Value1 = struct {
 	__type      Tcl_ValueType
+	_           [4]byte
 	intValue    int64
 	doubleValue float64
 	wideValue   Tcl_WideInt
@@ -7103,8 +7119,10 @@ type Tcl_Value = Tcl_Value1 /* tcl.h:700:3 */
 
 type Tcl_Obj1 = struct {
 	refCount    int32
+	_           [4]byte
 	bytes       uintptr
 	length      int32
+	_           [4]byte
 	typePtr     uintptr
 	internalRep struct {
 		longValue int64
@@ -7210,9 +7228,11 @@ type Tcl_CallFrame1 = struct {
 	dummy4  uintptr
 	dummy5  uintptr
 	dummy6  int32
+	_       [4]byte
 	dummy7  uintptr
 	dummy8  uintptr
 	dummy9  int32
+	_       [4]byte
 	dummy10 uintptr
 	dummy11 uintptr
 	dummy12 uintptr
@@ -7257,6 +7277,7 @@ type Tcl_CallFrame = Tcl_CallFrame1 /* tcl.h:937:3 */
 
 type Tcl_CmdInfo1 = struct {
 	isNativeObjectProc int32
+	_                  [4]byte
 	objProc            uintptr
 	objClientData      ClientData
 	proc               uintptr
@@ -7467,6 +7488,7 @@ type Tcl_HashEntry = Tcl_HashEntry1 /* tcl.h:1154:30 */
 type Tcl_HashSearch1 = struct {
 	tablePtr     uintptr
 	nextIndex    int32
+	_            [4]byte
 	nextEntryPtr uintptr
 } /* tcl.h:1308:9 */
 
@@ -7501,6 +7523,7 @@ type Tcl_HashSearch = Tcl_HashSearch1 /* tcl.h:1314:3 */
 type Tcl_DictSearch = struct {
 	next          uintptr
 	epoch         int32
+	_             [4]byte
 	dictionaryPtr Tcl_Dict
 } /* tcl.h:1354:3 */
 
@@ -7614,6 +7637,7 @@ type Tcl_FSVersion = uintptr /* tcl.h:1700:31 */
 type Tcl_Filesystem1 = struct {
 	typeName                 uintptr
 	structureLength          int32
+	_                        [4]byte
 	version                  Tcl_FSVersion
 	pathInFilesystemProc     uintptr
 	dupInternalRepProc       uintptr
@@ -7709,6 +7733,7 @@ type Tcl_NotifierProcs = Tcl_NotifierProcs1 /* tcl.h:1903:3 */
 
 type Tcl_Token1 = struct {
 	__type        int32
+	_             [4]byte
 	start         uintptr
 	size          int32
 	numComponents int32
@@ -7801,6 +7826,7 @@ type Tcl_Token = Tcl_Token1 /* tcl.h:1924:3 */
 type Tcl_Parse1 = struct {
 	commentStart    uintptr
 	commentSize     int32
+	_               [4]byte
 	commandStart    uintptr
 	commandSize     int32
 	numWords        int32
@@ -7808,11 +7834,13 @@ type Tcl_Parse1 = struct {
 	numTokens       int32
 	tokensAvailable int32
 	errorType       int32
+	_               [4]byte
 	string          uintptr
 	end             uintptr
 	interp          uintptr
 	term            uintptr
 	incomplete      int32
+	_               [4]byte
 	staticTokens    [20]Tcl_Token
 } /* tcl.h:2030:9 */
 
@@ -8017,6 +8045,7 @@ type mp_int1 = struct {
 	used  int32
 	alloc int32
 	sign  mp_sign
+	_     [4]byte
 	dp    uintptr
 } /* tcl.h:2266:9 */
 
@@ -8033,6 +8062,7 @@ type mp_digit = uint32 /* tcl.h:2268:22 */
 
 type Tcl_ArgvInfo = struct {
 	__type     int32
+	_          [4]byte
 	keyStr     uintptr
 	srcPtr     uintptr
 	dstPtr     uintptr
@@ -8042,11 +8072,13 @@ type Tcl_ArgvInfo = struct {
 
 type TclPlatStubs1 = struct {
 	magic int32
+	_     [4]byte
 	hooks uintptr
 } /* tclDecls.h:1840:11 */
 
 type TclIntStubs1 = struct {
 	magic                        int32
+	_                            [4]byte
 	hooks                        uintptr
 	reserved0                    uintptr
 	reserved1                    uintptr
@@ -8311,6 +8343,7 @@ type TclIntStubs1 = struct {
 
 type TclIntPlatStubs1 = struct {
 	magic                    int32
+	_                        [4]byte
 	hooks                    uintptr
 	tclGetAndDetachPids      uintptr
 	tclpCloseFile            uintptr
@@ -8353,6 +8386,7 @@ type TclStubHooks = struct {
 
 type TclStubs = struct {
 	magic                                  int32
+	_                                      [4]byte
 	hooks                                  uintptr
 	tcl_PkgProvideEx                       uintptr
 	tcl_PkgRequireEx                       uintptr
@@ -9033,6 +9067,185 @@ type TclStubs = struct {
 
 type TclPlatStubs = TclPlatStubs1 /* tclPlatDecls.h:86:3 */
 
+//  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.
+//    are already defined.
+//  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.
+//  NetBSD 5 requires the I386_ANSI_H and X86_64_ANSI_H checks here.
+
+// A null pointer constant.
+
+// _FloatN API tests for enablement.
+// Macros to control TS 18661-3 glibc features on x86.
+//   Copyright (C) 2017-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Defined to 1 if the current compiler invocation provides a
+//   floating-point type with the IEEE 754 binary128 format, and this
+//   glibc includes corresponding *f128 interfaces for it.  The required
+//   libgcc support was added some time after the basic compiler
+//   support, for x86_64 and x86.
+
+// Defined to 1 if __HAVE_FLOAT128 is 1 and the type is ABI-distinct
+//   from the default float, double and long double types in this glibc.
+
+// Defined to 1 if the current compiler invocation provides a
+//   floating-point type with the right format for _Float64x, and this
+//   glibc includes corresponding *f64x interfaces for it.
+
+// Defined to 1 if __HAVE_FLOAT64X is 1 and _Float64x has the format
+//   of long double.  Otherwise, if __HAVE_FLOAT64X is 1, _Float64x has
+//   the format of _Float128, which must be different from that of long
+//   double.
+
+// Defined to concatenate the literal suffix to be used with _Float128
+//   types, if __HAVE_FLOAT128 is 1.
+
+// Defined to a complex binary128 type if __HAVE_FLOAT128 is 1.
+
+// The remaining of this file provides support for older compilers.
+
+// Macros to control TS 18661-3 glibc features where the same
+//   definitions are appropriate for all platforms.
+//   Copyright (C) 2017-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License as published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// Properties of long double type.  ldbl-96 version.
+//   Copyright (C) 2016-2018 Free Software Foundation, Inc.
+//   This file is part of the GNU C Library.
+//
+//   The GNU C Library is free software; you can redistribute it and/or
+//   modify it under the terms of the GNU Lesser General Public
+//   License  published by the Free Software Foundation; either
+//   version 2.1 of the License, or (at your option) any later version.
+//
+//   The GNU C Library is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//   Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public
+//   License along with the GNU C Library; if not, see
+//   <http://www.gnu.org/licenses/>.
+
+// long double is distinct from double, so there is nothing to
+//   define here.
+
+// This header should be included at the bottom of each bits/floatn.h.
+//   It defines the following macros for each _FloatN and _FloatNx type,
+//   where the same definitions, or definitions based only on the macros
+//   in bits/floatn.h, are appropriate for all glibc configurations.
+
+// Defined to 1 if the current compiler invocation provides a
+//   floating-point type with the right format for this type, and this
+//   glibc includes corresponding *fN or *fNx interfaces for it.
+
+// Defined to 1 if the corresponding __HAVE_<type> macro is 1 and the
+//   type is the first with its format in the sequence of (the default
+//   choices for) float, double, long double, _Float16, _Float32,
+//   _Float64, _Float128, _Float32x, _Float64x, _Float128x for this
+//   glibc; that is, if functions present once per floating-point format
+//   rather than once per type are present for this type.
+//
+//   All configurations supported by glibc have _Float32 the same format
+//   as float, _Float64 and _Float32x the same format as double, the
+//   _Float64x the same format as either long double or _Float128.  No
+//   configurations support _Float128x or, as of GCC 7, have compiler
+//   support for a type meeting the requirements for _Float128x.
+
+// Defined to 1 if the corresponding _FloatN type is not binary compatible
+//   with the corresponding ISO C type in the current compilation unit as
+//   opposed to __HAVE_DISTINCT_FLOATN, which indicates the default types built
+//   in glibc.
+
+// Defined to 1 if any _FloatN or _FloatNx types that are not
+//   ABI-distinct are however distinct types at the C language level (so
+//   for the purposes of __builtin_types_compatible_p and _Generic).
+
+// Defined to concatenate the literal suffix to be used with _FloatN
+//   or _FloatNx types, if __HAVE_<type> is 1.  The corresponding
+//   literal suffixes exist since GCC 7, for C only.
+
+// Defined to a complex type if __HAVE_<type> is 1.
+
+// The remaining of this file provides support for older compilers.
+
+type _Float32 = float32 /* floatn-common.h:214:15 */
+
+// If double, long double and _Float64 all have the same set of
+//   values, TS 18661-3 requires the usual arithmetic conversions on
+//   long double and _Float64 to produce _Float64.  For this to be the
+//   case when building with a compiler without a distinct _Float64
+//   type, _Float64 must be a typedef for long double, not for
+//   double.
+
+type _Float64 = float64 /* floatn-common.h:251:16 */
+
+type _Float32x = float64 /* floatn-common.h:268:16 */
+
+type _Float64x = float64 /* floatn-common.h:285:21 */
+
 // Returned by `div'.
 type div_t = struct {
 	quot int32
@@ -9062,6 +9275,7 @@ type random_data = struct {
 	rand_type int32
 	rand_deg  int32
 	rand_sep  int32
+	_         [4]byte
 	end_ptr   uintptr
 } /* stdlib.h:423:1 */
 
@@ -9213,6 +9427,7 @@ type Namespace1 = struct {
 	flags                 int32
 	activationCount       int32
 	refCount              int32
+	_                     [4]byte
 	cmdTable              Tcl_HashTable
 	varTable              TclVarHashTable
 	exportArrayPtr        uintptr
@@ -9224,9 +9439,11 @@ type Namespace1 = struct {
 	varResProc            uintptr
 	compiledVarResProc    uintptr
 	exportLookupEpoch     int32
+	_                     [4]byte
 	ensembles             uintptr
 	unknownHandlerPtr     uintptr
 	commandPathLength     int32
+	_                     [4]byte
 	commandPathArray      uintptr
 	commandPathSourceList uintptr
 	earlyDeleteProc       uintptr
@@ -9292,10 +9509,12 @@ type EnsembleConfig1 = struct {
 	nsPtr              uintptr
 	token              Tcl_Command
 	epoch              int32
+	_                  [4]byte
 	subcommandArrayPtr uintptr
 	subcommandTable    Tcl_HashTable
 	next               uintptr
 	flags              int32
+	_                  [4]byte
 	subcommandDict     uintptr
 	subcmdList         uintptr
 	unknownHandler     uintptr
@@ -9355,6 +9574,7 @@ type VarTrace1 = struct {
 	traceProc  uintptr
 	clientData ClientData
 	flags      int32
+	_          [4]byte
 	nextPtr    uintptr
 } /* tclInt.h:506:9 */
 
@@ -9378,6 +9598,7 @@ type CommandTrace1 = struct {
 	traceProc  uintptr
 	clientData ClientData
 	flags      int32
+	_          [4]byte
 	nextPtr    uintptr
 	refCount   int32
 	_          [4]byte
@@ -9420,6 +9641,7 @@ type Command1 = struct {
 	deleteProc    uintptr
 	deleteData    ClientData
 	flags         int32
+	_             [4]byte
 	importRefPtr  uintptr
 	tracePtr      uintptr
 	nreProc       uintptr
@@ -9452,6 +9674,7 @@ type ActiveVarTrace1 = struct {
 
 type Var1 = struct {
 	flags int32
+	_     [4]byte
 	value struct{ objPtr uintptr }
 } /* tclInt.h:569:9 */
 
@@ -9475,6 +9698,7 @@ type Var = Var1 /* tclInt.h:604:3 */
 type VarInHash1 = struct {
 	__var    Var
 	refCount int32
+	_        [4]byte
 	entry    Tcl_HashEntry
 } /* tclInt.h:606:9 */
 
@@ -9496,6 +9720,7 @@ type CompiledLocal1 = struct {
 	nameLength  int32
 	frameIndex  int32
 	flags       int32
+	_           [4]byte
 	defValuePtr uintptr
 	resolveInfo uintptr
 	name        [1]int8
@@ -9522,6 +9747,7 @@ type CompiledLocal = CompiledLocal1 /* tclInt.h:928:3 */
 type Proc1 = struct {
 	iPtr              uintptr
 	refCount          int32
+	_                 [4]byte
 	cmdPtr            uintptr
 	bodyPtr           uintptr
 	numArgs           int32
@@ -9538,6 +9764,7 @@ type Interp1 = struct {
 	result            uintptr
 	freeProc          uintptr
 	errorLine         int32
+	_                 [4]byte
 	stubTable         uintptr
 	handle            TclHandle
 	globalNsPtr       uintptr
@@ -9553,6 +9780,7 @@ type Interp1 = struct {
 	varFramePtr            uintptr
 	activeVarTracePtr      uintptr
 	returnCode             int32
+	_                      [4]byte
 	rootFramePtr           uintptr
 	lookupNsPtr            uintptr
 	appendResult           uintptr
@@ -9563,29 +9791,35 @@ type Interp1 = struct {
 	cmdCount               int32
 	evalFlags              int32
 	unused1                int32
+	_                      [4]byte
 	literalTable           LiteralTable
 	compileEpoch           int32
+	_                      [4]byte
 	compiledProcPtr        uintptr
 	resolverPtr            uintptr
 	scriptFile             uintptr
 	flags                  int32
+	_                      [4]byte
 	randSeed               int64
 	tracePtr               uintptr
 	assocData              uintptr
 	execEnvPtr             uintptr
 	emptyObjPtr            uintptr
 	resultSpace            [201]int8
+	_                      [7]byte
 	objResultPtr           uintptr
 	threadId               Tcl_ThreadId
 	activeCmdTracePtr      uintptr
 	activeInterpTracePtr   uintptr
 	tracesForbiddingInline int32
+	_                      [4]byte
 	returnOpts             uintptr
 	errorInfo              uintptr
 	eiVar                  uintptr
 	errorCode              uintptr
 	ecVar                  uintptr
 	returnLevel            int32
+	_                      [4]byte
 	limit                  struct {
 		active            int32
 		granularityTicker int32
@@ -9593,9 +9827,11 @@ type Interp1 = struct {
 		cmdCount          int32
 		cmdHandlers       uintptr
 		cmdGranularity    int32
+		_                 [4]byte
 		time              Tcl_Time
 		timeHandlers      uintptr
 		timeGranularity   int32
+		_                 [4]byte
 		timeEvent         Tcl_TimerToken
 		callbacks         Tcl_HashTable
 	}
@@ -9608,12 +9844,14 @@ type Interp1 = struct {
 	cmdFramePtr       uintptr
 	invokeCmdFramePtr uintptr
 	invokeWord        int32
+	_                 [4]byte
 	linePBodyPtr      uintptr
 	lineBCPtr         uintptr
 	lineLABCPtr       uintptr
 	lineLAPtr         uintptr
 	scriptCLLocPtr    uintptr
 	packagePrefer     int32
+	_                 [4]byte
 	varTraces         Tcl_HashTable
 	varSearches       Tcl_HashTable
 	allocCache        uintptr
@@ -9643,10 +9881,12 @@ type Proc = Proc1 /* tclInt.h:963:3 */
 
 type Trace1 = struct {
 	level      int32
+	_          [4]byte
 	proc       uintptr
 	clientData ClientData
 	nextPtr    uintptr
 	flags      int32
+	_          [4]byte
 	delProc    uintptr
 } /* tclInt.h:936:9 */
 
@@ -9759,9 +9999,11 @@ type CallFrame1 = struct {
 	callerPtr         uintptr
 	callerVarPtr      uintptr
 	level             int32
+	_                 [4]byte
 	procPtr           uintptr
 	varTablePtr       uintptr
 	numCompiledLocals int32
+	_                 [4]byte
 	compiledLocals    uintptr
 	clientData        ClientData
 	localCachePtr     uintptr
@@ -9791,6 +10033,7 @@ type CmdFrame1 = struct {
 	level    int32
 	line     uintptr
 	nline    int32
+	_        [4]byte
 	framePtr uintptr
 	nextPtr  uintptr
 	data     struct {
@@ -9800,6 +10043,7 @@ type CmdFrame1 = struct {
 	cmdObj uintptr
 	cmd    uintptr
 	len    int32
+	_      [4]byte
 	litarg uintptr
 } /* tclInt.h:936:9 */
 
@@ -9901,6 +10145,7 @@ type ExtraFrameInfoField = struct {
 } /* tclInt.h:1303:3 */
 type ExtraFrameInfo = struct {
 	length int32
+	_      [4]byte
 	fields [2]ExtraFrameInfoField
 } /* tclInt.h:1309:3 */
 
@@ -9998,6 +10243,7 @@ type LiteralEntry1 = struct {
 	nextPtr  uintptr
 	objPtr   uintptr
 	refCount int32
+	_        [4]byte
 	nsPtr    uintptr
 } /* tclInt.h:936:9 */
 
@@ -10610,6 +10856,7 @@ type mp_endian = int32 /* tclTomMath.h:184:13 */
 
 type TclTomMathStubs1 = struct {
 	magic                       int32
+	_                           [4]byte
 	hooks                       uintptr
 	tclBN_epoch                 uintptr
 	tclBN_revision              uintptr
@@ -10709,6 +10956,7 @@ type Tcl_ObjectContext = uintptr /* tclOO.h:55:35 */
 
 type Tcl_MethodType = struct {
 	version    int32
+	_          [4]byte
 	name       uintptr
 	callProc   uintptr
 	deleteProc uintptr
@@ -10725,6 +10973,7 @@ type Tcl_MethodType = struct {
 
 type Tcl_ObjectMetadataType = struct {
 	version    int32
+	_          [4]byte
 	name       uintptr
 	deleteProc uintptr
 	cloneProc  uintptr
@@ -10732,6 +10981,7 @@ type Tcl_ObjectMetadataType = struct {
 
 type TclOOIntStubs1 = struct {
 	magic                         int32
+	_                             [4]byte
 	hooks                         uintptr
 	tclOOGetDefineCmdContext      uintptr
 	tclOOMakeProcInstanceMethod   uintptr
@@ -10755,6 +11005,7 @@ type TclOOStubHooks = struct{ tclOOIntStubs uintptr } /* tclOODecls.h:122:3 */
 
 type TclOOStubs1 = struct {
 	magic                         int32
+	_                             [4]byte
 	hooks                         uintptr
 	tcl_CopyObjectInstance        uintptr
 	tcl_GetClassAsObject          uintptr
@@ -10813,6 +11064,7 @@ type CallChain1 = struct {
 	staticChain         [4]struct {
 		mPtr           uintptr
 		isFilter       int32
+		_              [4]byte
 		filterDeclarer uintptr
 	}
 } /* tclOOInt.h:33:1 */
@@ -10820,8 +11072,10 @@ type CallChain1 = struct {
 type Class1 = struct {
 	thisPtr      uintptr
 	flags        int32
+	_            [4]byte
 	superclasses struct {
 		num  int32
+		_    [4]byte
 		list uintptr
 	}
 	subclasses struct {
@@ -10836,10 +11090,12 @@ type Class1 = struct {
 	}
 	filters struct {
 		num  int32
+		_    [4]byte
 		list uintptr
 	}
 	mixins struct {
 		num  int32
+		_    [4]byte
 		list uintptr
 	}
 	mixinSubs struct {
@@ -10856,6 +11112,7 @@ type Class1 = struct {
 	classChainCache     uintptr
 	variables           struct {
 		num  int32
+		_    [4]byte
 		list uintptr
 	}
 } /* tclOOInt.h:33:1 */
@@ -10869,6 +11126,7 @@ type Foundation1 = struct {
 	objdefNs             uintptr
 	helpersNs            uintptr
 	epoch                int32
+	_                    [4]byte
 	tsdPtr               uintptr
 	unknownMethodNameObj uintptr
 	constructorName      uintptr
@@ -10886,10 +11144,12 @@ type Object1 = struct {
 	methodsPtr   uintptr
 	mixins       struct {
 		num  int32
+		_    [4]byte
 		list uintptr
 	}
 	filters struct {
 		num  int32
+		_    [4]byte
 		list uintptr
 	}
 	classPtr          uintptr
@@ -10903,6 +11163,7 @@ type Object1 = struct {
 	mapMethodNameProc uintptr
 	variables         struct {
 		num  int32
+		_    [4]byte
 		list uintptr
 	}
 } /* tclOOInt.h:33:1 */
@@ -10914,6 +11175,7 @@ type Object1 = struct {
 type Method1 = struct {
 	typePtr            uintptr
 	refCount           int32
+	_                  [4]byte
 	clientData         ClientData
 	namePtr            uintptr
 	declaringObjectPtr uintptr
@@ -10932,6 +11194,7 @@ type Method = Method1 /* tclOOInt.h:61:3 */
 
 type ProcedureMethod1 = struct {
 	version              int32
+	_                    [4]byte
 	procPtr              uintptr
 	flags                int32
 	refCount             int32
@@ -11017,6 +11280,7 @@ type Foundation = Foundation1 /* tclOOInt.h:318:3 */
 type MInvoke = struct {
 	mPtr           uintptr
 	isFilter       int32
+	_              [4]byte
 	filterDeclarer uintptr
 } /* tclOOInt.h:33:1 */
 
@@ -11038,6 +11302,7 @@ type CallContext = CallContext1 /* tclOOInt.h:363:3 */
 type DeclaredClassMethod = struct {
 	name       uintptr
 	isPublic   int32
+	_          [4]byte
 	definition Tcl_MethodType
 } /* tclOOInt.h:384:3 */
 
@@ -11254,6 +11519,7 @@ type Tcl_OldStat_1 = uintptr /* tcl.h:645:21 */
 
 type TclStubs1 = struct {
 	magic                                  int32
+	_                                      [4]byte
 	hooks                                  uintptr
 	tcl_PkgProvideEx                       uintptr
 	tcl_PkgRequireEx                       uintptr
@@ -11998,6 +12264,7 @@ type Tcl_OldStat_2 = uintptr /* tcl.h:645:21 */
 
 type TclStubs2 = struct {
 	magic                                  int32
+	_                                      [4]byte
 	hooks                                  uintptr
 	tcl_PkgProvideEx                       uintptr
 	tcl_PkgRequireEx                       uintptr
@@ -13021,9 +13288,11 @@ type regoff_t = int64 /* regex.h:123:24 */
 // the biggie, a compiled RE (or rather, a front end to same)
 type regex_t = struct {
 	re_magic int32
+	_        [4]byte
 	re_nsub  size_t
 	re_info  int64
 	re_csize int32
+	_        [4]byte
 	re_endp  uintptr
 	re_guts  uintptr
 	re_fns   uintptr
@@ -13056,6 +13325,7 @@ type rm_detail_t = struct{ rm_extend regmatch_t } /* regex.h:167:3 */
 
 type TclRegexp1 = struct {
 	flags      int32
+	_          [4]byte
 	re         regex_t
 	string     uintptr
 	objPtr     uintptr
@@ -13341,6 +13611,7 @@ type EventScriptRecord1 = struct {
 	scriptPtr uintptr
 	interp    uintptr
 	mask      int32
+	_         [4]byte
 	nextPtr   uintptr
 } /* tclIO.h:75:9 */
 
@@ -13388,9 +13659,11 @@ type EventScriptRecord = EventScriptRecord1 /* tclIO.h:86:3 */
 type ChannelState1 = struct {
 	channelName         uintptr
 	flags               int32
+	_                   [4]byte
 	encoding            Tcl_Encoding
 	inputEncodingState  Tcl_EncodingState
 	inputEncodingFlags  int32
+	_                   [4]byte
 	outputEncodingState Tcl_EncodingState
 	outputEncodingFlags int32
 	inputTranslation    TclEolTranslation
@@ -13399,6 +13672,7 @@ type ChannelState1 = struct {
 	outEofChar          int32
 	unreportedError     int32
 	refCount            int32
+	_                   [4]byte
 	closeCbPtr          uintptr
 	outputStage         uintptr
 	curOutPtr           uintptr
@@ -13409,8 +13683,10 @@ type ChannelState1 = struct {
 	inQueueTail         uintptr
 	chPtr               uintptr
 	interestMask        int32
+	_                   [4]byte
 	scriptRecordPtr     uintptr
 	bufSize             int32
+	_                   [4]byte
 	timer               Tcl_TimerToken
 	csPtrR              uintptr
 	csPtrW              uintptr
@@ -13453,6 +13729,7 @@ var delInterp uintptr     /* tclTest.c:62:19: */
 
 type TestAsyncHandler1 = struct {
 	id      int32
+	_       [4]byte
 	handler Tcl_AsyncHandler
 	command uintptr
 	nextPtr uintptr

@@ -117,6 +117,7 @@ type _G_fpos64_t = struct {
 
 type _IO_FILE = struct {
 	_flags          int32
+	_               [4]byte
 	_IO_read_ptr    uintptr
 	_IO_read_end    uintptr
 	_IO_read_base   uintptr
@@ -136,6 +137,7 @@ type _IO_FILE = struct {
 	_cur_column     uint16
 	_vtable_offset  int8
 	_shortbuf       [1]int8
+	_               [4]byte
 	_lock           uintptr
 	_offset         int64
 	_codecvt        uintptr
@@ -440,6 +442,7 @@ type Tcl_RegExpIndices = Tcl_RegExpIndices1 /* tcl.h:628:3 */
 
 type Tcl_RegExpInfo1 = struct {
 	nsubs       int32
+	_           [4]byte
 	matches     uintptr
 	extendStart int64
 	reserved    int64
@@ -481,6 +484,7 @@ type Tcl_ValueType = uint32 /* tcl.h:692:3 */
 
 type Tcl_Value1 = struct {
 	__type      Tcl_ValueType
+	_           [4]byte
 	intValue    int64
 	doubleValue float64
 	wideValue   Tcl_WideInt
@@ -493,8 +497,10 @@ type Tcl_Value = Tcl_Value1 /* tcl.h:700:3 */
 
 type Tcl_Obj1 = struct {
 	refCount    int32
+	_           [4]byte
 	bytes       uintptr
 	length      int32
+	_           [4]byte
 	typePtr     uintptr
 	internalRep struct {
 		longValue int64
@@ -600,9 +606,11 @@ type Tcl_CallFrame1 = struct {
 	dummy4  uintptr
 	dummy5  uintptr
 	dummy6  int32
+	_       [4]byte
 	dummy7  uintptr
 	dummy8  uintptr
 	dummy9  int32
+	_       [4]byte
 	dummy10 uintptr
 	dummy11 uintptr
 	dummy12 uintptr
@@ -647,6 +655,7 @@ type Tcl_CallFrame = Tcl_CallFrame1 /* tcl.h:937:3 */
 
 type Tcl_CmdInfo1 = struct {
 	isNativeObjectProc int32
+	_                  [4]byte
 	objProc            uintptr
 	objClientData      ClientData
 	proc               uintptr
@@ -857,6 +866,7 @@ type Tcl_HashEntry = Tcl_HashEntry1 /* tcl.h:1154:30 */
 type Tcl_HashSearch1 = struct {
 	tablePtr     uintptr
 	nextIndex    int32
+	_            [4]byte
 	nextEntryPtr uintptr
 } /* tcl.h:1308:9 */
 
@@ -891,6 +901,7 @@ type Tcl_HashSearch = Tcl_HashSearch1 /* tcl.h:1314:3 */
 type Tcl_DictSearch = struct {
 	next          uintptr
 	epoch         int32
+	_             [4]byte
 	dictionaryPtr Tcl_Dict
 } /* tcl.h:1354:3 */
 
@@ -1004,6 +1015,7 @@ type Tcl_FSVersion = uintptr /* tcl.h:1700:31 */
 type Tcl_Filesystem1 = struct {
 	typeName                 uintptr
 	structureLength          int32
+	_                        [4]byte
 	version                  Tcl_FSVersion
 	pathInFilesystemProc     uintptr
 	dupInternalRepProc       uintptr
@@ -1099,6 +1111,7 @@ type Tcl_NotifierProcs = Tcl_NotifierProcs1 /* tcl.h:1903:3 */
 
 type Tcl_Token1 = struct {
 	__type        int32
+	_             [4]byte
 	start         uintptr
 	size          int32
 	numComponents int32
@@ -1191,6 +1204,7 @@ type Tcl_Token = Tcl_Token1 /* tcl.h:1924:3 */
 type Tcl_Parse1 = struct {
 	commentStart    uintptr
 	commentSize     int32
+	_               [4]byte
 	commandStart    uintptr
 	commandSize     int32
 	numWords        int32
@@ -1198,11 +1212,13 @@ type Tcl_Parse1 = struct {
 	numTokens       int32
 	tokensAvailable int32
 	errorType       int32
+	_               [4]byte
 	string          uintptr
 	end             uintptr
 	interp          uintptr
 	term            uintptr
 	incomplete      int32
+	_               [4]byte
 	staticTokens    [20]Tcl_Token
 } /* tcl.h:2030:9 */
 
@@ -1408,6 +1424,7 @@ type mp_digit = uint32        /* tcl.h:2268:22 */
 
 type Tcl_ArgvInfo = struct {
 	__type     int32
+	_          [4]byte
 	keyStr     uintptr
 	srcPtr     uintptr
 	dstPtr     uintptr
@@ -1417,6 +1434,7 @@ type Tcl_ArgvInfo = struct {
 
 type TclPlatStubs1 = struct {
 	magic int32
+	_     [4]byte
 	hooks uintptr
 } /* tclDecls.h:1840:11 */
 
@@ -1428,6 +1446,7 @@ type TclStubHooks = struct {
 
 type TclStubs1 = struct {
 	magic                                  int32
+	_                                      [4]byte
 	hooks                                  uintptr
 	tcl_PkgProvideEx                       uintptr
 	tcl_PkgRequireEx                       uintptr

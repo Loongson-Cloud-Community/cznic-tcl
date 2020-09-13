@@ -14,6 +14,9 @@
 //
 // Changelog:
 //
+// 2020-09-13 v1.3.0 supports linux/{amd64,386,arm,arm64}. The arm, arm64 ports
+// fail the http tests.
+//
 // 2020-09-03 v1.2.0 is now completelely CGo-free.
 //
 // 2020-08-04: beta2 released for linux/amd64 only. Support for threads,
