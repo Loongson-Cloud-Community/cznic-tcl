@@ -1,11 +1,11 @@
-Tests running in interp:  /tmp/tcl-test-359505135/tcltest
-Tests located in:  /tmp/tcl-test-359505135
-Tests running in:  /tmp/tcl-test-359505135
-Temporary files stored in /tmp/tcl-test-359505135
+Tests running in interp:  /tmp/tcl-test-036085287/tcltest
+Tests located in:  /tmp/tcl-test-036085287
+Tests running in:  /tmp/tcl-test-036085287
+Temporary files stored in /tmp/tcl-test-036085287
 Test files run in separate interpreters
 Running tests that match:  *
 Only running test files that match:  *.test
-Tests began at Sun Sep 13 10:27:51 CEST 2020
+Tests began at Thu Sep 24 11:14:41 CEST 2020
 aaa_exit.test
 append.test
 appendComp.test
@@ -157,7 +157,7 @@ winPipe.test
 winTime.test
 zlib.test
 
-Tests ended at Sun Sep 13 10:30:34 CEST 2020
+Tests ended at Thu Sep 24 11:17:44 CEST 2020
 all.tcl:	Total	33499	Passed	30164	Skipped	3335	Failed	0
 Sourced 150 Test Files.
 Number of tests skipped for each constraint:
