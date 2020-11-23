@@ -13816,38 +13816,100 @@ type TestChannel = TestChannel1 /* tclTest.c:150:3 */
 
 var firstDetached uintptr /* tclTest.c:152:20: */
 
-var testReportingFilesystem = Tcl_Filesystem{typeName: ts + 239 /* "reporting" */, structureLength: int32(unsafe.Sizeof(Tcl_Filesystem{})), version: uintptr(0x1), pathInFilesystemProc: 0, dupInternalRepProc: // path in
-0, freeInternalRepProc:                                                                                                                                                                                         0, internalToNormalizedProc: uintptr(0), createInternalRepProc: // native to norm
-uintptr(0), normalizePathProc:// convert to native
-0, filesystemPathTypeProc: uintptr(0), filesystemSeparatorProc: // path type
-uintptr(0), statProc:// separator
-0, accessProc: 0, openFileChannelProc: 0, matchInDirectoryProc: 0, utimeProc: 0, linkProc: 0, listVolumesProc: uintptr(0), fileAttrStringsProc: 0, fileAttrsGetProc: 0, fileAttrsSetProc: 0, createDirectoryProc: 0, removeDirectoryProc: 0, deleteFileProc: 0, copyFileProc: 0, renameFileProc: 0, copyDirectoryProc: 0, lstatProc: 0, loadFileProc: 0, getCwdProc: uintptr(0), chdirProc: 0,
+var testReportingFilesystem = Tcl_Filesystem{
+	typeName:             ts + 239, /* "reporting" */
+	structureLength:      int32(unsafe.Sizeof(Tcl_Filesystem{})),
+	version:              uintptr(0x1),
+	pathInFilesystemProc: 0,
+	dupInternalRepProc:// path in
+	0,
+	freeInternalRepProc:      0,
+	internalToNormalizedProc: uintptr(0),
+	createInternalRepProc:// native to norm
+	uintptr(0),
+	normalizePathProc:// convert to native
+	0,
+	filesystemPathTypeProc: uintptr(0),
+	filesystemSeparatorProc:// path type
+	uintptr(0),
+	statProc:// separator
+	0,
+	accessProc:           0,
+	openFileChannelProc:  0,
+	matchInDirectoryProc: 0,
+	utimeProc:            0,
+	linkProc:             0,
+	listVolumesProc:      uintptr(0),
+	fileAttrStringsProc:  0,
+	fileAttrsGetProc:     0,
+	fileAttrsSetProc:     0,
+	createDirectoryProc:  0,
+	removeDirectoryProc:  0,
+	deleteFileProc:       0,
+	copyFileProc:         0,
+	renameFileProc:       0,
+	copyDirectoryProc:    0,
+	lstatProc:            0,
+	loadFileProc:         0,
+	getCwdProc:           uintptr(0),
+	chdirProc:            0,
 } /* tclTest.c:442:29 */
 
-var simpleFilesystem = Tcl_Filesystem{typeName: ts + 249 /* "simple" */, structureLength: int32(unsafe.Sizeof(Tcl_Filesystem{})), version: uintptr(0x1), pathInFilesystemProc: 0, dupInternalRepProc: uintptr(0), freeInternalRepProc: uintptr(0), internalToNormalizedProc:
-// No internal to normalized, since we don't create any
-// pure 'internal' Tcl_Obj path representations
-uintptr(0), createInternalRepProc:
-// No create native rep function, since we don't use it
-// or 'Tcl_FSNewNativePath'
-uintptr(0), normalizePathProc:
-// Normalize path isn't needed - we assume paths only have
-// one representation
-uintptr(0), filesystemPathTypeProc: uintptr(0), filesystemSeparatorProc: uintptr(0), statProc: 0, accessProc: 0, openFileChannelProc: 0, matchInDirectoryProc: 0, utimeProc: uintptr(0), linkProc:
-// We choose not to support symbolic links inside our vfs's
-uintptr(0), listVolumesProc: 0, fileAttrStringsProc: uintptr(0), fileAttrsGetProc: uintptr(0), fileAttrsSetProc: uintptr(0), createDirectoryProc: uintptr(0), removeDirectoryProc: uintptr(0), deleteFileProc: uintptr(0), copyFileProc:
-// No copy file - fallback will occur at Tcl level
-uintptr(0), renameFileProc:
-// No rename file - fallback will occur at Tcl level
-uintptr(0), copyDirectoryProc:
-// No copy directory - fallback will occur at Tcl level
-uintptr(0), lstatProc:
-// Use stat for lstat
-uintptr(0), loadFileProc:
-// No load - fallback on core implementation
-uintptr(0), getCwdProc:
-// We don't need a getcwd or chdir - fallback on Tcl's versions
-uintptr(0), chdirProc: uintptr(0),
+var simpleFilesystem = Tcl_Filesystem{
+	typeName:             ts + 249, /* "simple" */
+	structureLength:      int32(unsafe.Sizeof(Tcl_Filesystem{})),
+	version:              uintptr(0x1),
+	pathInFilesystemProc: 0,
+	dupInternalRepProc:   uintptr(0),
+	freeInternalRepProc:  uintptr(0),
+	internalToNormalizedProc:
+	// No internal to normalized, since we don't create any
+	// pure 'internal' Tcl_Obj path representations
+	uintptr(0),
+	createInternalRepProc:
+	// No create native rep function, since we don't use it
+	// or 'Tcl_FSNewNativePath'
+	uintptr(0),
+	normalizePathProc:
+	// Normalize path isn't needed - we assume paths only have
+	// one representation
+	uintptr(0),
+	filesystemPathTypeProc:  uintptr(0),
+	filesystemSeparatorProc: uintptr(0),
+	statProc:                0,
+	accessProc:              0,
+	openFileChannelProc:     0,
+	matchInDirectoryProc:    0,
+	utimeProc:               uintptr(0),
+	linkProc:
+	// We choose not to support symbolic links inside our vfs's
+	uintptr(0),
+	listVolumesProc:     0,
+	fileAttrStringsProc: uintptr(0),
+	fileAttrsGetProc:    uintptr(0),
+	fileAttrsSetProc:    uintptr(0),
+	createDirectoryProc: uintptr(0),
+	removeDirectoryProc: uintptr(0),
+	deleteFileProc:      uintptr(0),
+	copyFileProc:
+	// No copy file - fallback will occur at Tcl level
+	uintptr(0),
+	renameFileProc:
+	// No rename file - fallback will occur at Tcl level
+	uintptr(0),
+	copyDirectoryProc:
+	// No copy directory - fallback will occur at Tcl level
+	uintptr(0),
+	lstatProc:
+	// Use stat for lstat
+	uintptr(0),
+	loadFileProc:
+	// No load - fallback on core implementation
+	uintptr(0),
+	getCwdProc:
+	// We don't need a getcwd or chdir - fallback on Tcl's versions
+	uintptr(0),
+	chdirProc: uintptr(0),
 } /* tclTest.c:476:29 */
 
 //----------------------------------------------------------------------
@@ -20539,7 +20601,14 @@ func TestHashSystemHashCmd(tls *libc.TLS, clientData ClientData, interp uintptr,
 	return 0
 }
 
-var hkType = Tcl_HashKeyType{version: 1, flags: 0x2, hashKeyProc: uintptr(0), compareKeysProc: uintptr(0), allocEntryProc: uintptr(0), freeEntryProc: uintptr(0)} /* tclTest.c:6882:34 */
+var hkType = Tcl_HashKeyType{
+	version:         1,
+	flags:           0x2,
+	hashKeyProc:     uintptr(0),
+	compareKeysProc: uintptr(0),
+	allocEntryProc:  uintptr(0),
+	freeEntryProc:   uintptr(0),
+} /* tclTest.c:6882:34 */
 
 // Used for testing Tcl_GetInt which is no longer used directly by the
 // core very much.
@@ -21074,8 +21143,32 @@ func TestparseargsCmd(tls *libc.TLS, dummy ClientData, interp uintptr, objc int3
 	// var result [3]uintptr at bp+208, 24
 
 	*(*[4]Tcl_ArgvInfo)(unsafe.Pointer(bp /* argTable */)) = [4]Tcl_ArgvInfo{
-		{__type: 15, keyStr: ts + 8702 /* "-bool" */, srcPtr: uintptr(int64(1)), dstPtr: uintptr(unsafe.Pointer(&foo)), helpStr: ts + 8708 /* "booltest" */, clientData: uintptr(0)},
-		{__type: 18, keyStr: ts + 4824 /* "--" */, srcPtr: uintptr(0), dstPtr: uintptr(0), helpStr: ts + 8717 /* "Marks the end of..." */, clientData: uintptr(0)}, {__type: 22, keyStr: ts + 8746 /* "-help" */, srcPtr: uintptr(0), dstPtr: uintptr(0), helpStr: ts + 8752 /* "Print summary of..." */, clientData: uintptr(0)}, {__type: 23, keyStr: uintptr(0), srcPtr: uintptr(0), dstPtr: uintptr(0), helpStr: uintptr(0), clientData: uintptr(0)},
+		{
+			__type:     15,
+			keyStr:     ts + 8702, /* "-bool" */
+			srcPtr:     uintptr(int64(1)),
+			dstPtr:     uintptr(unsafe.Pointer(&foo)),
+			helpStr:    ts + 8708, /* "booltest" */
+			clientData: uintptr(0)},
+		{
+			__type:     18,
+			keyStr:     ts + 4824, /* "--" */
+			srcPtr:     uintptr(0),
+			dstPtr:     uintptr(0),
+			helpStr:    ts + 8717, /* "Marks the end of..." */
+			clientData: uintptr(0)}, {
+			__type:     22,
+			keyStr:     ts + 8746, /* "-help" */
+			srcPtr:     uintptr(0),
+			dstPtr:     uintptr(0),
+			helpStr:    ts + 8752, /* "Print summary of..." */
+			clientData: uintptr(0)}, {
+			__type:     23,
+			keyStr:     uintptr(0),
+			srcPtr:     uintptr(0),
+			dstPtr:     uintptr(0),
+			helpStr:    uintptr(0),
+			clientData: uintptr(0)},
 	}
 
 	foo = 0
@@ -22302,10 +22395,7 @@ func TestindexobjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc 
 		}
 
 		(*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 2448 /* &.tcl_GetIndexFromObjStruct */))))(tls, uintptr(0), *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*8)), uintptr(unsafe.Pointer(&tablePtr)), int32(unsafe.Sizeof(uintptr(0))), ts+9307 /* "token" */, 0, bp+4 /* &index */)
-		indexRep = (*struct {
-			ptr1 uintptr
-			ptr2 uintptr
-		})(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(1)*8)) + 32 /* &.internalRep */)).ptr1
+		indexRep = *(*uintptr)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(1)*8)) + 32 /* &.internalRep */ /* &.twoPtrValue */ /* &.ptr1 */))
 		(*IndexRep)(unsafe.Pointer(indexRep)).index = *(*int32)(unsafe.Pointer(bp /* index2 */))
 		result = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 2448 /* &.tcl_GetIndexFromObjStruct */))))(tls, uintptr(0), *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*8)), uintptr(unsafe.Pointer(&tablePtr)), int32(unsafe.Sizeof(uintptr(0))), ts+9307 /* "token" */, 0, bp+4 /* &index */)
 		if result == 0 {
@@ -22339,10 +22429,7 @@ func TestindexobjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc 
 
 	if ((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(3)*8)))).typePtr != (uintptr(0))) &&
 		!(libc.Xstrcmp(tls, ts+9313 /* "index" */, (*Tcl_ObjType)(unsafe.Pointer((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(3)*8)))).typePtr)).name) != 0) {
-		indexRep = (*struct {
-			ptr1 uintptr
-			ptr2 uintptr
-		})(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(3)*8)) + 32 /* &.internalRep */)).ptr1
+		indexRep = *(*uintptr)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(3)*8)) + 32 /* &.internalRep */ /* &.twoPtrValue */ /* &.ptr1 */))
 		if (*IndexRep)(unsafe.Pointer(indexRep)).tablePtr == argv {
 			if (*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(objv + uintptr(3)*8))))).typePtr != (uintptr(0)) {
 				if (*Tcl_ObjType)(unsafe.Pointer((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(objv + uintptr(3)*8))))).typePtr)).freeIntRepProc != (uintptr(0)) {
@@ -23462,10 +23549,7 @@ __36:
 	}
 	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_ConvertToType */))))(tls, uintptr(0), *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 96 /* varIndex */)))*8)),
 		(*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 336 /* &.tcl_GetObjType */))))(tls, ts+4108 /* "string" */))
-	strPtr = (*struct {
-		ptr1 uintptr
-		ptr2 uintptr
-	})(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 96 /* varIndex */)))*8)) + 32 /* &.internalRep */)).ptr1
+	strPtr = *(*uintptr)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 96 /* varIndex */)))*8)) + 32 /* &.internalRep */ /* &.twoPtrValue */ /* &.ptr1 */))
 	*(*int32)(unsafe.Pointer(bp + 104 /* length */)) = (*String)(unsafe.Pointer(strPtr)).allocated
 	goto __38
 __37:
@@ -23543,10 +23627,7 @@ __46:
 	}
 	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_ConvertToType */))))(tls, uintptr(0), *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 96 /* varIndex */)))*8)),
 		(*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 336 /* &.tcl_GetObjType */))))(tls, ts+4108 /* "string" */))
-	strPtr = (*struct {
-		ptr1 uintptr
-		ptr2 uintptr
-	})(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 96 /* varIndex */)))*8)) + 32 /* &.internalRep */)).ptr1
+	strPtr = *(*uintptr)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 96 /* varIndex */)))*8)) + 32 /* &.internalRep */ /* &.twoPtrValue */ /* &.ptr1 */))
 	*(*int32)(unsafe.Pointer(bp + 104 /* length */)) = (*String)(unsafe.Pointer(strPtr)).maxChars
 	goto __48
 __47:
@@ -23812,15 +23893,27 @@ type CmdTable = CmdTable1 /* tclTestProcBodyObj.c:42:3 */
 // declarations of the enable command procedure.
 
 var commands = [3]CmdTable{
-	{cmdName: 0, proc: 0, exportIt: 1},
-	{cmdName: 0, proc: 0, exportIt: 1},
-	{cmdName: uintptr(0), proc: uintptr(0), exportIt: 0},
+	{
+		cmdName:  0,
+		proc:     0,
+		exportIt: 1},
+	{
+		cmdName:  0,
+		proc:     0,
+		exportIt: 1},
+	{},
 } /* tclTestProcBodyObj.c:61:23 */
 
 var safeCommands = [3]CmdTable{
-	{cmdName: 0, proc: 0, exportIt: 1},
-	{cmdName: 0, proc: 0, exportIt: 1},
-	{cmdName: uintptr(0), proc: uintptr(0), exportIt: 0},
+	{
+		cmdName:  0,
+		proc:     0,
+		exportIt: 1},
+	{
+		cmdName:  0,
+		proc:     0,
+		exportIt: 1},
+	{},
 } /* tclTestProcBodyObj.c:67:23 */
 
 //----------------------------------------------------------------------
