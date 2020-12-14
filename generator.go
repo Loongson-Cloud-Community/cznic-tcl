@@ -18,7 +18,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
-	"runtime/debug"
 	"strconv"
 	"strings"
 )
@@ -37,8 +36,8 @@ var (
 )
 
 func fail(s string, args ...interface{}) {
-	fmt.Fprintf(os.Stderr, origin(2)+":"+s, args...)
-	fmt.Fprintf(os.Stderr, "%s\n", debug.Stack())
+	s = fmt.Sprintf(s, args...)
+	fmt.Fprintf(os.Stderr, "\n%v: FAIL\n%s\n", origin(2), s)
 	os.Exit(1)
 }
 
@@ -72,12 +71,15 @@ func main() {
 	download()
 	switch goos {
 	case "linux":
-		makeUnix(goos, goarch, more)
-		if err := newCmd(nil, nil, "sh", "-c", fmt.Sprintf("cp -r %s %s", filepath.FromSlash(tclDir+"/library/*"), "assets/")).Run(); err != nil {
-			fail("error copying tcl library: %v", err)
-		}
+		generate(goos, goarch, "unix", more)
+	case "windows":
+		generate(goos, goarch, "win", more)
 	default:
 		fail("unsupported GOOS: %s\n", goos)
+	}
+
+	if err := newCmd(nil, nil, "sh", "-c", fmt.Sprintf("cp -r %s %s", filepath.FromSlash(tclDir+"/library/*"), "assets/")).Run(); err != nil {
+		fail("error copying tcl library: %v", err)
 	}
 
 	dst := filepath.FromSlash("testdata/tcl")
@@ -116,7 +118,7 @@ func copyFile(src, dest string) {
 	}
 }
 
-func makeUnix(goos, goarch string, more []string) {
+func generate(goos, goarch, dir string, more []string) {
 	testWD, err := os.Getwd()
 	if err != nil {
 		fail("%s\n", err)
@@ -124,21 +126,27 @@ func makeUnix(goos, goarch string, more []string) {
 
 	defer os.Chdir(testWD)
 
-	if err := os.Chdir(filepath.Join(tclDir, "unix")); err != nil {
+	if err := os.Chdir(filepath.Join(tclDir, dir)); err != nil {
 		fail("%s\n", err)
 	}
 
+	fmt.Printf("pwd: %s\n", filepath.Join(tclDir, dir))
 	cmd := newCmd(nil, nil, "make", "distclean")
 	if cc != "" {
 		cmd.Env = append(os.Environ(), fmt.Sprintf("CC=%s", cc))
 	}
 	cmd.Run()
-	cmd = newCmd(nil, nil, "./configure",
+	args := []string{
 		"--disable-dll-unload",
 		"--disable-load",
+		"--disable-shared",
 		"--disable-threads",
 		// "--enable-symbols=mem",
-	)
+	}
+	if goos == "windows" && goarch == "amd64" {
+		args = append(args, "--enable-64bit")
+	}
+	cmd = newCmd(nil, nil, "./configure", args...)
 	if cc != "" {
 		cmd.Env = append(os.Environ(), fmt.Sprintf("CC=%s", cc))
 	}
@@ -146,11 +154,11 @@ func makeUnix(goos, goarch string, more []string) {
 		fail("%s\n", err)
 	}
 
-	makeUnixLibAndShell(testWD, goos, goarch, more)
-	makeUnixTclTest(testWD, goos, goarch, more)
+	makeLibAndShell(testWD, goos, goarch, more)
+	makeTclTest(testWD, goos, goarch, more)
 }
 
-func makeUnixLibAndShell(testWD string, goos, goarch string, more []string) {
+func makeLibAndShell(testWD string, goos, goarch string, more []string) {
 	var stdout strings.Builder
 	cmd := newCmd(&stdout, nil, "make")
 	if cc != "" {
@@ -179,47 +187,91 @@ func makeUnixLibAndShell(testWD string, goos, goarch string, more []string) {
 					}
 				}
 			}
-		case "gcc", cc:
+		case "x86_64-w64-mingw32-gcc":
 			for _, v := range lines {
 				if strings.Contains(v, "tclAppInit.o") {
-					break
+					continue
+				}
+
+				for _, w := range strings.Split(v, " ") {
+					if strings.HasSuffix(w, ".o") {
+						objectFiles = append(objectFiles, w[:len(w)-len(".o")])
+					}
+				}
+				parseCCLine(nil, cFiles, optm, &opts, v)
+			}
+		case
+			"gcc",
+			cc:
+
+			for _, v := range lines {
+				if strings.Contains(v, "tclAppInit.o") {
+					continue
 				}
 
 				parseCCLine(nil, cFiles, optm, &opts, v)
 			}
-		case "make[1]:", "make[2]:", "rm":
+		case
+			"cp",
+			"make[1]:",
+			"make[2]:",
+			"rm",
+			"x86_64-w64-mingw32-ar",
+			"x86_64-w64-mingw32-ranlib",
+			"x86_64-w64-mingw32-windres":
+
 			// nop
 		default:
 			fail("unknown command: `%s` in %v\n", k, lines)
 		}
 	}
 	args := []string{
-		"-ccgo-export-defines", "",
-		"-ccgo-export-enums", "",
-		"-ccgo-export-externs", "X",
-		"-ccgo-export-fields", "F",
-		"-ccgo-export-structs", "",
-		"-ccgo-export-typedefs", "",
-		"-ccgo-hide", "TclpCreateProcess",
-		"-ccgo-long-double-is-double",
-		"-ccgo-pkgname", "tcl",
+		//"-E", //TODO-
+		"-D__printf__=printf",
+		"-all-errors",
+		"-export-defines", "",
+		"-export-enums", "",
+		"-export-externs", "X",
+		"-export-fields", "F",
+		"-export-structs", "",
+		"-export-typedefs", "",
+		"-pkgname", "tcl",
+		"-trace-translation-units",
 		"-o", filepath.Join(testWD, filepath.FromSlash(fmt.Sprintf("lib/tcl_%s_%s.go", goos, goarch))),
-		"../compat/zlib/adler32.c",
-		"../compat/zlib/compress.c",
-		"../compat/zlib/crc32.c",
-		"../compat/zlib/deflate.c",
-		"../compat/zlib/infback.c",
-		"../compat/zlib/inffast.c",
-		"../compat/zlib/inflate.c",
-		"../compat/zlib/inftrees.c",
-		"../compat/zlib/trees.c",
-		"../compat/zlib/uncompr.c",
-		"../compat/zlib/zutil.c",
 	}
 	args = append(args, more...)
 	args = append(args, opts...)
+	args = append(args, "-UHAVE_CAST_TO_UNION")
+	switch goos {
+	case "windows":
+		args = append(args, "-hide", "TclWinCPUID")
+	default:
+		args = append(args,
+			"-hide", "TclpCreateProcess",
+			"../compat/zlib/adler32.c",
+			"../compat/zlib/compress.c",
+			"../compat/zlib/crc32.c",
+			"../compat/zlib/deflate.c",
+			"../compat/zlib/infback.c",
+			"../compat/zlib/inffast.c",
+			"../compat/zlib/inflate.c",
+			"../compat/zlib/inftrees.c",
+			"../compat/zlib/trees.c",
+			"../compat/zlib/uncompr.c",
+			"../compat/zlib/zutil.c",
+		)
+	}
+	cm := map[string]struct{}{}
 	for _, v := range objectFiles {
-		args = append(args, cFiles[v])
+		cFile := cFiles[v]
+		if cFile == "" {
+			continue
+		}
+
+		if _, ok := cm[cFile]; !ok {
+			args = append(args, cFile)
+			cm[cFile] = struct{}{}
+		}
 	}
 	fmt.Println("====\nccgo")
 	for _, v := range args {
@@ -232,13 +284,16 @@ func makeUnixLibAndShell(testWD string, goos, goarch string, more []string) {
 	}
 
 	args = []string{
-		"-ccgo-long-double-is-double",
-		"-ccgo-pkgname", "tclsh",
+		"-D__printf__=printf",
+		"-all-errors",
+		"-pkgname", "tclsh",
+		"-trace-translation-units",
+		"-lmodernc.org/tcl/lib",
 		"-o", filepath.Join(testWD, filepath.FromSlash(fmt.Sprintf("internal/tclsh/tclsh_%s_%s.go", goos, goarch))),
 		"tclAppInit.c",
-		"-lmodernc.org/tcl/lib",
 	}
 	args = append(args, opts...)
+	args = append(args, "-UHAVE_CAST_TO_UNION")
 	fmt.Println("====\nccgo")
 	for _, v := range args {
 		fmt.Println(v)
@@ -250,7 +305,7 @@ func makeUnixLibAndShell(testWD string, goos, goarch string, more []string) {
 	}
 }
 
-func makeUnixTclTest(testWD string, goos, goarch string, more []string) {
+func makeTclTest(testWD string, goos, goarch string, more []string) {
 	var stdout strings.Builder
 	cmd := newCmd(&stdout, nil, "make", "tcltest")
 	if cc != "" {
@@ -267,11 +322,30 @@ func makeUnixTclTest(testWD string, goos, goarch string, more []string) {
 	cFiles := map[string]string{}
 	for k, lines := range groups {
 		switch k {
-		case "gcc", cc:
+		case
+			"gcc",
+			"x86_64-w64-mingw32-gcc",
+			cc:
+
 			for _, v := range lines {
+				if strings.Contains(v, "cat32.o") {
+					continue
+				}
+
 				parseCCLine(&cPaths, cFiles, optm, &opts, v)
 			}
-		case "mv", "rm", "make", "make[1]:", "make[2]:":
+		case
+			"Create",
+			"cp",
+			"make",
+			"make[1]:",
+			"make[2]:",
+			"mv",
+			"rm",
+			"x86_64-w64-mingw32-ar",
+			"x86_64-w64-mingw32-ranlib",
+			"x86_64-w64-mingw32-windres":
+
 			// nop
 		default:
 			fail("unknown command: `%s` %v\n", k, lines)
@@ -279,7 +353,9 @@ func makeUnixTclTest(testWD string, goos, goarch string, more []string) {
 	}
 	args := []string{
 		"-o", filepath.Join(testWD, filepath.FromSlash(fmt.Sprintf("internal/tcltest/tcltest_%s_%s.go", goos, goarch))),
-		"-ccgo-long-double-is-double",
+		"-D__printf__=printf",
+		"-all-errors",
+		"-trace-translation-units",
 		"../generic/tclOOStubLib.c",
 		"../generic/tclStubLib.c",
 		"../generic/tclTomMathStubLib.c",
@@ -287,6 +363,7 @@ func makeUnixTclTest(testWD string, goos, goarch string, more []string) {
 	}
 	args = append(args, more...)
 	args = append(args, opts...)
+	args = append(args, "-UHAVE_CAST_TO_UNION")
 	args = append(args, cPaths...)
 	fmt.Println("====\nccgo")
 	for _, v := range args {
@@ -312,15 +389,23 @@ func parseCCLine(cPaths *[]string, cFiles map[string]string, m map[string]struct
 			continue
 		}
 
+		tok = unquote(tok)
 		switch {
 		case tok == "-o":
 			skip = true
 		case
-			tok == "-c",
-			tok == "-g",
-			tok == "-pipe",
+			strings.HasPrefix(tok, "-O"),
 			strings.HasPrefix(tok, "-W"),
-			strings.HasPrefix(tok, "-O"):
+			strings.HasPrefix(tok, "-l"),
+			strings.HasSuffix(tok, ".a"),
+			strings.HasSuffix(tok, ".o"),
+			tok == "-c",
+			tok == "-fomit-frame-pointer",
+			tok == "-g",
+			tok == "-mconsole",
+			tok == "-pipe",
+			tok == "-shared",
+			tok == "-static-libgcc":
 
 			// nop
 		case strings.HasPrefix(tok, "-D"):
@@ -362,13 +447,7 @@ func parseCCLine(cPaths *[]string, cFiles map[string]string, m map[string]struct
 			m[tok] = struct{}{}
 			*opts = append(*opts, tok)
 		case strings.HasPrefix(tok, "-I"):
-			s := tok[2:]
-			if strings.HasPrefix(s, "\"") {
-				var err error
-				if s, err = strconv.Unquote(s); err != nil {
-					fail("%q", tok)
-				}
-			}
+			s := unquote(tok[2:])
 			tok = "-I" + s
 			if _, ok := m[tok]; ok {
 				break
@@ -376,7 +455,7 @@ func parseCCLine(cPaths *[]string, cFiles map[string]string, m map[string]struct
 
 			m[tok] = struct{}{}
 			*opts = append(*opts, tok)
-		case strings.HasPrefix(tok, "/") && strings.HasSuffix(tok, ".c"):
+		case strings.HasSuffix(tok, ".c"):
 			if cPaths != nil {
 				*cPaths = append(*cPaths, tok)
 			}
@@ -386,6 +465,17 @@ func parseCCLine(cPaths *[]string, cFiles map[string]string, m map[string]struct
 			fail("TODO `%s` in `%s`\n", tok, line)
 		}
 	}
+}
+
+func unquote(s string) string {
+	if strings.HasPrefix(s, "\"") && strings.HasSuffix(s, "\"") {
+		var err error
+		if s, err = strconv.Unquote(s); err != nil {
+			fail("%q", s)
+		}
+	}
+
+	return s
 }
 
 func splitCCLine(s string) (r []string) {
@@ -443,7 +533,17 @@ func makeGroups(s string) map[string][]string {
 		}
 
 		var key string
-		if i := strings.IndexByte(v, ' '); i > 0 {
+		i := strings.IndexByte(v, ' ')
+		j := strings.IndexByte(v, '\t')
+		switch {
+		case i < 0:
+			i = j
+		case j < 0:
+			// nop
+		case j < i:
+			i = j
+		}
+		if i > 0 {
 			key = v[:i]
 			v = strings.TrimSpace(v[i+1:])
 		}
