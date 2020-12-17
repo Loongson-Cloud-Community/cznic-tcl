@@ -55,6 +55,10 @@ windows_amd64:
 	CCGO_CPP=x86_64-w64-mingw32-cpp TARGET_GOOS=windows TARGET_GOARCH=amd64 go generate 2>&1 | tee /tmp/log-generate-tcl-windows-amd64
 	GOOS=windows GOARCH=amd64 go build -v ./...
 
+windows_386:
+	CCGO_CPP=i686-w64-mingw32-cpp TARGET_GOOS=windows TARGET_GOARCH=386 go generate 2>&1 | tee /tmp/log-generate-tcl-windows-386
+	GOOS=windows GOARCH=386 go build -v ./...
+
 test:
 	go version | tee $(testlog)
 	uname -a | tee -a $(testlog)

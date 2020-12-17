@@ -187,7 +187,10 @@ func makeLibAndShell(testWD string, goos, goarch string, more []string) {
 					}
 				}
 			}
-		case "x86_64-w64-mingw32-gcc":
+		case
+			"i686-w64-mingw32-gcc",
+			"x86_64-w64-mingw32-gcc":
+
 			for _, v := range lines {
 				if strings.Contains(v, "tclAppInit.o") {
 					continue
@@ -213,6 +216,9 @@ func makeLibAndShell(testWD string, goos, goarch string, more []string) {
 			}
 		case
 			"cp",
+			"i686-w64-mingw32-ar",
+			"i686-w64-mingw32-ranlib",
+			"i686-w64-mingw32-windres",
 			"make[1]:",
 			"make[2]:",
 			"rm",
@@ -244,7 +250,7 @@ func makeLibAndShell(testWD string, goos, goarch string, more []string) {
 	args = append(args, "-UHAVE_CAST_TO_UNION")
 	switch goos {
 	case "windows":
-		args = append(args, "-hide", "TclWinCPUID")
+		//args = append(args, "-hide", "TclWinCPUID")
 	default:
 		args = append(args,
 			"-hide", "TclpCreateProcess",
@@ -283,6 +289,7 @@ func makeLibAndShell(testWD string, goos, goarch string, more []string) {
 		fail("%s\n", err)
 	}
 
+	fmt.Println("====")
 	args = []string{
 		"-D__printf__=printf",
 		"-all-errors",
