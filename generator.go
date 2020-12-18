@@ -245,6 +245,9 @@ func makeLibAndShell(testWD string, goos, goarch string, more []string) {
 		"-trace-translation-units",
 		"-o", filepath.Join(testWD, filepath.FromSlash(fmt.Sprintf("lib/tcl_%s_%s.go", goos, goarch))),
 	}
+	if goos == "windows" && goarch == "386" {
+		args = append(args, "-D_USE_32BIT_TIME_T")
+	}
 	args = append(args, more...)
 	args = append(args, opts...)
 	args = append(args, "-UHAVE_CAST_TO_UNION")
@@ -331,6 +334,7 @@ func makeTclTest(testWD string, goos, goarch string, more []string) {
 		switch k {
 		case
 			"gcc",
+			"i686-w64-mingw32-gcc",
 			"x86_64-w64-mingw32-gcc",
 			cc:
 
