@@ -235,15 +235,17 @@ func makeLibAndShell(testWD string, goos, goarch string, more []string) {
 		//"-E", //TODO-
 		"-D__printf__=printf",
 		"-all-errors",
+		"-err-trace",
 		"-export-defines", "",
 		"-export-enums", "",
 		"-export-externs", "X",
 		"-export-fields", "F",
 		"-export-structs", "",
 		"-export-typedefs", "",
-		"-pkgname", "tcl",
-		"-trace-translation-units",
 		"-o", filepath.Join(testWD, filepath.FromSlash(fmt.Sprintf("lib/tcl_%s_%s.go", goos, goarch))),
+		"-pkgname", "tcl",
+		"-replace-fd-zero", "__ccgo_fd_zero",
+		"-trace-translation-units",
 	}
 	if goos == "windows" && goarch == "386" {
 		args = append(args, "-D_USE_32BIT_TIME_T")
@@ -296,10 +298,12 @@ func makeLibAndShell(testWD string, goos, goarch string, more []string) {
 	args = []string{
 		"-D__printf__=printf",
 		"-all-errors",
+		"-err-trace",
 		"-pkgname", "tclsh",
 		"-trace-translation-units",
 		"-lmodernc.org/tcl/lib",
 		"-o", filepath.Join(testWD, filepath.FromSlash(fmt.Sprintf("internal/tclsh/tclsh_%s_%s.go", goos, goarch))),
+		"-replace-fd-zero", "__ccgo_fd_zero",
 		"tclAppInit.c",
 	}
 	args = append(args, opts...)
@@ -366,6 +370,8 @@ func makeTclTest(testWD string, goos, goarch string, more []string) {
 		"-o", filepath.Join(testWD, filepath.FromSlash(fmt.Sprintf("internal/tcltest/tcltest_%s_%s.go", goos, goarch))),
 		"-D__printf__=printf",
 		"-all-errors",
+		"-err-trace",
+		"-replace-fd-zero", "__ccgo_fd_zero",
 		"-trace-translation-units",
 		"../generic/tclOOStubLib.c",
 		"../generic/tclStubLib.c",
