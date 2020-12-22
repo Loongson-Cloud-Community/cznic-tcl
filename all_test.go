@@ -6,6 +6,7 @@ package tcl // import "modernc.org/tcl"
 
 import (
 	"bufio"
+	"bytes"
 	"flag"
 	"fmt"
 	"io"
@@ -97,136 +98,6 @@ func TestMain(m *testing.M) {
 func TestTclTest(t *testing.T) {
 	skip := []string{}
 	notFile := []string{}
-	if runtime.GOOS == "windows" {
-		//	Tests ended at Sat Oct 03 19:32:00 +0200 2020
-		//	all.tcl:	Total	33202	Passed	29178	Skipped	4024	Failed	0
-		//	Sourced 146 Test Files.
-		//	Number of tests skipped for each constraint:
-		//		9	!ieeeFloatingPoint
-		//		1	asyncPipeChan
-		//		76	bigEndian
-		//		5	bug-3057639
-		//		23	cat32
-		//		8	cdrom
-		//		50	dde
-		//		1	dontCopyLinks
-		//		19	eformat
-		//		65	emptyTest
-		//		2	exdev
-		//		5	fullutf
-		//		2	hasIsoLocale
-		//		1	interactive
-		//		1	knownBadTest
-		//		38	knownBug
-		//		100	localeRegexp
-		//		15	longIs64bit
-		//		14	macosxFileAttr
-		//		82	memory
-		//		15	nonPortable
-		//		5	notNetworkFilesystem
-		//		1	notValgrind
-		//		19	pkga.dllRequired
-		//		20	pkgua.dllRequired
-		//		126	reg
-		//		1996	serverNeeded
-		//		2	sharedCdrive
-		//		1	symbolicLinkFile
-		//		1	tempNotWin
-		//		1	testexprparser && !ieeeFloatingPoint
-		//		22	testfilehandler
-		//		2	testfilewait
-		//		7	testfindexecutable
-		//		1	testfork
-		//		1	testgetdefenc
-		//		21	testwordend
-		//		185	thread
-		//		3	threaded
-		//		3	tip389
-		//		157	unix
-		//		14	unixExecs
-		//		6	win2000orXP
-		//		3	winOlderThan2000
-		//		6	xdev
-		//	--- PASS: TestTclTest (97.65s)
-		//	PASS
-		//	ok  	modernc.org/tcl	98.128s
-		skip = []string{
-			//TODO other
-			"chan-16.*",
-			"clock-47.*",
-			"cmdAH-20.2",
-			"cmdAH-20.6",
-			"env-4.*",
-			"env-5.*",
-			"env-7.*",
-			"event-7.*",
-			"exec-20.*",
-			"filesystem-1.*",
-			"filesystem-7.*",
-			"info-22.*",
-			"iocmd-31.*",
-			"fCmd-10.*",
-			"iocmd-8.*",
-			"platform-3.1",
-			"safe-13.*",
-			"safe-16.*",
-			"safe-7.*",
-			"safe-8.*",
-			"tcltest-5.*",
-			"tcltest-10.*",
-			"winFCmd-16.*",
-			"winFCmd-6.*",
-			"winFCmd-9.*",
-			"winNotify-3.*",
-			"winTime-2.*",
-			"winpipe-8.*",
-			"zlib-10.*",
-			"zlib-8.*",
-			"zlib-9.*",
-
-			//TODO hangs
-			"Tcl_Main-1.9",
-			"Tcl_Main-4.*",
-			"Tcl_Main-5.*",
-			"chan-io-12.*",
-			"chan-io-13.*",
-			"chan-io-14.*",
-			"chan-io-39.*",
-			"chan-io-45.*",
-			"clock-35.*",
-			"cmdAH-24.*",
-			"interp-34.*",
-			"io-12.*",
-			"io-13.*",
-			"io-14.*",
-			"io-27.*",
-			"io-29.*",
-			"io-3*.*",
-			"io-4*.*",
-			"io-5*.*",
-			"timer-3.*",
-			"timer-6.*",
-
-			//TODO crashes
-			"chan-io-28.*",
-			"chan-io-29.*",
-			"chan-io-51.*",
-			"chan-io-53.*",
-			"chan-io-54.*",
-			"chan-io-57.*",
-			"event-11.*",
-		}
-		notFile = []string{
-			//TODO hangs
-			"http.test",
-
-			//TODO Test file error: child killed: unknown signal
-			"http11.test",
-			"httpold.test",
-			"socket.test",
-		}
-	}
-
 	wd, err := os.Getwd()
 	if err != nil {
 		t.Fatal(err)
@@ -311,10 +182,15 @@ func TestTclTest(t *testing.T) {
 	os.Setenv("TCL_LIBRARY", filepath.Join(pth, "assets"))
 	os.Setenv("PATH", fmt.Sprintf("%s%c%s", dir, os.PathListSeparator, os.Getenv("PATH")))
 	cmd = exec.Command(tcltest, args...)
-	cmd.Stdout = io.MultiWriter(g, os.Stdout)
-	cmd.Stderr = os.Stderr
+	var out bytes.Buffer
+	cmd.Stdout = io.MultiWriter(&out, os.Stdout)
+	cmd.Stderr = io.MultiWriter(&out, os.Stdout)
 	if err := cmd.Run(); err != nil {
 		t.Error(err)
+	}
+
+	if b := out.Bytes(); bytes.Contains(b, []byte("panic:")) || bytes.Contains(b, []byte("FAIL")) {
+		t.Error("panic detected")
 	}
 }
 

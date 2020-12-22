@@ -150,6 +150,7 @@ func generate(goos, goarch, dir string, more []string) {
 	if cc != "" {
 		cmd.Env = append(os.Environ(), fmt.Sprintf("CC=%s", cc))
 	}
+	//TODO cmd.Env = append(os.Environ(), "CFLAGS=-D_LARGE_FILE_SOURCE=1,-D_FILE_OFFSET_BITS=64")
 	if err = cmd.Run(); err != nil {
 		fail("%s\n", err)
 	}
@@ -245,6 +246,8 @@ func makeLibAndShell(testWD string, goos, goarch string, more []string) {
 		"-o", filepath.Join(testWD, filepath.FromSlash(fmt.Sprintf("lib/tcl_%s_%s.go", goos, goarch))),
 		"-pkgname", "tcl",
 		"-replace-fd-zero", "__ccgo_fd_zero",
+		"-replace-tcl-default-double-rounding", "__ccgo_tcl_default_double_rounding",
+		"-replace-tcl-ieee-double-rounding", "__ccgo_tcl_ieee_double_rounding",
 		"-trace-translation-units",
 	}
 	if goos == "windows" && goarch == "386" {
@@ -255,7 +258,12 @@ func makeLibAndShell(testWD string, goos, goarch string, more []string) {
 	args = append(args, "-UHAVE_CAST_TO_UNION")
 	switch goos {
 	case "windows":
-		//args = append(args, "-hide", "TclWinCPUID")
+		switch goarch {
+		case "amd64":
+			args = append(args, "-hide", "TclWinCPUID")
+		case "386":
+			args = append(args, "-hide", "TclWinCPUID,DoRenameFile,DoCopyFile,Tcl_MakeFileChannel")
+		}
 	default:
 		args = append(args,
 			"-hide", "TclpCreateProcess",
@@ -304,6 +312,8 @@ func makeLibAndShell(testWD string, goos, goarch string, more []string) {
 		"-lmodernc.org/tcl/lib",
 		"-o", filepath.Join(testWD, filepath.FromSlash(fmt.Sprintf("internal/tclsh/tclsh_%s_%s.go", goos, goarch))),
 		"-replace-fd-zero", "__ccgo_fd_zero",
+		"-replace-tcl-default-double-rounding", "_ccgo_tcl_default_double_rounding",
+		"-replace-tcl-ieee-double-rounding", "_ccgo_tcl_ieee_double_rounding",
 		"tclAppInit.c",
 	}
 	args = append(args, opts...)
@@ -372,6 +382,8 @@ func makeTclTest(testWD string, goos, goarch string, more []string) {
 		"-all-errors",
 		"-err-trace",
 		"-replace-fd-zero", "__ccgo_fd_zero",
+		"-replace-tcl-default-double-rounding", "_ccgo_tcl_default_double_rounding",
+		"-replace-tcl-ieee-double-rounding", "_ccgo_tcl_ieee_double_rounding",
 		"-trace-translation-units",
 		"../generic/tclOOStubLib.c",
 		"../generic/tclStubLib.c",
