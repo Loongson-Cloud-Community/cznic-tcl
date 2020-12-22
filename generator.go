@@ -150,7 +150,6 @@ func generate(goos, goarch, dir string, more []string) {
 	if cc != "" {
 		cmd.Env = append(os.Environ(), fmt.Sprintf("CC=%s", cc))
 	}
-	//TODO cmd.Env = append(os.Environ(), "CFLAGS=-D_LARGE_FILE_SOURCE=1,-D_FILE_OFFSET_BITS=64")
 	if err = cmd.Run(); err != nil {
 		fail("%s\n", err)
 	}
