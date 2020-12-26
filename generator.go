@@ -70,7 +70,7 @@ func main() {
 	}
 	download()
 	switch goos {
-	case "linux":
+	case "darwin", "linux":
 		generate(goos, goarch, "unix", more)
 	case "windows":
 		generate(goos, goarch, "win", more)
@@ -145,6 +145,9 @@ func generate(goos, goarch, dir string, more []string) {
 	}
 	if goos == "windows" && goarch == "amd64" {
 		args = append(args, "--enable-64bit")
+	}
+	if goos == "darwin" {
+		args = append(args, "--enable-corefoundation=no")
 	}
 	cmd = newCmd(nil, nil, "./configure", args...)
 	if cc != "" {
@@ -359,6 +362,7 @@ func makeTclTest(testWD string, goos, goarch string, more []string) {
 				parseCCLine(&cPaths, cFiles, optm, &opts, v)
 			}
 		case
+			"/Library/Developer/CommandLineTools/usr/bin/make",
 			"Create",
 			"cp",
 			"make",
@@ -431,6 +435,7 @@ func parseCCLine(cPaths *[]string, cFiles map[string]string, m map[string]struct
 			tok == "-fomit-frame-pointer",
 			tok == "-g",
 			tok == "-mconsole",
+			tok == "-mdynamic-no-pic",
 			tok == "-pipe",
 			tok == "-shared",
 			tok == "-static-libgcc":
