@@ -204,7 +204,7 @@ func makeLibAndShell(testWD string, goos, goarch string, more []string) {
 						objectFiles = append(objectFiles, w[:len(w)-len(".o")])
 					}
 				}
-				parseCCLine(nil, cFiles, optm, &opts, v)
+				parseCCLine(nil, cFiles, optm, &opts, v, goos)
 			}
 		case
 			"gcc",
@@ -215,7 +215,7 @@ func makeLibAndShell(testWD string, goos, goarch string, more []string) {
 					continue
 				}
 
-				parseCCLine(nil, cFiles, optm, &opts, v)
+				parseCCLine(nil, cFiles, optm, &opts, v, goos)
 			}
 		case
 			"cp",
@@ -359,7 +359,7 @@ func makeTclTest(testWD string, goos, goarch string, more []string) {
 					continue
 				}
 
-				parseCCLine(&cPaths, cFiles, optm, &opts, v)
+				parseCCLine(&cPaths, cFiles, optm, &opts, v, goos)
 			}
 		case
 			"/Library/Developer/CommandLineTools/usr/bin/make",
@@ -409,7 +409,7 @@ func makeTclTest(testWD string, goos, goarch string, more []string) {
 	os.Remove(filepath.Join(testWD, filepath.FromSlash(fmt.Sprintf("internal/tcltest/capi_%s_%s.go", goos, goarch))))
 }
 
-func parseCCLine(cPaths *[]string, cFiles map[string]string, m map[string]struct{}, opts *[]string, line string) {
+func parseCCLine(cPaths *[]string, cFiles map[string]string, m map[string]struct{}, opts *[]string, line, goos string) {
 	if strings.HasSuffix(line, "-o tcltest") {
 		return
 	}
@@ -443,6 +443,10 @@ func parseCCLine(cPaths *[]string, cFiles map[string]string, m map[string]struct
 			// nop
 		case strings.HasPrefix(tok, "-D"):
 			if tok == "-DHAVE_CPUID=1" {
+				break
+			}
+
+			if goos == "darwin" && strings.HasPrefix(tok, "-DHAVE_COPYFILE") {
 				break
 			}
 
