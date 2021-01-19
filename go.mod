@@ -4,5 +4,5 @@ go 1.15
 
 require (
 	modernc.org/httpfs v1.0.2
-	modernc.org/libc v0.0.0-20210117101922-e473cf1fa08d
+	modernc.org/libc v1.7.2
 )
