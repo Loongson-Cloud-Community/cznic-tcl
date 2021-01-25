@@ -5,6 +5,7 @@ package main
 import (
 	"math"
 	"reflect"
+	"sync/atomic"
 	"unsafe"
 
 	"modernc.org/libc"
@@ -13,6 +14,7 @@ import (
 
 var _ = math.Pi
 var _ reflect.Kind
+var _ atomic.Value
 var _ unsafe.Pointer
 
 func main() { libc.Start(main1) }
@@ -17546,6 +17548,7 @@ func TestsetCmd(tls *libc.TLS, data ClientData, interp uintptr, argc int32, argv
 	}
 	return int32(0)
 }
+
 func Testset2Cmd(tls *libc.TLS, data ClientData, interp uintptr, argc int32, argv uintptr) int32 { /* tclTest.c:5124:1: */
 	bp := tls.Alloc(32)
 	defer tls.Free(32)
