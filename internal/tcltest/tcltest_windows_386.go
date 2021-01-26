@@ -5,6 +5,7 @@ package main
 import (
 	"math"
 	"reflect"
+	"sync/atomic"
 	"unsafe"
 
 	"modernc.org/libc"
@@ -13,6 +14,7 @@ import (
 
 var _ = math.Pi
 var _ reflect.Kind
+var _ atomic.Value
 var _ unsafe.Pointer
 
 func main() { libc.Start(main1) }
@@ -14731,6 +14733,7 @@ type off64_t = int64  /* _mingw_off_t.h:15:39 */
 type off_t = off64_t /* _mingw_off_t.h:24:17 */ // A pointer to an array of FILE
 
 type fpos_t = int64 /* stdio.h:104:37 */
+
 func vsnwprintf(tls *libc.TLS, s uintptr, n size_t, format uintptr, arg va_list) int32 { /* stdio.h:1213:15: */
 	return libc.X_vsnwprintf(tls, s, n, format, arg)
 
@@ -25848,6 +25851,7 @@ func TestsetCmd(tls *libc.TLS, data ClientData, interp uintptr, argc int32, argv
 	}
 	return int32(0)
 }
+
 func Testset2Cmd(tls *libc.TLS, data ClientData, interp uintptr, argc int32, argv uintptr) int32 { /* tclTest.c:5124:1: */
 	bp := tls.Alloc(40)
 	defer tls.Free(40)

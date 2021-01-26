@@ -5,6 +5,7 @@ package main
 import (
 	"math"
 	"reflect"
+	"sync/atomic"
 	"unsafe"
 
 	"modernc.org/libc"
@@ -13,6 +14,7 @@ import (
 
 var _ = math.Pi
 var _ reflect.Kind
+var _ atomic.Value
 var _ unsafe.Pointer
 
 func main() { libc.Start(main1) }
@@ -2424,7 +2426,10 @@ type fpsimd_context = struct {
 	}
 	fpsr  uint32
 	fpcr  uint32
-	vregs [32][2]uint64
+	vregs [32]struct {
+		lo uint64
+		hi uint64
+	}
 } /* sigcontext.h:73:1 */
 
 // ESR_EL1 context
@@ -3518,9 +3523,12 @@ type user_regs_struct = struct {
 } /* user.h:22:1 */
 
 type user_fpsimd_struct = struct {
-	vregs [32][2]uint64
-	fpsr  uint32
-	fpcr  uint32
+	vregs [32]struct {
+		lo uint64
+		hi uint64
+	}
+	fpsr uint32
+	fpcr uint32
 } /* user.h:30:1 */
 
 // Type for a general-purpose register.
@@ -17720,6 +17728,7 @@ func TestsetCmd(tls *libc.TLS, data ClientData, interp uintptr, argc int32, argv
 	}
 	return int32(0)
 }
+
 func Testset2Cmd(tls *libc.TLS, data ClientData, interp uintptr, argc int32, argv uintptr) int32 { /* tclTest.c:5124:1: */
 	bp := tls.Alloc(32)
 	defer tls.Free(32)

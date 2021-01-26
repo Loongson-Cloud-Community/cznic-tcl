@@ -5,6 +5,7 @@ package tclsh
 import (
 	"math"
 	"reflect"
+	"sync/atomic"
 	"unsafe"
 
 	"modernc.org/libc"
@@ -13,6 +14,7 @@ import (
 
 var _ = math.Pi
 var _ reflect.Kind
+var _ atomic.Value
 var _ unsafe.Pointer
 
 // Positions to pass to Tcl_QueueEvent:

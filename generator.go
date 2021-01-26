@@ -428,11 +428,11 @@ func parseCCLine(cPaths *[]string, cFiles map[string]string, m map[string]struct
 		case
 			strings.HasPrefix(tok, "-O"),
 			strings.HasPrefix(tok, "-W"),
+			strings.HasPrefix(tok, "-f"),
 			strings.HasPrefix(tok, "-l"),
 			strings.HasSuffix(tok, ".a"),
 			strings.HasSuffix(tok, ".o"),
 			tok == "-c",
-			tok == "-fomit-frame-pointer",
 			tok == "-g",
 			tok == "-mconsole",
 			tok == "-mdynamic-no-pic",
