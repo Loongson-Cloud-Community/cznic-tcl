@@ -120,7 +120,7 @@ edit:
 
 editor:
 	gofmt -l -s -w *.go
-	go install -v ./...
+	GO111MODULE=off go install -v ./...
 
 internalError:
 	egrep -ho '"internal error.*"' *.go | sort | cat -n
@@ -132,6 +132,9 @@ later:
 mem: clean
 	go test -run Mem -mem -memprofile mem.out -timeout 24h
 	go tool pprof -lines -web -alloc_space *.test mem.out
+
+memgrind:
+	GO111MODULE=off go test -v -timeout 24h -tags libc.memgrind -xtags=libc.memgrind
 
 nuke: clean
 	go clean -i

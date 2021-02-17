@@ -21,6 +21,7 @@ import (
 	"sync/atomic"
 	"testing"
 
+	"modernc.org/libc"
 	"modernc.org/tcl/lib"
 )
 
@@ -92,6 +93,7 @@ var (
 func TestMain(m *testing.M) {
 	fmt.Printf("test binary compiled for %s/%s\n", runtime.GOOS, runtime.GOARCH)
 	flag.Parse()
+	libc.MemAuditStart()
 	os.Exit(m.Run())
 }
 

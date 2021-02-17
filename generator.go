@@ -141,7 +141,7 @@ func generate(goos, goarch, dir string, more []string) {
 		"--disable-load",
 		"--disable-shared",
 		"--disable-threads",
-		// "--enable-symbols=mem",
+		// "--enable-symbols=mem", //TODO-
 	}
 	if goos == "windows" && goarch == "amd64" {
 		args = append(args, "--enable-64bit")
