@@ -4,11 +4,16 @@
 
 // +build ignore
 
+//TODO enable threads
+//TODO 8.6.11
+//TODO vfs
+
 package main
 
 import (
 	"archive/tar"
 	"bufio"
+	"bytes"
 	"compress/gzip"
 	"fmt"
 	"io"
@@ -31,7 +36,7 @@ var (
 		{tclDir, "https://downloads.sourceforge.net/project/tcl/Tcl/8.6.10/tcl8.6.10-src.tar.gz", 9700, false},
 	}
 
-	cc     = os.Getenv("GO_GENERATE_CC")
+	gcc    = os.Getenv("GO_GENERATE_CC")
 	tclDir = filepath.FromSlash("testdata/tcl8.6.10")
 )
 
@@ -41,20 +46,12 @@ func fail(s string, args ...interface{}) {
 	os.Exit(1)
 }
 
-func origin(skip int) string {
-	pc, fn, fl, _ := runtime.Caller(skip)
-	f := runtime.FuncForPC(pc)
-	var fns string
-	if f != nil {
-		fns = f.Name()
-		if x := strings.LastIndex(fns, "."); x > 0 {
-			fns = fns[x+1:]
-		}
-	}
-	return fmt.Sprintf("%s:%d:%s", fn, fl, fns)
-}
-
 func main() {
+	if runtime.GOOS == "linux" && runtime.GOARCH == "amd64" {
+		main2()
+		return
+	}
+
 	env := os.Getenv("GO_GENERATE")
 	goarch := runtime.GOARCH
 	goos := runtime.GOOS
@@ -132,8 +129,8 @@ func generate(goos, goarch, dir string, more []string) {
 
 	fmt.Printf("pwd: %s\n", filepath.Join(tclDir, dir))
 	cmd := newCmd(nil, nil, "make", "distclean")
-	if cc != "" {
-		cmd.Env = append(os.Environ(), fmt.Sprintf("CC=%s", cc))
+	if gcc != "" {
+		cmd.Env = append(os.Environ(), fmt.Sprintf("CC=%s", gcc))
 	}
 	cmd.Run()
 	args := []string{
@@ -150,8 +147,8 @@ func generate(goos, goarch, dir string, more []string) {
 		args = append(args, "--enable-corefoundation=no")
 	}
 	cmd = newCmd(nil, nil, "./configure", args...)
-	if cc != "" {
-		cmd.Env = append(os.Environ(), fmt.Sprintf("CC=%s", cc))
+	if gcc != "" {
+		cmd.Env = append(os.Environ(), fmt.Sprintf("CC=%s", gcc))
 	}
 	if err = cmd.Run(); err != nil {
 		fail("%s\n", err)
@@ -164,8 +161,8 @@ func generate(goos, goarch, dir string, more []string) {
 func makeLibAndShell(testWD string, goos, goarch string, more []string) {
 	var stdout strings.Builder
 	cmd := newCmd(&stdout, nil, "make")
-	if cc != "" {
-		cmd.Env = append(os.Environ(), fmt.Sprintf("CC=%s", cc))
+	if gcc != "" {
+		cmd.Env = append(os.Environ(), fmt.Sprintf("CC=%s", gcc))
 	}
 	err := cmd.Run()
 	if err != nil {
@@ -208,7 +205,7 @@ func makeLibAndShell(testWD string, goos, goarch string, more []string) {
 			}
 		case
 			"gcc",
-			cc:
+			gcc:
 
 			for _, v := range lines {
 				if strings.Contains(v, "tclAppInit.o") {
@@ -334,8 +331,8 @@ func makeLibAndShell(testWD string, goos, goarch string, more []string) {
 func makeTclTest(testWD string, goos, goarch string, more []string) {
 	var stdout strings.Builder
 	cmd := newCmd(&stdout, nil, "make", "tcltest")
-	if cc != "" {
-		cmd.Env = append(os.Environ(), fmt.Sprintf("CC=%s", cc))
+	if gcc != "" {
+		cmd.Env = append(os.Environ(), fmt.Sprintf("CC=%s", gcc))
 	}
 	err := cmd.Run()
 	if err != nil {
@@ -352,7 +349,7 @@ func makeTclTest(testWD string, goos, goarch string, more []string) {
 			"gcc",
 			"i686-w64-mingw32-gcc",
 			"x86_64-w64-mingw32-gcc",
-			cc:
+			gcc:
 
 			for _, v := range lines {
 				if strings.Contains(v, "cat32.o") {
@@ -668,7 +665,7 @@ func download() {
 
 			switch {
 			case strings.HasSuffix(base, ".tar.gz"):
-				return untar(root, bufio.NewReader(f))
+				return untar0(root, bufio.NewReader(f))
 			}
 
 			panic("internal error") //TODOOK
@@ -678,7 +675,7 @@ func download() {
 	}
 }
 
-func untar(root string, r io.Reader) error {
+func untar0(root string, r io.Reader) error {
 	gr, err := gzip.NewReader(r)
 	if err != nil {
 		return err
@@ -743,5 +740,413 @@ func untar(root string, r io.Reader) error {
 		default:
 			return fmt.Errorf("unexpected tar header typeflag %#02x", hdr.Typeflag)
 		}
+	}
+}
+
+// ============================================================== new generator
+
+const (
+	tarDir = "tcl8.6.10"
+	tarFn  = tarVer + ".tar.gz"
+	tarVer = tarDir + "-src"
+)
+
+func origin(skip int) string {
+	pc, fn, fl, _ := runtime.Caller(skip)
+	fn = filepath.Base(fn)
+	f := runtime.FuncForPC(pc)
+	var fns string
+	if f != nil {
+		fns = f.Name()
+		if x := strings.LastIndex(fns, "."); x > 0 {
+			fns = fns[x+1:]
+		}
+	}
+	return fmt.Sprintf("%s:%d:%s", fn, fl, fns)
+}
+
+func todo(s string, args ...interface{}) string { //TODO-
+	switch {
+	case s == "":
+		s = fmt.Sprintf(strings.Repeat("%v ", len(args)), args...)
+	default:
+		s = fmt.Sprintf(s, args...)
+	}
+	pc, fn, fl, _ := runtime.Caller(1)
+	f := runtime.FuncForPC(pc)
+	var fns string
+	if f != nil {
+		fns = f.Name()
+		if x := strings.LastIndex(fns, "."); x > 0 {
+			fns = fns[x+1:]
+		}
+	}
+	r := fmt.Sprintf("%s:%d:%s: TODOTODO %s", fn, fl, fns, s) //TODOOK
+	fmt.Fprintf(os.Stdout, "%s\n", r)
+	os.Stdout.Sync()
+	return r
+}
+
+func trc(s string, args ...interface{}) string { //TODO-
+	switch {
+	case s == "":
+		s = fmt.Sprintf(strings.Repeat("%v ", len(args)), args...)
+	default:
+		s = fmt.Sprintf(s, args...)
+	}
+	_, fn, fl, _ := runtime.Caller(1)
+	r := fmt.Sprintf("%s:%d: TRC %s", fn, fl, s)
+	fmt.Fprintf(os.Stdout, "%s\n", r)
+	os.Stdout.Sync()
+	return r
+}
+
+type supportedKey = struct{ os, arch string }
+
+var (
+	goos      = env("TARGET_GOOS", runtime.GOOS)
+	goarch    = env("TARGET_GOARCH", runtime.GOARCH)
+	supported = map[supportedKey]struct{}{
+		{"darwin", "amd64"}:  {},
+		{"linux", "386"}:     {},
+		{"linux", "amd64"}:   {},
+		{"linux", "arm"}:     {},
+		{"linux", "arm64"}:   {},
+		{"windows", "386"}:   {},
+		{"windows", "amd64"}: {},
+	}
+	tmpDir = os.Getenv("GO_GENERATE_TMPDIR")
+	ccgo   string
+)
+
+func env(key, dflt string) string {
+	if s := os.Getenv(key); s != "" {
+		return s
+	}
+
+	return dflt
+}
+
+func fatalf(s string, args ...interface{}) {
+	s = strings.TrimRight(fmt.Sprintf(s, args...), " \t\n\r")
+	fmt.Fprintln(os.Stderr, s)
+	os.Exit(1)
+}
+
+func fatal(args ...interface{}) {
+	s := strings.TrimRight(fmt.Sprint(args...), " \t\n\r")
+	fmt.Fprintln(os.Stderr, s)
+	// trc("\n%s", debug.Stack()) //TODO-
+	os.Exit(1)
+}
+
+func main2() {
+	if _, ok := supported[supportedKey{goos, goarch}]; !ok {
+		fatalf("unknown/unsupported os/arch combination: %s/%s\n", goos, goarch)
+	}
+
+	var err error
+	if ccgo, err = exec.LookPath("ccgo"); err != nil {
+		fatal(err)
+	}
+
+	if err := mkdir("lib"); err != nil {
+		fatal(err)
+	}
+
+	if err := mkdir(
+		"internal/tclsh",
+		"internal/tcltest",
+		"lib",
+		"testdata/tcl",
+	); err != nil {
+		fatal(err)
+	}
+
+	if tmpDir == "" {
+		var err error
+		if tmpDir, err = ioutil.TempDir("", "go-generate-tcl-"); err != nil {
+			fatal(err)
+		}
+
+		defer os.RemoveAll(tmpDir)
+	}
+	if tmpDir, err = filepath.Abs(tmpDir); err != nil {
+		fatal(err)
+	}
+
+	f, err := os.Open(tarFn)
+	if err != nil {
+		fatal(err)
+	}
+
+	defer f.Close()
+
+	if err := inDir(tmpDir, func() error {
+		os.RemoveAll(tarDir)
+		if err := untar("", bufio.NewReader(f)); err != nil {
+			fatal(err)
+		}
+
+		return nil
+	}); err != nil {
+		fatal(err)
+	}
+
+	cdb := filepath.Join(tmpDir, "cdb.json")
+	mkDB := false
+	if _, err := os.Stat(cdb); err != nil {
+		if !os.IsNotExist(err) {
+			fatal(err)
+		}
+
+		mkDB = true
+	}
+
+	if mkDB {
+		cfg := []string{
+			"--disable-dll-unload",
+			"--disable-load",
+			"--disable-shared",
+			"--disable-threads", //TODO-
+			// "--enable-symbols=mem", //TODO-
+		}
+		switch goos {
+		case "windows":
+			panic(todo(""))
+		default:
+			if err := inDir(filepath.Join(tmpDir, tarDir, "unix"), func() error {
+				if gcc != "" {
+					os.Setenv("CC", gcc)
+				}
+				if out, err := shell("./configure", cfg...); err != nil {
+					fatalf("%s\n%v", out, err)
+				}
+
+				if out, err := shell("ccgo", "-compiledb", cdb, "make", "CFLAGS=-UHAVE_CPUID", "binaries", "tcltest"); err != nil {
+					fatalf("%s\n%v", out, err)
+				}
+
+				return nil
+			}); err != nil {
+				fatal(err)
+			}
+		}
+	}
+	mustCC(os.Stdout, os.Stderr,
+		"-D__printf__=printf",
+		"-export-defines", "",
+		"-export-enums", "",
+		"-export-externs", "X",
+		"-export-fields", "F",
+		"-export-structs", "",
+		"-export-typedefs", "",
+		"-hide", "TclpCreateProcess",
+		"-lmodernc.org/z/lib",
+		"-o", filepath.Join("lib", fmt.Sprintf("tcl_%s_%s.go", goos, goarch)),
+		"-pkgname", "tcl",
+		"-replace-fd-zero", "__ccgo_fd_zero",
+		"-replace-tcl-default-double-rounding", "__ccgo_tcl_default_double_rounding",
+		"-replace-tcl-ieee-double-rounding", "__ccgo_tcl_ieee_double_rounding",
+		"-trace-translation-units",
+		cdb,
+		"libtcl8.6.a",
+		"libtclstub8.6.a",
+	)
+	mustCC(os.Stdout, os.Stderr,
+		"-export-defines", "",
+		"-lmodernc.org/tcl/lib",
+		"-nocapi",
+		"-o", filepath.Join("internal", "tclsh", fmt.Sprintf("tclsh_%s_%s.go", goos, goarch)),
+		"-pkgname", "tclsh",
+		"-replace-fd-zero", "__ccgo_fd_zero",
+		"-replace-tcl-default-double-rounding", "__ccgo_tcl_default_double_rounding",
+		"-replace-tcl-ieee-double-rounding", "__ccgo_tcl_ieee_double_rounding",
+		"-trace-translation-units",
+		cdb, "tclsh",
+	)
+	mustCC(os.Stdout, os.Stderr,
+		"-export-defines", "",
+		"-lmodernc.org/tcl/lib",
+		"-nocapi",
+		"-o", filepath.Join("internal", "tcltest", fmt.Sprintf("tcltest_%s_%s.go", goos, goarch)),
+		"-trace-translation-units",
+		cdb,
+		"tclAppInit.o#1",
+		"tclTest.o",
+		"tclTestObj.o",
+		"tclTestProcBodyObj.o",
+		"tclThreadTest.o",
+		"tclUnixTest.o",
+	)
+
+	if err := newCmd(nil, nil, "sh", "-c", fmt.Sprintf("cp -r %s %s", filepath.FromSlash(tclDir+"/library/*"), "assets/")).Run(); err != nil {
+		fail("error copying tcl library: %v", err)
+	}
+
+	dst := filepath.FromSlash("testdata/tcl")
+	if err := os.MkdirAll(dst, 0770); err != nil {
+		fail("cannot create %q: %v", dst, err)
+	}
+
+	m, err := filepath.Glob(filepath.Join(tclDir, "tests/*"))
+	if err != nil {
+		fail("cannot glob tests/*: %v", err)
+	}
+
+	for _, v := range m {
+		copyFile(v, filepath.Join(dst, filepath.Base(v)))
+	}
+
+	dir := filepath.FromSlash("assets/tcltests")
+	if err := os.MkdirAll(dir, 0770); err != nil {
+		fail("cannot create %q: %v", dir, err)
+	}
+
+	copyFile("testdata/tcl/pkgIndex.tcl", "assets/tcltests/pkgIndex.tcl")
+	copyFile("testdata/tcl/tcltests.tcl", "assets/tcltests/tcltests.tcl")
+}
+
+func mkdir(paths ...string) error {
+	for _, path := range paths {
+		path = filepath.FromSlash(path)
+		if err := os.MkdirAll(path, 0770); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func inDir(dir string, f func() error) (err error) {
+	var cwd string
+	if cwd, err = os.Getwd(); err != nil {
+		return err
+	}
+
+	defer func() {
+		if err2 := os.Chdir(cwd); err2 != nil {
+			err = err2
+		}
+	}()
+
+	if err = os.Chdir(dir); err != nil {
+		return err
+	}
+
+	return f()
+}
+
+func untar(root string, r io.Reader) error {
+	gr, err := gzip.NewReader(r)
+	if err != nil {
+		return err
+	}
+
+	tr := tar.NewReader(gr)
+	for {
+		hdr, err := tr.Next()
+		if err != nil {
+			if err != io.EOF {
+				return err
+			}
+
+			return nil
+		}
+
+		switch hdr.Typeflag {
+		case tar.TypeDir:
+			dir := filepath.Join(root, hdr.Name)
+			if err = os.MkdirAll(dir, 0770); err != nil {
+				return err
+			}
+		case tar.TypeSymlink, tar.TypeXGlobalHeader:
+			// skip
+		case tar.TypeReg, tar.TypeRegA:
+			dir := filepath.Dir(filepath.Join(root, hdr.Name))
+			if _, err := os.Stat(dir); err != nil {
+				if !os.IsNotExist(err) {
+					return err
+				}
+
+				if err = os.MkdirAll(dir, 0770); err != nil {
+					return err
+				}
+			}
+
+			fn := filepath.Join(root, hdr.Name)
+			f, err := os.OpenFile(fn, os.O_CREATE|os.O_WRONLY, os.FileMode(hdr.Mode))
+			if err != nil {
+				return err
+			}
+
+			w := bufio.NewWriter(f)
+			if _, err = io.Copy(w, tr); err != nil {
+				return err
+			}
+
+			if err := w.Flush(); err != nil {
+				return err
+			}
+
+			if err := f.Close(); err != nil {
+				return err
+			}
+
+			if err := os.Chtimes(fn, hdr.AccessTime, hdr.ModTime); err != nil {
+				return err
+			}
+		default:
+			return fmt.Errorf("unexpected tar header typeflag %#02x", hdr.Typeflag)
+		}
+	}
+}
+
+type echoWriter struct {
+	w bytes.Buffer
+}
+
+func (w *echoWriter) Write(b []byte) (int, error) {
+	os.Stdout.Write(b)
+	return w.w.Write(b)
+}
+
+func shell(cmd string, args ...string) ([]byte, error) {
+	wd, err := absCwd()
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Printf("execute %s %q in %s\n", cmd, args, wd)
+	var b echoWriter
+	c := exec.Command(cmd, args...)
+	c.Stdout = &b
+	c.Stderr = &b
+	err = c.Run()
+	return b.w.Bytes(), err
+}
+
+func absCwd() (string, error) {
+	wd, err := os.Getwd()
+	if err != nil {
+		return "", err
+	}
+
+	if wd, err = filepath.Abs(wd); err != nil {
+		return "", err
+	}
+
+	return wd, nil
+}
+
+func cc(stdout, stderr io.Writer, args ...string) error {
+	cmd := exec.Command(ccgo, args...)
+	cmd.Stdout = stdout
+	cmd.Stderr = stderr
+	return cmd.Run()
+}
+
+func mustCC(stdout, stderr io.Writer, args ...string) {
+	if err := cc(stdout, stderr, args...); err != nil {
+		fatal(err)
 	}
 }

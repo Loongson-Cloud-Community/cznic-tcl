@@ -35,6 +35,11 @@ all: editor
 	go version
 	date 2>&1 | tee -a log
 
+generate:
+	go generate 2>&1 | tee log-generate
+	gofmt -l -s -w *.go 2>&1 | tee -a log-generate
+	go build -v ./... 2>&1 | tee -a log-generate
+
 darwin_amd64:
 	TARGET_GOOS=darwin TARGET_GOARCH=amd64 go generate 2>&1 | tee /tmp/log-generate-tcl-darwin-amd64
 	GOOS=darwin GOARCH=amd64 go build -v ./...
