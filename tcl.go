@@ -12,9 +12,7 @@
 // suitable for a very wide range of uses, including web and desktop
 // applications, networking, administration, testing and many more.
 //
-// A sperate Tcl shell is in the gotclsh directory.
-//
-// Do not use in production.
+// A separate Tcl shell is in the gotclsh directory.
 //
 // Changelog:
 //
@@ -356,4 +354,33 @@ func (in *Interp) SetResult(s string) error {
 
 	tcl.XTcl_SetResult(in.tls, in.interp, cs, tclVolatile)
 	return nil
+}
+
+// FileSystem represents a virtual file system.
+type fileSystem interface { //TODO export
+	// PathInFilesystem is called to determine whether a given path value belongs
+	// to this filesystem or not. Tcl will only call the rest of the filesystem
+	// functions with a path for which this function has returned true. If the path
+	// does not belong, false should be returned.
+	PathInFilesystem(path string) bool
+
+	// Function to normalize a path. Should be implemented for all filesystems
+	// which can have multiple string representations for the same path value. In
+	// Tcl, every “path” must have a single unique “normalized” string
+	// representation. Depending on the filesystem, there may be more than one
+	// unnormalized string representation which refers to that path (e.g. a
+	// relative path, a path with different character case if the filesystem is
+	// case insensitive, a path contain a reference to a home directory such as
+	// “~”, a path containing symbolic links, etc). If the very last component in
+	// the path is a symbolic link, it should not be converted into the value it
+	// points to (but its case or other aspects should be made unique). All other
+	// path components should be converted from symbolic links. This one exception
+	// is required to agree with Tcl's semantics with file delete, file rename,
+	// file copy operating on symbolic links. This function may be called with
+	// nextCheckpoint either at the beginning of the path (i.e. zero), at the end
+	// of the path, or at any intermediate file separator in the path. It will
+	// never point to any other arbitrary position in the path. In the last of the
+	// three valid cases, the implementation can assume that the path up to and
+	// including the file separator is known and normalized.
+	NormalizePathProc(path string, nextCheckpoint int)
 }

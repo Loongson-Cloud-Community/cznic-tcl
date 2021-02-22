@@ -35,10 +35,21 @@ all: editor
 	go version
 	date 2>&1 | tee -a log
 
+# generate on current host
 generate:
 	go generate 2>&1 | tee log-generate
 	gofmt -l -s -w *.go 2>&1 | tee -a log-generate
 	go build -v ./... 2>&1 | tee -a log-generate
+
+build_all_targets:
+	GOOS=darwin GOARCH=amd64 go build -v ./...
+	GOOS=linux GOARCH=386 go build -v ./...
+	GOOS=linux GOARCH=amd64 go build -v ./...
+	GOOS=linux GOARCH=arm go build -v ./...
+	GOOS=linux GOARCH=arm64 go build -v ./...
+	GOOS=windows GOARCH=386 go build -v ./...
+	GOOS=windows GOARCH=amd64 go build -v ./...
+	echo done
 
 darwin_amd64:
 	TARGET_GOOS=darwin TARGET_GOARCH=amd64 go generate 2>&1 | tee /tmp/log-generate-tcl-darwin-amd64
@@ -68,7 +79,9 @@ windows_386:
 	CCGO_CPP=i686-w64-mingw32-cpp TARGET_GOOS=windows TARGET_GOARCH=386 go generate 2>&1 | tee /tmp/log-generate-tcl-windows-386
 	GOOS=windows GOARCH=386 go build -v ./...
 
-all_targets: linux_amd64 linux_386 linux_arm linux_arm64 windows_amd64 windows_386
+# darwin can be generated only on darwin
+# windows can be generated only on windows
+all_targets: linux_amd64 linux_386 linux_arm linux_arm64
 	echo done
 
 test:
@@ -126,6 +139,7 @@ edit:
 editor:
 	gofmt -l -s -w *.go
 	GO111MODULE=off go install -v ./...
+	GO111MODULE=off go build -o /dev/null generator.go
 
 internalError:
 	egrep -ho '"internal error.*"' *.go | sort | cat -n
