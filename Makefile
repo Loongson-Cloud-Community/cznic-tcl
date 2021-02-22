@@ -72,11 +72,11 @@ linux_arm64:
 	GOOS=linux GOARCH=arm64 go build -v ./...
 
 windows_amd64:
-	CCGO_CPP=x86_64-w64-mingw32-cpp TARGET_GOOS=windows TARGET_GOARCH=amd64 go generate 2>&1 | tee /tmp/log-generate-tcl-windows-amd64
+	GO_GENERATE_CC=x86_64-w64-mingw32-gcc CCGO_CPP=x86_64-w64-mingw32-cpp TARGET_GOOS=windows TARGET_GOARCH=amd64 go generate 2>&1 | tee /tmp/log-generate-tcl-windows-amd64
 	GOOS=windows GOARCH=amd64 go build -v ./...
 
 windows_386:
-	CCGO_CPP=i686-w64-mingw32-cpp TARGET_GOOS=windows TARGET_GOARCH=386 go generate 2>&1 | tee /tmp/log-generate-tcl-windows-386
+	GO_GENERATE_CC=i686-w64-mingw32-gcc CCGO_CPP=i686-w64-mingw32-cpp TARGET_GOOS=windows TARGET_GOARCH=386 go generate 2>&1 | tee /tmp/log-generate-tcl-windows-386
 	GOOS=windows GOARCH=386 go build -v ./...
 
 # darwin can be generated only on darwin

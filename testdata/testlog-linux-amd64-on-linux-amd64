@@ -1,15 +1,15 @@
 go version go1.15.8 linux/amd64
-Linux e5-1650 4.19.0-13-amd64 #1 SMP Debian 4.19.160-2 (2020-11-28) x86_64 GNU/Linux
+Linux 3900x 4.19.0-12-amd64 #1 SMP Debian 4.19.152-1 (2020-10-18) x86_64 GNU/Linux
 test binary compiled for linux/amd64
 === RUN   TestTclTest
-Tests running in interp:  /tmp/tcl-test-294908518/tcltest
-Tests located in:  /tmp/tcl-test-294908518
-Tests running in:  /tmp/tcl-test-294908518
-Temporary files stored in /tmp/tcl-test-294908518
+Tests running in interp:  /tmp/tcl-test-346275062/tcltest
+Tests located in:  /tmp/tcl-test-346275062
+Tests running in:  /tmp/tcl-test-346275062
+Temporary files stored in /tmp/tcl-test-346275062
 Test files run in separate interpreters
 Running tests that match:  *
 Only running test files that match:  *.test
-Tests began at Mon Feb 22 16:15:31 CET 2021
+Tests began at Mon Feb 22 21:35:25 CET 2021
 aaa_exit.test
 append.test
 appendComp.test
@@ -161,7 +161,7 @@ winPipe.test
 winTime.test
 zlib.test
 
-Tests ended at Mon Feb 22 16:18:35 CET 2021
+Tests ended at Mon Feb 22 21:38:10 CET 2021
 all.tcl:	Total	33499	Passed	30164	Skipped	3335	Failed	0
 Sourced 150 Test Files.
 Number of tests skipped for each constraint:
@@ -199,7 +199,7 @@ Number of tests skipped for each constraint:
 	487	win
 	4	winVista
 	6	xdev
---- PASS: TestTclTest (183.87s)
+--- PASS: TestTclTest (165.50s)
 === RUN   TestEval
 --- PASS: TestEval (0.00s)
 === RUN   TestCreateCommand
@@ -209,6 +209,6 @@ Number of tests skipped for each constraint:
 === RUN   ExampleInterp_NewCommand
 --- PASS: ExampleInterp_NewCommand (0.00s)
 PASS
-ok  	modernc.org/tcl	183.880s
+ok  	modernc.org/tcl	165.509s
 165:all.tcl:	Total	33499	Passed	30164	Skipped	3335	Failed	0
-Mon Feb 22 16:18:35 CET 2021
+Mon Feb 22 21:38:10 CET 2021

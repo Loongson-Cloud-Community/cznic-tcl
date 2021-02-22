@@ -13,6 +13,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"runtime"
 
@@ -28,7 +29,7 @@ const (
 type supportedKey = struct{ os, arch string }
 
 var (
-	gcc       = os.Getenv("GO_GENERATE_CC")
+	gcc       = ccgo.Env("GO_GENERATE_CC", "gcc")
 	goarch    = ccgo.Env("TARGET_GOARCH", runtime.GOARCH)
 	goos      = ccgo.Env("TARGET_GOOS", runtime.GOOS)
 	supported = map[supportedKey]struct{}{
@@ -48,8 +49,7 @@ func main() {
 		ccgo.Fatalf(true, "unsupported target: %s/%s", goos, goarch)
 	}
 
-	ccgo.MustMkdirs(
-		true,
+	ccgo.MustMkdirs(true,
 		"internal/tclsh",
 		"internal/tcltest",
 		"lib",
@@ -70,38 +70,21 @@ func main() {
 		ccgo.Fatal(true, err)
 	}
 
-	if _, err := os.Stat(cdb); err != nil {
-		if !os.IsNotExist(err) {
-			ccgo.Fatal(true, err)
-		}
-
-		cfg := []string{
-			"--disable-dll-unload",
-			"--disable-load",
-			"--disable-shared",
-			"--disable-threads", //TODO-
-			// "--enable-symbols=mem", //TODO-
-		}
-		platformDir := "/unix"
-		switch goos {
-		case "windows":
-			platformDir = "/win"
-			if goarch == "amd64" {
-				cfg = append(cfg, "--enable-64bit")
-			}
-		case "darwin":
-			cfg = append(cfg, "--enable-corefoundation=no")
-		}
-		ccgo.MustInDir(true, srcDir+platformDir, func() error {
-			if gcc != "" {
-				os.Setenv("CC", gcc)
-			}
-			ccgo.MustShell(true, "./configure", cfg...)
-			ccgo.MustCompile(true, "-compiledb", cdb, "make", "CFLAGS=-UHAVE_CPUID", "binaries", "tcltest")
-			return nil
-		})
+	cc, err := exec.LookPath(gcc)
+	if err != nil {
+		ccgo.Fatal(true, err)
 	}
-	ccgo.MustCompile(true,
+
+	os.Setenv("CC", cc)
+	cfg := []string{
+		"--disable-dll-unload",
+		"--disable-load",
+		"--disable-shared",
+		"--disable-threads", //TODO-
+		// "--enable-symbols=mem", //TODO-
+	}
+	platformDir := "/unix"
+	lib := []string{
 		"-D__printf__=printf",
 		"-export-defines", "",
 		"-export-enums", "",
@@ -118,9 +101,46 @@ func main() {
 		"-replace-tcl-ieee-double-rounding", "__ccgo_tcl_ieee_double_rounding",
 		"-trace-translation-units",
 		cdb,
-		"libtcl8.6.a",
-		"libtclstub8.6.a",
-	)
+	}
+	switch goos {
+	case "windows":
+		platformDir = "/win"
+		lib = append(lib,
+			"libtcl86.a",
+			"libtclstub86.a",
+		)
+		if goarch == "amd64" {
+			cfg = append(cfg, "--enable-64bit")
+		}
+		switch s := runtime.GOOS; s {
+		case "windows":
+			// ok
+		case "linux":
+			cfg = append(cfg, "--host=linux")
+		default:
+			ccgo.Fatal(true, "unsupported cross compilation host: %s", s)
+		}
+	case "darwin":
+		cfg = append(cfg, "--enable-corefoundation=no")
+		fallthrough
+	case "linux":
+		lib = append(lib,
+			"libtcl8.6.a",
+			"libtclstub8.6.a",
+		)
+	}
+	if _, err := os.Stat(cdb); err != nil {
+		if !os.IsNotExist(err) {
+			ccgo.Fatal(true, err)
+		}
+
+		ccgo.MustInDir(true, srcDir+platformDir, func() error {
+			ccgo.MustShell(true, "./configure", cfg...)
+			ccgo.MustCompile(true, "-compiledb", cdb, "make", "CFLAGS=-UHAVE_CPUID", "binaries", "tcltest")
+			return nil
+		})
+	}
+	ccgo.MustCompile(true, lib...)
 	ccgo.MustCompile(true,
 		"-export-defines", "",
 		"-lmodernc.org/tcl/lib",
