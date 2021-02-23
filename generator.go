@@ -4,7 +4,6 @@
 
 // +build ignore
 
-//TODO vfs
 //TODO enable threads
 //TODO 8.6.11
 

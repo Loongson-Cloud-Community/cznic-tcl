@@ -24,7 +24,7 @@
 // 2020-08-04: beta2 released for linux/amd64 only. Support for threads,
 // sockets and fork is not yet implemented. Some tests still crash, those are
 // disabled at the moment.
-package tcl
+package tcl // import "modernc.org/tcl"
 
 import (
 	"fmt"
@@ -112,7 +112,7 @@ func getObject(t uintptr) interface{} {
 	objectMu.Lock()
 	o := objects[t]
 	if o == nil {
-		panic(todo("", t))
+		panic(todo("%#x", t))
 	}
 
 	objectMu.Unlock()
@@ -122,7 +122,7 @@ func getObject(t uintptr) interface{} {
 func removeObject(t uintptr) {
 	objectMu.Lock()
 	if _, ok := objects[t]; !ok {
-		panic(todo(""))
+		panic(todo("%#x"))
 	}
 
 	delete(objects, t)
@@ -354,13 +354,4 @@ func (in *Interp) SetResult(s string) error {
 
 	tcl.XTcl_SetResult(in.tls, in.interp, cs, tclVolatile)
 	return nil
-}
-
-// FileSystem represents a virtual file system.
-type fileSystem interface { //TODO export
-	// PathInFilesystem is called to determine whether a given path value belongs
-	// to this filesystem or not. Tcl will only call the rest of the filesystem
-	// functions with a path for which this function has returned true. If the path
-	// does not belong, false should be returned.
-	PathInFilesystem(path string) bool
 }

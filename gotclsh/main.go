@@ -5,8 +5,6 @@
 package main
 
 import (
-	"fmt"
-	"io/ioutil"
 	"os"
 
 	"modernc.org/libc"
@@ -14,18 +12,13 @@ import (
 	"modernc.org/tcl/internal/tclsh"
 )
 
+const envVar = "TCL_LIBRARY"
+
 func main() {
-	dir, err := ioutil.TempDir("", "gotclsh-")
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+	if os.Getenv(envVar) == "" {
+		if s, err := tcl.MountLibraryVFS(); err == nil {
+			os.Setenv(envVar, s)
+		}
 	}
-
-	if err := tcl.Library(dir); err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
-
-	os.Setenv("TCL_LIBRARY", dir)
 	libc.Start(tclsh.Main)
 }
