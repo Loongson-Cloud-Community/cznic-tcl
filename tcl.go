@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 //go:generate go run generator.go
-//go:generate assets -package tcl
+//go:generate assets -package tcl -dir
 //go:generate go fmt ./...
 
 // Package tcl is a CGo-free port of the Tool Command Language (Tcl).
