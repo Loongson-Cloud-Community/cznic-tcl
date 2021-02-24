@@ -144,7 +144,10 @@ func Library(directory string) error {
 	dirs := map[string]struct{}{}
 	for _, nm := range a {
 		pth := filepath.Join(directory, filepath.FromSlash(nm))
-		dir := filepath.Dir(pth)
+		dir := pth
+		if !strings.HasSuffix(nm, "/") {
+			dir = filepath.Dir(pth)
+		}
 		if _, ok := dirs[dir]; !ok {
 			if err := os.MkdirAll(dir, 0755); err != nil {
 				return err
@@ -152,6 +155,10 @@ func Library(directory string) error {
 
 			dirs[dir] = struct{}{}
 		}
+		if strings.HasSuffix(nm, "/") {
+			continue
+		}
+
 		f, err := os.Create(pth)
 		if err != nil {
 			return err
