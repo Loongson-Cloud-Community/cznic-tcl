@@ -24,8 +24,6 @@ import (
 	"modernc.org/httpfs"
 	"modernc.org/libc"
 	"modernc.org/libc/errno"
-	"modernc.org/libc/sys/types"
-	ctime "modernc.org/libc/time"
 	"modernc.org/mathutil"
 	"modernc.org/tcl/lib"
 )
@@ -126,38 +124,6 @@ func normalizeMountPoint(s string) (string, error) {
 	return s, nil
 }
 
-// MountLibraryVFS mounts the Tcl library virtual file system and returns the
-// mount point. This is how it's used, for example, in gotclsh:
-//
-//	package main
-//
-//	import (
-//		"os"
-//
-//		"modernc.org/libc"
-//		"modernc.org/tcl"
-//		"modernc.org/tcl/internal/tclsh"
-//	)
-//
-//	const envVar = "TCL_LIBRARY"
-//
-//	func main() {
-//		if os.Getenv(envVar) == "" {
-//			if s, err := tcl.MountLibraryVFS(); err == nil {
-//				os.Setenv(envVar, s)
-//			}
-//		}
-//		libc.Start(tclsh.Main)
-//	}
-func MountLibraryVFS() (string, error) {
-	point := tcl.TCL_LIBRARY
-	if err := MountFileSystem(point, assets); err != nil {
-		return "", err
-	}
-
-	return point, nil
-}
-
 var vfs = tcl.Tcl_Filesystem{
 	FtypeName:        uintptr(unsafe.Pointer(&cVFSName[0])),
 	FstructureLength: int32(unsafe.Sizeof(tcl.Tcl_Filesystem{})),
@@ -203,43 +169,6 @@ func vfsPathInFilesystem(tls *libc.TLS, pathPtr uintptr, clientDataPtr uintptr) 
 	}
 
 	return -1
-}
-
-// Function to process a Tcl_FSStat call. Must be implemented for any
-// reasonable filesystem, since many Tcl level commands depend crucially upon
-// it (e.g. file atime, file isdirectory, file size, glob).
-
-// The Tcl_FSStatProc fills the stat structure statPtr with information about
-// the specified file. You do not need any access rights to the file to get
-// this information but you need search rights to all directories named in the
-// path leading to the file. The stat structure includes info regarding device,
-// inode (always 0 on Windows), privilege mode, nlink (always 1 on Windows),
-// user id (always 0 on Windows), group id (always 0 on Windows), rdev (same as
-// device on Windows), size, last access time, last modification time, and last
-// metadata change time.
-//
-// If the file represented by pathPtr exists, the Tcl_FSStatProc returns 0 and
-// the stat structure is filled with data. Otherwise, -1 is returned, and no
-// stat info is given.
-func vfsStat(tls *libc.TLS, pathPtr uintptr, bufPtr uintptr) int32 {
-	vfsMu.Lock()
-
-	defer vfsMu.Unlock()
-
-	fi := vfsFileInfo(libc.GoString(tcl.XTcl_GetString(tls, pathPtr)))
-	if fi == nil {
-		return -1
-	}
-
-	tm := ctime.Timespec{Ftv_sec: types.Time_t(fi.ModTime().Unix())}
-	*(*tcl.Tcl_StatBuf)(unsafe.Pointer(bufPtr)) = tcl.Tcl_StatBuf{
-		Fst_atim: tm,
-		Fst_ctim: tm,
-		Fst_mode: types.Mode_t(fi.Mode()),
-		Fst_mtim: tm,
-		Fst_size: types.Off_t(fi.Size()),
-	}
-	return 0
 }
 
 // Function to process a Tcl_FSAccess call. Must be implemented for any
