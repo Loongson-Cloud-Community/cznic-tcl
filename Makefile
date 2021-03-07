@@ -17,6 +17,7 @@ all: editor
 	go test -i
 	go test 2>&1 -timeout 1h | tee -a log
 	GOOS=darwin GOARCH=amd64 go build -o /dev/null
+	GOOS=darwin GOARCH=arm64 go build -o /dev/null
 	GOOS=linux GOARCH=386 go build -o /dev/null
 	GOOS=linux GOARCH=amd64 go build -o /dev/null
 	GOOS=linux GOARCH=arm go build -o /dev/null
@@ -29,9 +30,9 @@ all: editor
 	misspell *.go | grep -v $(ngrep) || true
 	staticcheck
 	maligned || true
-	grep -n 'FAIL\|PASS' log 
+	grep -n 'FAIL\|PASS' log
 	git diff --unified=0 testdata/*.golden || true
-	grep -n Passed log 
+	grep -n Passed log
 	go version
 	date 2>&1 | tee -a log
 
@@ -43,6 +44,7 @@ generate:
 
 build_all_targets:
 	GOOS=darwin GOARCH=amd64 go build -v ./...
+	GOOS=darwin GOARCH=arm64 go build -v ./...
 	GOOS=linux GOARCH=386 go build -v ./...
 	GOOS=linux GOARCH=amd64 go build -v ./...
 	GOOS=linux GOARCH=arm go build -v ./...
@@ -54,6 +56,10 @@ build_all_targets:
 darwin_amd64:
 	TARGET_GOOS=darwin TARGET_GOARCH=amd64 go generate 2>&1 | tee /tmp/log-generate-tcl-darwin-amd64
 	GOOS=darwin GOARCH=amd64 go build -v ./...
+
+darwin_arm64:
+	TARGET_GOOS=darwin TARGET_GOARCH=arm64 go generate 2>&1 | tee /tmp/log-generate-tcl-darwin-arm64
+	GOOS=darwin GOARCH=arm64 go build -v ./...
 
 linux_amd64:
 	TARGET_GOOS=linux TARGET_GOARCH=amd64 go generate 2>&1 | tee /tmp/log-generate-tcl-linux-amd64
@@ -94,6 +100,9 @@ test:
 
 test_darwin_amd64:
 	GOOS=darwin GOARCH=amd64 make test
+
+test_darwin_arm64:
+	GOOS=darwin GOARCH=arm64 make test
 
 test_linux_amd64:
 	GOOS=linux GOARCH=amd64 make test

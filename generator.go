@@ -33,6 +33,7 @@ var (
 	goos      = ccgo.Env("TARGET_GOOS", runtime.GOOS)
 	supported = map[supportedKey]struct{}{
 		{"darwin", "amd64"}:  {},
+		{"darwin", "arm64"}:  {},
 		{"linux", "386"}:     {},
 		{"linux", "amd64"}:   {},
 		{"linux", "arm"}:     {},
@@ -135,7 +136,11 @@ func main() {
 
 		ccgo.MustInDir(true, srcDir+platformDir, func() error {
 			ccgo.MustShell(true, "./configure", cfg...)
-			ccgo.MustCompile(true, "-compiledb", cdb, "make", "CFLAGS=-UHAVE_CPUID", "binaries", "tcltest")
+			// This option currently causes trouble with gcc on darwin/arm64.
+			// Ex: error: invalid variant 'BLEAH'
+			ccgo.MustShell(true, "sed", "-i", "", "s/ -mdynamic-no-pic//", "Makefile")
+			// -UHAVE_COPYFILE disables the tcl macOS bits trying to use copyfile/libc.Xcopyfile.
+			ccgo.MustCompile(true, "-compiledb", cdb, "make", "CFLAGS='-UHAVE_CPUID -UHAVE_COPYFILE'", "binaries", "tcltest")
 			return nil
 		})
 	}
