@@ -136,9 +136,11 @@ func main() {
 
 		ccgo.MustInDir(true, srcDir+platformDir, func() error {
 			ccgo.MustShell(true, "./configure", cfg...)
-			// This option currently causes trouble with gcc on darwin/arm64.
-			// Ex: error: invalid variant 'BLEAH'
-			ccgo.MustShell(true, "sed", "-i", "", "s/ -mdynamic-no-pic//", "Makefile")
+			if goos == "darwin" {
+				// This option currently causes trouble with gcc on darwin/arm64.
+				// Ex: error: invalid variant 'BLEAH'
+				ccgo.MustShell(true, "sed", "-i", "", "s/ -mdynamic-no-pic//", "Makefile")
+			}
 			// -UHAVE_COPYFILE disables the tcl macOS bits trying to use copyfile/libc.Xcopyfile.
 			ccgo.MustCompile(true, "-compiledb", cdb, "make", "CFLAGS='-UHAVE_CPUID -UHAVE_COPYFILE'", "binaries", "tcltest")
 			return nil
