@@ -21,6 +21,7 @@ import (
 	"sync/atomic"
 	"testing"
 
+	"modernc.org/ccgo/v3/lib"
 	"modernc.org/libc"
 	"modernc.org/tcl/lib"
 )
@@ -99,7 +100,9 @@ func TestMain(m *testing.M) {
 
 func TestTclTest(t *testing.T) {
 	skip := []string{}
-	notFile := []string{}
+	notFile := []string{
+		"socket.test", //TODO
+	}
 	wd, err := os.Getwd()
 	if err != nil {
 		t.Fatal(err)
@@ -114,17 +117,20 @@ func TestTclTest(t *testing.T) {
 
 	defer g.close()
 
-	m, err := filepath.Glob(filepath.FromSlash("testdata/tcl/*"))
-	if err != nil {
-		t.Fatal(err)
-	}
-
 	dir, err := ioutil.TempDir("", "tcl-test-")
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	defer os.RemoveAll(dir)
+
+	if _, _, err := ccgo.CopyDir(dir, "testdata/tcl", nil); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, _, err := ccgo.CopyDir(dir, "testdata/overlay", nil); err != nil {
+		t.Log(err)
+	}
 
 	tcltest := filepath.Join(dir, "tcltest")
 	if runtime.GOOS == "windows" {
@@ -144,23 +150,6 @@ func TestTclTest(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	for _, v := range m {
-		s := filepath.Join(wd, v)
-		d := filepath.Join(dir, filepath.Base(v))
-		f, err := ioutil.ReadFile(s)
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		fi, err := os.Stat(s)
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		if err := ioutil.WriteFile(d, f, fi.Mode()&os.ModePerm); err != nil {
-			t.Fatal(err)
-		}
-	}
 	args := []string{
 		"all.tcl",
 		"-notfile", strings.Join(notFile, " "),
@@ -191,7 +180,10 @@ func TestTclTest(t *testing.T) {
 		t.Error(err)
 	}
 
-	if b := out.Bytes(); bytes.Contains(b, []byte("panic:")) || bytes.Contains(b, []byte("FAIL")) {
+	if b := out.Bytes(); bytes.Contains(b, []byte("FAIL")) ||
+		bytes.Contains(b, []byte("Test file error:")) ||
+		bytes.Contains(b, []byte("Test files exiting with errors:")) ||
+		bytes.Contains(b, []byte("panic:")) {
 		t.Error("panic detected")
 	}
 }

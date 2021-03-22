@@ -1,15 +1,17 @@
 go version go1.15.8 linux/amd64
-Linux e5-1650 4.19.0-13-amd64 #1 SMP Debian 4.19.160-2 (2020-11-28) x86_64 GNU/Linux
+Linux 3900x 4.19.0-12-amd64 #1 SMP Debian 4.19.152-1 (2020-10-18) x86_64 GNU/Linux
 test binary compiled for linux/amd64
 === RUN   TestTclTest
-Tests running in interp:  /tmp/tcl-test-327337989/tcltest
-Tests located in:  /tmp/tcl-test-327337989
-Tests running in:  /tmp/tcl-test-327337989
-Temporary files stored in /tmp/tcl-test-327337989
+    all_test.go:309: stat testdata/overlay: no such file or directory
+Tests running in interp:  /tmp/tcl-test-750223710/tcltest
+Tests located in:  /tmp/tcl-test-750223710
+Tests running in:  /tmp/tcl-test-750223710
+Temporary files stored in /tmp/tcl-test-750223710
 Test files run in separate interpreters
 Running tests that match:  *
+Skipping test files that match:  socket.test
 Only running test files that match:  *.test
-Tests began at Thu Feb 25 12:27:55 CET 2021
+Tests began at Mon Mar 22 21:10:15 CET 2021
 aaa_exit.test
 append.test
 appendComp.test
@@ -22,7 +24,271 @@ basic.test
 binary.test
 case.test
 chan.test
+Test file error: Tcl_FinalizeNotifier: unable to write q to triggerPipe
 chanio.test
+
+
+==== chan-io-7.4 FilterInputBytes: recover from split up character FAILED
+==== Contents of test case:
+
+    set f [openpipe w+ $path(cat)]
+    chan configure $f -encoding binary -buffering none
+    chan puts -nonewline $f "1234567890123\x82\x4f\x82\x50\x82"
+    chan configure $f -encoding shiftjis -blocking 0
+    chan event $f read [namespace code {
+	lappend x [chan gets $f line] $line [chan blocked $f]
+    }]
+    vwait [namespace which -variable x]
+    chan configure $f -encoding binary -blocking 1
+    chan puts $f "\x51\x82\x52"
+    chan configure $f -encoding shiftjis
+    vwait [namespace which -variable x]
+    return $x
+
+---- Test cleanup failed:
+Tcl_FinalizeNotifier: unable to write q to triggerPipe
+---- errorInfo(cleanup): Tcl_FinalizeNotifier: unable to write q to triggerPipe
+    while executing
+"chan close $f"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): CHILDKILLED 5383 SIGABRT SIGABRT
+==== chan-io-7.4 FAILED
+
+
+
+==== chan-io-46.1 Tcl event loop vs multiple interpreters FAILED
+==== Contents of test case:
+
+    testfevent create
+    set script "set f \[[list open $path(foo) r]]\n"
+    append script {
+	set x "no event"
+	chan event $f readable [namespace code {
+	    set x "f triggered: [chan gets $f]"
+	    chan event $f readable {}
+	}]
+    }
+    testfevent cmd $script
+    after 1	;# We must delay because Windows takes a little time to notice
+    update
+    testfevent cmd {chan close $f}
+    list [testfevent cmd {set x}] [testfevent cmd {info commands after}]
+
+---- Result was:
+{no event} after
+---- Result should have been (exact matching):
+{f triggered: foo bar} after
+==== chan-io-46.1 FAILED
+
+
+
+==== chan-io-50.1 testing handler deletion FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) w]
+    chan close $f
+    set f [open $path(test1) r]
+    testchannelevent $f add readable [namespace code {
+	variable z called
+	testchannelevent $f delete 0
+    }]
+    variable z not_called
+    update
+    return $z
+
+---- Result was:
+not_called
+---- Result should have been (exact matching):
+called
+==== chan-io-50.1 FAILED
+
+
+
+==== chan-io-50.2 testing handler deletion with multiple handlers FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) r]
+    testchannelevent $f add readable [namespace code [list delhandler $f 1]]
+    testchannelevent $f add readable [namespace code [list delhandler $f 0]]
+    proc delhandler {f i} {
+	variable z
+	lappend z "called delhandler $f $i"
+	testchannelevent $f delete 0
+    }
+    update
+    string equal $z  [list [list called delhandler $f 0] [list called delhandler $f 1]]
+
+---- Result was:
+0
+---- Result should have been (exact matching):
+1
+==== chan-io-50.2 FAILED
+
+
+
+==== chan-io-50.3 testing handler deletion with multiple handlers FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) r]
+    testchannelevent $f add readable [namespace code [list notcalled $f 1]]
+    testchannelevent $f add readable [namespace code [list delhandler $f 0]]
+    proc notcalled {f i} {
+	variable z
+	lappend z "notcalled was called!! $f $i"
+    }
+    proc delhandler {f i} {
+	variable z
+	testchannelevent $f delete 1
+	lappend z "delhandler $f $i called"
+	testchannelevent $f delete 0
+	lappend z "delhandler $f $i deleted myself"
+    }
+    update
+    string equal $z  [list [list delhandler $f 0 called]  [list delhandler $f 0 deleted myself]]
+
+---- Result was:
+0
+---- Result should have been (exact matching):
+1
+==== chan-io-50.3 FAILED
+
+
+
+==== chan-io-50.4 testing handler deletion vs reentrant calls FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) r]
+    testchannelevent $f add readable [namespace code {
+	if {$u eq "recursive"} {
+	    testchannelevent $f delete 0
+	    lappend z "delrecursive deleting recursive"
+	} else {
+	    lappend z "delrecursive calling recursive"
+	    set u recursive
+	    update
+	}
+    }]
+    variable u toplevel
+    variable z ""
+    update
+    return $z
+
+---- Result was:
+
+---- Result should have been (exact matching):
+{delrecursive calling recursive} {delrecursive deleting recursive}
+==== chan-io-50.4 FAILED
+
+
+
+==== chan-io-50.5 testing handler deletion vs reentrant calls FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) r]
+    testchannelevent $f add readable [namespace code [list notcalled $f]]
+    testchannelevent $f add readable [namespace code [list del $f]]
+    proc notcalled {f} {
+	variable z
+	lappend z "notcalled was called!! $f"
+    }
+    proc del {f} {
+	variable u
+	variable z
+	if {$u eq "recursive"} {
+	    testchannelevent $f delete 1
+	    testchannelevent $f delete 0
+	    lappend z "del deleted notcalled"
+	    lappend z "del deleted myself"
+	} else {
+	    set u recursive
+	    lappend z "del calling recursive"
+	    update
+	    lappend z "del after update"
+	}
+    }
+    set z ""
+    set u toplevel
+    update
+    return $z
+
+---- Result was:
+
+---- Result should have been (exact matching):
+{del calling recursive} {del deleted notcalled} {del deleted myself} {del after update}
+==== chan-io-50.5 FAILED
+
+
+
+==== chan-io-50.6 testing handler deletion vs reentrant calls FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) r]
+    testchannelevent $f add readable [namespace code [list second $f]]
+    testchannelevent $f add readable [namespace code [list first $f]]
+    proc first {f} {
+	variable u
+	variable z
+	if {$u eq "toplevel"} {
+	    lappend z "first called"
+	    set u first
+	    update
+	    lappend z "first after update"
+	} else {
+	    lappend z "first called not toplevel"
+	}
+    }
+    proc second {f} {
+	variable u
+	variable z
+	if {$u eq "first"} {
+	    lappend z "second called, first time"
+	    set u second
+	    testchannelevent $f delete 0
+	} elseif {$u eq "second"} {
+	    lappend z "second called, second time"
+	    testchannelevent $f delete 0
+	} else {
+	    lappend z "second called, cannot happen!"
+	    testchannelevent $f removeall
+	}
+    }
+    set z ""
+    set u toplevel
+    update
+    return $z
+
+---- Result was:
+
+---- Result should have been (exact matching):
+{first called} {first called not toplevel} {second called, first time} {second called, second time} {first after update}
+==== chan-io-50.6 FAILED
+
+
+
+==== chan-io-53.10 Bug 1350564, multi-directional fcopy FAILED
+==== Contents of test case:
+
+    # Now pass data through the server in both directions.
+    set ::forever {}
+    chan puts $a AB
+    vwait ::forever
+    chan puts $b BA
+    vwait ::forever
+    set ::forever
+
+---- Test cleanup failed:
+child killed: SIGABRT
+---- errorInfo(cleanup): child killed: SIGABRT
+    while executing
+"chan close $pipe"
+    ("uplevel" body line 4)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): CHILDKILLED 8771 SIGABRT SIGABRT
+==== chan-io-53.10 FAILED
+
 clock.test
 cmdAH.test
 cmdIL.test
@@ -42,6 +308,27 @@ env.test
 error.test
 eval.test
 event.test
+
+
+==== event-1.1 Tcl_CreateFileHandler, reading FAILED
+==== Contents of test case:
+
+    testfilehandler create 0 readable off
+    testfilehandler clear 0
+    testfilehandler oneevent
+    lappend result [testfilehandler counts 0]
+    testfilehandler fillpartial 0
+    testfilehandler oneevent
+    lappend result [testfilehandler counts 0]
+    testfilehandler oneevent
+    lappend result [testfilehandler counts 0]
+
+---- Result was:
+{0 0} {0 0} {0 0}
+---- Result should have been (exact matching):
+{0 0} {1 0} {2 0}
+==== event-1.1 FAILED
+
 exec.test
 execute.test
 expr-old.test
@@ -57,9 +344,11 @@ format.test
 get.test
 history.test
 http.test
+Test file error: Tcl_FinalizeNotifier: unable to write q to triggerPipe
 http11.test
 httpPipeline.test
 httpold.test
+Test file error: Tcl_FinalizeNotifier: unable to write q to triggerPipe
 if-old.test
 if.test
 incr-old.test
@@ -69,6 +358,414 @@ info.test
 init.test
 interp.test
 io.test
+
+
+==== io-7.4 FilterInputBytes: recover from split up character FAILED
+==== Contents of test case:
+
+    set f [open "|[list [interpreter] $path(cat)]" w+]
+    fconfigure $f -encoding binary -buffering none
+    puts -nonewline $f "1234567890123\x82\x4f\x82\x50\x82"
+    fconfigure $f -encoding shiftjis -blocking 0
+    fileevent $f read [namespace code "ready $f"]
+    variable x {}
+    proc ready {f} {
+	variable x
+	lappend x [gets $f line] $line [fblocked $f]
+    }
+    vwait [namespace which -variable x]
+    fconfigure $f -encoding binary -blocking 1
+    puts $f "\x51\x82\x52"
+    fconfigure $f -encoding shiftjis
+    vwait [namespace which -variable x]
+    close $f
+    set x
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: Tcl_FinalizeNotifier: unable to write q to triggerPipe
+    while executing
+"close $f"
+    ("uplevel" body line 17)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: CHILDKILLED 18125 SIGABRT SIGABRT
+==== io-7.4 FAILED
+
+
+
+==== io-8.2 PeekAhead: only go to device if no more cached data FAILED
+==== Contents of test case:
+
+    # not (bufPtr->nextPtr == NULL)
+
+    set f [open "|[list [interpreter] $path(cat)]" w+]
+    fconfigure $f -translation lf -encoding ascii -buffering none
+    puts -nonewline $f "123456789012345\r\nbcdefghijklmnopqrstuvwxyz"
+    variable x {}
+    fileevent $f read [namespace code "ready $f"]
+    proc ready {f} {
+	variable x
+	lappend x [gets $f line] $line [testchannel inputbuffered $f]
+    }
+    fconfigure $f -encoding unicode -buffersize 16 -blocking 0
+    vwait [namespace which -variable x]
+    fconfigure $f -translation auto -encoding ascii -blocking 1
+    # here
+    vwait [namespace which -variable x]
+    close $f
+    set x
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: Tcl_FinalizeNotifier: unable to write q to triggerPipe
+    while executing
+"close $f"
+    ("uplevel" body line 18)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: CHILDKILLED 18159 SIGABRT SIGABRT
+==== io-8.2 FAILED
+
+
+
+==== io-29.25 Implicit flush with Tcl_Flush to command pipelines FAILED
+==== Contents of test case:
+
+    file delete $path(test3)
+    set f [open "|[list [interpreter] $path(cat) | [interpreter] $path(cat) > $path(test3)]" w]
+    puts $f "Line 1"
+    puts $f "Line 2"
+    close $f
+    after 100
+    set f [open $path(test3) r]
+    set x [read $f]
+    close $f
+    set x
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: Tcl_FinalizeNotifier: unable to write q to triggerPipe
+    while executing
+"close $f"
+    ("uplevel" body line 6)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: CHILDKILLED 21279 SIGABRT SIGABRT
+==== io-29.25 FAILED
+
+
+
+==== io-46.1 Tcl event loop vs multiple interpreters FAILED
+==== Contents of test case:
+
+    testfevent create
+    set script "set f \[[list open $path(foo) r]]\n"
+    append script {
+	set x "no event"
+	fileevent $f readable [namespace code {
+	    set x "f triggered: [gets $f]"
+	    fileevent $f readable {}
+	}]
+    }
+    testfevent cmd $script
+    after 1	;# We must delay because Windows takes a little time to notice
+    update
+    testfevent cmd {close $f}
+    list [testfevent cmd {set x}] [testfevent cmd {info commands after}]
+
+---- Result was:
+{no event} after
+---- Result should have been (exact matching):
+{f triggered: foo bar} after
+==== io-46.1 FAILED
+
+
+
+==== io-50.1 testing handler deletion FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    close $f
+    set f [open $path(test1) r]
+    testchannelevent $f add readable [namespace code [list delhandler $f]]
+    proc delhandler {f} {
+	variable z
+	set z called
+	testchannelevent $f delete 0
+    }
+    set z not_called
+    update
+    close $f
+    set z
+
+---- Result was:
+not_called
+---- Result should have been (exact matching):
+called
+==== io-50.1 FAILED
+
+
+
+==== io-50.2 testing handler deletion with multiple handlers FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    close $f
+    set f [open $path(test1) r]
+    testchannelevent $f add readable [namespace code [list delhandler $f 1]]
+    testchannelevent $f add readable [namespace code [list delhandler $f 0]]
+    proc delhandler {f i} {
+	variable z
+	lappend z "called delhandler $f $i"
+	testchannelevent $f delete 0
+    }
+    set z ""
+    update
+    close $f
+    string compare [string tolower $z]  [list [list called delhandler $f 0] [list called delhandler $f 1]]
+
+---- Result was:
+-1
+---- Result should have been (exact matching):
+0
+==== io-50.2 FAILED
+
+
+
+==== io-50.3 testing handler deletion with multiple handlers FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    close $f
+    set f [open $path(test1) r]
+    testchannelevent $f add readable [namespace code [list notcalled $f 1]]
+    testchannelevent $f add readable [namespace code [list delhandler $f 0]]
+    set z ""
+    proc notcalled {f i} {
+	variable z
+	lappend z "notcalled was called!! $f $i"
+    }
+    proc delhandler {f i} {
+	variable z
+	testchannelevent $f delete 1
+	lappend z "delhandler $f $i called"
+	testchannelevent $f delete 0
+	lappend z "delhandler $f $i deleted myself"
+    }
+    set z ""
+    update
+    close $f
+    string compare [string tolower $z]  [list [list delhandler $f 0 called]  [list delhandler $f 0 deleted myself]]
+
+---- Result was:
+-1
+---- Result should have been (exact matching):
+0
+==== io-50.3 FAILED
+
+
+
+==== io-50.4 testing handler deletion vs reentrant calls FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    close $f
+    set f [open $path(test1) r]
+    testchannelevent $f add readable [namespace code [list delrecursive $f]]
+    proc delrecursive {f} {
+	variable z
+	variable u
+	if {"$u" == "recursive"} {
+	    testchannelevent $f delete 0
+	    lappend z "delrecursive deleting recursive"
+	} else {
+	    lappend z "delrecursive calling recursive"
+	    set u recursive
+	    update
+	}
+    }
+    variable u toplevel
+    variable z ""
+    update
+    close $f
+    string compare [string tolower $z]  {{delrecursive calling recursive} {delrecursive deleting recursive}}
+
+---- Result was:
+-1
+---- Result should have been (exact matching):
+0
+==== io-50.4 FAILED
+
+
+
+==== io-50.5 testing handler deletion vs reentrant calls FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    close $f
+    set f [open $path(test1) r]
+    testchannelevent $f add readable [namespace code [list notcalled $f]]
+    testchannelevent $f add readable [namespace code [list del $f]]
+    proc notcalled {f} {
+	variable z
+	lappend z "notcalled was called!! $f"
+    }
+    proc del {f} {
+	variable u
+	variable z
+	if {"$u" == "recursive"} {
+	    testchannelevent $f delete 1
+	    testchannelevent $f delete 0
+	    lappend z "del deleted notcalled"
+	    lappend z "del deleted myself"
+	} else {
+	    set u recursive
+	    lappend z "del calling recursive"
+	    update
+	    lappend z "del after update"
+	}
+    }
+    set z ""
+    set u toplevel
+    update
+    close $f
+    string compare [string tolower $z]  [list {del calling recursive} {del deleted notcalled}  {del deleted myself} {del after update}]
+
+---- Result was:
+-1
+---- Result should have been (exact matching):
+0
+==== io-50.5 FAILED
+
+
+
+==== io-50.6 testing handler deletion vs reentrant calls FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    close $f
+    set f [open $path(test1) r]
+    testchannelevent $f add readable [namespace code [list second $f]]
+    testchannelevent $f add readable [namespace code [list first $f]]
+    proc first {f} {
+	variable u
+	variable z
+	if {"$u" == "toplevel"} {
+	    lappend z "first called"
+	    set u first
+	    update
+	    lappend z "first after update"
+	} else {
+	    lappend z "first called not toplevel"
+	}
+    }
+    proc second {f} {
+	variable u
+	variable z
+	if {"$u" == "first"} {
+	    lappend z "second called, first time"
+	    set u second
+	    testchannelevent $f delete 0
+	} elseif {"$u" == "second"} {
+	    lappend z "second called, second time"
+	    testchannelevent $f delete 0
+	} else {
+	    lappend z "second called, cannot happen!"
+	    testchannelevent $f removeall
+	}
+    }
+    set z ""
+    set u toplevel
+    update
+    close $f
+    string compare [string tolower $z]  [list {first called} {first called not toplevel}  {second called, first time} {second called, second time}  {first after update}]
+
+---- Result was:
+-1
+---- Result should have been (exact matching):
+0
+==== io-50.6 FAILED
+
+
+
+==== io-53.4.1 Bug 894da183c8 FAILED
+==== Contents of test case:
+
+    set big bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\n
+    variable x
+    for {set x 0} {$x < 12} {incr x} {
+	append big $big
+    }
+    file delete $path(pipe)
+    set f1 [open $path(pipe) w]
+    puts $f1 [list file delete $path(test1)]
+    puts $f1 {
+	puts ready
+	set f [open io-53.4.1 w]
+	chan configure $f -translation lf
+	fcopy stdin $f -command { set x }
+	vwait x
+	close $f
+    }
+    puts $f1 "close \[[list open $path(test1) w]]"
+    close $f1
+    set f1 [open "|[list [interpreter] $path(pipe)]" r+]
+    set result [gets $f1]
+    fconfigure $f1 -blocking 0 -buffersize 125000 -translation lf
+    puts $f1 $big
+    fconfigure $f1 -blocking 1
+    close $f1
+    set big {}
+    while {[catch {glob $path(test1)}]} {after 50}
+    file delete $path(test1)
+    set check [file size io-53.4.1]
+    file delete io-53.4.1
+    set check
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: Tcl_FinalizeNotifier: unable to write q to triggerPipe
+    while executing
+"close $f1"
+    ("uplevel" body line 25)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: CHILDKILLED 22348 SIGABRT SIGABRT
+==== io-53.4.1 FAILED
+
+
+
+==== io-53.10 Bug 1350564, multi-directional fcopy FAILED
+==== Contents of test case:
+
+    # Now pass data through the server in both directions.
+    set ::forever {}
+    puts $a AB
+    vwait ::forever
+    puts $b BA
+    vwait ::forever
+    set ::forever
+
+---- Test cleanup failed:
+child killed: SIGABRT
+---- errorInfo(cleanup): child killed: SIGABRT
+    while executing
+"close $pipe"
+    ("uplevel" body line 4)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): CHILDKILLED 24582 SIGABRT SIGABRT
+==== io-53.10 FAILED
+
+Warning: files left behind:
+	io.test:	io-53.4.1
 ioCmd.test
 ioTrans.test
 iogt.test
@@ -123,7 +820,6 @@ scan.test
 security.test
 set-old.test
 set.test
-socket.test
 source.test
 split.test
 stack.test
@@ -161,9 +857,10 @@ winPipe.test
 winTime.test
 zlib.test
 
-Tests ended at Thu Feb 25 12:31:11 CET 2021
-all.tcl:	Total	33499	Passed	30164	Skipped	3335	Failed	0
-Sourced 150 Test Files.
+Tests ended at Mon Mar 22 21:13:17 CET 2021
+all.tcl:	Total	33334	Passed	29982	Skipped	3330	Failed	22
+Sourced 149 Test Files.
+Files with failing tests: chanio.test event.test io.test
 Number of tests skipped for each constraint:
 	9	!ieeeFloatingPoint
 	3	asyncPipeChan
@@ -180,7 +877,7 @@ Number of tests skipped for each constraint:
 	52	longIs32bit
 	14	macosxFileAttr
 	82	memory
-	46	nonPortable
+	45	nonPortable
 	5	notNetworkFilesystem
 	1	notValgrind
 	9	nt
@@ -192,14 +889,24 @@ Number of tests skipped for each constraint:
 	1	testexprparser && !ieeeFloatingPoint
 	1	testwinclock
 	21	testwordend
-	189	thread
-	3	threaded
+	187	thread
 	3	tip389
+	2	unthreaded
 	2	wideBiggerThanInt
-	487	win
+	486	win
 	4	winVista
 	6	xdev
---- PASS: TestTclTest (197.05s)
+
+Test files exiting with errors:  
+
+  chan.test
+
+  http.test
+
+  httpold.test
+
+    all_test.go:364: panic detected
+--- FAIL: TestTclTest (182.45s)
 === RUN   TestEval
 --- PASS: TestEval (0.00s)
 === RUN   TestCreateCommand
@@ -208,7 +915,59 @@ Number of tests skipped for each constraint:
 --- PASS: ExampleInterp_Eval (0.00s)
 === RUN   ExampleInterp_NewCommand
 --- PASS: ExampleInterp_NewCommand (0.00s)
-PASS
-ok  	modernc.org/tcl	197.057s
-165:all.tcl:	Total	33499	Passed	30164	Skipped	3335	Failed	0
-Thu Feb 25 12:31:11 CET 2021
+FAIL
+exit status 1
+FAIL	modernc.org/tcl	182.464s
+31:==== chan-io-7.4 FilterInputBytes: recover from split up character FAILED
+48:---- Test cleanup failed:
+57:==== chan-io-7.4 FAILED
+61:==== chan-io-46.1 Tcl event loop vs multiple interpreters FAILED
+83:==== chan-io-46.1 FAILED
+87:==== chan-io-50.1 testing handler deletion FAILED
+105:==== chan-io-50.1 FAILED
+109:==== chan-io-50.2 testing handler deletion with multiple handlers FAILED
+127:==== chan-io-50.2 FAILED
+131:==== chan-io-50.3 testing handler deletion with multiple handlers FAILED
+155:==== chan-io-50.3 FAILED
+159:==== chan-io-50.4 testing handler deletion vs reentrant calls FAILED
+182:==== chan-io-50.4 FAILED
+186:==== chan-io-50.5 testing handler deletion vs reentrant calls FAILED
+220:==== chan-io-50.5 FAILED
+224:==== chan-io-50.6 testing handler deletion vs reentrant calls FAILED
+266:==== chan-io-50.6 FAILED
+270:==== chan-io-53.10 Bug 1350564, multi-directional fcopy FAILED
+281:---- Test cleanup failed:
+290:==== chan-io-53.10 FAILED
+313:==== event-1.1 Tcl_CreateFileHandler, reading FAILED
+330:==== event-1.1 FAILED
+363:==== io-7.4 FilterInputBytes: recover from split up character FAILED
+393:==== io-7.4 FAILED
+397:==== io-8.2 PeekAhead: only go to device if no more cached data FAILED
+428:==== io-8.2 FAILED
+432:==== io-29.25 Implicit flush with Tcl_Flush to command pipelines FAILED
+455:==== io-29.25 FAILED
+459:==== io-46.1 Tcl event loop vs multiple interpreters FAILED
+481:==== io-46.1 FAILED
+485:==== io-50.1 testing handler deletion FAILED
+507:==== io-50.1 FAILED
+511:==== io-50.2 testing handler deletion with multiple handlers FAILED
+534:==== io-50.2 FAILED
+538:==== io-50.3 testing handler deletion with multiple handlers FAILED
+568:==== io-50.3 FAILED
+572:==== io-50.4 testing handler deletion vs reentrant calls FAILED
+602:==== io-50.4 FAILED
+606:==== io-50.5 testing handler deletion vs reentrant calls FAILED
+644:==== io-50.5 FAILED
+648:==== io-50.6 testing handler deletion vs reentrant calls FAILED
+694:==== io-50.6 FAILED
+698:==== io-53.4.1 Bug 894da183c8 FAILED
+741:==== io-53.4.1 FAILED
+745:==== io-53.10 Bug 1350564, multi-directional fcopy FAILED
+756:---- Test cleanup failed:
+765:==== io-53.10 FAILED
+861:all.tcl:	Total	33334	Passed	29982	Skipped	3330	Failed	22
+863:Files with failing tests: chanio.test event.test io.test
+909:--- FAIL: TestTclTest (182.45s)
+918:FAIL
+920:FAIL	modernc.org/tcl	182.464s
+Mon Mar 22 21:13:17 CET 2021
