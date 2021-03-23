@@ -80,6 +80,7 @@ func main() {
 		"--disable-dll-unload",
 		"--disable-load",
 		"--disable-shared",
+		"--enable-threads",
 		// "--enable-symbols=mem", //TODO-
 	}
 	platformDir := "/unix"

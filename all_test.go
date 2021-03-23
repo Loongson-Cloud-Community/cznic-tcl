@@ -100,18 +100,7 @@ func TestMain(m *testing.M) {
 
 func TestTclTest(t *testing.T) {
 	skip := []string{}
-	notFile := []string{
-		"aaa_exit.test", //TODO
-		"chan.test",     //TODO
-		"chanio.test",   //TODO
-		"event.test",    //TODO
-		"http11.test",   //TODO
-		"httpold.test",  //TODO
-		"io.test",       //TODO
-		"main.test",     //TODO
-		"socket.test",   //TODO
-		"zlib.test",     //TODO
-	}
+	notFile := []string{}
 	wd, err := os.Getwd()
 	if err != nil {
 		t.Fatal(err)
