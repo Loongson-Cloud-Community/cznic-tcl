@@ -2,7 +2,7 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-.PHONY:	all clean cover cpu editor internalError later mem nuke todo edit tcl
+.PHONY:	all clean cover cpu editor internalError later mem nuke todo edit tcl gotclsh
 
 grep=--include=*.go --include=*.l --include=*.y --include=*.yy
 ngrep='TODOOK\|internal\|.*stringer.*\.go\|assets\.go'
@@ -41,6 +41,11 @@ generate:
 	go generate 2>&1 | tee log-generate
 	gofmt -l -s -w *.go 2>&1 | tee -a log-generate
 	go build -v ./... 2>&1 | tee -a log-generate
+
+gotclsh:
+	go install -v modernc.org/tcl/gotclsh && \
+		ls -l $$(which gotclsh) && \
+		go version -m $$(which gotclsh)
 
 build_all_targets:
 	GOOS=darwin GOARCH=amd64 go build -v ./...
