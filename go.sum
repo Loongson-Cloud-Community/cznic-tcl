@@ -43,10 +43,10 @@ modernc.org/ccgo/v3 v3.0.0-20210323214039-32b85d4592bd h1:lrDfv33m4GprHdS8fGUQQA
 modernc.org/ccgo/v3 v3.0.0-20210323214039-32b85d4592bd/go.mod h1:aopmMk0XIpnk9jSIgzkKBPHh2XFLRkoZNG2YwsufRUs=
 modernc.org/httpfs v1.0.6 h1:AAgIpFZRXuYnkjftxTAZwMIiwEqAfk8aVB2/oA6nAeM=
 modernc.org/httpfs v1.0.6/go.mod h1:7dosgurJGp0sPaRanU53W4xZYKh14wfzX420oZADeHM=
-modernc.org/libc v1.7.13-0.20210308123627-12f642a52bb8 h1:m/p34a6Fq+riVqUMSO0swBCBads6NXwzQ5WfTWJfrTA=
 modernc.org/libc v1.7.13-0.20210308123627-12f642a52bb8/go.mod h1:U1eq8YWr/Kc1RWCMFUWEdkTg8OTcfLw2kY8EDwl039w=
-modernc.org/libc v1.9.2 h1:PYr5miNafdDGOxvBAOKN29CHXf93t4Y6YDmwkbu+8Uk=
 modernc.org/libc v1.9.2/go.mod h1:U1eq8YWr/Kc1RWCMFUWEdkTg8OTcfLw2kY8EDwl039w=
+modernc.org/libc v1.9.3 h1:4IcbnITV5zKr+tC5AaDFtxVMMN1PG0yiu9deN651vOY=
+modernc.org/libc v1.9.3/go.mod h1:U1eq8YWr/Kc1RWCMFUWEdkTg8OTcfLw2kY8EDwl039w=
 modernc.org/mathutil v1.1.1/go.mod h1:mZW8CKdRPY1v87qxC/wUdX5O1qDzXMP5TH3wjfpga6E=
 modernc.org/mathutil v1.2.2 h1:+yFk8hBprV+4c0U9GjFtL+dV3N8hOJ8JCituQcMShFY=
 modernc.org/mathutil v1.2.2/go.mod h1:mZW8CKdRPY1v87qxC/wUdX5O1qDzXMP5TH3wjfpga6E=
