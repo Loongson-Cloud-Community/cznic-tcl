@@ -22,6 +22,7 @@ all: editor
 	GOOS=linux GOARCH=amd64 go build -o /dev/null
 	GOOS=linux GOARCH=arm go build -o /dev/null
 	GOOS=linux GOARCH=arm64 go build -o /dev/null
+	GOOS=linux GOARCH=s390x go build -o /dev/null
 	GOOS=windows GOARCH=386 go build -o /dev/null
 	GOOS=windows GOARCH=amd64 go build -o /dev/null
 	go vet 2>&1 | grep -v $(ngrep) || true
@@ -54,6 +55,7 @@ build_all_targets:
 	GOOS=linux GOARCH=amd64 go build -v ./...
 	GOOS=linux GOARCH=arm go build -v ./...
 	GOOS=linux GOARCH=arm64 go build -v ./...
+	GOOS=linux GOARCH=s390x go build -v ./...
 	GOOS=windows GOARCH=386 go build -v ./...
 	GOOS=windows GOARCH=amd64 go build -v ./...
 	echo done
@@ -81,6 +83,23 @@ linux_arm:
 linux_arm64:
 	QEMU_LD_PREFIX=/usr/aarch64-linux-gnu CCGO_CPP=aarch64-linux-gnu-cpp-8 GO_GENERATE_CC=aarch64-linux-gnu-gcc-8 TARGET_GOOS=linux TARGET_GOARCH=arm64 go generate 2>&1 | tee /tmp/log-generate-tcl-linux-arm64
 	GOOS=linux GOARCH=arm64 go build -v ./...
+
+# The part that is run inside the 4GB VM.
+linux_s390x_vm:
+	rm -rf tmp/*
+	mkdir tmp || true
+	GO_GENERATE_TMPDIR=tmp/ TARGET_GOOS=linux TARGET_GOARCH=s390x go generate 2>&1 | tee /tmp/log-generate-tcl-linux-s390x
+
+# The part that is run first at the linux/amd64 dev machine.
+linux_s390x_pull:
+	rm -rf /home/${S390XVM_USER}/*
+	mkdir -p /home/${S390XVM_USER}/src/modernc.org/tcl/tmp/ || true
+	rsync -rp ${S390XVM}:src/modernc.org/tcl/tmp/ /home/${S390XVM_USER}/src/modernc.org/tcl/tmp/
+
+# The part that is run next at the linux/amd64 dev machine.
+linux_s390x_dev:
+	GO_GENERATE_TMPDIR=/home/${S390XVM_USER}/src/modernc.org/tcl/tmp/ TARGET_GOOS=linux TARGET_GOARCH=s390x go generate 2>&1 | tee /tmp/log-generate-tcl-linux-s390x
+	GOOS=linux GOARCH=s390x go build -v ./...
 
 windows_amd64:
 	GO_GENERATE_CC=x86_64-w64-mingw32-gcc CCGO_CPP=x86_64-w64-mingw32-cpp TARGET_GOOS=windows TARGET_GOARCH=amd64 go generate 2>&1 | tee /tmp/log-generate-tcl-windows-amd64
@@ -123,6 +142,9 @@ test_linux_arm:
 
 test_linux_arm64:
 	GOOS=linux GOARCH=arm64 make test
+
+test_linux_s390x:
+	GOOS=linux GOARCH=s390x make test
 
 test_windows_amd64:
 	rm -f y:\\libc.log

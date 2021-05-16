@@ -100,7 +100,71 @@ func TestMain(m *testing.M) {
 
 func TestTclTest(t *testing.T) {
 	skip := []string{}
-	notFile := []string{}
+	var notFile []string
+	switch {
+	case runtime.GOOS == "linux" && runtime.GOARCH == "s390x":
+		notFile = []string{ //TODO
+			"assemble.test",
+			"autoMkindex.test",
+			"basic.test",
+			"binary.test",
+			"chan.test",
+			"chanio.test",
+			"clock.test",
+			"cmdAH.test",
+			"cmdMZ.test",
+			"compExpr-old.test",
+			"encoding.test",
+			"env.test",
+			"event.test",
+			"exec.test",
+			"execute.test",
+			"expr-old.test",
+			"expr.test",
+			"fCmd.test",
+			"fileName.test",
+			"fileSystem.test",
+			"for.test",
+			"foreach.test",
+			"get.test",
+			"history.test",
+			"http.test",
+			"http11.test",
+			"httpold.test",
+			"info.test",
+			"interp.test",
+			"io.test",
+			"ioCmd.test",
+			"ioTrans.test",
+			"iogt.test",
+			"link.test",
+			"lmap.test",
+			"main.test",
+			"mathop.test",
+			"msgcat.test",
+			"newname.txt",
+			"obj.test",
+			"opt.test",
+			"pid.test",
+			"pkgMkIndex.test",
+			"regexp.test",
+			"regexpComp.test",
+			"safe.test",
+			"scan.test",
+			"socket.test",
+			"source.test",
+			"subst.test",
+			"tcltest.test",
+			"unixFCmd.test",
+			"unixInit.test",
+			"unixNotfy.test",
+			"uplevel.test",
+			"util.test",
+			"winPipe.test",
+			"zlib.test",
+		}
+	}
+
 	wd, err := os.Getwd()
 	if err != nil {
 		t.Fatal(err)

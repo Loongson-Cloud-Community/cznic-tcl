@@ -38,6 +38,7 @@ var (
 		{"linux", "amd64"}:   {},
 		{"linux", "arm"}:     {},
 		{"linux", "arm64"}:   {},
+		{"linux", "s390x"}:   {},
 		{"windows", "386"}:   {},
 		{"windows", "amd64"}: {},
 	}
@@ -80,8 +81,13 @@ func main() {
 		"--disable-dll-unload",
 		"--disable-load",
 		"--disable-shared",
-		"--enable-threads",
 		// "--enable-symbols=mem", //TODO-
+	}
+	switch {
+	case goos == "linux" && goarch == "amd64":
+		cfg = append(cfg, "--enable-threads")
+	default:
+		cfg = append(cfg, "--disable-threads")
 	}
 	platformDir := "/unix"
 	lib := []string{
@@ -141,14 +147,25 @@ func main() {
 				// This option currently causes trouble with gcc on darwin/arm64.
 				// Ex: error: invalid variant 'BLEAH'
 				ccgo.MustShell(true, "sed", "-i", "", "s/ -mdynamic-no-pic//", "Makefile")
-			default:
-				ccgo.MustShell(true, "sed", "-i", "s/ -DHAVE_PTHREAD_ATFORK=1//", "Makefile")
+			case "linux":
+				if goarch == "amd64" {
+					ccgo.MustShell(true, "sed", "-i", "s/ -DHAVE_PTHREAD_ATFORK=1//", "Makefile")
+				}
 			}
 			// -UHAVE_COPYFILE disables the tcl macOS bits trying to use copyfile/libc.Xcopyfile.
 			ccgo.MustCompile(true, "-compiledb", cdb, "make", "CFLAGS=-UHAVE_CPUID -UHAVE_COPYFILE", "binaries", "tcltest")
 			return nil
 		})
 	}
+
+	// s390x hack. The VM has only 4GB, so we do the above in the VM, but
+	// the bellow on linux/amd64 after pulling the configured sources and
+	// the CDB from the VM.
+	if runtime.GOARCH == "s390x" {
+		fmt.Printf("Finished the s390x VM part\n")
+		return
+	}
+
 	ccgo.MustCompile(true, lib...)
 	ccgo.MustCompile(true,
 		"-export-defines", "",
