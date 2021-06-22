@@ -83,12 +83,15 @@ func main() {
 		"--disable-shared",
 		// "--enable-symbols=mem", //TODO-
 	}
-	switch {
-	case goos == "linux" && goarch == "amd64":
-		cfg = append(cfg, "--enable-threads")
-	default:
-		cfg = append(cfg, "--disable-threads")
+	thr := "--disable-threads"
+	switch goos {
+	case "linux":
+		switch goarch {
+		case "amd64", "386", "arm64":
+			thr = "--enable-threads"
+		}
 	}
+	cfg = append(cfg, thr)
 	platformDir := "/unix"
 	lib := []string{
 		"-D__printf__=printf",
@@ -148,7 +151,8 @@ func main() {
 				// Ex: error: invalid variant 'BLEAH'
 				ccgo.MustShell(true, "sed", "-i", "", "s/ -mdynamic-no-pic//", "Makefile")
 			case "linux":
-				if goarch == "amd64" {
+				switch goarch {
+				case "amd64", "386", "arm64":
 					ccgo.MustShell(true, "sed", "-i", "s/ -DHAVE_PTHREAD_ATFORK=1//", "Makefile")
 				}
 			}
