@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build ignore
 // +build ignore
 
 //TODO enable threads
@@ -87,7 +88,7 @@ func main() {
 	switch goos {
 	case "linux":
 		switch goarch {
-		case "amd64", "386", "arm64":
+		case "amd64":
 			thr = "--enable-threads"
 		}
 	}
@@ -152,7 +153,7 @@ func main() {
 				ccgo.MustShell(true, "sed", "-i", "", "s/ -mdynamic-no-pic//", "Makefile")
 			case "linux":
 				switch goarch {
-				case "amd64", "386", "arm64":
+				case "amd64":
 					ccgo.MustShell(true, "sed", "-i", "s/ -DHAVE_PTHREAD_ATFORK=1//", "Makefile")
 				}
 			}
