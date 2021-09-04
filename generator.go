@@ -35,6 +35,7 @@ var (
 	supported = map[supportedKey]struct{}{
 		{"darwin", "amd64"}:  {},
 		{"darwin", "arm64"}:  {},
+		{"freebsd", "amd64"}: {},
 		{"linux", "386"}:     {},
 		{"linux", "amd64"}:   {},
 		{"linux", "arm"}:     {},
@@ -63,6 +64,7 @@ func main() {
 	srcDir := tmpDir + "/" + tarDir
 	os.RemoveAll(srcDir)
 	ccgo.MustUntarFile(true, tmpDir, tarFile, nil)
+	ccgo.CopyDir(srcDir, filepath.Join("overlay", goos, goarch), nil)
 	ccgo.MustCopyDir(true, "assets", srcDir+"/library", nil)
 	ccgo.MustCopyDir(true, "testdata/tcl", srcDir+"/tests", nil)
 	ccgo.MustCopyFile(true, "assets/tcltests/pkgIndex.tcl", "testdata/tcl/pkgIndex.tcl", nil)
@@ -133,7 +135,7 @@ func main() {
 	case "darwin":
 		cfg = append(cfg, "--enable-corefoundation=no")
 		fallthrough
-	case "linux":
+	case "linux", "freebsd":
 		lib = append(lib,
 			"libtcl8.6.a",
 			"libtclstub8.6.a",
@@ -157,8 +159,13 @@ func main() {
 					ccgo.MustShell(true, "sed", "-i", "s/ -DHAVE_PTHREAD_ATFORK=1//", "Makefile")
 				}
 			}
-			// -UHAVE_COPYFILE disables the tcl macOS bits trying to use copyfile/libc.Xcopyfile.
-			ccgo.MustCompile(true, "-compiledb", cdb, "make", "CFLAGS=-UHAVE_CPUID -UHAVE_COPYFILE", "binaries", "tcltest")
+			switch goos {
+			case "freebsd":
+				ccgo.MustCompile(true, "-compiledb", cdb, "make", "CFLAGS=-DNO_ISNAN", "binaries", "tcltest")
+			default:
+				// -UHAVE_COPYFILE disables the tcl macOS bits trying to use copyfile/libc.Xcopyfile.
+				ccgo.MustCompile(true, "-compiledb", cdb, "make", "CFLAGS=-UHAVE_CPUID -UHAVE_COPYFILE", "binaries", "tcltest")
+			}
 			return nil
 		})
 	}

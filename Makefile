@@ -18,6 +18,7 @@ all: editor
 	go test 2>&1 -timeout 1h | tee -a log
 	GOOS=darwin GOARCH=amd64 go build -o /dev/null
 	GOOS=darwin GOARCH=arm64 go build -o /dev/null
+	GOOS=freebsd GOARCH=arm64 go build -o /dev/null
 	GOOS=linux GOARCH=386 go build -o /dev/null
 	GOOS=linux GOARCH=amd64 go build -o /dev/null
 	GOOS=linux GOARCH=arm go build -o /dev/null
@@ -51,6 +52,7 @@ gotclsh:
 build_all_targets:
 	GOOS=darwin GOARCH=amd64 go build -v ./...
 	GOOS=darwin GOARCH=arm64 go build -v ./...
+	GOOS=freebsd GOARCH=arm64 go build -v ./...
 	GOOS=linux GOARCH=386 go build -v ./...
 	GOOS=linux GOARCH=amd64 go build -v ./...
 	GOOS=linux GOARCH=arm go build -v ./...
@@ -67,6 +69,10 @@ darwin_amd64:
 darwin_arm64:
 	TARGET_GOOS=darwin TARGET_GOARCH=arm64 go generate 2>&1 | tee /tmp/log-generate-tcl-darwin-arm64
 	GOOS=darwin GOARCH=arm64 go build -v ./...
+
+freebsd_amd64:
+	TARGET_GOOS=freebsd TARGET_GOARCH=amd64 AR=/usr/bin/ar CC=gcc go generate 2>&1 | tee /tmp/log-generate-tcl-freebsd-amd64
+	GOOS=freebsd GOARCH=amd64 go build -v ./...
 
 linux_amd64:
 	TARGET_GOOS=linux TARGET_GOARCH=amd64 go generate 2>&1 | tee /tmp/log-generate-tcl-linux-amd64
