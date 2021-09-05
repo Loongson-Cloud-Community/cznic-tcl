@@ -161,7 +161,7 @@ func main() {
 			}
 			switch goos {
 			case "freebsd":
-				ccgo.MustCompile(true, "-compiledb", cdb, "make", "CFLAGS=-DNO_ISNAN", "binaries", "tcltest")
+				ccgo.MustCompile(true, "-compiledb", cdb, "make", "CFLAGS='-DNO_ISNAN -UHAVE_CPUID'", "binaries", "tcltest")
 			default:
 				// -UHAVE_COPYFILE disables the tcl macOS bits trying to use copyfile/libc.Xcopyfile.
 				ccgo.MustCompile(true, "-compiledb", cdb, "make", "CFLAGS=-UHAVE_CPUID -UHAVE_COPYFILE", "binaries", "tcltest")
