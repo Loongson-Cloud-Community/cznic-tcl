@@ -41,6 +41,7 @@ var (
 		{"linux", "arm"}:     {},
 		{"linux", "arm64"}:   {},
 		{"linux", "s390x"}:   {},
+		{"netbsd", "amd64"}:  {},
 		{"windows", "386"}:   {},
 		{"windows", "amd64"}: {},
 	}
@@ -135,7 +136,7 @@ func main() {
 	case "darwin":
 		cfg = append(cfg, "--enable-corefoundation=no")
 		fallthrough
-	case "linux", "freebsd":
+	case "linux", "freebsd", "netbsd":
 		lib = append(lib,
 			"libtcl8.6.a",
 			"libtclstub8.6.a",
@@ -160,7 +161,7 @@ func main() {
 				}
 			}
 			switch goos {
-			case "freebsd":
+			case "freebsd", "netbsd":
 				ccgo.MustCompile(true, "-compiledb", cdb, "make", "CFLAGS='-DNO_ISNAN -UHAVE_CPUID'", "binaries", "tcltest")
 			default:
 				// -UHAVE_COPYFILE disables the tcl macOS bits trying to use copyfile/libc.Xcopyfile.

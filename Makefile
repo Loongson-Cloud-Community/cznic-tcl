@@ -23,6 +23,7 @@ all: editor
 	GOOS=linux GOARCH=amd64 go build -o /dev/null
 	GOOS=linux GOARCH=arm go build -o /dev/null
 	GOOS=linux GOARCH=arm64 go build -o /dev/null
+	GOOS=netbsd GOARCH=arm64 go build -o /dev/null
 	#TODO GOOS=linux GOARCH=s390x go build -o /dev/null
 	GOOS=windows GOARCH=386 go build -o /dev/null
 	GOOS=windows GOARCH=amd64 go build -o /dev/null
@@ -73,6 +74,10 @@ darwin_arm64:
 freebsd_amd64:
 	TARGET_GOOS=freebsd TARGET_GOARCH=amd64 AR=/usr/bin/ar CC=gcc go generate 2>&1 | tee /tmp/log-generate-tcl-freebsd-amd64
 	GOOS=freebsd GOARCH=amd64 go build -v ./...
+
+netbsd_amd64:
+	TARGET_GOOS=netbsd TARGET_GOARCH=amd64 AR=/usr/bin/ar CC=gcc go generate 2>&1 | tee /tmp/log-generate-tcl-netbsd-amd64
+	GOOS=netbsd GOARCH=amd64 go build -v ./...
 
 linux_amd64:
 	TARGET_GOOS=linux TARGET_GOARCH=amd64 go generate 2>&1 | tee /tmp/log-generate-tcl-linux-amd64
