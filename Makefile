@@ -23,8 +23,8 @@ all: editor
 	GOOS=linux GOARCH=amd64 go build -o /dev/null
 	GOOS=linux GOARCH=arm go build -o /dev/null
 	GOOS=linux GOARCH=arm64 go build -o /dev/null
+	GOOS=linux GOARCH=s390x go build -o /dev/null
 	GOOS=netbsd GOARCH=arm64 go build -o /dev/null
-	#TODO GOOS=linux GOARCH=s390x go build -o /dev/null
 	GOOS=windows GOARCH=386 go build -o /dev/null
 	GOOS=windows GOARCH=amd64 go build -o /dev/null
 	go vet 2>&1 | grep -v $(ngrep) || true
@@ -58,7 +58,7 @@ build_all_targets:
 	GOOS=linux GOARCH=amd64 go build -v ./...
 	GOOS=linux GOARCH=arm go build -v ./...
 	GOOS=linux GOARCH=arm64 go build -v ./...
-	#TODO GOOS=linux GOARCH=s390x go build -v ./...
+	GOOS=linux GOARCH=s390x go build -v ./...
 	GOOS=windows GOARCH=386 go build -v ./...
 	GOOS=windows GOARCH=amd64 go build -v ./...
 	echo done
@@ -98,7 +98,7 @@ linux_arm64:
 # The part that is run inside the 4GB VM.
 linux_s390x_vm:
 	rm -rf tmp/*
-	mkdir tmp || true
+	mkdir -p tmp || true
 	GO_GENERATE_TMPDIR=tmp/ TARGET_GOOS=linux TARGET_GOARCH=s390x go generate 2>&1 | tee /tmp/log-generate-tcl-linux-s390x
 
 # The part that is run first at the linux/amd64 dev machine.
