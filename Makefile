@@ -109,7 +109,7 @@ linux_s390x_pull:
 
 # The part that is run next at the linux/amd64 dev machine.
 linux_s390x_dev:
-	GO_GENERATE_TMPDIR=/home/${S390XVM_USER}/src/modernc.org/tcl/tmp/ TARGET_GOOS=linux TARGET_GOARCH=s390x go generate 2>&1 | tee /tmp/log-generate-tcl-linux-s390x
+	GO_GENERATE_TMPDIR=/home/${S390XVM_USER}/src/modernc.org/tcl/tmp/ CCGO_CPP=s390x-linux-gnu-cpp TARGET_GOOS=linux TARGET_GOARCH=s390x go generate 2>&1 | tee /tmp/log-generate-tcl-linux-s390x
 	GOOS=linux GOARCH=s390x go build -v ./...
 
 windows_amd64:

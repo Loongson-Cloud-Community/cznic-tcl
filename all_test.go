@@ -236,8 +236,8 @@ func TestTclTest(t *testing.T) {
 	os.Setenv("PATH", fmt.Sprintf("%s%c%s", dir, os.PathListSeparator, os.Getenv("PATH")))
 	cmd = exec.Command(tcltest, args...)
 	var out bytes.Buffer
-	cmd.Stdout = io.MultiWriter(&out, os.Stdout)
-	cmd.Stderr = io.MultiWriter(&out, os.Stdout)
+	cmd.Stdout = io.MultiWriter(&out, g, os.Stdout)
+	cmd.Stderr = io.MultiWriter(&out, g, os.Stdout)
 	if err := cmd.Run(); err != nil {
 		t.Error(err)
 	}
@@ -265,9 +265,8 @@ func newGolden(t *testing.T, fn string) *golden {
 			t.Fatal(err)
 		}
 
-		t.Logf("writing results to %s\n", f.Name())
 	}
-
+	t.Logf("writing results to %s\n", f.Name())
 	w := bufio.NewWriter(f)
 	return &golden{t, f, w}
 }
