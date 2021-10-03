@@ -410,7 +410,7 @@ const (
 	BN_H_                                 = 0
 	BUFFER_PADDING                        = 16
 	BUILD_tcl                             = 1
-	BYTE_ORDER                            = 1234
+	BYTE_ORDER                            = 4321
 	CANBSIZ                               = 255
 	CANCELED                              = 0x1000
 	CHANNELBUFFER_DEFAULT_SIZE            = 4096
@@ -428,8 +428,8 @@ const (
 	CHANNEL_UNBUFFERED                    = 32
 	CHARCLASS_NAME_MAX                    = 2048
 	CHAR_BIT                              = 8
-	CHAR_MAX                              = 127
-	CHAR_MIN                              = -128
+	CHAR_MAX                              = 255
+	CHAR_MIN                              = 0
 	CLL_END                               = -1
 	CLOCK_BOOTTIME                        = 7
 	CLOCK_BOOTTIME_ALARM                  = 9
@@ -457,7 +457,7 @@ const (
 	DBL_MAX_EXP                           = 1024
 	DBL_MIN_10_EXP                        = -307
 	DBL_MIN_EXP                           = -1021
-	DECIMAL_DIG                           = 21
+	DECIMAL_DIG                           = 36
 	DEFFILEMODE                           = 438
 	DELAYTIMER_MAX                        = 2147483647
 	DELETED                               = 1
@@ -644,14 +644,14 @@ const (
 	FLT_TRUE_MIN                          = 0
 	FNDELAY                               = 2048
 	FNONBLOCK                             = 2048
-	FP_ILOGB0                             = -2147483648
-	FP_ILOGBNAN                           = -2147483648
+	FP_FAST_FMA                           = 1
+	FP_FAST_FMAF                          = 1
+	FP_ILOGB0                             = -2147483647
+	FP_ILOGBNAN                           = 2147483647
 	FP_INFINITE1                          = 1
 	FP_NAN1                               = 0
 	FP_NORMAL1                            = 4
 	FP_SUBNORMAL1                         = 3
-	FP_XSTATE_MAGIC1                      = 0x46505853
-	FP_XSTATE_MAGIC2                      = 0x46505845
 	FP_ZERO1                              = 2
 	FRAME_IS_LAMBDA                       = 0x2
 	FRAME_IS_METHOD                       = 0x4
@@ -872,11 +872,11 @@ const (
 	LC_TELEPHONE_MASK                     = 1024
 	LC_TIME                               = 2
 	LC_TIME_MASK                          = 4
-	LDBL_DECIMAL_DIG                      = 21
-	LDBL_DIG                              = 18
+	LDBL_DECIMAL_DIG                      = 36
+	LDBL_DIG                              = 33
 	LDBL_EPSILON                          = 0
 	LDBL_HAS_SUBNORM                      = 1
-	LDBL_MANT_DIG                         = 64
+	LDBL_MANT_DIG                         = 113
 	LDBL_MAX                              = 0
 	LDBL_MAX_10_EXP                       = 4932
 	LDBL_MAX_EXP                          = 16384
@@ -961,7 +961,7 @@ const (
 	NCARGS                                = 131072
 	NETDB_INTERNAL                        = -1
 	NETDB_SUCCESS                         = 0
-	NGREG                                 = 23
+	NGREG                                 = 27
 	NGROUPS                               = 65536
 	NGROUPS_MAX                           = 65536
 	NI_DGRAM                              = 16
@@ -1056,8 +1056,8 @@ const (
 	PF_WANPIPE                            = 25
 	PF_X25                                = 9
 	PIPE_BUF                              = 4096
-	POSIX_FADV_DONTNEED                   = 4
-	POSIX_FADV_NOREUSE                    = 5
+	POSIX_FADV_DONTNEED                   = 6
+	POSIX_FADV_NOREUSE                    = 7
 	POSIX_FADV_NORMAL                     = 0
 	POSIX_FADV_RANDOM                     = 1
 	POSIX_FADV_SEQUENTIAL                 = 2
@@ -1531,6 +1531,9 @@ const (
 	X_ARPA_INET_H                         = 1
 	X_ASM_GENERIC_ERRNO_BASE_H            = 0
 	X_ASM_GENERIC_ERRNO_H                 = 0
+	X_ASM_GENERIC_INT_LL64_H              = 0
+	X_ASM_S390_SIGCONTEXT_H               = 0
+	X_ASM_SOCKET_H                        = 0
 	X_BITS_BYTESWAP_H                     = 1
 	X_BITS_ERRNO_H                        = 1
 	X_BITS_FLOATN_COMMON_H                = 0
@@ -1590,6 +1593,8 @@ const (
 	X_LIMITS_H___                         = 0
 	X_LINUX_LIMITS_H                      = 0
 	X_LINUX_PARAM_H                       = 0
+	X_LINUX_POSIX_TYPES_H                 = 0
+	X_LINUX_TYPES_H                       = 0
 	X_LOCALE_H                            = 1
 	X_MATH_H                              = 1
 	X_MKNOD_VER                           = 0
@@ -1715,6 +1720,10 @@ const (
 	X_PWD_H                               = 1
 	X_REGEX_H_                            = 0
 	X_RPC_NETDB_H                         = 1
+	X_S390_TYPES_H                        = 0
+	X_SIGCONTEXT_NSIG                     = 64
+	X_SIGCONTEXT_NSIG_BPW                 = 64
+	X_SIGCONTEXT_NSIG_WORDS               = 1
 	X_SIGNAL_H                            = 0
 	X_SS_SIZE                             = 128
 	X_STATBUF_ST_BLKSIZE                  = 0
@@ -2189,281 +2198,6 @@ const ( /* tclInt.h:2738:1: */
 	TCL_EMPTYSTRING_UNKNOWN = -1
 	TCL_EMPTYSTRING_NO      = 0
 	TCL_EMPTYSTRING_YES     = 1
-)
-
-// end block for C++
-
-// Local Variables:
-// mode: c
-// c-basic-offset: 4
-// fill-column: 78
-// End:
-
-// Define ISO C stdio on top of C++ iostreams.
-//    Copyright (C) 1991-2018 Free Software Foundation, Inc.
-//    This file is part of the GNU C Library.
-//
-//    The GNU C Library is free software; you can redistribute it and/or
-//    modify it under the terms of the GNU Lesser General Public
-//    License as published by the Free Software Foundation; either
-//    version 2.1 of the License, or (at your option) any later version.
-//
-//    The GNU C Library is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-//    Lesser General Public License for more details.
-//
-//    You should have received a copy of the GNU Lesser General Public
-//    License along with the GNU C Library; if not, see
-//    <http://www.gnu.org/licenses/>.
-
-//	ISO C99 Standard: 7.19 Input/output	<stdio.h>
-
-// Copyright (C) 1991-2018 Free Software Foundation, Inc.
-//    This file is part of the GNU C Library.
-//
-//    The GNU C Library is free software; you can redistribute it and/or
-//    modify it under the terms of the GNU Lesser General Public
-//    License as published by the Free Software Foundation; either
-//    version 2.1 of the License, or (at your option) any later version.
-//
-//    The GNU C Library is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-//    Lesser General Public License for more details.
-//
-//    You should have received a copy of the GNU Lesser General Public
-//    License along with the GNU C Library; if not, see
-//    <http://www.gnu.org/licenses/>.
-
-//	ISO C99 Standard 7.4: Character handling	<ctype.h>
-
-// Copyright (C) 1991-2018 Free Software Foundation, Inc.
-//    This file is part of the GNU C Library.
-//
-//    The GNU C Library is free software; you can redistribute it and/or
-//    modify it under the terms of the GNU Lesser General Public
-//    License as published by the Free Software Foundation; either
-//    version 2.1 of the License, or (at your option) any later version.
-//
-//    The GNU C Library is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-//    Lesser General Public License for more details.
-//
-//    You should have received a copy of the GNU Lesser General Public
-//    License along with the GNU C Library; if not, see
-//    <http://www.gnu.org/licenses/>.
-
-// bits/types.h -- definitions of __*_t types underlying *_t types.
-//    Copyright (C) 2002-2018 Free Software Foundation, Inc.
-//    This file is part of the GNU C Library.
-//
-//    The GNU C Library is free software; you can redistribute it and/or
-//    modify it under the terms of the GNU Lesser General Public
-//    License as published by the Free Software Foundation; either
-//    version 2.1 of the License, or (at your option) any later version.
-//
-//    The GNU C Library is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-//    Lesser General Public License for more details.
-//
-//    You should have received a copy of the GNU Lesser General Public
-//    License along with the GNU C Library; if not, see
-//    <http://www.gnu.org/licenses/>.
-
-// Never include this file directly; use <sys/types.h> instead.
-
-// These are all the characteristics of characters.
-//    If there get to be more than 16 distinct characteristics,
-//    many things must be changed that use `unsigned short int's.
-//
-//    The characteristics are stored always in network byte order (big
-//    endian).  We define the bit value interpretations here dependent on the
-//    machine's byte order.
-
-// Copyright (C) 1992-2018 Free Software Foundation, Inc.
-//    This file is part of the GNU C Library.
-//
-//    The GNU C Library is free software; you can redistribute it and/or
-//    modify it under the terms of the GNU Lesser General Public
-//    License as published by the Free Software Foundation; either
-//    version 2.1 of the License, or (at your option) any later version.
-//
-//    The GNU C Library is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-//    Lesser General Public License for more details.
-//
-//    You should have received a copy of the GNU Lesser General Public
-//    License along with the GNU C Library; if not, see
-//    <http://www.gnu.org/licenses/>.
-
-const ( /* ctype.h:46:1: */
-	_ISupper  = 256   // UPPERCASE.
-	_ISlower  = 512   // lowercase.
-	_ISalpha  = 1024  // Alphabetic.
-	_ISdigit  = 2048  // Numeric.
-	_ISxdigit = 4096  // Hexadecimal numeric.
-	_ISspace  = 8192  // Whitespace.
-	_ISprint  = 16384 // Printing.
-	_ISgraph  = 32768 // Graphical.
-	_ISblank  = 1     // Blank (usually SPC and TAB).
-	_IScntrl  = 2     // Control character.
-	_ISpunct  = 4     // Punctuation.
-	_ISalnum  = 8
-)
-
-// Inform libc code that these two types are effectively identical.
-
-// These macros extract size information from a `struct dirent *'.
-//    They may evaluate their argument multiple times, so it must not
-//    have side effects.  Each of these may involve a relatively costly
-//    call to `strlen' on some systems, so these values should be cached.
-//
-//    _D_EXACT_NAMLEN (DP)	returns the length of DP->d_name, not including
-//    its terminating null character.
-//
-//    _D_ALLOC_NAMLEN (DP)	returns a size at least (_D_EXACT_NAMLEN (DP) + 1);
-//    that is, the allocation size needed to hold the DP->d_name string.
-//    Use this macro when you don't need the exact length, just an upper bound.
-//    This macro is less likely to require calling `strlen' than _D_EXACT_NAMLEN.
-//
-
-// File types for `d_type'.
-const ( /* dirent.h:97:1: */
-	DT_UNKNOWN = 0
-	DT_FIFO    = 1
-	DT_CHR     = 2
-	DT_DIR     = 4
-	DT_BLK     = 6
-	DT_REG     = 8
-	DT_LNK     = 10
-	DT_SOCK    = 12
-	DT_WHT     = 14
-)
-
-// Depending on the type of TG_ARG, call an appropriately suffixed
-//    version of FUNC with arguments (including parentheses) ARGS.
-//    Suffixed functions may not exist for long double if it has the same
-//    format as double, or for other types with the same format as float,
-//    double or long double.  The behavior is undefined if the argument
-//    does not have a real floating type.  The definition may use a
-//    conditional expression, so all suffixed versions of FUNC must
-//    return the same type (FUNC may include a cast if necessary rather
-//    than being a single identifier).
-
-// ISO C99 defines some generic macros which work on any data type.
-
-// All floating-point numbers can be put in one of these categories.
-const ( /* math.h:853:1: */
-	FP_NAN       = 0
-	FP_INFINITE  = 1
-	FP_ZERO      = 2
-	FP_SUBNORMAL = 3
-	FP_NORMAL    = 4
-)
-
-// Standard well-known ports.
-const ( /* in.h:122:1: */
-	IPPORT_ECHO       = 7  // Echo service.
-	IPPORT_DISCARD    = 9  // Discard transmissions service.
-	IPPORT_SYSTAT     = 11 // System status service.
-	IPPORT_DAYTIME    = 13 // Time of day service.
-	IPPORT_NETSTAT    = 15 // Network status service.
-	IPPORT_FTP        = 21 // File Transfer Protocol.
-	IPPORT_TELNET     = 23 // Telnet protocol.
-	IPPORT_SMTP       = 25 // Simple Mail Transfer Protocol.
-	IPPORT_TIMESERVER = 37 // Timeserver service.
-	IPPORT_NAMESERVER = 42 // Domain Name Service.
-	IPPORT_WHOIS      = 43 // Internet Whois service.
-	IPPORT_MTP        = 57
-
-	IPPORT_TFTP    = 69 // Trivial File Transfer Protocol.
-	IPPORT_RJE     = 77
-	IPPORT_FINGER  = 79 // Finger service.
-	IPPORT_TTYLINK = 87
-	IPPORT_SUPDUP  = 95 // SUPDUP protocol.
-
-	IPPORT_EXECSERVER  = 512 // execd service.
-	IPPORT_LOGINSERVER = 513 // rlogind service.
-	IPPORT_CMDSERVER   = 514
-	IPPORT_EFSSERVER   = 520
-
-	// UDP ports.
-	IPPORT_BIFFUDP     = 512
-	IPPORT_WHOSERVER   = 513
-	IPPORT_ROUTESERVER = 520
-
-	// Ports less than this value are reserved for privileged processes.
-	IPPORT_RESERVED = 1024
-
-	// Ports greater this value are reserved for (non-privileged) servers.
-	IPPORT_USERRESERVED = 5000
-)
-
-// Options for use with `getsockopt' and `setsockopt' at the IPv6 level.
-//    The first word in the comment at the right is the data type used;
-//    "bool" means a boolean value stored in an `int'.
-
-// Advanced API (RFC3542) (1).
-
-// Advanced API (RFC3542) (2).
-
-// RFC5014.
-
-// RFC5082.
-
-// Obsolete synonyms for the above.
-
-// IPV6_MTU_DISCOVER values.
-
-// Socket level values for IPv6.
-
-// Routing header options for IPv6.
-
-// Standard well-defined IP protocols.
-const ( /* in.h:40:1: */
-	IPPROTO_IP      = 0   // Dummy protocol for TCP.
-	IPPROTO_ICMP    = 1   // Internet Control Message Protocol.
-	IPPROTO_IGMP    = 2   // Internet Group Management Protocol.
-	IPPROTO_IPIP    = 4   // IPIP tunnels (older KA9Q tunnels use 94).
-	IPPROTO_TCP     = 6   // Transmission Control Protocol.
-	IPPROTO_EGP     = 8   // Exterior Gateway Protocol.
-	IPPROTO_PUP     = 12  // PUP protocol.
-	IPPROTO_UDP     = 17  // User Datagram Protocol.
-	IPPROTO_IDP     = 22  // XNS IDP protocol.
-	IPPROTO_TP      = 29  // SO Transport Protocol Class 4.
-	IPPROTO_DCCP    = 33  // Datagram Congestion Control Protocol.
-	IPPROTO_IPV6    = 41  // IPv6 header.
-	IPPROTO_RSVP    = 46  // Reservation Protocol.
-	IPPROTO_GRE     = 47  // General Routing Encapsulation.
-	IPPROTO_ESP     = 50  // encapsulating security payload.
-	IPPROTO_AH      = 51  // authentication header.
-	IPPROTO_MTP     = 92  // Multicast Transport Protocol.
-	IPPROTO_BEETPH  = 94  // IP option pseudo header for BEET.
-	IPPROTO_ENCAP   = 98  // Encapsulation Header.
-	IPPROTO_PIM     = 103 // Protocol Independent Multicast.
-	IPPROTO_COMP    = 108 // Compression Header Protocol.
-	IPPROTO_SCTP    = 132 // Stream Control Transmission Protocol.
-	IPPROTO_UDPLITE = 136 // UDP-Lite protocol.
-	IPPROTO_MPLS    = 137 // MPLS in IP.
-	IPPROTO_RAW     = 255 // Raw IP packets.
-	IPPROTO_MAX     = 256
-)
-
-// If __USE_KERNEL_IPV6_DEFS is 1 then the user has included the kernel
-//    network headers first and we should use those ABI-identical definitions
-//    instead of our own, otherwise 0.
-const ( /* in.h:99:1: */
-	IPPROTO_HOPOPTS  = 0  // IPv6 Hop-by-Hop options.
-	IPPROTO_ROUTING  = 43 // IPv6 routing header.
-	IPPROTO_FRAGMENT = 44 // IPv6 fragmentation header.
-	IPPROTO_ICMPV6   = 58 // ICMPv6.
-	IPPROTO_NONE     = 59 // IPv6 no next header.
-	IPPROTO_DSTOPTS  = 60 // IPv6 destination options.
-	IPPROTO_MH       = 135
 )
 
 // Get the `_PC_*' symbols for the NAME argument to `pathconf' and `fpathconf';
@@ -3121,7 +2855,7 @@ const ( /* siginfo-consts.h:168:1: */
 
 // Most of these constants are uniform across all architectures, but there
 //    is one exception.
-// Architecture-specific adjustments to siginfo_t.  x86 version.
+// Architecture-specific adjustments to siginfo_t.
 
 // Values for `si_code'.  Positive values are reserved for kernel-generated
 //    signals.
@@ -3598,6 +3332,281 @@ const ( /* waitflags.h:52:1: */
 	P_PGID = 2
 )
 
+// end block for C++
+
+// Local Variables:
+// mode: c
+// c-basic-offset: 4
+// fill-column: 78
+// End:
+
+// Define ISO C stdio on top of C++ iostreams.
+//    Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//    This file is part of the GNU C Library.
+//
+//    The GNU C Library is free software; you can redistribute it and/or
+//    modify it under the terms of the GNU Lesser General Public
+//    License as published by the Free Software Foundation; either
+//    version 2.1 of the License, or (at your option) any later version.
+//
+//    The GNU C Library is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//    Lesser General Public License for more details.
+//
+//    You should have received a copy of the GNU Lesser General Public
+//    License along with the GNU C Library; if not, see
+//    <http://www.gnu.org/licenses/>.
+
+//	ISO C99 Standard: 7.19 Input/output	<stdio.h>
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//    This file is part of the GNU C Library.
+//
+//    The GNU C Library is free software; you can redistribute it and/or
+//    modify it under the terms of the GNU Lesser General Public
+//    License as published by the Free Software Foundation; either
+//    version 2.1 of the License, or (at your option) any later version.
+//
+//    The GNU C Library is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//    Lesser General Public License for more details.
+//
+//    You should have received a copy of the GNU Lesser General Public
+//    License along with the GNU C Library; if not, see
+//    <http://www.gnu.org/licenses/>.
+
+//	ISO C99 Standard 7.4: Character handling	<ctype.h>
+
+// Copyright (C) 1991-2018 Free Software Foundation, Inc.
+//    This file is part of the GNU C Library.
+//
+//    The GNU C Library is free software; you can redistribute it and/or
+//    modify it under the terms of the GNU Lesser General Public
+//    License as published by the Free Software Foundation; either
+//    version 2.1 of the License, or (at your option) any later version.
+//
+//    The GNU C Library is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//    Lesser General Public License for more details.
+//
+//    You should have received a copy of the GNU Lesser General Public
+//    License along with the GNU C Library; if not, see
+//    <http://www.gnu.org/licenses/>.
+
+// bits/types.h -- definitions of __*_t types underlying *_t types.
+//    Copyright (C) 2002-2018 Free Software Foundation, Inc.
+//    This file is part of the GNU C Library.
+//
+//    The GNU C Library is free software; you can redistribute it and/or
+//    modify it under the terms of the GNU Lesser General Public
+//    License as published by the Free Software Foundation; either
+//    version 2.1 of the License, or (at your option) any later version.
+//
+//    The GNU C Library is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//    Lesser General Public License for more details.
+//
+//    You should have received a copy of the GNU Lesser General Public
+//    License along with the GNU C Library; if not, see
+//    <http://www.gnu.org/licenses/>.
+
+// Never include this file directly; use <sys/types.h> instead.
+
+// These are all the characteristics of characters.
+//    If there get to be more than 16 distinct characteristics,
+//    many things must be changed that use `unsigned short int's.
+//
+//    The characteristics are stored always in network byte order (big
+//    endian).  We define the bit value interpretations here dependent on the
+//    machine's byte order.
+
+// Copyright (C) 1992-2018 Free Software Foundation, Inc.
+//    This file is part of the GNU C Library.
+//
+//    The GNU C Library is free software; you can redistribute it and/or
+//    modify it under the terms of the GNU Lesser General Public
+//    License as published by the Free Software Foundation; either
+//    version 2.1 of the License, or (at your option) any later version.
+//
+//    The GNU C Library is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//    Lesser General Public License for more details.
+//
+//    You should have received a copy of the GNU Lesser General Public
+//    License along with the GNU C Library; if not, see
+//    <http://www.gnu.org/licenses/>.
+
+const ( /* ctype.h:46:1: */
+	_ISupper  = 1    // UPPERCASE.
+	_ISlower  = 2    // lowercase.
+	_ISalpha  = 4    // Alphabetic.
+	_ISdigit  = 8    // Numeric.
+	_ISxdigit = 16   // Hexadecimal numeric.
+	_ISspace  = 32   // Whitespace.
+	_ISprint  = 64   // Printing.
+	_ISgraph  = 128  // Graphical.
+	_ISblank  = 256  // Blank (usually SPC and TAB).
+	_IScntrl  = 512  // Control character.
+	_ISpunct  = 1024 // Punctuation.
+	_ISalnum  = 2048
+)
+
+// Inform libc code that these two types are effectively identical.
+
+// These macros extract size information from a `struct dirent *'.
+//    They may evaluate their argument multiple times, so it must not
+//    have side effects.  Each of these may involve a relatively costly
+//    call to `strlen' on some systems, so these values should be cached.
+//
+//    _D_EXACT_NAMLEN (DP)	returns the length of DP->d_name, not including
+//    its terminating null character.
+//
+//    _D_ALLOC_NAMLEN (DP)	returns a size at least (_D_EXACT_NAMLEN (DP) + 1);
+//    that is, the allocation size needed to hold the DP->d_name string.
+//    Use this macro when you don't need the exact length, just an upper bound.
+//    This macro is less likely to require calling `strlen' than _D_EXACT_NAMLEN.
+//
+
+// File types for `d_type'.
+const ( /* dirent.h:97:1: */
+	DT_UNKNOWN = 0
+	DT_FIFO    = 1
+	DT_CHR     = 2
+	DT_DIR     = 4
+	DT_BLK     = 6
+	DT_REG     = 8
+	DT_LNK     = 10
+	DT_SOCK    = 12
+	DT_WHT     = 14
+)
+
+// Depending on the type of TG_ARG, call an appropriately suffixed
+//    version of FUNC with arguments (including parentheses) ARGS.
+//    Suffixed functions may not exist for long double if it has the same
+//    format as double, or for other types with the same format as float,
+//    double or long double.  The behavior is undefined if the argument
+//    does not have a real floating type.  The definition may use a
+//    conditional expression, so all suffixed versions of FUNC must
+//    return the same type (FUNC may include a cast if necessary rather
+//    than being a single identifier).
+
+// ISO C99 defines some generic macros which work on any data type.
+
+// All floating-point numbers can be put in one of these categories.
+const ( /* math.h:853:1: */
+	FP_NAN       = 0
+	FP_INFINITE  = 1
+	FP_ZERO      = 2
+	FP_SUBNORMAL = 3
+	FP_NORMAL    = 4
+)
+
+// Standard well-known ports.
+const ( /* in.h:122:1: */
+	IPPORT_ECHO       = 7  // Echo service.
+	IPPORT_DISCARD    = 9  // Discard transmissions service.
+	IPPORT_SYSTAT     = 11 // System status service.
+	IPPORT_DAYTIME    = 13 // Time of day service.
+	IPPORT_NETSTAT    = 15 // Network status service.
+	IPPORT_FTP        = 21 // File Transfer Protocol.
+	IPPORT_TELNET     = 23 // Telnet protocol.
+	IPPORT_SMTP       = 25 // Simple Mail Transfer Protocol.
+	IPPORT_TIMESERVER = 37 // Timeserver service.
+	IPPORT_NAMESERVER = 42 // Domain Name Service.
+	IPPORT_WHOIS      = 43 // Internet Whois service.
+	IPPORT_MTP        = 57
+
+	IPPORT_TFTP    = 69 // Trivial File Transfer Protocol.
+	IPPORT_RJE     = 77
+	IPPORT_FINGER  = 79 // Finger service.
+	IPPORT_TTYLINK = 87
+	IPPORT_SUPDUP  = 95 // SUPDUP protocol.
+
+	IPPORT_EXECSERVER  = 512 // execd service.
+	IPPORT_LOGINSERVER = 513 // rlogind service.
+	IPPORT_CMDSERVER   = 514
+	IPPORT_EFSSERVER   = 520
+
+	// UDP ports.
+	IPPORT_BIFFUDP     = 512
+	IPPORT_WHOSERVER   = 513
+	IPPORT_ROUTESERVER = 520
+
+	// Ports less than this value are reserved for privileged processes.
+	IPPORT_RESERVED = 1024
+
+	// Ports greater this value are reserved for (non-privileged) servers.
+	IPPORT_USERRESERVED = 5000
+)
+
+// Options for use with `getsockopt' and `setsockopt' at the IPv6 level.
+//    The first word in the comment at the right is the data type used;
+//    "bool" means a boolean value stored in an `int'.
+
+// Advanced API (RFC3542) (1).
+
+// Advanced API (RFC3542) (2).
+
+// RFC5014.
+
+// RFC5082.
+
+// Obsolete synonyms for the above.
+
+// IPV6_MTU_DISCOVER values.
+
+// Socket level values for IPv6.
+
+// Routing header options for IPv6.
+
+// Standard well-defined IP protocols.
+const ( /* in.h:40:1: */
+	IPPROTO_IP      = 0   // Dummy protocol for TCP.
+	IPPROTO_ICMP    = 1   // Internet Control Message Protocol.
+	IPPROTO_IGMP    = 2   // Internet Group Management Protocol.
+	IPPROTO_IPIP    = 4   // IPIP tunnels (older KA9Q tunnels use 94).
+	IPPROTO_TCP     = 6   // Transmission Control Protocol.
+	IPPROTO_EGP     = 8   // Exterior Gateway Protocol.
+	IPPROTO_PUP     = 12  // PUP protocol.
+	IPPROTO_UDP     = 17  // User Datagram Protocol.
+	IPPROTO_IDP     = 22  // XNS IDP protocol.
+	IPPROTO_TP      = 29  // SO Transport Protocol Class 4.
+	IPPROTO_DCCP    = 33  // Datagram Congestion Control Protocol.
+	IPPROTO_IPV6    = 41  // IPv6 header.
+	IPPROTO_RSVP    = 46  // Reservation Protocol.
+	IPPROTO_GRE     = 47  // General Routing Encapsulation.
+	IPPROTO_ESP     = 50  // encapsulating security payload.
+	IPPROTO_AH      = 51  // authentication header.
+	IPPROTO_MTP     = 92  // Multicast Transport Protocol.
+	IPPROTO_BEETPH  = 94  // IP option pseudo header for BEET.
+	IPPROTO_ENCAP   = 98  // Encapsulation Header.
+	IPPROTO_PIM     = 103 // Protocol Independent Multicast.
+	IPPROTO_COMP    = 108 // Compression Header Protocol.
+	IPPROTO_SCTP    = 132 // Stream Control Transmission Protocol.
+	IPPROTO_UDPLITE = 136 // UDP-Lite protocol.
+	IPPROTO_MPLS    = 137 // MPLS in IP.
+	IPPROTO_RAW     = 255 // Raw IP packets.
+	IPPROTO_MAX     = 256
+)
+
+// If __USE_KERNEL_IPV6_DEFS is 1 then the user has included the kernel
+//    network headers first and we should use those ABI-identical definitions
+//    instead of our own, otherwise 0.
+const ( /* in.h:99:1: */
+	IPPROTO_HOPOPTS  = 0  // IPv6 Hop-by-Hop options.
+	IPPROTO_ROUTING  = 43 // IPv6 routing header.
+	IPPROTO_FRAGMENT = 44 // IPv6 fragmentation header.
+	IPPROTO_ICMPV6   = 58 // ICMPv6.
+	IPPROTO_NONE     = 59 // IPv6 no next header.
+	IPPROTO_DSTOPTS  = 60 // IPv6 destination options.
+	IPPROTO_MH       = 135
+)
+
 // The following constants should be used for the second parameter of
 //    `shutdown'.
 const ( /* socket.h:41:1: */
@@ -3686,7 +3695,7 @@ type _IO_FILE = struct {
 	_old_offset     int64
 	_cur_column     uint16
 	_vtable_offset  int8
-	_shortbuf       [1]int8
+	_shortbuf       [1]uint8
 	_               [4]byte
 	_lock           uintptr
 	_offset         int64
@@ -3696,7 +3705,7 @@ type _IO_FILE = struct {
 	_freeres_buf    uintptr
 	__pad5          size_t
 	_mode           int32
-	_unused2        [20]int8
+	_unused2        [20]uint8
 } /* __FILE.h:4:1 */
 
 // The opaque type of streams.  This is the definition used elsewhere.
@@ -3852,18 +3861,16 @@ type Tcl_WideInt = int64   /* tcl.h:415:28 */
 type Tcl_WideUInt = uint64 /* tcl.h:416:36 */
 
 type stat = struct {
-	st_dev     uint64
-	st_ino     uint64
-	st_nlink   uint64
-	st_mode    uint32
-	st_uid     uint32
-	st_gid     uint32
-	__pad0     int32
-	st_rdev    uint64
-	st_size    int64
-	st_blksize int64
-	st_blocks  int64
-	st_atim    struct {
+	st_dev            uint64
+	st_ino            uint64
+	st_nlink          uint64
+	st_mode           uint32
+	st_uid            uint32
+	st_gid            uint32
+	__glibc_reserved0 int32
+	st_rdev           uint64
+	st_size           int64
+	st_atim           struct {
 		tv_sec  int64
 		tv_nsec int64
 	}
@@ -3875,8 +3882,10 @@ type stat = struct {
 		tv_sec  int64
 		tv_nsec int64
 	}
+	st_blksize       int64
+	st_blocks        int64
 	__glibc_reserved [3]int64
-} /* stat.h:46:1 */
+} /* stat.h:50:1 */
 
 //----------------------------------------------------------------------------
 // Data structures defined opaquely in this module. The definitions below just
@@ -4102,7 +4111,7 @@ type Tcl_SavedResult1 = struct {
 	appendResult uintptr
 	appendAvl    int32
 	appendUsed   int32
-	resultSpace  [201]int8
+	resultSpace  [201]uint8
 	_            [7]byte
 } /* tcl.h:864:9 */
 
@@ -4245,7 +4254,7 @@ type Tcl_DString1 = struct {
 	string      uintptr
 	length      int32
 	spaceAvl    int32
-	staticSpace [200]int8
+	staticSpace [200]uint8
 } /* tcl.h:983:9 */
 
 //----------------------------------------------------------------------------
@@ -6094,8 +6103,8 @@ func Tcl_AppInit(tls *libc.TLS, interp uintptr) int32 { /* tclAppInit.c:108:1: *
 
 // Get the definitions of O_*, F_*, FD_*: all the
 //    numbers and flag bits for `open', `fcntl', et al.
-// O_*, F_*, FD_* bit values for Linux/x86.
-//    Copyright (C) 2001-2018 Free Software Foundation, Inc.
+// O_*, F_*, FD_* bit values for Linux.
+//    Copyright (C) 2000-2018 Free Software Foundation, Inc.
 //    This file is part of the GNU C Library.
 //
 //    The GNU C Library is free software; you can redistribute it and/or
@@ -6112,6 +6121,10 @@ func Tcl_AppInit(tls *libc.TLS, interp uintptr) int32 { /* tclAppInit.c:108:1: *
 //    License along with the GNU C Library; if not, see
 //    <http://www.gnu.org/licenses/>.
 
+// Determine the wordsize from the preprocessor defines.
+
+// Not necessary, files are always with 64bit off_t.
+
 // Not necessary, we always have 64-bit offsets.
 
 type flock = struct {
@@ -6122,7 +6135,7 @@ type flock = struct {
 	l_len    int64
 	l_pid    int32
 	_        [4]byte
-} /* fcntl.h:35:1 */
+} /* fcntl.h:37:1 */
 
 type flock64 = struct {
 	l_type   int16
@@ -6132,7 +6145,7 @@ type flock64 = struct {
 	l_len    int64
 	l_pid    int32
 	_        [4]byte
-} /* fcntl.h:50:1 */
+} /* fcntl.h:52:1 */
 
 // Include generic Linux declarations.
 // O_*, F_*, FD_* bit values for Linux.
@@ -6241,20 +6254,18 @@ type timespec = struct {
 	tv_nsec int64
 } /* struct_timespec.h:9:1 */
 
-// Note stat64 has the same shape as stat for x86-64.
+// Note stat64 is the same shape as stat.
 type stat64 = struct {
-	st_dev     uint64
-	st_ino     uint64
-	st_nlink   uint64
-	st_mode    uint32
-	st_uid     uint32
-	st_gid     uint32
-	__pad0     int32
-	st_rdev    uint64
-	st_size    int64
-	st_blksize int64
-	st_blocks  int64
-	st_atim    struct {
+	st_dev            uint64
+	st_ino            uint64
+	st_nlink          uint64
+	st_mode           uint32
+	st_uid            uint32
+	st_gid            uint32
+	__glibc_reserved0 int32
+	st_rdev           uint64
+	st_size           int64
+	st_atim           struct {
 		tv_sec  int64
 		tv_nsec int64
 	}
@@ -6266,8 +6277,10 @@ type stat64 = struct {
 		tv_sec  int64
 		tv_nsec int64
 	}
+	st_blksize       int64
+	st_blocks        int64
 	__glibc_reserved [3]int64
-} /* stat.h:119:1 */
+} /* stat.h:147:1 */
 
 // Wide character type.
 //    Locale-writers should change this as necessary to
@@ -6461,7 +6474,6 @@ type sigset_t = struct{ __val [16]uint64 } /* sigset_t.h:7:20 */
 
 // Determine the wordsize from the preprocessor defines.
 
-// Both x86-64 and x32 use the 64-bit system call interface.
 // bits/types.h -- definitions of __*_t types underlying *_t types.
 //    Copyright (C) 2002-2018 Free Software Foundation, Inc.
 //    This file is part of the GNU C Library.
@@ -6508,7 +6520,9 @@ type sigval = struct {
 } /* __sigval_t.h:24:1 */
 
 // Some fields of siginfo_t have architecture-specific variations.
-// Architecture-specific adjustments to siginfo_t.  x86 version.
+// Architecture-specific adjustments to siginfo_t.
+
+// This architecture has no adjustments to make to siginfo_t.
 
 type siginfo_t = struct {
 	si_signo  int32
@@ -6553,7 +6567,6 @@ type sigval_t = sigval /* sigval_t.h:16:20 */
 
 // Determine the wordsize from the preprocessor defines.
 
-// Both x86-64 and x32 use the 64-bit system call interface.
 // bits/types.h -- definitions of __*_t types underlying *_t types.
 //    Copyright (C) 2002-2018 Free Software Foundation, Inc.
 //    This file is part of the GNU C Library.
@@ -6595,12 +6608,11 @@ type sigval_t = sigval /* sigval_t.h:16:20 */
 // Forward declaration.
 type pthread_attr_t1 = struct {
 	_      [0]uint64
-	__size [56]int8
+	__size [56]uint8
 } /* sigevent_t.h:17:9 */
 
 // Determine the wordsize from the preprocessor defines.
 
-// Both x86-64 and x32 use the 64-bit system call interface.
 // bits/types.h -- definitions of __*_t types underlying *_t types.
 //    Copyright (C) 2002-2018 Free Software Foundation, Inc.
 //    This file is part of the GNU C Library.
@@ -6665,8 +6677,8 @@ type sig_t = uintptr /* signal.h:190:24 */
 
 // Get the system-specific definitions of `struct sigaction'
 //    and the `SA_*' and `SIG_*'. constants.
-// The proper definitions for Linux's sigaction.
-//    Copyright (C) 1993-2018 Free Software Foundation, Inc.
+// Definitions for 31 & 64 bit S/390 sigaction.
+//    Copyright (C) 2001-2018 Free Software Foundation, Inc.
 //    This file is part of the GNU C Library.
 //
 //    The GNU C Library is free software; you can redistribute it and/or
@@ -6682,157 +6694,58 @@ type sig_t = uintptr /* signal.h:190:24 */
 //    You should have received a copy of the GNU Lesser General Public
 //    License along with the GNU C Library; if not, see
 //    <http://www.gnu.org/licenses/>.
+
+// Determine the wordsize from the preprocessor defines.
 
 // Structure describing the action to be taken when a signal arrives.
 type sigaction = struct {
 	__sigaction_handler struct{ sa_handler uintptr }
-	sa_mask             struct{ __val [16]uint64 }
+	__glibc_reserved0   int32
 	sa_flags            int32
-	_                   [4]byte
 	sa_restorer         uintptr
-} /* sigaction.h:27:1 */
+	sa_mask             struct{ __val [16]uint64 }
+} /* sigaction.h:30:1 */
 
-// Get machine-dependent `struct sigcontext' and signal subcodes.
-// Copyright (C) 2002-2018 Free Software Foundation, Inc.
-//    This file is part of the GNU C Library.
-//
-//    The GNU C Library is free software; you can redistribute it and/or
-//    modify it under the terms of the GNU Lesser General Public
-//    License as published by the Free Software Foundation; either
-//    version 2.1 of the License, or (at your option) any later version.
-//
-//    The GNU C Library is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
-//    Lesser General Public License for more details.
-//
-//    You should have received a copy of the GNU Lesser General Public
-//    License along with the GNU C Library; if not, see
-//    <http://www.gnu.org/licenses/>.
+// A address type so that arithmetic can be done on it & it can be upgraded to
+//    64 bit when necessary
+type addr_t = uint64 /* types.h:18:23 */
+type saddr_t = int64 /* types.h:19:25 */
 
-// bits/types.h -- definitions of __*_t types underlying *_t types.
-//    Copyright (C) 2002-2018 Free Software Foundation, Inc.
-//    This file is part of the GNU C Library.
-//
-//    The GNU C Library is free software; you can redistribute it and/or
-//    modify it under the terms of the GNU Lesser General Public
-//    License as published by the Free Software Foundation; either
-//    version 2.1 of the License, or (at your option) any later version.
-//
-//    The GNU C Library is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-//    Lesser General Public License for more details.
-//
-//    You should have received a copy of the GNU Lesser General Public
-//    License along with the GNU C Library; if not, see
-//    <http://www.gnu.org/licenses/>.
+// Has to be at least _NSIG_WORDS from asm/signal.h
+// Size of stack frame allocated when calling signal handler.
 
-// Never include this file directly; use <sys/types.h> instead.
+type _psw_t = struct {
+	mask uint64
+	addr uint64
+} /* sigcontext.h:45:32 */
 
-type _fpx_sw_bytes = struct {
-	magic1            uint32
-	extended_size     uint32
-	xstate_bv         uint64
-	xstate_size       uint32
-	__glibc_reserved1 [7]uint32
-} /* sigcontext.h:31:1 */
+type _s390_regs_common = struct {
+	psw  _psw_t
+	gprs [16]uint64
+	acrs [16]uint32
+} /* sigcontext.h:52:3 */
 
-type _fpreg = struct {
-	significand [4]uint16
-	exponent    uint16
-} /* sigcontext.h:40:1 */
+type _s390_fp_regs = struct {
+	fpc  uint32
+	pad  uint32
+	fprs [16]float64
+} /* sigcontext.h:59:3 */
 
-type _fpxreg = struct {
-	significand       [4]uint16
-	exponent          uint16
-	__glibc_reserved1 [3]uint16
-} /* sigcontext.h:46:1 */
+type _sigregs = struct {
+	regs   _s390_regs_common
+	fpregs _s390_fp_regs
+} /* sigcontext.h:65:3 */
 
-type _xmmreg = struct{ element [4]uint32 } /* sigcontext.h:53:1 */
-
-type _fpstate = struct {
-	cwd       uint16
-	swd       uint16
-	ftw       uint16
-	fop       uint16
-	rip       uint64
-	rdp       uint64
-	mxcsr     uint32
-	mxcr_mask uint32
-	_st       [8]struct {
-		significand       [4]uint16
-		exponent          uint16
-		__glibc_reserved1 [3]uint16
-	}
-	_xmm              [16]struct{ element [4]uint32 }
-	__glibc_reserved1 [24]uint32
-} /* sigcontext.h:123:1 */
+type _sigregs_ext = struct {
+	vxrs_low   [16]uint64
+	vxrs_high  [16]struct{ u [4]uint32 }
+	__reserved [128]uint8
+} /* sigcontext.h:75:3 */
 
 type sigcontext = struct {
-	r8          uint64
-	r9          uint64
-	r10         uint64
-	r11         uint64
-	r12         uint64
-	r13         uint64
-	r14         uint64
-	r15         uint64
-	rdi         uint64
-	rsi         uint64
-	rbp         uint64
-	rbx         uint64
-	rdx         uint64
-	rax         uint64
-	rcx         uint64
-	rsp         uint64
-	rip         uint64
-	eflags      uint64
-	cs          uint16
-	gs          uint16
-	fs          uint16
-	__pad0      uint16
-	err         uint64
-	trapno      uint64
-	oldmask     uint64
-	cr2         uint64
-	__184       struct{ fpstate uintptr }
-	__reserved1 [8]uint64
-} /* sigcontext.h:139:1 */
-
-type _xsave_hdr = struct {
-	xstate_bv         uint64
-	__glibc_reserved1 [2]uint64
-	__glibc_reserved2 [5]uint64
-} /* sigcontext.h:177:1 */
-
-type _ymmh_state = struct{ ymmh_space [64]uint32 } /* sigcontext.h:184:1 */
-
-type _xstate = struct {
-	fpstate struct {
-		cwd       uint16
-		swd       uint16
-		ftw       uint16
-		fop       uint16
-		rip       uint64
-		rdp       uint64
-		mxcsr     uint32
-		mxcr_mask uint32
-		_st       [8]struct {
-			significand       [4]uint16
-			exponent          uint16
-			__glibc_reserved1 [3]uint16
-		}
-		_xmm              [16]struct{ element [4]uint32 }
-		__glibc_reserved1 [24]uint32
-	}
-	xstate_hdr struct {
-		xstate_bv         uint64
-		__glibc_reserved1 [2]uint64
-		__glibc_reserved2 [5]uint64
-	}
-	ymmh struct{ ymmh_space [64]uint32 }
-} /* sigcontext.h:189:1 */
+	oldmask [1]uint64
+	sregs   uintptr
+} /* sigcontext.h:77:1 */
 
 // Copyright (C) 1989-2018 Free Software Foundation, Inc.
 //
@@ -7024,152 +6937,48 @@ type stack_t = struct {
 	ss_size  size_t
 } /* stack_t.h:31:5 */
 
-// This will define `ucontext_t' and `mcontext_t'.
-// Copyright (C) 2001-2018 Free Software Foundation, Inc.
-//    This file is part of the GNU C Library.
-//
-//    The GNU C Library is free software; you can redistribute it and/or
-//    modify it under the terms of the GNU Lesser General Public
-//    License as published by the Free Software Foundation; either
-//    version 2.1 of the License, or (at your option) any later version.
-//
-//    The GNU C Library is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-//    Lesser General Public License for more details.
-//
-//    You should have received a copy of the GNU Lesser General Public
-//    License along with the GNU C Library; if not, see
-//    <http://www.gnu.org/licenses/>.
+// Type for a general-purpose register.
+type greg_t = uint64 /* ucontext.h:42:23 */
 
-// Copyright (C) 1991-2018 Free Software Foundation, Inc.
-//    This file is part of the GNU C Library.
-//
-//    The GNU C Library is free software; you can redistribute it and/or
-//    modify it under the terms of the GNU Lesser General Public
-//    License as published by the Free Software Foundation; either
-//    version 2.1 of the License, or (at your option) any later version.
-//
-//    The GNU C Library is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-//    Lesser General Public License for more details.
-//
-//    You should have received a copy of the GNU Lesser General Public
-//    License along with the GNU C Library; if not, see
-//    <http://www.gnu.org/licenses/>.
+// And the whole bunch of them.  We should have used `struct s390_regs',
+//    but to avoid name space pollution and since the tradition says that
+//    the register set is an array, we make gregset_t a simple array
+//    that has the same size as s390_regs.  This is needed for the
+//    elf_prstatus structure.
+// Must match kernels psw_t alignment.
+type gregset_t = [27]greg_t /* ucontext.h:58:16 */
 
-// bits/types.h -- definitions of __*_t types underlying *_t types.
-//    Copyright (C) 2002-2018 Free Software Foundation, Inc.
-//    This file is part of the GNU C Library.
-//
-//    The GNU C Library is free software; you can redistribute it and/or
-//    modify it under the terms of the GNU Lesser General Public
-//    License as published by the Free Software Foundation; either
-//    version 2.1 of the License, or (at your option) any later version.
-//
-//    The GNU C Library is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-//    Lesser General Public License for more details.
-//
-//    You should have received a copy of the GNU Lesser General Public
-//    License along with the GNU C Library; if not, see
-//    <http://www.gnu.org/licenses/>.
+type fpreg_t = struct{ d float64 } /* ucontext.h:64:5 */
 
-// Never include this file directly; use <sys/types.h> instead.
-
-// Define stack_t.  Linux version.
-//    Copyright (C) 1998-2018 Free Software Foundation, Inc.
-//    This file is part of the GNU C Library.
-//
-//    The GNU C Library is free software; you can redistribute it and/or
-//    modify it under the terms of the GNU Lesser General Public
-//    License as published by the Free Software Foundation; either
-//    version 2.1 of the License, or (at your option) any later version.
-//
-//    The GNU C Library is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-//    Lesser General Public License for more details.
-//
-//    You should have received a copy of the GNU Lesser General Public
-//    License along with the GNU C Library; if not, see
-//    <http://www.gnu.org/licenses/>.
-
-// Type for general register.
-type greg_t = int64 /* ucontext.h:37:37 */
-
-// Number of general registers.
-
-// Container for all general registers.
-type gregset_t = [23]greg_t /* ucontext.h:46:16 */
-
-type _libc_fpxreg = struct {
-	significand       [4]uint16
-	exponent          uint16
-	__glibc_reserved1 [3]uint16
-} /* ucontext.h:101:1 */
-
-type _libc_xmmreg = struct{ element [4]uint32 } /* ucontext.h:108:1 */
-
-type _libc_fpstate = struct {
-	cwd       uint16
-	swd       uint16
-	ftw       uint16
-	fop       uint16
-	rip       uint64
-	rdp       uint64
-	mxcsr     uint32
-	mxcr_mask uint32
-	_st       [8]struct {
-		significand       [4]uint16
-		exponent          uint16
-		__glibc_reserved1 [3]uint16
-	}
-	_xmm              [16]struct{ element [4]uint32 }
-	__glibc_reserved1 [24]uint32
-} /* ucontext.h:113:1 */
-
-// Structure to describe FPU registers.
-type fpregset_t = uintptr /* ucontext.h:130:30 */
+// Register set for the floating-point registers.
+type fpregset_t = struct {
+	fpc  uint32
+	_    [4]byte
+	fprs [16]fpreg_t
+} /* ucontext.h:71:5 */
 
 // Context to describe whole processor state.
 type mcontext_t = struct {
-	gregs       gregset_t
-	fpregs      fpregset_t
-	__reserved1 [8]uint64
-} /* ucontext.h:139:3 */
+	psw struct {
+		mask uint64
+		addr uint64
+	}
+	gregs  [16]uint64
+	aregs  [16]uint32
+	fpregs fpregset_t
+} /* ucontext.h:80:5 */
 
 // Userlevel context.
 type ucontext_t1 = struct {
-	uc_flags     uint64
-	uc_link      uintptr
-	uc_stack     stack_t
-	uc_mcontext  mcontext_t
-	uc_sigmask   sigset_t
-	__fpregs_mem struct {
-		cwd       uint16
-		swd       uint16
-		ftw       uint16
-		fop       uint16
-		rip       uint64
-		rdp       uint64
-		mxcsr     uint32
-		mxcr_mask uint32
-		_st       [8]struct {
-			significand       [4]uint16
-			exponent          uint16
-			__glibc_reserved1 [3]uint16
-		}
-		_xmm              [16]struct{ element [4]uint32 }
-		__glibc_reserved1 [24]uint32
-	}
-	__ssp [4]uint64
-} /* ucontext.h:142:9 */
+	uc_flags    uint64
+	uc_link     uintptr
+	uc_stack    stack_t
+	uc_mcontext mcontext_t
+	uc_sigmask  sigset_t
+} /* ucontext.h:83:9 */
 
 // Userlevel context.
-type ucontext_t = ucontext_t1 /* ucontext.h:151:5 */
+type ucontext_t = ucontext_t1 /* ucontext.h:90:5 */
 
 // Define struct sigstack.
 //    Copyright (C) 1998-2018 Free Software Foundation, Inc.
@@ -7290,7 +7099,7 @@ type sigstack = struct {
 //    And finally the internal pthread_rwlock_t (struct __pthread_rwlock_arch_t)
 //    must be defined.
 //
-// Copyright (C) 2002-2018 Free Software Foundation, Inc.
+// Copyright (C) 2003-2018 Free Software Foundation, Inc.
 //    This file is part of the GNU C Library.
 //
 //    The GNU C Library is free software; you can redistribute it and/or
@@ -7309,8 +7118,6 @@ type sigstack = struct {
 
 // Determine the wordsize from the preprocessor defines.
 
-// Both x86-64 and x32 use the 64-bit system call interface.
-
 // Definitions for internal mutex struct.
 
 type __pthread_rwlock_arch_t = struct {
@@ -7322,12 +7129,11 @@ type __pthread_rwlock_arch_t = struct {
 	__pad4          uint32
 	__cur_writer    int32
 	__shared        int32
-	__rwelision     int8
-	__pad1          [7]uint8
+	__pad1          uint64
 	__pad2          uint64
 	__flags         uint32
 	_               [4]byte
-} /* pthreadtypes-arch.h:65:1 */
+} /* pthreadtypes-arch.h:50:1 */
 
 // Common definition of pthread_mutex_t.
 
@@ -7372,14 +7178,14 @@ type pthread_t = uint64 /* pthreadtypes.h:27:27 */
 //    type is not exposed on purpose.
 type pthread_mutexattr_t = struct {
 	_      [0]uint32
-	__size [4]int8
+	__size [4]uint8
 } /* pthreadtypes.h:36:3 */
 
 // Data structure for condition variable handling.  The structure of
 //    the attribute type is not exposed on purpose.
 type pthread_condattr_t = struct {
 	_      [0]uint32
-	__size [4]int8
+	__size [4]uint8
 } /* pthreadtypes.h:45:3 */
 
 // Keys for thread-specific data
@@ -7398,7 +7204,7 @@ type pthread_rwlock_t = struct{ __data __pthread_rwlock_arch_t } /* pthreadtypes
 
 type pthread_rwlockattr_t = struct {
 	_      [0]uint64
-	__size [8]int8
+	__size [8]uint8
 } /* pthreadtypes.h:97:3 */
 
 // POSIX spinlock data type.
@@ -7408,12 +7214,12 @@ type pthread_spinlock_t = int32 /* pthreadtypes.h:103:22 */
 //    deliberately not exposed.
 type pthread_barrier_t = struct {
 	_      [0]uint64
-	__size [32]int8
+	__size [32]uint8
 } /* pthreadtypes.h:112:3 */
 
 type pthread_barrierattr_t = struct {
 	_      [0]uint32
-	__size [4]int8
+	__size [4]uint8
 } /* pthreadtypes.h:118:3 */
 
 // Compatibility header for old-style Unix parameters and limits.
@@ -7905,9 +7711,8 @@ type register_t = int32 /* types.h:182:13 */
 //    License along with the GNU C Library; if not, see
 //    <http://www.gnu.org/licenses/>.
 
-// Determine the wordsize from the preprocessor defines.
-
-// Both x86-64 and x32 use the 64-bit system call interface.
+// We don't use `memset' because this would require a prototype and
+//    the array isn't too big.
 
 // Get sigset_t.
 
@@ -8140,8 +7945,6 @@ type fsfilcnt64_t = uint64 /* types.h:238:24 */ // Type to count file system ino
 //	Never include this file directly; use <limits.h> instead.
 
 // Determine the wordsize from the preprocessor defines.
-
-// Both x86-64 and x32 use the 64-bit system call interface.
 
 // These are the standard-mandated minimum values.
 
@@ -8565,7 +8368,7 @@ type dirent = struct {
 	d_off    int64
 	d_reclen uint16
 	d_type   uint8
-	d_name   [256]int8
+	d_name   [256]uint8
 	_        [5]byte
 } /* dirent.h:22:1 */
 
@@ -8574,7 +8377,7 @@ type dirent64 = struct {
 	d_off    int64
 	d_reclen uint16
 	d_type   uint8
-	d_name   [256]int8
+	d_name   [256]uint8
 	_        [5]byte
 } /* dirent.h:37:1 */
 
@@ -9286,8 +9089,6 @@ type rusage = struct {
 
 // Determine the wordsize from the preprocessor defines.
 
-// Both x86-64 and x32 use the 64-bit system call interface.
-
 // Exact integral types.
 
 // Signed.
@@ -9759,8 +9560,6 @@ type imaxdiv_t = struct {
 
 // Determine the wordsize from the preprocessor defines.
 
-// Both x86-64 and x32 use the 64-bit system call interface.
-
 // This header should define the following symbols under the described
 //    situations.  A value `1' means that the model is always supported,
 //    `-1' means it is never supported.  Undefined means it cannot be
@@ -10096,7 +9895,7 @@ type sa_family_t = uint16 /* sockaddr.h:28:28 */
 // Structure describing a generic socket address.
 type sockaddr = struct {
 	sa_family sa_family_t
-	sa_data   [14]int8
+	sa_data   [14]uint8
 } /* socket.h:175:1 */
 
 // Structure large enough to hold any socket address (with the historical
@@ -10104,7 +9903,7 @@ type sockaddr = struct {
 
 type sockaddr_storage = struct {
 	ss_family    sa_family_t
-	__ss_padding [118]int8
+	__ss_padding [118]uint8
 	__ss_align   uint64
 } /* socket.h:188:1 */
 
@@ -10134,6 +9933,9 @@ type cmsghdr = struct {
 
 // Get socket manipulation related informations from kernel headers.
 // SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
+//  S390 version
+//
+//  Derived from "include/asm-i386/socket.h"
 
 // SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
 
@@ -10223,12 +10025,12 @@ type osockaddr = struct {
 
 // Structure describing the system and machine.
 type utsname = struct {
-	sysname      [65]int8
-	nodename     [65]int8
-	release      [65]int8
-	version      [65]int8
-	machine      [65]int8
-	__domainname [65]int8
+	sysname      [65]uint8
+	nodename     [65]uint8
+	release      [65]uint8
+	version      [65]uint8
+	machine      [65]uint8
+	__domainname [65]uint8
 } /* utsname.h:48:1 */
 
 // Copyright (C) 1991-2018 Free Software Foundation, Inc.
@@ -10374,7 +10176,7 @@ type in_addr = struct{ s_addr in_addr_t } /* in.h:31:1 */
 //    source route (this gets put into the header proper).
 type ip_opts = struct {
 	ip_dst  struct{ s_addr in_addr_t }
-	ip_opts [40]int8
+	ip_opts [40]uint8
 } /* in.h:142:1 */
 
 // Like `struct ip_mreq' but including interface specification by index.
@@ -10469,7 +10271,7 @@ type group_req = struct {
 	_            [4]byte
 	gr_group     struct {
 		ss_family    sa_family_t
-		__ss_padding [118]int8
+		__ss_padding [118]uint8
 		__ss_align   uint64
 	}
 } /* in.h:300:1 */
@@ -10479,12 +10281,12 @@ type group_source_req = struct {
 	_             [4]byte
 	gsr_group     struct {
 		ss_family    sa_family_t
-		__ss_padding [118]int8
+		__ss_padding [118]uint8
 		__ss_align   uint64
 	}
 	gsr_source struct {
 		ss_family    sa_family_t
-		__ss_padding [118]int8
+		__ss_padding [118]uint8
 		__ss_align   uint64
 	}
 } /* in.h:309:1 */
@@ -10503,14 +10305,14 @@ type group_filter = struct {
 	_            [4]byte
 	gf_group     struct {
 		ss_family    sa_family_t
-		__ss_padding [118]int8
+		__ss_padding [118]uint8
 		__ss_align   uint64
 	}
 	gf_fmode  uint32_t
 	gf_numsrc uint32_t
 	gf_slist  [1]struct {
 		ss_family    sa_family_t
-		__ss_padding [118]int8
+		__ss_padding [118]uint8
 		__ss_align   uint64
 	}
 } /* in.h:344:1 */
@@ -11012,7 +10814,7 @@ type mp_int = mp_int1 /* tcl.h:2266:23 */
 // A null pointer constant.
 
 // _FloatN API tests for enablement.
-// Macros to control TS 18661-3 glibc features on x86.
+// Macros to control TS 18661-3 glibc features on ldbl-128 platforms.
 //    Copyright (C) 2017-2018 Free Software Foundation, Inc.
 //    This file is part of the GNU C Library.
 //
@@ -11047,11 +10849,27 @@ type mp_int = mp_int1 /* tcl.h:2266:23 */
 //    License along with the GNU C Library; if not, see
 //    <http://www.gnu.org/licenses/>.
 
+// Properties of long double type.  ldbl-opt version.
+//    Copyright (C) 2016-2018 Free Software Foundation, Inc.
+//    This file is part of the GNU C Library.
+//
+//    The GNU C Library is free software; you can redistribute it and/or
+//    modify it under the terms of the GNU Lesser General Public
+//    License  published by the Free Software Foundation; either
+//    version 2.1 of the License, or (at your option) any later version.
+//
+//    The GNU C Library is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//    Lesser General Public License for more details.
+//
+//    You should have received a copy of the GNU Lesser General Public
+//    License along with the GNU C Library; if not, see
+//    <http://www.gnu.org/licenses/>.
+
 // Defined to 1 if the current compiler invocation provides a
 //    floating-point type with the IEEE 754 binary128 format, and this
-//    glibc includes corresponding *f128 interfaces for it.  The required
-//    libgcc support was added some time after the basic compiler
-//    support, for x86_64 and x86.
+//    glibc includes corresponding *f128 interfaces for it.
 
 // Defined to 1 if __HAVE_FLOAT128 is 1 and the type is ABI-distinct
 //    from the default float, double and long double types in this glibc.
@@ -11074,18 +10892,7 @@ type mp_int = mp_int1 /* tcl.h:2266:23 */
 
 // The type _Float128 exists only since GCC 7.0.
 
-// __builtin_huge_valf128 doesn't exist before GCC 7.0.
-
-// Older GCC has only a subset of built-in functions for _Float128 on
-//    x86, and __builtin_infq is not usable in static initializers.
-//    Converting a narrower sNaN to _Float128 produces a quiet NaN, so
-//    attempts to use _Float128 sNaNs will not work properly with older
-//    compilers.
-
-// In math/math.h, __MATH_TG will expand signbit to __builtin_signbit*,
-//    e.g.: __builtin_signbitf128, before GCC 6.  However, there has never
-//    been a __builtin_signbitf128 in GCC and the type-generic builtin is
-//    only available since GCC 6.
+// Various built-in functions do not exist before GCC 7.0.
 
 // Macros to control TS 18661-3 glibc features where the same
 //    definitions are appropriate for all platforms.
@@ -11123,7 +10930,7 @@ type mp_int = mp_int1 /* tcl.h:2266:23 */
 //    License along with the GNU C Library; if not, see
 //    <http://www.gnu.org/licenses/>.
 
-// Properties of long double type.  ldbl-96 version.
+// Properties of long double type.  ldbl-opt version.
 //    Copyright (C) 2016-2018 Free Software Foundation, Inc.
 //    This file is part of the GNU C Library.
 //
@@ -11140,9 +10947,6 @@ type mp_int = mp_int1 /* tcl.h:2266:23 */
 //    You should have received a copy of the GNU Lesser General Public
 //    License along with the GNU C Library; if not, see
 //    <http://www.gnu.org/licenses/>.
-
-// long double is distinct from double, so there is nothing to
-//    define here.
 
 // This header should be included at the bottom of each bits/floatn.h.
 //    It defines the following macros for each _FloatN and _FloatNx type,
@@ -11667,7 +11471,7 @@ type CompiledLocal1 = struct {
 	_           [4]byte
 	defValuePtr uintptr
 	resolveInfo uintptr
-	name        [1]int8
+	name        [1]uint8
 	_           [7]byte
 } /* tclInt.h:900:9 */
 
@@ -11749,7 +11553,7 @@ type Interp1 = struct {
 	assocData              uintptr
 	execEnvPtr             uintptr
 	emptyObjPtr            uintptr
-	resultSpace            [201]int8
+	resultSpace            [201]uint8
 	_                      [7]byte
 	objResultPtr           uintptr
 	threadId               Tcl_ThreadId
@@ -13092,7 +12896,7 @@ type TclOOStubs = TclOOStubs1 /* tclOODecls.h:157:3 */
 //
 //    The GNU C Library is free software; you can redistribute it and/or
 //    modify it under the terms of the GNU Lesser General Public
-//    License as published by the Free Software Foundation; either
+//    License  published by the Free Software Foundation; either
 //    version 2.1 of the License, or (at your option) any later version.
 //
 //    The GNU C Library is distributed in the hope that it will be useful,
@@ -13104,7 +12908,9 @@ type TclOOStubs = TclOOStubs1 /* tclOODecls.h:157:3 */
 //    License along with the GNU C Library; if not, see
 //    <http://www.gnu.org/licenses/>.
 
-// Get default empty definitions for simd declarations.
+// Get default empty definitions required for __MATHCALL_VEC unfolding.
+//    Plaform-specific analogue of this header should redefine them with specific
+//    SIMD declarations.
 // Empty definitions required for __MATHCALL_VEC unfolding in mathcalls.h.
 //    Copyright (C) 2014-2018 Free Software Foundation, Inc.
 //    This file is part of the GNU C Library.
@@ -13132,7 +12938,7 @@ type TclOOStubs = TclOOStubs1 /* tclOODecls.h:157:3 */
 //
 
 // Gather machine dependent type support.
-// Macros to control TS 18661-3 glibc features on x86.
+// Macros to control TS 18661-3 glibc features on ldbl-128 platforms.
 //    Copyright (C) 2017-2018 Free Software Foundation, Inc.
 //    This file is part of the GNU C Library.
 //
@@ -13158,7 +12964,7 @@ type TclOOStubs = TclOOStubs1 /* tclOODecls.h:157:3 */
 // IEEE Not A Number.
 
 // Get __GLIBC_FLT_EVAL_METHOD.
-// Define __GLIBC_FLT_EVAL_METHOD.  x86 version.
+// Define __GLIBC_FLT_EVAL_METHOD.  S/390 version.
 //    Copyright (C) 2016-2018 Free Software Foundation, Inc.
 //    This file is part of the GNU C Library.
 //
@@ -13176,14 +12982,16 @@ type TclOOStubs = TclOOStubs1 /* tclOODecls.h:157:3 */
 //    License along with the GNU C Library; if not, see
 //    <http://www.gnu.org/licenses/>.
 
+// This value is used because of a historical mistake.
+
 // Define the following typedefs.
 //
 //     float_t	floating-point type at least as wide as `float' used
 // 		to evaluate `float' expressions
 //     double_t	floating-point type at least as wide as `double' used
 // 		to evaluate `double' expressions
-type float_t = float32  /* math.h:149:15 */
-type double_t = float64 /* math.h:150:16 */
+type float_t = float64  /* math.h:152:16 */
+type double_t = float64 /* math.h:153:16 */
 
 // GCC bug 66462 means we cannot use the math builtins with -fsignaling-nan,
 //    so disable builtins if this is enabled.  When fixed in a newer GCC,
@@ -13583,20 +13391,20 @@ type lconv = struct {
 	mon_grouping       uintptr
 	positive_sign      uintptr
 	negative_sign      uintptr
-	int_frac_digits    int8
-	frac_digits        int8
-	p_cs_precedes      int8
-	p_sep_by_space     int8
-	n_cs_precedes      int8
-	n_sep_by_space     int8
-	p_sign_posn        int8
-	n_sign_posn        int8
-	int_p_cs_precedes  int8
-	int_p_sep_by_space int8
-	int_n_cs_precedes  int8
-	int_n_sep_by_space int8
-	int_p_sign_posn    int8
-	int_n_sign_posn    int8
+	int_frac_digits    uint8
+	frac_digits        uint8
+	p_cs_precedes      uint8
+	p_sep_by_space     uint8
+	n_cs_precedes      uint8
+	n_sep_by_space     uint8
+	p_sign_posn        uint8
+	n_sign_posn        uint8
+	int_p_cs_precedes  uint8
+	int_p_sep_by_space uint8
+	int_n_cs_precedes  uint8
+	int_n_sep_by_space uint8
+	int_p_sign_posn    uint8
+	int_n_sign_posn    uint8
 	_                  [2]byte
 } /* locale.h:51:1 */
 
@@ -13631,7 +13439,7 @@ type ChannelBuffer1 = struct {
 	nextRemoved int32
 	bufLength   int32
 	nextPtr     uintptr
-	buf         [1]int8
+	buf         [1]uint8
 	_           [7]byte
 } /* tclIO.h:38:9 */
 
@@ -14532,7 +14340,7 @@ func AsyncHandlerProc(tls *libc.TLS, clientData ClientData, interp uintptr, code
 	// var listArgv [4]uintptr at bp+24, 32
 
 	var cmd uintptr
-	// var string [24]int8 at bp, 24
+	// var string [24]uint8 at bp, 24
 
 	for asyncPtr = firstHandler; asyncPtr != (uintptr(0)); asyncPtr = (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).nextPtr {
 		if (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).id == id {
@@ -14730,7 +14538,7 @@ func TestcmdtokenCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32
 	var token Tcl_Command
 	// var l uintptr at bp+144, 8
 
-	// var buf [30]int8 at bp+112, 30
+	// var buf [30]uint8 at bp+112, 30
 
 	if argc != 3 {
 		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+1278 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv)),
@@ -15073,7 +14881,7 @@ func DelCallbackProc(tls *libc.TLS, clientData ClientData, interp uintptr) { /* 
 	defer tls.Free(24)
 
 	var id int32 = int32(clientData)
-	// var buffer [24]int8 at bp, 24
+	// var buffer [24]uint8 at bp, 24
 
 	(*(*func(*libc.TLS, uintptr, int64) int32)(unsafe.Pointer((tcl.XtclIntStubsPtr + 208 /* &.tclFormatInt */))))(tls, bp /* &buffer[0] */, int64(id))
 	(*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tcl.XtclStubsPtr + 960 /* &.tcl_DStringAppendElement */))))(tls, uintptr(unsafe.Pointer(&delString)), bp /* &buffer[0] */)
@@ -15985,7 +15793,7 @@ func ExitProcOdd(tls *libc.TLS, clientData ClientData) { /* tclTest.c:2404:1: */
 	bp := tls.Alloc(48)
 	defer tls.Free(48)
 
-	// var buf [40]int8 at bp+8, 40
+	// var buf [40]uint8 at bp+8, 40
 
 	var len int32
 
@@ -16000,7 +15808,7 @@ func ExitProcEven(tls *libc.TLS, clientData ClientData) { /* tclTest.c:2418:1: *
 	bp := tls.Alloc(48)
 	defer tls.Free(48)
 
-	// var buf [40]int8 at bp+8, 40
+	// var buf [40]uint8 at bp+8, 40
 
 	var len int32
 
@@ -16032,7 +15840,7 @@ func TestexprlongCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc 
 
 	// var exprResult int64 at bp+56, 8
 
-	// var buf [28]int8 at bp+64, 28
+	// var buf [28]uint8 at bp+64, 28
 
 	var result int32
 
@@ -16072,7 +15880,7 @@ func TestexprlongobjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, ob
 
 	// var exprResult int64 at bp+24, 8
 
-	// var buf [28]int8 at bp+32, 28
+	// var buf [28]uint8 at bp+32, 28
 
 	var result int32
 
@@ -16111,7 +15919,7 @@ func TestexprdoubleCmd(tls *libc.TLS, clientData ClientData, interp uintptr, arg
 
 	// var exprResult float64 at bp+48, 8
 
-	// var buf [31]int8 at bp+56, 31
+	// var buf [31]uint8 at bp+56, 31
 
 	var result int32
 
@@ -16152,7 +15960,7 @@ func TestexprdoubleobjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, 
 
 	// var exprResult float64 at bp+16, 8
 
-	// var buf [31]int8 at bp+24, 31
+	// var buf [31]uint8 at bp+24, 31
 
 	var result int32
 
@@ -16387,7 +16195,7 @@ func TestlinkCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, ar
 	bp := tls.Alloc(312)
 	defer tls.Free(312)
 
-	// var buffer [54]int8 at bp+212, 54
+	// var buffer [54]uint8 at bp+212, 54
 
 	// var writable int32 at bp+208, 4
 
@@ -16678,22 +16486,22 @@ func TestlinkCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, ar
 				ts+3965 /* " intValue realVa..." */, uintptr(0)))
 			return TCL_ERROR
 		}
-		if int32(*(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 2*8))))) != 0 {
+		if int32(*(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 2*8))))) != 0 {
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 312 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + 2*8)), uintptr(unsafe.Pointer(&intVar))) != TCL_OK {
 				return TCL_ERROR
 			}
 		}
-		if int32(*(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 3*8))))) != 0 {
+		if int32(*(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 3*8))))) != 0 {
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 288 /* &.tcl_GetDouble */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + 3*8)), uintptr(unsafe.Pointer(&realVar))) != TCL_OK {
 				return TCL_ERROR
 			}
 		}
-		if int32(*(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 4*8))))) != 0 {
+		if int32(*(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 4*8))))) != 0 {
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 312 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + 4*8)), uintptr(unsafe.Pointer(&boolVar))) != TCL_OK {
 				return TCL_ERROR
 			}
 		}
-		if int32(*(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 5*8))))) != 0 {
+		if int32(*(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 5*8))))) != 0 {
 			if stringVar != (uintptr(0)) {
 				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 48 /* &.tcl_Free */))))(tls, stringVar)
 			}
@@ -16704,7 +16512,7 @@ func TestlinkCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, ar
 				libc.Xstrcpy(tls, stringVar, *(*uintptr)(unsafe.Pointer(argv + 5*8)))
 			}
 		}
-		if int32(*(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 6*8))))) != 0 {
+		if int32(*(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 6*8))))) != 0 {
 			tmp = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tcl.XtclStubsPtr + 464 /* &.tcl_NewStringObj */))))(tls, *(*uintptr)(unsafe.Pointer(argv + 6*8)), -1)
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 3912 /* &.tcl_GetWideIntFromObj */))))(tls, interp, tmp, uintptr(unsafe.Pointer(&wideVar))) != TCL_OK {
 				for ok4 := true; ok4; ok4 = 0 != 0 {
@@ -16722,49 +16530,49 @@ func TestlinkCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, ar
 				}
 			}
 		}
-		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 7*8)))) != 0 {
+		if *(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 7*8)))) != 0 {
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 312 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + 7*8)), bp+268 /* &v */) != TCL_OK {
 				return TCL_ERROR
 			}
-			charVar = int8(*(*int32)(unsafe.Pointer(bp + 268 /* v */)))
+			charVar = uint8(*(*int32)(unsafe.Pointer(bp + 268 /* v */)))
 		}
-		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 8*8)))) != 0 {
+		if *(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 8*8)))) != 0 {
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 312 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + 8*8)), bp+268 /* &v */) != TCL_OK {
 				return TCL_ERROR
 			}
 			ucharVar = uint8(*(*int32)(unsafe.Pointer(bp + 268 /* v */)))
 		}
-		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 9*8)))) != 0 {
+		if *(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 9*8)))) != 0 {
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 312 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + 9*8)), bp+268 /* &v */) != TCL_OK {
 				return TCL_ERROR
 			}
 			shortVar = int16(*(*int32)(unsafe.Pointer(bp + 268 /* v */)))
 		}
-		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 10*8)))) != 0 {
+		if *(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 10*8)))) != 0 {
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 312 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + 10*8)), bp+268 /* &v */) != TCL_OK {
 				return TCL_ERROR
 			}
 			ushortVar = uint16(*(*int32)(unsafe.Pointer(bp + 268 /* v */)))
 		}
-		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 11*8)))) != 0 {
+		if *(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 11*8)))) != 0 {
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 312 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + 11*8)), bp+268 /* &v */) != TCL_OK {
 				return TCL_ERROR
 			}
 			uintVar = uint32(*(*int32)(unsafe.Pointer(bp + 268 /* v */)))
 		}
-		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 12*8)))) != 0 {
+		if *(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 12*8)))) != 0 {
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 312 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + 12*8)), bp+268 /* &v */) != TCL_OK {
 				return TCL_ERROR
 			}
 			longVar = int64(*(*int32)(unsafe.Pointer(bp + 268 /* v */)))
 		}
-		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 13*8)))) != 0 {
+		if *(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 13*8)))) != 0 {
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 312 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + 13*8)), bp+268 /* &v */) != TCL_OK {
 				return TCL_ERROR
 			}
 			ulongVar = uint64(*(*int32)(unsafe.Pointer(bp + 268 /* v */)))
 		}
-		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 14*8)))) != 0 {
+		if *(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 14*8)))) != 0 {
 			// var d float64 at bp+272, 8
 
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 288 /* &.tcl_GetDouble */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + 14*8)), bp+272 /* &d */) != TCL_OK {
@@ -16772,7 +16580,7 @@ func TestlinkCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, ar
 			}
 			floatVar = float32(*(*float64)(unsafe.Pointer(bp + 272 /* d */)))
 		}
-		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 15*8)))) != 0 {
+		if *(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 15*8)))) != 0 {
 			// var w Tcl_WideInt at bp+280, 8
 
 			tmp = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tcl.XtclStubsPtr + 464 /* &.tcl_NewStringObj */))))(tls, *(*uintptr)(unsafe.Pointer(argv + 15*8)), -1)
@@ -16803,25 +16611,25 @@ func TestlinkCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, ar
 				ts+3965 /* " intValue realVa..." */, uintptr(0)))
 			return TCL_ERROR
 		}
-		if int32(*(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 2*8))))) != 0 {
+		if int32(*(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 2*8))))) != 0 {
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 312 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + 2*8)), uintptr(unsafe.Pointer(&intVar))) != TCL_OK {
 				return TCL_ERROR
 			}
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 2072 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+3889 /* "int" */)
 		}
-		if int32(*(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 3*8))))) != 0 {
+		if int32(*(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 3*8))))) != 0 {
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 288 /* &.tcl_GetDouble */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + 3*8)), uintptr(unsafe.Pointer(&realVar))) != TCL_OK {
 				return TCL_ERROR
 			}
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 2072 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+3893 /* "real" */)
 		}
-		if int32(*(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 4*8))))) != 0 {
+		if int32(*(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 4*8))))) != 0 {
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 312 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + 4*8)), uintptr(unsafe.Pointer(&boolVar))) != TCL_OK {
 				return TCL_ERROR
 			}
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 2072 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+3898 /* "bool" */)
 		}
-		if int32(*(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 5*8))))) != 0 {
+		if int32(*(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 5*8))))) != 0 {
 			if stringVar != (uintptr(0)) {
 				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 48 /* &.tcl_Free */))))(tls, stringVar)
 			}
@@ -16833,7 +16641,7 @@ func TestlinkCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, ar
 			}
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 2072 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+3903 /* "string" */)
 		}
-		if int32(*(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 6*8))))) != 0 {
+		if int32(*(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 6*8))))) != 0 {
 			tmp = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tcl.XtclStubsPtr + 464 /* &.tcl_NewStringObj */))))(tls, *(*uintptr)(unsafe.Pointer(argv + 6*8)), -1)
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 3912 /* &.tcl_GetWideIntFromObj */))))(tls, interp, tmp, uintptr(unsafe.Pointer(&wideVar))) != TCL_OK {
 				for ok8 := true; ok8; ok8 = 0 != 0 {
@@ -16852,56 +16660,56 @@ func TestlinkCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, ar
 			}
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 2072 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+3910 /* "wide" */)
 		}
-		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 7*8)))) != 0 {
+		if *(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 7*8)))) != 0 {
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 312 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + 7*8)), bp+288 /* &v */) != TCL_OK {
 				return TCL_ERROR
 			}
-			charVar = int8(*(*int32)(unsafe.Pointer(bp + 288 /* v */)))
+			charVar = uint8(*(*int32)(unsafe.Pointer(bp + 288 /* v */)))
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 2072 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+3915 /* "char" */)
 		}
-		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 8*8)))) != 0 {
+		if *(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 8*8)))) != 0 {
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 312 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + 8*8)), bp+288 /* &v */) != TCL_OK {
 				return TCL_ERROR
 			}
 			ucharVar = uint8(*(*int32)(unsafe.Pointer(bp + 288 /* v */)))
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 2072 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+3920 /* "uchar" */)
 		}
-		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 9*8)))) != 0 {
+		if *(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 9*8)))) != 0 {
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 312 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + 9*8)), bp+288 /* &v */) != TCL_OK {
 				return TCL_ERROR
 			}
 			shortVar = int16(*(*int32)(unsafe.Pointer(bp + 288 /* v */)))
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 2072 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+2358 /* "short" */)
 		}
-		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 10*8)))) != 0 {
+		if *(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 10*8)))) != 0 {
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 312 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + 10*8)), bp+288 /* &v */) != TCL_OK {
 				return TCL_ERROR
 			}
 			ushortVar = uint16(*(*int32)(unsafe.Pointer(bp + 288 /* v */)))
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 2072 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+3926 /* "ushort" */)
 		}
-		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 11*8)))) != 0 {
+		if *(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 11*8)))) != 0 {
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 312 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + 11*8)), bp+288 /* &v */) != TCL_OK {
 				return TCL_ERROR
 			}
 			uintVar = uint32(*(*int32)(unsafe.Pointer(bp + 288 /* v */)))
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 2072 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+3933 /* "uint" */)
 		}
-		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 12*8)))) != 0 {
+		if *(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 12*8)))) != 0 {
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 312 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + 12*8)), bp+288 /* &v */) != TCL_OK {
 				return TCL_ERROR
 			}
 			longVar = int64(*(*int32)(unsafe.Pointer(bp + 288 /* v */)))
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 2072 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+3938 /* "long" */)
 		}
-		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 13*8)))) != 0 {
+		if *(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 13*8)))) != 0 {
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 312 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + 13*8)), bp+288 /* &v */) != TCL_OK {
 				return TCL_ERROR
 			}
 			ulongVar = uint64(*(*int32)(unsafe.Pointer(bp + 288 /* v */)))
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 2072 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+3943 /* "ulong" */)
 		}
-		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 14*8)))) != 0 {
+		if *(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 14*8)))) != 0 {
 			// var d float64 at bp+296, 8
 
 			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 288 /* &.tcl_GetDouble */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + 14*8)), bp+296 /* &d */) != TCL_OK {
@@ -16910,7 +16718,7 @@ func TestlinkCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, ar
 			floatVar = float32(*(*float64)(unsafe.Pointer(bp + 296 /* d */)))
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 2072 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+3949 /* "float" */)
 		}
-		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 15*8)))) != 0 {
+		if *(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 15*8)))) != 0 {
 			// var w Tcl_WideInt at bp+304, 8
 
 			tmp = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tcl.XtclStubsPtr + 464 /* &.tcl_NewStringObj */))))(tls, *(*uintptr)(unsafe.Pointer(argv + 15*8)), -1)
@@ -16945,7 +16753,7 @@ var boolVar int32 = 4                                /* tclTest.c:2846:16 */
 var realVar float64 = 1.23                           /* tclTest.c:2847:19 */
 var wideVar Tcl_WideInt = int64(79)                  /* tclTest.c:2848:24 */
 var stringVar uintptr = uintptr(0)                   /* tclTest.c:2849:17 */
-var charVar int8 = int8('@')                         /* tclTest.c:2850:17 */
+var charVar uint8 = uint8('@')                       /* tclTest.c:2850:17 */
 var ucharVar uint8 = uint8(130)                      /* tclTest.c:2851:26 */
 var shortVar int16 = int16(3000)                     /* tclTest.c:2852:18 */
 var ushortVar uint16 = uint16(60000)                 /* tclTest.c:2853:27 */
@@ -17528,11 +17336,11 @@ func TestregexpObjCmd(tls *libc.TLS, dummy ClientData, interp uintptr, objc int3
 
 	// var end int32 at bp+108, 4
 
-	// var resinfo [48]int8 at bp+112, 48
+	// var resinfo [48]uint8 at bp+112, 48
 
 	var varName1 uintptr
 	var value1 uintptr
-	// var resinfo1 [48]int8 at bp+192, 48
+	// var resinfo1 [48]uint8 at bp+192, 48
 
 	// var objs [2]uintptr at bp+248, 16
 
@@ -17557,7 +17365,7 @@ __1:
 	}
 
 	name = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tcl.XtclStubsPtr + 2736 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(i)*8)))
-	if !(int32(*(*int8)(unsafe.Pointer(name))) != '-') {
+	if !(int32(*(*uint8)(unsafe.Pointer(name))) != '-') {
 		goto __4
 	}
 	goto __3
@@ -17860,7 +17668,7 @@ func TestregexpXflags(tls *libc.TLS, string uintptr, length int32, cflagsPtr uin
 	cflags = *(*int32)(unsafe.Pointer(cflagsPtr))
 	eflags = *(*int32)(unsafe.Pointer(eflagsPtr))
 	for i = 0; i < length; i++ {
-		switch int32(*(*int8)(unsafe.Pointer(string + uintptr(i)))) {
+		switch int32(*(*uint8)(unsafe.Pointer(string + uintptr(i)))) {
 		case 'a':
 			cflags = cflags | (REG_ADVF)
 			break
@@ -18174,7 +17982,7 @@ func TestupvarCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, a
 		}
 		return (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer((tcl.XtclStubsPtr + 2088 /* &.tcl_UpVar2 */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + 1*8)), *(*uintptr)(unsafe.Pointer(argv + 2*8)),
 			func() uintptr {
-				if int32(*(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 3*8))))) == 0 {
+				if int32(*(*uint8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + 3*8))))) == 0 {
 					return uintptr(0)
 				}
 				return *(*uintptr)(unsafe.Pointer(argv + 3*8))
@@ -18470,7 +18278,7 @@ __9:
 	if !(*(*uintptr)(unsafe.Pointer(bp + 40 /* error */)) != (uintptr(0))) {
 		goto __21
 	}
-	if !(int32(*(*int8)(unsafe.Pointer((*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tcl.XtclStubsPtr + 2736 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(bp + 40 /* error */)))))) != 0) {
+	if !(int32(*(*uint8)(unsafe.Pointer((*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tcl.XtclStubsPtr + 2736 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(bp + 40 /* error */)))))) != 0) {
 		goto __22
 	}
 	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tcl.XtclStubsPtr + 2736 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(bp + 40 /* error */))), ts+1346 /* " " */, uintptr(0)))
@@ -18602,7 +18410,7 @@ func GetTimesObjCmd(tls *libc.TLS, unused ClientData, interp uintptr, notused1 i
 	var objPtr uintptr
 	var objv uintptr
 	var s uintptr
-	// var newString [24]int8 at bp+140, 24
+	// var newString [24]uint8 at bp+140, 24
 
 	// alloc & free 100000 times
 	libc.Xfprintf(tls, libc.Xstderr, ts+4957 /* "alloc & free 100..." */, 0)
@@ -18841,7 +18649,7 @@ func TestpurebytesobjObjCmd(tls *libc.TLS, unused ClientData, interp uintptr, ob
 		(*Tcl_Obj)(unsafe.Pointer(objPtr)).length = (*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + 1*8)))).length
 		(*Tcl_Obj)(unsafe.Pointer(objPtr)).bytes = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tcl.XtclStubsPtr + 40 /* &.tcl_Alloc */))))(tls, (uint32((*Tcl_Obj)(unsafe.Pointer(objPtr)).length + 1)))
 		libc.Xmemcpy(tls, (*Tcl_Obj)(unsafe.Pointer(objPtr)).bytes, s, uint64((*Tcl_Obj)(unsafe.Pointer(objPtr)).length))
-		*(*int8)(unsafe.Pointer((*Tcl_Obj)(unsafe.Pointer(objPtr)).bytes + uintptr((*Tcl_Obj)(unsafe.Pointer(objPtr)).length))) = int8(0)
+		*(*uint8)(unsafe.Pointer((*Tcl_Obj)(unsafe.Pointer(objPtr)).bytes + uintptr((*Tcl_Obj)(unsafe.Pointer(objPtr)).length))) = uint8(0)
 	}
 	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 1896 /* &.tcl_SetObjResult */))))(tls, interp, objPtr)
 	return TCL_OK
@@ -19220,7 +19028,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 	var chan1 Tcl_Channel // The opaque type.
 	var len size_t        // Length of subcommand string.
 	var IOQueued int32    // How much IO is queued inside channel?
-	// var buf [24]int8 at bp+584, 24
+	// var buf [24]uint8 at bp+584, 24
 	// For sprintf.
 	// var mode int32 at bp+560, 4
 	// rw mode of the channel
@@ -19236,7 +19044,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 	chanPtr = uintptr(0)
 
 	if argc > 2 {
-		if (int32(*(*int8)(unsafe.Pointer(cmdName))) == 's') && (libc.Xstrncmp(tls, cmdName, ts+6123 /* "splice" */, len) == 0) {
+		if (int32(*(*uint8)(unsafe.Pointer(cmdName))) == 's') && (libc.Xstrncmp(tls, cmdName, ts+6123 /* "splice" */, len) == 0) {
 			// For splice access the pool of detached channels.
 			// Locate channel, remove from the list.
 
@@ -19284,7 +19092,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		chan1 = uintptr(0)
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName))) == 's') && (libc.Xstrncmp(tls, cmdName, ts+6130 /* "setchannelerror" */, len) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmdName))) == 's') && (libc.Xstrncmp(tls, cmdName, ts+6130 /* "setchannelerror" */, len) == 0) {
 
 		*(*uintptr)(unsafe.Pointer(bp + 568 /* msg */)) = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tcl.XtclStubsPtr + 464 /* &.tcl_NewStringObj */))))(tls, *(*uintptr)(unsafe.Pointer(argv + 3*8)), -1)
 
@@ -19307,7 +19115,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		}
 		return TCL_OK
 	}
-	if (int32(*(*int8)(unsafe.Pointer(cmdName))) == 's') && (libc.Xstrncmp(tls, cmdName, ts+6146 /* "setchannelerrori..." */, len) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmdName))) == 's') && (libc.Xstrncmp(tls, cmdName, ts+6146 /* "setchannelerrori..." */, len) == 0) {
 
 		*(*uintptr)(unsafe.Pointer(bp + 576 /* msg */)) = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tcl.XtclStubsPtr + 464 /* &.tcl_NewStringObj */))))(tls, *(*uintptr)(unsafe.Pointer(argv + 3*8)), -1)
 
@@ -19336,7 +19144,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 	// checking that the command is truly cut'able, no mutexes for
 	// thread-safety). Its complementary command is "splice", see below.
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName))) == 'c') && (libc.Xstrncmp(tls, cmdName, ts+6168 /* "cut" */, len) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmdName))) == 'c') && (libc.Xstrncmp(tls, cmdName, ts+6168 /* "cut" */, len) == 0) {
 		var det uintptr
 
 		if argc != 3 {
@@ -19360,7 +19168,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		return TCL_OK
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName))) == 'c') && (libc.Xstrncmp(tls, cmdName, ts+6190 /* "clearchannelhand..." */, len) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmdName))) == 'c') && (libc.Xstrncmp(tls, cmdName, ts+6190 /* "clearchannelhand..." */, len) == 0) {
 		if argc != 3 {
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+64, ts+1278 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv)),
 				ts+6211 /* " clearchannelhan..." */, uintptr(0)))
@@ -19370,7 +19178,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		return TCL_OK
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName))) == 'i') && (libc.Xstrncmp(tls, cmdName, ts+6246 /* "info" */, len) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmdName))) == 'i') && (libc.Xstrncmp(tls, cmdName, ts+6246 /* "info" */, len) == 0) {
 		if argc != 3 {
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+96, ts+1278 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv)),
 				ts+6251 /* " info channelNam..." */, uintptr(0)))
@@ -19462,7 +19270,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		return TCL_OK
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName))) == 'i') && (libc.Xstrncmp(tls, cmdName, ts+6384 /* "inputbuffered" */, len) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmdName))) == 'i') && (libc.Xstrncmp(tls, cmdName, ts+6384 /* "inputbuffered" */, len) == 0) {
 		if argc != 3 {
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+128, ts+6398 /* "channel name req..." */, uintptr(0)))
 			return TCL_ERROR
@@ -19473,7 +19281,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		return TCL_OK
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName))) == 'i') && (libc.Xstrncmp(tls, cmdName, ts+6420 /* "isshared" */, len) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmdName))) == 'i') && (libc.Xstrncmp(tls, cmdName, ts+6420 /* "isshared" */, len) == 0) {
 		if argc != 3 {
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+160, ts+6398 /* "channel name req..." */, uintptr(0)))
 			return TCL_ERROR
@@ -19484,7 +19292,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		return TCL_OK
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName))) == 'i') && (libc.Xstrncmp(tls, cmdName, ts+6429 /* "isstandard" */, len) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmdName))) == 'i') && (libc.Xstrncmp(tls, cmdName, ts+6429 /* "isstandard" */, len) == 0) {
 		if argc != 3 {
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+192, ts+6398 /* "channel name req..." */, uintptr(0)))
 			return TCL_ERROR
@@ -19495,7 +19303,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		return TCL_OK
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName))) == 'm') && (libc.Xstrncmp(tls, cmdName, ts+6440 /* "mode" */, len) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmdName))) == 'm') && (libc.Xstrncmp(tls, cmdName, ts+6440 /* "mode" */, len) == 0) {
 		if argc != 3 {
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+224, ts+6398 /* "channel name req..." */, uintptr(0)))
 			return TCL_ERROR
@@ -19514,7 +19322,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		return TCL_OK
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName))) == 'm') && (libc.Xstrncmp(tls, cmdName, ts+6445 /* "mthread" */, len) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmdName))) == 'm') && (libc.Xstrncmp(tls, cmdName, ts+6445 /* "mthread" */, len) == 0) {
 		if argc != 3 {
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+240, ts+6398 /* "channel name req..." */, uintptr(0)))
 			return TCL_ERROR
@@ -19525,7 +19333,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		return TCL_OK
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName))) == 'n') && (libc.Xstrncmp(tls, cmdName, ts+1574 /* "name" */, len) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmdName))) == 'n') && (libc.Xstrncmp(tls, cmdName, ts+1574 /* "name" */, len) == 0) {
 		if argc != 3 {
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+256, ts+6398 /* "channel name req..." */, uintptr(0)))
 			return TCL_ERROR
@@ -19534,7 +19342,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		return TCL_OK
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName))) == 'o') && (libc.Xstrncmp(tls, cmdName, ts+6453 /* "open" */, len) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmdName))) == 'o') && (libc.Xstrncmp(tls, cmdName, ts+6453 /* "open" */, len) == 0) {
 		hTblPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) ClientData)(unsafe.Pointer((tcl.XtclStubsPtr + 1216 /* &.tcl_GetAssocData */))))(tls, interp, ts+6458 /* "tclIO" */, uintptr(0))
 		if hTblPtr == (uintptr(0)) {
 			return TCL_OK
@@ -19550,7 +19358,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		return TCL_OK
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName))) == 'o') && (libc.Xstrncmp(tls, cmdName, ts+6464 /* "outputbuffered" */, len) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmdName))) == 'o') && (libc.Xstrncmp(tls, cmdName, ts+6464 /* "outputbuffered" */, len) == 0) {
 		if argc != 3 {
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+288, ts+6398 /* "channel name req..." */, uintptr(0)))
 			return TCL_ERROR
@@ -19562,7 +19370,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		return TCL_OK
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName))) == 'q') && (libc.Xstrncmp(tls, cmdName, ts+6479 /* "queuedcr" */, len) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmdName))) == 'q') && (libc.Xstrncmp(tls, cmdName, ts+6479 /* "queuedcr" */, len) == 0) {
 		if argc != 3 {
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+320, ts+6398 /* "channel name req..." */, uintptr(0)))
 			return TCL_ERROR
@@ -19578,7 +19386,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		return TCL_OK
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName))) == 'r') && (libc.Xstrncmp(tls, cmdName, ts+6492 /* "readable" */, len) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmdName))) == 'r') && (libc.Xstrncmp(tls, cmdName, ts+6492 /* "readable" */, len) == 0) {
 		hTblPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) ClientData)(unsafe.Pointer((tcl.XtclStubsPtr + 1216 /* &.tcl_GetAssocData */))))(tls, interp, ts+6458 /* "tclIO" */, uintptr(0))
 		if hTblPtr == (uintptr(0)) {
 			return TCL_OK
@@ -19598,7 +19406,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		return TCL_OK
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName))) == 'r') && (libc.Xstrncmp(tls, cmdName, ts+6501 /* "refcount" */, len) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmdName))) == 'r') && (libc.Xstrncmp(tls, cmdName, ts+6501 /* "refcount" */, len) == 0) {
 		if argc != 3 {
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+352, ts+6398 /* "channel name req..." */, uintptr(0)))
 			return TCL_ERROR
@@ -19614,7 +19422,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 	// checking that the command is truly cut'able, no mutexes for
 	// thread-safety). Its complementary command is "cut", see above.
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName))) == 's') && (libc.Xstrncmp(tls, cmdName, ts+6123 /* "splice" */, len) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmdName))) == 's') && (libc.Xstrncmp(tls, cmdName, ts+6123 /* "splice" */, len) == 0) {
 		if argc != 3 {
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+384, ts+6398 /* "channel name req..." */, uintptr(0)))
 			return TCL_ERROR
@@ -19628,7 +19436,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		return TCL_OK
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName))) == 't') && (libc.Xstrncmp(tls, cmdName, ts+6510 /* "type" */, len) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmdName))) == 't') && (libc.Xstrncmp(tls, cmdName, ts+6510 /* "type" */, len) == 0) {
 		if argc != 3 {
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+400, ts+6398 /* "channel name req..." */, uintptr(0)))
 			return TCL_ERROR
@@ -19637,7 +19445,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		return TCL_OK
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName))) == 'w') && (libc.Xstrncmp(tls, cmdName, ts+6515 /* "writable" */, len) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmdName))) == 'w') && (libc.Xstrncmp(tls, cmdName, ts+6515 /* "writable" */, len) == 0) {
 		hTblPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) ClientData)(unsafe.Pointer((tcl.XtclStubsPtr + 1216 /* &.tcl_GetAssocData */))))(tls, interp, ts+6458 /* "tclIO" */, uintptr(0))
 		if hTblPtr == (uintptr(0)) {
 			return TCL_OK
@@ -19657,7 +19465,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		return TCL_OK
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName))) == 't') && (libc.Xstrncmp(tls, cmdName, ts+6524 /* "transform" */, len) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmdName))) == 't') && (libc.Xstrncmp(tls, cmdName, ts+6524 /* "transform" */, len) == 0) {
 		// Syntax: transform channel -command command
 
 		if argc != 5 {
@@ -19675,7 +19483,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 			(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tcl.XtclStubsPtr + 464 /* &.tcl_NewStringObj */))))(tls, *(*uintptr)(unsafe.Pointer(argv + 4*8)), -1))
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName))) == 'u') && (libc.Xstrncmp(tls, cmdName, ts+6617 /* "unstack" */, len) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmdName))) == 'u') && (libc.Xstrncmp(tls, cmdName, ts+6617 /* "unstack" */, len) == 0) {
 		// Syntax: unstack channel
 
 		if argc != 3 {
@@ -19738,7 +19546,7 @@ func TestChannelEventCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc i
 
 	cmd = *(*uintptr)(unsafe.Pointer(argv + 2*8))
 	len = int32(libc.Xstrlen(tls, cmd))
-	if (int32(*(*int8)(unsafe.Pointer(cmd))) == 'a') && (libc.Xstrncmp(tls, cmd, ts+6790 /* "add" */, uint64(uint32(len))) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmd))) == 'a') && (libc.Xstrncmp(tls, cmd, ts+6790 /* "add" */, uint64(uint32(len))) == 0) {
 		if argc != 5 {
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+32, ts+1278 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv)),
 				ts+6794 /* " channelName add..." */, uintptr(0)))
@@ -19772,7 +19580,7 @@ func TestChannelEventCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc i
 		return TCL_OK
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmd))) == 'd') && (libc.Xstrncmp(tls, cmd, ts+1212 /* "delete" */, uint64(uint32(len))) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmd))) == 'd') && (libc.Xstrncmp(tls, cmd, ts+1212 /* "delete" */, uint64(uint32(len))) == 0) {
 		if argc != 4 {
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+96, ts+1278 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv)),
 				ts+6885 /* " channelName del..." */, uintptr(0)))
@@ -19833,7 +19641,7 @@ func TestChannelEventCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc i
 		return TCL_OK
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmd))) == 'l') && (libc.Xstrncmp(tls, cmd, ts+7031 /* "list" */, uint64(uint32(len))) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmd))) == 'l') && (libc.Xstrncmp(tls, cmd, ts+7031 /* "list" */, uint64(uint32(len))) == 0) {
 		if argc != 3 {
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+192, ts+1278 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv)),
 				ts+7036 /* " channelName lis..." */, uintptr(0)))
@@ -19859,7 +19667,7 @@ func TestChannelEventCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc i
 		return TCL_OK
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmd))) == 'r') && (libc.Xstrncmp(tls, cmd, ts+7055 /* "removeall" */, uint64(uint32(len))) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmd))) == 'r') && (libc.Xstrncmp(tls, cmd, ts+7055 /* "removeall" */, uint64(uint32(len))) == 0) {
 		if argc != 3 {
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+224, ts+1278 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv)),
 				ts+7065 /* " channelName rem..." */, uintptr(0)))
@@ -19881,7 +19689,7 @@ func TestChannelEventCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc i
 		return TCL_OK
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmd))) == 's') && (libc.Xstrncmp(tls, cmd, ts+3961 /* "set" */, uint64(uint32(len))) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(cmd))) == 's') && (libc.Xstrncmp(tls, cmd, ts+3961 /* "set" */, uint64(uint32(len))) == 0) {
 		if argc != 5 {
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+256, ts+1278 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv)),
 				ts+7089 /* " channelName del..." */, uintptr(0)))
@@ -20027,7 +19835,7 @@ func TestGetIndexFromObjStructObjCmd(tls *libc.TLS, dummy ClientData, interp uin
 		return TCL_ERROR
 	}
 	if *(*int32)(unsafe.Pointer(bp + 136 /* idx */)) != *(*int32)(unsafe.Pointer(bp + 140 /* target */)) {
-		// var buffer [64]int8 at bp+144, 64
+		// var buffer [64]uint8 at bp+144, 64
 
 		libc.Xsprintf(tls, bp+144 /* &buffer[0] */, ts+5529 /* "%d" */, libc.VaList(bp, *(*int32)(unsafe.Pointer(bp + 136 /* idx */))))
 		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+8, ts+7245, /* "index value comp..." */
@@ -21188,7 +20996,7 @@ func InterpCmdResolver(tls *libc.TLS, interp uintptr, name uintptr, context uint
 	// Just do something special on a cmd literal "z" in two cases:
 	//  A)  when the caller is a proc "x", and the proc is either in "::" or in "::ns2".
 	//  B) the caller's namespace is "ctx1" or "ctx2"
-	if (int32(*(*int8)(unsafe.Pointer(name))) == 'z') && (int32(*(*int8)(unsafe.Pointer(name + 1))) == 0) {
+	if (int32(*(*uint8)(unsafe.Pointer(name))) == 'z') && (int32(*(*uint8)(unsafe.Pointer(name + 1))) == 0) {
 		var ns2NsPtr uintptr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tcl.XtclIntStubsPtr + 952 /* &.tcl_FindNamespace */))))(tls, interp, ts+8595 /* "::ns2" */, uintptr(0), 0)
 
 		if (procPtr != (uintptr(0))) &&
@@ -21212,7 +21020,7 @@ func InterpCmdResolver(tls *libc.TLS, interp uintptr, name uintptr, context uint
 
 			var callingCmdName uintptr = (*(*func(*libc.TLS, uintptr, Tcl_Command) uintptr)(unsafe.Pointer((tcl.XtclStubsPtr + 1296 /* &.tcl_GetCommandName */))))(tls, interp, (*Proc)(unsafe.Pointer(procPtr)).cmdPtr)
 
-			if (int32(*(*int8)(unsafe.Pointer(callingCmdName))) == 'x') && (int32(*(*int8)(unsafe.Pointer(callingCmdName + 1))) == 0) {
+			if (int32(*(*uint8)(unsafe.Pointer(callingCmdName))) == 'x') && (int32(*(*uint8)(unsafe.Pointer(callingCmdName + 1))) == 0) {
 				resolvedCmdPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) Tcl_Command)(unsafe.Pointer((tcl.XtclIntStubsPtr + 944 /* &.tcl_FindCommand */))))(tls, interp, ts+8601 /* "y" */, uintptr(0), TCL_GLOBAL_ONLY)
 			}
 		} else if callerNsPtr != (uintptr(0)) {
@@ -21241,11 +21049,11 @@ func InterpCmdResolver(tls *libc.TLS, interp uintptr, name uintptr, context uint
 				context = ts + 8603 /* "(NULL)" */
 			}
 
-			if ((libc.Xstrcmp(tls, context, ts+8610 /* "ctx1" */) == 0) && (int32(*(*int8)(unsafe.Pointer(name))) == 'z')) && (int32(*(*int8)(unsafe.Pointer(name + 1))) == 0) {
+			if ((libc.Xstrcmp(tls, context, ts+8610 /* "ctx1" */) == 0) && (int32(*(*uint8)(unsafe.Pointer(name))) == 'z')) && (int32(*(*uint8)(unsafe.Pointer(name + 1))) == 0) {
 				resolvedCmdPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) Tcl_Command)(unsafe.Pointer((tcl.XtclIntStubsPtr + 944 /* &.tcl_FindCommand */))))(tls, interp, ts+8601 /* "y" */, uintptr(0), TCL_GLOBAL_ONLY)
 				// fprintf(stderr, "... y ==> %p\n", resolvedCmdPtr);
 
-			} else if ((libc.Xstrcmp(tls, context, ts+8615 /* "ctx2" */) == 0) && (int32(*(*int8)(unsafe.Pointer(name))) == 'z')) && (int32(*(*int8)(unsafe.Pointer(name + 1))) == 0) {
+			} else if ((libc.Xstrcmp(tls, context, ts+8615 /* "ctx2" */) == 0) && (int32(*(*uint8)(unsafe.Pointer(name))) == 'z')) && (int32(*(*uint8)(unsafe.Pointer(name + 1))) == 0) {
 				resolvedCmdPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) Tcl_Command)(unsafe.Pointer((tcl.XtclIntStubsPtr + 944 /* &.tcl_FindCommand */))))(tls, interp, ts+8620 /* "Y" */, uintptr(0), TCL_GLOBAL_ONLY)
 				//fprintf(stderr, "... Y ==> %p\n", resolvedCmdPtr);
 			}
@@ -21335,7 +21143,7 @@ func MyCompiledVarFetch(tls *libc.TLS, interp uintptr, vinfoPtr uintptr) Tcl_Var
 }
 
 func InterpCompiledVarResolver(tls *libc.TLS, interp uintptr, name uintptr, length int32, context uintptr, rPtr uintptr) int32 { /* tclTest.c:7597:1: */
-	if int32(*(*int8)(unsafe.Pointer(name))) == 'T' {
+	if int32(*(*uint8)(unsafe.Pointer(name))) == 'T' {
 		var resVarInfo uintptr = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tcl.XtclStubsPtr + 40 /* &.tcl_Alloc */))))(tls, uint32(unsafe.Sizeof(MyResolvedVarInfo{})))
 
 		(*MyResolvedVarInfo)(unsafe.Pointer(resVarInfo)).vInfo.fetchProc = *(*uintptr)(unsafe.Pointer(&struct {
@@ -23820,7 +23628,7 @@ func CheckIfVarUnset(tls *libc.TLS, interp uintptr, varPtr uintptr, varIndex int
 	defer tls.Free(64)
 
 	if *(*uintptr)(unsafe.Pointer(varPtr + uintptr(varIndex)*8)) == (uintptr(0)) {
-		// var buf [56]int8 at bp+8, 56
+		// var buf [56]uint8 at bp+8, 56
 
 		libc.Xsprintf(tls, bp+8 /* &buf[0] */, ts+9601 /* "variable %d is u..." */, libc.VaList(bp, varIndex))
 		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 1752 /* &.tcl_ResetResult */))))(tls, interp)
@@ -23855,13 +23663,13 @@ func CheckIfVarUnset(tls *libc.TLS, interp uintptr, varPtr uintptr, varIndex int
 
 // name and version of this package
 
-var packageName = *(*[13]int8)(unsafe.Pointer(ts + 9629 /* "procbodytest" */)) /* tclTestProcBodyObj.c:23:19 */
-var packageVersion = *(*[4]int8)(unsafe.Pointer(ts + 9642 /* "1.1" */))        /* tclTestProcBodyObj.c:24:19 */
+var packageName = *(*[13]uint8)(unsafe.Pointer(ts + 9629 /* "procbodytest" */)) /* tclTestProcBodyObj.c:23:19 */
+var packageVersion = *(*[4]uint8)(unsafe.Pointer(ts + 9642 /* "1.1" */))        /* tclTestProcBodyObj.c:24:19 */
 
 // Name of the commands exported by this package
 
-var procCommand = *(*[5]int8)(unsafe.Pointer(ts + 9646 /* "proc" */))   /* tclTestProcBodyObj.c:30:19 */
-var checkCommand = *(*[6]int8)(unsafe.Pointer(ts + 9096 /* "check" */)) /* tclTestProcBodyObj.c:31:19 */
+var procCommand = *(*[5]uint8)(unsafe.Pointer(ts + 9646 /* "proc" */))   /* tclTestProcBodyObj.c:30:19 */
+var checkCommand = *(*[6]uint8)(unsafe.Pointer(ts + 9096 /* "check" */)) /* tclTestProcBodyObj.c:31:19 */
 
 // this struct describes an entry in the table of command names and command
 // procs
@@ -23948,7 +23756,7 @@ func RegisterCommand(tls *libc.TLS, interp uintptr, namespace uintptr, cmdTableP
 	bp := tls.Alloc(160)
 	defer tls.Free(160)
 
-	// var buf [128]int8 at bp+32, 128
+	// var buf [128]uint8 at bp+32, 128
 
 	if (*CmdTable)(unsafe.Pointer(cmdTablePtr)).exportIt != 0 {
 		libc.Xsprintf(tls, bp+32 /* &buf[0] */, ts+9651, /* "namespace eval %..." */
@@ -24291,7 +24099,7 @@ func TestfilehandlerCmd(tls *libc.TLS, clientData ClientData, interp uintptr, ar
 	var mask int32
 	// var timeout int32 at bp+4572, 4
 
-	// var buffer [4000]int8 at bp+548, 4000
+	// var buffer [4000]uint8 at bp+548, 4000
 
 	var file TclFile
 
@@ -24339,7 +24147,7 @@ func TestfilehandlerCmd(tls *libc.TLS, clientData ClientData, interp uintptr, ar
 		}
 		(*Pipe)(unsafe.Pointer(pipePtr)).readCount = libc.AssignPtrInt32(pipePtr+20 /* &.writeCount */, 0)
 	} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + 1*8)), ts+10038 /* "counts" */) == 0 {
-		// var buf [48]int8 at bp+500, 48
+		// var buf [48]uint8 at bp+500, 48
 
 		if argc != 3 {
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+88, ts+2164, /* "wrong # argument..." */
@@ -24420,7 +24228,7 @@ func TestfilehandlerCmd(tls *libc.TLS, clientData ClientData, interp uintptr, ar
 			// Empty loop body.
 		}
 	} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + 1*8)), ts+10182 /* "fillpartial" */) == 0 {
-		// var buf [24]int8 at bp+4548, 24
+		// var buf [24]uint8 at bp+4548, 24
 
 		if argc != 3 {
 			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tcl.XtclStubsPtr + 576 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+352, ts+2164, /* "wrong # argument..." */
@@ -24768,7 +24576,7 @@ func TestalarmCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc int
 	// I/O system calls.
 
 	*(*uintptr)(unsafe.Pointer(bp + 32 /* &action */ /* &.__sigaction_handler */)) = *(*uintptr)(unsafe.Pointer(&struct{ f func(*libc.TLS, int32) }{AlarmHandler}))
-	libc.Xmemset(tls, (bp + 32 /* &action */ + 8 /* &.sa_mask */), 0, uint64(unsafe.Sizeof(sigset_t{})))
+	libc.Xmemset(tls, (bp + 32 /* &action */ + 24 /* &.sa_mask */), 0, uint64(unsafe.Sizeof(sigset_t{})))
 	(*sigaction)(unsafe.Pointer(bp + 32 /* &action */)).sa_flags = SA_RESTART
 
 	if libc.Xsigaction(tls, SIGALRM, bp+32 /* &action */, uintptr(0)) < 0 {

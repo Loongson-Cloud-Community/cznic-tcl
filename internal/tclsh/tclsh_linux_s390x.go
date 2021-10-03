@@ -457,7 +457,7 @@ type _IO_FILE = struct {
 	_old_offset     int64
 	_cur_column     uint16
 	_vtable_offset  int8
-	_shortbuf       [1]int8
+	_shortbuf       [1]uint8
 	_               [4]byte
 	_lock           uintptr
 	_offset         int64
@@ -467,7 +467,7 @@ type _IO_FILE = struct {
 	_freeres_buf    uintptr
 	__pad5          size_t
 	_mode           int32
-	_unused2        [20]int8
+	_unused2        [20]uint8
 } /* __FILE.h:4:1 */
 
 // The opaque type of streams.  This is the definition used elsewhere.
@@ -840,7 +840,7 @@ type Tcl_SavedResult1 = struct {
 	appendResult uintptr
 	appendAvl    int32
 	appendUsed   int32
-	resultSpace  [201]int8
+	resultSpace  [201]uint8
 	_            [7]byte
 } /* tcl.h:864:9 */
 
@@ -983,7 +983,7 @@ type Tcl_DString1 = struct {
 	string      uintptr
 	length      int32
 	spaceAvl    int32
-	staticSpace [200]int8
+	staticSpace [200]uint8
 } /* tcl.h:983:9 */
 
 //----------------------------------------------------------------------------

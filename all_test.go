@@ -408,3 +408,25 @@ func ExampleInterp_NewCommand() {
 	// 123 foo bar 42
 	// 42
 }
+
+func TestS390xBug(t *testing.T) {
+	in, err := NewInterp()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	defer func() {
+		if err := in.Close(); err != nil {
+			t.Error(err)
+		}
+	}()
+
+	s, err := in.Eval("set dirs {a b c d}; lindex $dirs end")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if g, e := s, "d"; g != e {
+		t.Errorf("got %q exp %q", g, e)
+	}
+}
