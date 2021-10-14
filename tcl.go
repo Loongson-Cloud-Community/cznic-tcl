@@ -232,6 +232,34 @@ func MustNewInterp() *Interp {
 	return in
 }
 
+// Handle returns the handle of the underlying interpreter. It is used when
+// calling libtcl directly. For example:
+//
+//	import (
+//		"modernc.org/libc"
+//		"modernc.org/tcl"
+//		libtcl "modernc.org/tcl/lib"
+//	)
+//
+//	in := tcl.MustNewInterp()
+//	returnCode := libtcl.XTcl_Eval(in.TLS(), in.Handle(), "set a 42")
+//	returnString := libc.GoString(libtcl.XTcl_GetStringResult(in.TLS(), in.Handle()))
+func (in *Interp) Handle() uintptr { return in.interp }
+
+// TLS returns the thread local storage of the underlying interpreter. It is
+// used when calling libtcl directly. For example:
+//
+//	import (
+//		"modernc.org/libc"
+//		"modernc.org/tcl"
+//		libtcl "modernc.org/tcl/lib"
+//	)
+//
+//	in := tcl.MustNewInterp()
+//	returnCode := libtcl.XTcl_Eval(in.TLS(), in.Handle(), "set a 42")
+//	returnString := libc.GoString(libtcl.XTcl_GetStringResult(in.TLS(), in.Handle()))
+func (in *Interp) TLS() *libc.TLS { return in.tls }
+
 // Close invalidates the interpreter and releases all its associated resources.
 func (in *Interp) Close() error {
 	tcl.XTcl_DeleteInterp(in.tls, in.interp)
