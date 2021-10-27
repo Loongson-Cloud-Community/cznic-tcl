@@ -162,10 +162,10 @@ func main() {
 			}
 			switch goos {
 			case "freebsd", "netbsd":
-				ccgo.MustCompile(true, "-compiledb", cdb, "make", "CFLAGS='-DNO_ISNAN -UHAVE_CPUID'", "binaries", "tcltest")
+				ccgo.MustRun(true, "-compiledb", cdb, "make", "CFLAGS='-DNO_ISNAN -UHAVE_CPUID'", "binaries", "tcltest")
 			default:
 				// -UHAVE_COPYFILE disables the tcl macOS bits trying to use copyfile/libc.Xcopyfile.
-				ccgo.MustCompile(true, "-compiledb", cdb, "make", "CFLAGS=-UHAVE_CPUID -UHAVE_COPYFILE", "binaries", "tcltest")
+				ccgo.MustRun(true, "-compiledb", cdb, "make", "CFLAGS=-UHAVE_CPUID -UHAVE_COPYFILE", "binaries", "tcltest")
 			}
 			return nil
 		})
@@ -179,8 +179,8 @@ func main() {
 		return
 	}
 
-	ccgo.MustCompile(true, lib...)
-	ccgo.MustCompile(true,
+	ccgo.MustRun(true, lib...)
+	ccgo.MustRun(true,
 		"-export-defines", "",
 		"-lmodernc.org/tcl/lib",
 		"-nocapi",
@@ -192,7 +192,7 @@ func main() {
 		"-trace-translation-units",
 		cdb, "tclsh",
 	)
-	ccgo.MustCompile(true,
+	ccgo.MustRun(true,
 		"-export-defines", "",
 		"-lmodernc.org/tcl/lib",
 		"-nocapi",
