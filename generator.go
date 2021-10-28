@@ -91,7 +91,7 @@ func main() {
 	switch goos {
 	case "linux":
 		switch goarch {
-		case "amd64":
+		case "amd64", "386":
 			thr = "--enable-threads"
 		}
 	}
@@ -156,7 +156,7 @@ func main() {
 				ccgo.MustShell(true, "sed", "-i", "", "s/ -mdynamic-no-pic//", "Makefile")
 			case "linux":
 				switch goarch {
-				case "amd64":
+				case "amd64", "386":
 					ccgo.MustShell(true, "sed", "-i", "s/ -DHAVE_PTHREAD_ATFORK=1//", "Makefile")
 				}
 			}
