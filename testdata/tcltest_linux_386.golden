@@ -1,11 +1,11 @@
-Tests running in interp:  /tmp/tcl-test-1597568956/tcltest
-Tests located in:  /tmp/tcl-test-1597568956
-Tests running in:  /tmp/tcl-test-1597568956
-Temporary files stored in /tmp/tcl-test-1597568956
+Tests running in interp:  /tmp/tcl-test-3401444744/tcltest
+Tests located in:  /tmp/tcl-test-3401444744
+Tests running in:  /tmp/tcl-test-3401444744
+Temporary files stored in /tmp/tcl-test-3401444744
 Test files run in separate interpreters
 Running tests that match:  *
 Only running test files that match:  *.test
-Tests began at Thu Oct 28 17:29:07 CEST 2021
+Tests began at Fri Oct 29 12:21:36 CEST 2021
 aaa_exit.test
 append.test
 appendComp.test
@@ -157,8 +157,8 @@ winPipe.test
 winTime.test
 zlib.test
 
-Tests ended at Thu Oct 28 17:32:11 CEST 2021
-all.tcl:	Total	33499	Passed	30202	Skipped	3297	Failed	0
+Tests ended at Fri Oct 29 12:26:47 CEST 2021
+all.tcl:	Total	33499	Passed	30201	Skipped	3298	Failed	0
 Sourced 150 Test Files.
 Number of tests skipped for each constraint:
 	9	!ieeeFloatingPoint
@@ -189,9 +189,9 @@ Number of tests skipped for each constraint:
 	1	testwinclock
 	21	testwordend
 	189	thread
+	3	threaded
 	2	time64bit
 	3	tip389
-	2	unthreaded
 	487	win
 	4	winVista
 	6	xdev
