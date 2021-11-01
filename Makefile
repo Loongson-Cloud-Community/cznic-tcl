@@ -98,11 +98,11 @@ linux_386:
 	GOOS=linux GOARCH=386 go build -v ./...
 
 linux_arm:
-	QEMU_LD_PREFIX=/usr/arm-linux-gnueabi CCGO_CPP=arm-linux-gnueabi-cpp-8 GO_GENERATE_CC=arm-linux-gnueabi-gcc-8 TARGET_GOOS=linux TARGET_GOARCH=arm go generate 2>&1 | tee /tmp/log-generate-tcl-linux-arm
+	QEMU_LD_PREFIX=/usr/arm-linux-gnueabi CCGO_CPP=arm-linux-gnueabi-cpp GO_GENERATE_CC=arm-linux-gnueabi-gcc TARGET_GOOS=linux TARGET_GOARCH=arm go generate 2>&1 | tee /tmp/log-generate-tcl-linux-arm
 	GOOS=linux GOARCH=arm go build -v ./...
 
 linux_arm64:
-	QEMU_LD_PREFIX=/usr/aarch64-linux-gnu CCGO_CPP=aarch64-linux-gnu-cpp-8 GO_GENERATE_CC=aarch64-linux-gnu-gcc-8 TARGET_GOOS=linux TARGET_GOARCH=arm64 go generate 2>&1 | tee /tmp/log-generate-tcl-linux-arm64
+	QEMU_LD_PREFIX=/usr/aarch64-linux-gnu CCGO_CPP=aarch64-linux-gnu-cpp GO_GENERATE_CC=aarch64-linux-gnu-gcc TARGET_GOOS=linux TARGET_GOARCH=arm64 go generate 2>&1 | tee /tmp/log-generate-tcl-linux-arm64
 	GOOS=linux GOARCH=arm64 go build -v ./...
 
 # The part that is run inside the 4GB VM.
