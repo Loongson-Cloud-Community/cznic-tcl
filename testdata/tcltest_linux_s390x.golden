@@ -1,12 +1,12 @@
-Tests running in interp:  /tmp/tcl-test-2585805653/tcltest
-Tests located in:  /tmp/tcl-test-2585805653
-Tests running in:  /tmp/tcl-test-2585805653
-Temporary files stored in /tmp/tcl-test-2585805653
+Tests running in interp:  /tmp/tcl-test-611824927/tcltest
+Tests located in:  /tmp/tcl-test-611824927
+Tests running in:  /tmp/tcl-test-611824927
+Temporary files stored in /tmp/tcl-test-611824927
 Test files run in separate interpreters
 Running tests that match:  *
 Skipping test files that match:  http.test httpold.test
 Only running test files that match:  *.test
-Tests began at Sun Oct 03 16:42:42 EDT 2021
+Tests began at Wed Nov 03 14:16:58 UTC 2021
 aaa_exit.test
 append.test
 appendComp.test
@@ -156,8 +156,8 @@ winPipe.test
 winTime.test
 zlib.test
 
-Tests ended at Sun Oct 03 16:45:22 EDT 2021
-all.tcl:	Total	33402	Passed	30068	Skipped	3334	Failed	0
+Tests ended at Wed Nov 03 14:19:40 UTC 2021
+all.tcl:	Total	33402	Passed	30059	Skipped	3343	Failed	0
 Sourced 148 Test Files.
 Number of tests skipped for each constraint:
 	9	!ieeeFloatingPoint
@@ -172,6 +172,7 @@ Number of tests skipped for each constraint:
 	39	knownBug
 	77	littleEndian
 	100	localeRegexp
+	9	localhost_v6
 	52	longIs32bit
 	14	macosxFileAttr
 	82	memory
