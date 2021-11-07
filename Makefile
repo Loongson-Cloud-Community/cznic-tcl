@@ -82,20 +82,32 @@ darwin_arm64:
 	GOOS=darwin GOARCH=arm64 go build -v ./...
 
 freebsd_amd64:
-	TARGET_GOOS=freebsd TARGET_GOARCH=amd64 AR=/usr/bin/ar CC=gcc go generate 2>&1 | tee /tmp/log-generate-tcl-freebsd-amd64
-	GOOS=freebsd GOARCH=amd64 go build -v ./...
+	@echo "Should be executed only on freebsd/amd64."
+	AR=$$(which ar) go generate 2>&1 | tee log-generate
+	go build -v ./...
 
 netbsd_amd64:
 	TARGET_GOOS=netbsd TARGET_GOARCH=amd64 AR=/usr/bin/ar CC=gcc go generate 2>&1 | tee /tmp/log-generate-tcl-netbsd-amd64
 	GOOS=netbsd GOARCH=amd64 go build -v ./...
 
 linux_amd64:
-	TARGET_GOOS=linux TARGET_GOARCH=amd64 go generate 2>&1 | tee /tmp/log-generate-tcl-linux-amd64
-	GOOS=linux GOARCH=amd64 go build -v ./...
+	@echo "Should be executed only on linux/amd64."
+	go generate 2>&1 | tee log-generate
+	go build -v ./...
 
-linux_386:
-	CCGO_CPP=i686-linux-gnu-cpp GO_GENERATE_CC=i686-linux-gnu-gcc TARGET_GOOS=linux TARGET_GOARCH=386 go generate 2>&1 | tee /tmp/log-generate-tcl-linux-386
-	GOOS=linux GOARCH=386 go build -v ./...
+linux_386_config:
+	@echo "Should be executed only on linux/386."
+	rm -rf tmp/
+	mkdir -p tmp/config tmp/src
+	GO_GENERATE_TMPDIR=tmp/src GO_GENERATE_SAVE_CONFIG=tmp/config go generate 2>&1 | tee log-generate
+
+linux_386_pull:
+	@echo "Can be executed everywhere"
+	rm -rf tmp/
+	mkdir tmp/
+	rsync -rp nuc32:src/modernc.org/tcl/tmp/ tmp/
+	GO_GENERATE_TMPDIR=tmp/src GO_GENERATE_LOAD_CONFIG=tmp/config TARGET_GOOS=linux TARGET_GOARCH=386 go generate 2>&1 | tee log-generate
+	go build -v ./...
 
 linux_arm:
 	QEMU_LD_PREFIX=/usr/arm-linux-gnueabi CCGO_CPP=arm-linux-gnueabi-cpp GO_GENERATE_CC=arm-linux-gnueabi-gcc TARGET_GOOS=linux TARGET_GOARCH=arm go generate 2>&1 | tee /tmp/log-generate-tcl-linux-arm

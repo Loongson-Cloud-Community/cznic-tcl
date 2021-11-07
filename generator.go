@@ -45,10 +45,13 @@ var (
 		{"windows", "386"}:   {},
 		{"windows", "amd64"}: {},
 	}
-	tmpDir = ccgo.Env("GO_GENERATE_TMPDIR", "")
+	loadConfig = ccgo.Env("GO_GENERATE_LOAD_CONFIG", "")
+	saveConfig = ccgo.Env("GO_GENERATE_SAVE_CONFIG", "")
+	tmpDir     = ccgo.Env("GO_GENERATE_TMPDIR", "")
 )
 
 func main() {
+	fmt.Printf("Running on %s/%s.\n", runtime.GOOS, runtime.GOARCH)
 	if _, ok := supported[supportedKey{goos, goarch}]; !ok {
 		ccgo.Fatalf(true, "unsupported target: %s/%s", goos, goarch)
 	}
@@ -88,12 +91,9 @@ func main() {
 		// "--enable-symbols=mem", //TODO-
 	}
 	thr := "--disable-threads"
-	switch goos {
-	case "linux":
-		switch goarch {
-		case "amd64":
-			thr = "--enable-threads"
-		}
+	switch fmt.Sprintf("%s/%s", goos, goarch) {
+	case "linux/amd64":
+		thr = "--enable-threads"
 	}
 	cfg = append(cfg, thr)
 	platformDir := "/unix"
@@ -113,6 +113,8 @@ func main() {
 		"-replace-tcl-default-double-rounding", "__ccgo_tcl_default_double_rounding",
 		"-replace-tcl-ieee-double-rounding", "__ccgo_tcl_ieee_double_rounding",
 		"-trace-translation-units",
+		"--load-config", loadConfig,
+		"-save-config", saveConfig,
 		cdb,
 	}
 	switch goos {
@@ -162,7 +164,7 @@ func main() {
 			}
 			switch goos {
 			case "freebsd", "netbsd":
-				ccgo.MustRun(true, "-compiledb", cdb, "make", "CFLAGS='-DNO_ISNAN -UHAVE_CPUID'", "binaries", "tcltest")
+				ccgo.MustRun(true, "-compiledb", cdb, "gmake", "CFLAGS='-DNO_ISNAN -UHAVE_CPUID'", "binaries", "tcltest")
 			default:
 				// -UHAVE_COPYFILE disables the tcl macOS bits trying to use copyfile/libc.Xcopyfile.
 				ccgo.MustRun(true, "-compiledb", cdb, "make", "CFLAGS=-UHAVE_CPUID -UHAVE_COPYFILE", "binaries", "tcltest")
@@ -190,6 +192,8 @@ func main() {
 		"-replace-tcl-default-double-rounding", "__ccgo_tcl_default_double_rounding",
 		"-replace-tcl-ieee-double-rounding", "__ccgo_tcl_ieee_double_rounding",
 		"-trace-translation-units",
+		"--load-config", loadConfig,
+		"-save-config", saveConfig,
 		cdb, "tclsh",
 	)
 	ccgo.MustRun(true,
@@ -198,6 +202,8 @@ func main() {
 		"-nocapi",
 		"-o", filepath.Join("internal", "tcltest", fmt.Sprintf("tcltest_%s_%s.go", goos, goarch)),
 		"-trace-translation-units",
+		"--load-config", loadConfig,
+		"-save-config", saveConfig,
 		cdb,
 		"tclAppInit.o#1",
 		"tclTest.o",

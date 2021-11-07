@@ -1,0 +1,2870 @@
+Tests running in interp:  /tmp/tcl-test-4139353546/tcltest
+Tests located in:  /tmp/tcl-test-4139353546
+Tests running in:  /tmp/tcl-test-4139353546
+Temporary files stored in /tmp/tcl-test-4139353546
+Test files run in separate interpreters
+Running tests that match:  *
+Only running test files that match:  *.test
+Tests began at Sun Nov 07 22:51:07 CET 2021
+aaa_exit.test
+append.test
+appendComp.test
+apply.test
+assemble.test
+assocd.test
+async.test
+autoMkindex.test
+basic.test
+binary.test
+case.test
+chan.test
+
+
+==== chan-16.9 chan command: pending input subcommand FAILED
+==== Contents of test case:
+
+    after idle chan-16.9-client 
+    vwait ::chan-16.9-done
+    set ::chan-16.9-data
+
+---- Test setup failed:
+couldn't open socket: cannot assign requested address
+---- errorInfo(setup): couldn't open socket: cannot assign requested address
+    while executing
+"socket -server chan-16.9-accept -myaddr 127.0.0.1 0"
+    ("uplevel" body line 32)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): POSIX EADDRNOTAVAIL {cannot assign requested address}
+==== chan-16.9 FAILED
+
+chanio.test
+
+
+==== chan-io-28.7 Tcl_CloseEx (half-close) socket FAILED
+==== Contents of test case:
+
+    set s [socket 127.0.0.1 $port]
+    puts $s Hey
+    close $s w
+    set timer [after 1000 [namespace code {set done Failed}]]
+    set acc {}
+    fileevent $s readable [namespace code {
+	if {[gets $s line]<0} {
+	    set done Succeeded
+	} else {
+	    lappend acc $line
+	}
+    }]
+    vwait [namespace which -variable done]
+    list $done $acc
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: expected integer but got ""
+    while executing
+"socket 127.0.0.1 $port"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: TCL VALUE NUMBER
+---- Test cleanup failed:
+couldn't open socket: bad address in system call argument
+    while executing
+"socket -server accept 0"
+    invoked from within
+"set s [socket -server accept 0]"
+    (file "/tmp/tcl-test-4139353546/echo.tcl" line 3)
+---- errorInfo(cleanup): couldn't open socket: bad address in system call argument
+    while executing
+"socket -server accept 0"
+    invoked from within
+"set s [socket -server accept 0]"
+    (file "/tmp/tcl-test-4139353546/echo.tcl" line 3)
+    while executing
+"close $ff"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): CHILDSTATUS 4687 1
+==== chan-io-28.7 FAILED
+
+
+
+==== chan-io-29.34 Tcl_Chan Close, async flush on chan close, using sockets FAILED
+==== Contents of test case:
+
+    proc accept {s a p} {
+	variable x
+	chan event $s readable [namespace code [list readit $s]]
+	chan configure $s -blocking off
+	set x accepted
+    }
+    proc readit {s} {
+	variable c
+	variable x
+	set l [chan gets $s]
+	if {[chan eof $s]} {
+	    chan close $s
+	    set x done
+	} elseif {([string length $l] > 0) || ![chan blocked $s]} {
+	    incr c
+	}
+    }
+    set ss [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set cs [socket 127.0.0.1 [lindex [chan configure $ss -sockname] 2]]
+    vwait [namespace which -variable x]
+    chan configure $cs -blocking off
+    writelots $cs $l
+    chan close $cs
+    chan close $ss
+    vwait [namespace which -variable x]
+    set c
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 19)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+==== chan-io-29.34 FAILED
+
+
+
+==== chan-io-29.35 Tcl_Chan Close vs chan event vs multiple interpreters FAILED
+==== Contents of test case:
+
+    # On Mac, this test screws up sockets such that subsequent tests using
+    # port 2828 either cause errors or panic().
+    interp create x
+    interp create y
+    set s [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    proc accept {s a p} {
+	chan puts $s hello
+	chan close $s
+    }
+    set c [socket 127.0.0.1 [lindex [chan configure $s -sockname] 2]]
+    interp share {} $c x
+    interp share {} $c y
+    chan close $c
+    x eval {
+	proc readit {s} {
+	    chan gets $s
+	    if {[chan eof $s]} {
+		chan close $s
+	    }
+	}
+    }
+    y eval {
+	proc readit {s} {
+	    chan gets $s
+	    if {[chan eof $s]} {
+		chan close $s
+	    }
+	}
+    }
+    x eval "chan event $c readable \{readit $c\}"
+    y eval "chan event $c readable \{readit $c\}"
+    y eval [list chan close $c]
+    update
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 6)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+---- Test cleanup failed:
+can't read "s": no such variable
+---- errorInfo(cleanup): can't read "s": no such variable
+    while executing
+"chan close $s"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME s
+==== chan-io-29.35 FAILED
+
+
+
+==== chan-io-39.18 Tcl_SetChannelOption, setting read mode independently FAILED
+==== Contents of test case:
+
+    proc accept {s a p} {chan close $s}
+    set s1 [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set port [lindex [chan configure $s1 -sockname] 2]
+    set s2 [socket 127.0.0.1 $port]
+    update
+    chan configure $s2 -translation {auto lf}
+    chan configure $s2 -translation
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+---- Test cleanup failed:
+can't read "s1": no such variable
+---- errorInfo(cleanup): can't read "s1": no such variable
+    while executing
+"chan close $s1"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME s1
+==== chan-io-39.18 FAILED
+
+
+
+==== chan-io-39.19 Tcl_SetChannelOption, setting read mode independently FAILED
+==== Contents of test case:
+
+    proc accept {s a p} {chan close $s}
+    set s1 [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set port [lindex [chan configure $s1 -sockname] 2]
+    set s2 [socket 127.0.0.1 $port]
+    update
+    chan configure $s2 -translation {auto crlf}
+    chan configure $s2 -translation
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+---- Test cleanup failed:
+can't read "s1": no such variable
+---- errorInfo(cleanup): can't read "s1": no such variable
+    while executing
+"chan close $s1"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME s1
+==== chan-io-39.19 FAILED
+
+
+
+==== chan-io-39.20 Tcl_SetChannelOption, setting read mode independently FAILED
+==== Contents of test case:
+
+    proc accept {s a p} {chan close $s}
+    set s1 [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set port [lindex [chan configure $s1 -sockname] 2]
+    set s2 [socket 127.0.0.1 $port]
+    update
+    chan configure $s2 -translation {auto cr}
+    chan configure $s2 -translation
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+---- Test cleanup failed:
+can't read "s1": no such variable
+---- errorInfo(cleanup): can't read "s1": no such variable
+    while executing
+"chan close $s1"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME s1
+==== chan-io-39.20 FAILED
+
+
+
+==== chan-io-39.21 Tcl_SetChannelOption, setting read mode independently FAILED
+==== Contents of test case:
+
+    proc accept {s a p} {chan close $s}
+    set s1 [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set port [lindex [chan configure $s1 -sockname] 2]
+    set s2 [socket 127.0.0.1 $port]
+    update
+    chan configure $s2 -translation {auto auto}
+    chan configure $s2 -translation
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+---- Test cleanup failed:
+can't read "s1": no such variable
+---- errorInfo(cleanup): can't read "s1": no such variable
+    while executing
+"chan close $s1"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME s1
+==== chan-io-39.21 FAILED
+
+
+
+==== chan-io-39.23 Tcl_GetChannelOption, server socket is not readable or writeable, it should still have valid -eofchar and -translation options FAILED
+==== Contents of test case:
+
+    set sock [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    lappend l [chan configure $sock -eofchar]  [chan configure $sock -translation]
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+---- Test cleanup failed:
+can't read "sock": no such variable
+---- errorInfo(cleanup): can't read "sock": no such variable
+    while executing
+"chan close $sock"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME sock
+==== chan-io-39.23 FAILED
+
+
+
+==== chan-io-39.24 Tcl_SetChannelOption, server socket is not readable or writable so we can't change -eofchar or -translation FAILED
+==== Contents of test case:
+
+    set sock [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    chan configure $sock -eofchar D -translation lf
+    lappend l [chan configure $sock -eofchar]  [chan configure $sock -translation]
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+---- Test cleanup failed:
+can't read "sock": no such variable
+---- errorInfo(cleanup): can't read "sock": no such variable
+    while executing
+"chan close $sock"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME sock
+==== chan-io-39.24 FAILED
+
+
+
+==== chan-io-51.1 Test old socket deletion on Macintosh FAILED
+==== Contents of test case:
+
+    proc accept {s a p} {
+	variable x
+	chan configure $s -blocking off
+	chan puts $s "sock[incr x]"
+	chan close $s
+	variable wait done
+    }
+    set ss [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set port [lindex [chan configure $ss -sockname] 2]
+    set cs [socket 127.0.0.1 $port]
+    vwait [namespace which -variable wait]
+    lappend result [chan gets $cs]
+    chan close $cs
+    set cs [socket 127.0.0.1 $port]
+    vwait [namespace which -variable wait]
+    lappend result [chan gets $cs]
+    chan close $cs
+    set cs [socket 127.0.0.1 $port]
+    vwait [namespace which -variable wait]
+    lappend result [chan gets $cs]
+    chan close $cs
+    set cs [socket 127.0.0.1 $port]
+    vwait [namespace which -variable wait]
+    lappend result [chan gets $cs]
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 9)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+---- Test cleanup failed:
+can't read "cs": no such variable
+---- errorInfo(cleanup): can't read "cs": no such variable
+    while executing
+"chan close $cs"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME cs
+==== chan-io-51.1 FAILED
+
+
+
+==== chan-io-53.5 CopyData: error during chan copy FAILED
+==== Contents of test case:
+
+    variable fcopyTestDone
+    set listen [socket -server [namespace code FcopyTestAccept] -myaddr 127.0.0.1 0]
+    set in [open $thisScript]	;# 126 K
+    set out [socket 127.0.0.1 [lindex [chan configure $listen -sockname] 2]]
+    catch {unset fcopyTestDone}
+    chan close $listen	;# This means the socket open never really succeeds
+    chan copy $in $out -command [namespace code FcopyTestDone]
+    variable fcopyTestDone
+    if ![info exists fcopyTestDone] {
+	vwait [namespace which -variable fcopyTestDone]		;# The error occurs here in the b.g.
+    }
+    chan close $in
+    chan close $out
+    set fcopyTestDone	;# 1 for error condition
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code FcopyTestAccept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+==== chan-io-53.5 FAILED
+
+
+
+==== chan-io-53.10 Bug 1350564, multi-directional fcopy FAILED
+==== Contents of test case:
+
+    # Now pass data through the server in both directions.
+    set ::forever {}
+    chan puts $a AB
+    vwait ::forever
+    chan puts $b BA
+    vwait ::forever
+    set ::forever
+
+---- Test setup failed:
+couldn't open socket: bad address in system call argument
+---- errorInfo(setup): couldn't open socket: bad address in system call argument
+    while executing
+"socket 127.0.0.1 9999"
+    ("uplevel" body line 48)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): POSIX EFAULT {bad address in system call argument}
+==== chan-io-53.10 FAILED
+
+
+
+==== chan-io-54.1 Recursive channel events FAILED
+==== Contents of test case:
+
+    # This test checks to see if file events are delivered during recursive
+    # event loops when there is buffered data on the channel.
+    proc accept {s a p} {
+	variable as
+	chan configure $s -translation lf
+	chan puts $s "line 1\nline2\nline3"
+	chan flush $s
+	set as $s
+    }
+    proc readit {s next} {
+	variable x
+	variable result
+	lappend result $next
+	if {$next == 1} {
+	    chan event $s readable [namespace code [list readit $s 2]]
+	    vwait [namespace which -variable x]
+	}
+	incr x
+    }
+    set ss [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    # We need to delay on some systems until the creation of the server socket
+    # completes.
+    set done 0
+    for {set i 0} {$i < 10} {incr i} {
+	if {![catch {
+	    set cs [socket 127.0.0.1 [lindex [chan configure $ss -sockname] 2]]
+	}]} {
+	    set done 1
+	    break
+	}
+	after 100
+    }
+    if {$done == 0} {
+	chan close $ss
+	error "failed to connect to server"
+    }
+    variable result {}
+    variable x 0
+    variable as
+    vwait [namespace which -variable as]
+    chan configure $cs -translation lf
+    lappend result [chan gets $cs]
+    chan configure $cs -blocking off
+    chan event $cs readable [namespace code [list readit $cs 1]]
+    set a [after 2000 [namespace code { set x failure }]]
+    vwait [namespace which -variable x]
+    after cancel $a
+    chan close $as
+    chan close $ss
+    chan close $cs
+    list $result $x
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 21)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+==== chan-io-54.1 FAILED
+
+
+
+==== chan-io-54.2 Testing for busy-wait in recursive channel events FAILED
+==== Contents of test case:
+
+    variable s [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    proc accept {s a p} {
+	variable counter 0
+	variable accept $s
+	chan configure $s -blocking off -buffering line -translation lf
+	chan event $s readable [namespace code "doit $s"]
+    }
+    proc doit {s} {
+	variable counter
+	variable after
+	incr counter
+	if {[chan gets $s] eq ""} {
+	    chan event $s readable [namespace code "doit1 $s"]
+	    set after [after 1000 [namespace code {
+		chan puts $writer hello
+		chan flush $writer
+		set done 1
+	    }]]
+	}
+    }
+    proc doit1 {s} {
+	variable counter
+	variable accept
+	incr counter
+	chan gets $s
+	chan close $s
+	set accept {}
+    }
+    proc producer {} {
+	variable s
+	variable writer
+	set writer [socket 127.0.0.1 [lindex [chan configure $s -sockname] 2]]
+	chan configure $writer -buffering line
+	chan puts -nonewline $writer hello
+	chan flush $writer
+    }
+    producer
+    vwait [namespace which -variable done]
+    chan close $writer
+    chan close $s
+    after cancel $after
+    set counter
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+==== chan-io-54.2 FAILED
+
+
+
+==== chan-io-57.1 buffered data and file events, gets FAILED
+==== Contents of test case:
+
+    proc accept {sock args} {
+	variable s2
+	set s2 $sock
+    }
+    set server [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set s [socket 127.0.0.1 [lindex [chan configure $server -sockname] 2]]
+    vwait [namespace which -variable s2]
+    update
+    chan event $s2 readable [namespace code {lappend result readable}]
+    chan puts $s "12\n34567890"
+    chan flush $s
+    variable result [chan gets $s2]
+    after 1000 [namespace code {lappend result timer}]
+    vwait [namespace which -variable result]
+    lappend result [chan gets $s2]
+    vwait [namespace which -variable result]
+    set result
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 6)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+---- Test cleanup failed:
+can not find channel named "11"
+---- errorInfo(cleanup): can not find channel named "11"
+    while executing
+"chan close $s"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP CHANNEL 11
+==== chan-io-57.1 FAILED
+
+
+
+==== chan-io-57.2 buffered data and file events, read FAILED
+==== Contents of test case:
+
+    proc accept {sock args} {
+	variable s2
+	set s2 $sock
+    }
+    set server [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set s [socket 127.0.0.1 [lindex [chan configure $server -sockname] 2]]
+    vwait [namespace which -variable s2]
+    update
+    chan event $s2 readable [namespace code {lappend result readable}]
+    chan puts -nonewline $s "1234567890"
+    chan flush $s
+    variable result [chan read $s2 1]
+    after 1000 [namespace code {lappend result timer}]
+    vwait [namespace which -variable result]
+    lappend result [chan read $s2 9]
+    vwait [namespace which -variable result]
+    set result
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 6)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+---- Test cleanup failed:
+can not find channel named "11"
+---- errorInfo(cleanup): can not find channel named "11"
+    while executing
+"chan close $s"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP CHANNEL 11
+==== chan-io-57.2 FAILED
+
+clock.test
+libc_freebsd.go:228:Xlocaltime_r: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x9f
+modernc.org/libc.todo({0x0, 0x0}, {0x0, 0x0, 0x0})
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.55/etc.go:100 +0x20f
+modernc.org/libc.Xlocaltime_r(...)
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.55/libc_freebsd.go:228
+modernc.org/tcl/lib.sThreadSafeLocalTime(0xc00020e0a0, 0x827e002e8)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:97645 +0x67
+modernc.org/tcl/lib.sConvertUTCToLocalUsingC(0xc00020e0a0, 0x828000020, 0x827e00240, 0x231519)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:97097 +0xf2
+modernc.org/tcl/lib.sConvertUTCToLocal(0xc00020e0a0, 0x828000020, 0x827e00240, 0x828110050, 0x231519)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:96994 +0xec
+modernc.org/tcl/lib.XClockGetdatefieldsObjCmd(0xc00020e0a0, 0x827a017a0, 0x828000020, 0x4, 0x8282010d0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:96468 +0x18d
+modernc.org/tcl/lib.sDispatch(0xc00020e0a0, 0x829379288, 0x828000020, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:86314 +0x6c
+modernc.org/tcl/lib.XTclNRRunCallbacks(0xc00020e0a0, 0x828000020, 0x0, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:86341 +0xa4
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc00020e0a0, 0x828000020, 0xb, 0x828200300, 0x200010)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:85896 +0x99
+modernc.org/tcl/lib.XTclEvalEx(0xc00020e0a0, 0x828000020, 0x828600020, 0x1d460d, 0x0, 0x1, 0x0, 0x828600020)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:87529 +0x1410
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc00020e0a0, 0x828000020, 0x828110bc0, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:285811 +0xb85
+modernc.org/tcl/lib.XTcl_MainEx(0xc00020e0a0, 0xffffffff, 0x827900040, 0x870008, 0x828000020)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:301822 +0x66e
+main.main1(0xc00020e0a0, 0x4, 0x827900020)
+	/home/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_freebsd_amd64.go:5646 +0x65
+modernc.org/libc.Start(0x8703b8)
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.55/libc.go:124 +0x1dd
+main.main()
+	/home/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_freebsd_amd64.go:22 +0x2d
+
+Test file error: child process exited abnormally
+cmdAH.test
+libc_freebsd.go:903:Xgetpwnam: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x9f
+modernc.org/libc.todo({0x0, 0x0}, {0x0, 0x0, 0x0})
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.55/etc.go:100 +0x20f
+modernc.org/libc.Xgetpwnam(0xc0001da0a0, 0x827f00580)
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.55/libc_freebsd.go:903 +0x5cc
+modernc.org/tcl/lib.XTclpGetPwNam(...)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:365269
+modernc.org/tcl/lib.XTclpGetUserHome(0xc0001da0a0, 0x827f00478, 0x827f00388)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:368673 +0xc5
+modernc.org/tcl/lib.sSetFsPathFromAny(0xc0001da0a0, 0x828100020, 0x8282a1010)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:333163 +0x6e5
+modernc.org/tcl/lib.XTcl_FSConvertToPathType(0xc0001da0a0, 0x828100020, 0x8282a1010)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:331818 +0xc6
+modernc.org/tcl/lib.XTcl_CdObjCmd(0xc0001da0a0, 0x0, 0x828100020, 0x2, 0x828300da0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:98525 +0x15e
+modernc.org/tcl/lib.sDispatch(0xc0001da0a0, 0x82829e028, 0x828100020, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:86314 +0x6c
+modernc.org/tcl/lib.XTclNRRunCallbacks(0xc0001da0a0, 0x828100020, 0x0, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:86341 +0xa4
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0001da0a0, 0x828100020, 0x9, 0x828300300, 0x200010)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:85896 +0x99
+modernc.org/tcl/lib.XTclEvalEx(0xc0001da0a0, 0x828100020, 0x828600020, 0xe0da, 0x0, 0x1, 0x0, 0x828600020)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:87529 +0x1410
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0001da0a0, 0x828100020, 0x828210bc0, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:285811 +0xb85
+modernc.org/tcl/lib.XTcl_MainEx(0xc0001da0a0, 0xffffffff, 0x827a00040, 0x870008, 0x828100020)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:301822 +0x66e
+main.main1(0xc0001da0a0, 0x4, 0x827a00020)
+	/home/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_freebsd_amd64.go:5646 +0x65
+modernc.org/libc.Start(0x8703b8)
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.55/libc.go:124 +0x1dd
+main.main()
+	/home/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_freebsd_amd64.go:22 +0x2d
+
+Test file error: child process exited abnormally
+cmdIL.test
+cmdInfo.test
+cmdMZ.test
+compExpr-old.test
+compExpr.test
+compile.test
+concat.test
+config.test
+coroutine.test
+dcall.test
+dict.test
+dstring.test
+encoding.test
+env.test
+error.test
+eval.test
+event.test
+
+
+==== event-11.5 Tcl_VwaitCmd procedure: round robin scheduling, 2 sources FAILED
+==== Contents of test case:
+
+    set f1 [open $test1file w]
+    proc accept {s args} {
+	puts $s foobar
+	close $s
+    }
+    set s1 [socket -server accept -myaddr 127.0.0.1 0]
+    after 1000
+    set s2 [socket 127.0.0.1 [lindex [fconfigure $s1 -sockname] 2]]
+    close $s1
+    set x 0
+    set y 0
+    set z 0
+    fileevent $s2 readable {incr z}
+    vwait z
+    fileevent $f1 writable {incr x; if {$y == 3} {set z done}}
+    fileevent $s2 readable {incr y; if {$x == 3} {set z done}}
+    vwait z
+    close $f1
+    close $s2
+    list $x $y $z
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server accept -myaddr 127.0.0.1 0"
+    ("uplevel" body line 7)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+==== event-11.5 FAILED
+
+exec.test
+libc_freebsd.go:903:Xgetpwnam: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x9f
+modernc.org/libc.todo({0x0, 0x0}, {0x0, 0x0, 0x0})
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.55/etc.go:100 +0x20f
+modernc.org/libc.Xgetpwnam(0xc0001940a0, 0x827e00820)
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.55/libc_freebsd.go:903 +0x5cc
+modernc.org/tcl/lib.XTclpGetPwNam(...)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:365269
+modernc.org/tcl/lib.XTclpGetUserHome(0xc0001940a0, 0x827e00718, 0x827e00628)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:368673 +0xc5
+modernc.org/tcl/lib.sSetFsPathFromAny(0xc0001940a0, 0x828000020, 0x8281803e0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:333163 +0x6e5
+modernc.org/tcl/lib.XTcl_FSConvertToPathType(0xc0001940a0, 0x828000020, 0x8281803e0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:331818 +0xc6
+modernc.org/tcl/lib.XTcl_FSGetTranslatedPath(0xc0001940a0, 0x828000020, 0x8281803e0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:332287 +0x45
+modernc.org/tcl/lib.XTcl_TranslateFileName(0xc0001940a0, 0x828000020, 0x827c86180, 0x827e003c8)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:260970 +0x71
+modernc.org/tcl/lib.XTclCreatePipeline(0xc0001940a0, 0x828000020, 0x1, 0x828200dc0, 0x827e002e0, 0x0, 0x827e002d0, 0x827e002d8)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:334610 +0x2250
+modernc.org/tcl/lib.XTcl_OpenCommandChannel(0xc0001940a0, 0x828000020, 0x1, 0x828200dc0, 0xc)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:334920 +0x168
+modernc.org/tcl/lib.XTcl_ExecObjCmd(0xc0001940a0, 0x0, 0x828000020, 0x2, 0x828200da0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:277065 +0x455
+modernc.org/tcl/lib.sDispatch(0xc0001940a0, 0x8281da898, 0x828000020, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:86314 +0x6c
+modernc.org/tcl/lib.XTclNRRunCallbacks(0xc0001940a0, 0x828000020, 0x0, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:86341 +0xa4
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0001940a0, 0x828000020, 0xb, 0x828200300, 0x200010)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:85896 +0x99
+modernc.org/tcl/lib.XTclEvalEx(0xc0001940a0, 0x828000020, 0x828400020, 0x6e29, 0x0, 0x1, 0x0, 0x828400020)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:87529 +0x1410
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0001940a0, 0x828000020, 0x828110bc0, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:285811 +0xb85
+modernc.org/tcl/lib.XTcl_MainEx(0xc0001940a0, 0xffffffff, 0x827900040, 0x870008, 0x828000020)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:301822 +0x66e
+main.main1(0xc0001940a0, 0x4, 0x827900020)
+	/home/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_freebsd_amd64.go:5646 +0x65
+modernc.org/libc.Start(0x8703b8)
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.55/libc.go:124 +0x1dd
+main.main()
+	/home/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_freebsd_amd64.go:22 +0x2d
+
+Test file error: child process exited abnormally
+execute.test
+expr-old.test
+expr.test
+fCmd.test
+libc_freebsd.go:903:Xgetpwnam: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x9f
+modernc.org/libc.todo({0x0, 0x0}, {0x0, 0x0, 0x0})
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.55/etc.go:100 +0x20f
+modernc.org/libc.Xgetpwnam(0xc00020e0a0, 0x827e00680)
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.55/libc_freebsd.go:903 +0x5cc
+modernc.org/tcl/lib.XTclpGetPwNam(...)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:365269
+modernc.org/tcl/lib.XTclpGetUserHome(0xc00020e0a0, 0x827e00578, 0x827e00488)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:368673 +0xc5
+modernc.org/tcl/lib.sSetFsPathFromAny(0xc00020e0a0, 0x828000020, 0x8281a0410)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:333163 +0x6e5
+modernc.org/tcl/lib.XTcl_FSConvertToPathType(0xc00020e0a0, 0x828000020, 0x8281a0410)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:331818 +0xc6
+modernc.org/tcl/lib.sFileCopyRename(0xc00020e0a0, 0x828000020, 0x3, 0x82793e530, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:257502 +0x158
+modernc.org/tcl/lib.XTclFileRenameCmd(0xc00020e0a0, 0x0, 0x828000020, 0x3, 0x82793e530)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:257437 +0x4f
+modernc.org/tcl/lib.sDispatch(0xc00020e0a0, 0x8281b8c58, 0x828000020, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:86314 +0x6c
+modernc.org/tcl/lib.XTclNRRunCallbacks(0xc00020e0a0, 0x828000020, 0x0, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:86341 +0xa4
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc00020e0a0, 0x828000020, 0xb, 0x828200300, 0x200010)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:85896 +0x99
+modernc.org/tcl/lib.XTclEvalEx(0xc00020e0a0, 0x828000020, 0x828500020, 0x159cc, 0x0, 0x1, 0x0, 0x828500020)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:87529 +0x1410
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc00020e0a0, 0x828000020, 0x828110bc0, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:285811 +0xb85
+modernc.org/tcl/lib.XTcl_MainEx(0xc00020e0a0, 0xffffffff, 0x827900040, 0x870008, 0x828000020)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:301822 +0x66e
+main.main1(0xc00020e0a0, 0x4, 0x827900020)
+	/home/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_freebsd_amd64.go:5646 +0x65
+modernc.org/libc.Start(0x8703b8)
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.55/libc.go:124 +0x1dd
+main.main()
+	/home/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_freebsd_amd64.go:22 +0x2d
+
+Test file error: child process exited abnormally
+fileName.test
+libc_freebsd.go:903:Xgetpwnam: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x9f
+modernc.org/libc.todo({0x0, 0x0}, {0x0, 0x0, 0x0})
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.55/etc.go:100 +0x20f
+modernc.org/libc.Xgetpwnam(0xc0001fa0a0, 0x827f00570)
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.55/libc_freebsd.go:903 +0x5cc
+modernc.org/tcl/lib.XTclpGetPwNam(...)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:365269
+modernc.org/tcl/lib.XTclpGetUserHome(0xc0001fa0a0, 0x827f00468, 0x827f00378)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:368673 +0xc5
+modernc.org/tcl/lib.sSetFsPathFromAny(0xc0001fa0a0, 0x0, 0x8282987a0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:333163 +0x6e5
+modernc.org/tcl/lib.XTcl_FSConvertToPathType(0xc0001fa0a0, 0x0, 0x8282987a0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:331818 +0xc6
+modernc.org/tcl/lib.XTclFSGetPathType(0xc0001fa0a0, 0x8282987a0, 0x0, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:330629 +0x45
+modernc.org/tcl/lib.XTcl_FSGetPathType(...)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:330602
+modernc.org/tcl/lib.sPathTypeCmd(0xc0001fa0a0, 0x0, 0x828100020, 0x2, 0x828300da0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:100332 +0x53
+modernc.org/tcl/lib.sDispatch(0xc0001fa0a0, 0x82823a058, 0x828100020, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:86314 +0x6c
+modernc.org/tcl/lib.XTclNRRunCallbacks(0xc0001fa0a0, 0x828100020, 0x0, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:86341 +0xa4
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0001fa0a0, 0x828100020, 0x6, 0x828300300, 0x200010)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:85896 +0x99
+modernc.org/tcl/lib.XTclEvalEx(0xc0001fa0a0, 0x828100020, 0x828500020, 0xdcd8, 0x0, 0x1, 0x0, 0x828500020)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:87529 +0x1410
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0001fa0a0, 0x828100020, 0x828210bc0, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:285811 +0xb85
+modernc.org/tcl/lib.XTcl_MainEx(0xc0001fa0a0, 0xffffffff, 0x827a00040, 0x870008, 0x828100020)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:301822 +0x66e
+main.main1(0xc0001fa0a0, 0x4, 0x827a00020)
+	/home/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_freebsd_amd64.go:5646 +0x65
+modernc.org/libc.Start(0x8703b8)
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.55/libc.go:124 +0x1dd
+main.main()
+	/home/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_freebsd_amd64.go:22 +0x2d
+
+Test file error: child process exited abnormally
+fileSystem.test
+libc_freebsd.go:903:Xgetpwnam: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x9f
+modernc.org/libc.todo({0x0, 0x0}, {0x0, 0x0, 0x0})
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.55/etc.go:100 +0x20f
+modernc.org/libc.Xgetpwnam(0xc0001d20a0, 0x827f00590)
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.55/libc_freebsd.go:903 +0x5cc
+modernc.org/tcl/lib.XTclpGetPwNam(...)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:365269
+modernc.org/tcl/lib.XTclpGetUserHome(0xc0001d20a0, 0x827f00488, 0x827f00398)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:368673 +0xc5
+modernc.org/tcl/lib.sSetFsPathFromAny(0xc0001d20a0, 0x828100020, 0x8282e04a0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:333163 +0x6e5
+modernc.org/tcl/lib.XTcl_FSConvertToPathType(0xc0001d20a0, 0x828100020, 0x8282e04a0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:331818 +0xc6
+modernc.org/tcl/lib.XTcl_FSGetNormalizedPath(0xc0001d20a0, 0x828100020, 0x8282e04a0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:332415 +0xc5
+modernc.org/tcl/lib.sPathNormalizeCmd(0xc0001d20a0, 0x0, 0x828100020, 0x2, 0x828300ee0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:100259 +0x53
+modernc.org/tcl/lib.sDispatch(0xc0001d20a0, 0x8282e05f8, 0x828100020, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:86314 +0x6c
+modernc.org/tcl/lib.XTclNRRunCallbacks(0xc0001d20a0, 0x828100020, 0x0, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:86341 +0xa4
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0001d20a0, 0x828100020, 0x4, 0x828300300, 0x200010)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:85896 +0x99
+modernc.org/tcl/lib.XTclEvalEx(0xc0001d20a0, 0x828100020, 0x828500020, 0x8ad9, 0x0, 0x1, 0x0, 0x828500020)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:87529 +0x1410
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0001d20a0, 0x828100020, 0x828210bc0, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:285811 +0xb85
+modernc.org/tcl/lib.XTcl_MainEx(0xc0001d20a0, 0xffffffff, 0x827a00040, 0x870008, 0x828100020)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:301822 +0x66e
+main.main1(0xc0001d20a0, 0x4, 0x827a00020)
+	/home/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_freebsd_amd64.go:5646 +0x65
+modernc.org/libc.Start(0x8703b8)
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.55/libc.go:124 +0x1dd
+main.main()
+	/home/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_freebsd_amd64.go:22 +0x2d
+
+Test file error: child process exited abnormally
+fileSystemEncoding.test
+for-old.test
+for.test
+foreach.test
+format.test
+get.test
+history.test
+http.test
+Cannot start http server, http test skipped
+http11.test
+
+
+==== http11-1.0 normal request for document FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html -timeout 10000]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok] [meta $tok connection]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.0 FAILED
+
+
+
+==== http11-1.1 normal,gzip,non-chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 10000 -headers {accept-encoding gzip}]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.1 FAILED
+
+
+
+==== http11-1.2 normal,deflated,non-chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 10000 -headers {accept-encoding deflate}]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.2 FAILED
+
+
+
+==== http11-1.3 normal,compressed,non-chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 10000 -headers {accept-encoding compress}]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.3 FAILED
+
+
+
+==== http11-1.4 normal,identity,non-chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 10000 -headers {accept-encoding identity}]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.4 FAILED
+
+
+
+==== http11-1.5 normal request for document, unsupported coding FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 10000 -headers {accept-encoding unsupported}]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok content-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.5 FAILED
+
+
+
+==== http11-1.6 normal, specify 1.1 FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -protocol 1.1 -timeout 10000]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok connection] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.6 FAILED
+
+
+
+==== http11-1.7 normal, 1.1 and keepalive FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -protocol 1.1 -keepalive 1 -timeout 10000]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok connection] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.7 FAILED
+
+
+
+==== http11-1.8 normal, 1.1 and keepalive, server close FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -protocol 1.1 -keepalive 1 -timeout 10000]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok connection] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.8 FAILED
+
+
+
+==== http11-1.9 normal,gzip,chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 10000 -headers {accept-encoding gzip}]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.9 FAILED
+
+
+
+==== http11-1.10 normal,deflate,chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 10000 -headers {accept-encoding deflate}]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.10 FAILED
+
+
+
+==== http11-1.11 normal,compress,chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 10000 -headers {accept-encoding compress}]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.11 FAILED
+
+
+
+==== http11-1.12 normal,identity,chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 10000 -headers {accept-encoding identity}]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.12 FAILED
+
+
+
+==== http11-2.0 -channel FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.0 FAILED
+
+
+
+==== http11-2.1 -channel, encoding gzip FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan -headers {accept-encoding gzip}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.1 FAILED
+
+
+
+==== http11-2.2 -channel, encoding deflate FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan -headers {accept-encoding deflate}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.2 FAILED
+
+
+
+==== http11-2.3 -channel,encoding compress FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan  -headers {accept-encoding compress}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.3 FAILED
+
+
+
+==== http11-2.4 -channel,encoding identity FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan  -headers {accept-encoding identity}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.4 FAILED
+
+
+
+==== http11-2.5 -channel,encoding unsupported FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan  -headers {accept-encoding unsupported}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.5 FAILED
+
+
+
+==== http11-2.6 -channel,encoding gzip,non-chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 5000 -channel $chan -headers {accept-encoding gzip}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding] [expr {[file size testdoc.html]-[file size testfile.tmp]}]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.6 FAILED
+
+
+
+==== http11-2.7 -channel,encoding deflate,non-chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 5000 -channel $chan -headers {accept-encoding deflate}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding] [expr {[file size testdoc.html]-[file size testfile.tmp]}]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.7 FAILED
+
+
+
+==== http11-2.8 -channel,encoding compress,non-chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 5000 -channel $chan -headers {accept-encoding compress}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding] [expr {[file size testdoc.html]-[file size testfile.tmp]}]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.8 FAILED
+
+
+
+==== http11-2.9 -channel,encoding identity,non-chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 5000 -channel $chan -headers {accept-encoding identity}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding] [expr {[file size testdoc.html]-[file size testfile.tmp]}]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.9 FAILED
+
+
+
+==== http11-2.10 -channel,deflate,keepalive FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan -keepalive 1  -headers {accept-encoding deflate}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding] [expr {[file size testdoc.html]-[file size testfile.tmp]}]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.10 FAILED
+
+
+
+==== http11-2.11 -channel,identity,keepalive FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -headers {accept-encoding identity}  -timeout 5000 -channel $chan -keepalive 1]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.11 FAILED
+
+
+
+==== http11-2.12 -channel,negotiate,keepalive FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan -keepalive 1]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding] [meta $tok x-requested-encodings] [expr {[file size testdoc.html]-[file size testfile.tmp]}]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.12 FAILED
+
+
+
+==== http11-3.0 -handler,close,identity FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 10000 -handler [namespace code [list handler testdata]]]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok $testdata] [meta $tok connection] [meta $tok content-encoding]  [meta $tok transfer-encoding]  [expr {[file size testdoc.html]-[string length $testdata]}]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-3.0 FAILED
+
+
+
+==== http11-3.1 -handler,protocol1.0 FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 10000 -protocol 1.0  -handler [namespace code [list handler testdata]]]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok $testdata] [meta $tok connection] [meta $tok content-encoding]  [meta $tok transfer-encoding]  [expr {[file size testdoc.html]-[string length $testdata]}]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-3.1 FAILED
+
+
+
+==== http11-3.2 -handler,close,chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 10000 -keepalive 0 -binary 1 -handler [namespace code [list handler testdata]]]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok $testdata] [meta $tok connection] [meta $tok content-encoding]  [meta $tok transfer-encoding]  [expr {[file size testdoc.html]-[string length $testdata]}]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-3.2 FAILED
+
+
+
+==== http11-3.3 -handler,keepalive,chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 10000 -keepalive 1 -binary 1 -handler [namespace code [list handler testdata]]]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok $testdata] [meta $tok connection] [meta $tok content-encoding]  [meta $tok transfer-encoding]  [expr {[file size testdoc.html]-[string length $testdata]}]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-3.3 FAILED
+
+
+
+==== http11-4.0 normal post request FAILED
+==== Contents of test case:
+
+    set query [http::formatQuery q 1 z 2]
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -query $query -timeout 10000]
+    http::wait $tok
+    list status [http::status $tok] code [http::code $tok] crc [check_crc $tok] connection [meta $tok connection] query-length [meta $tok x-query-length]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-4.0 FAILED
+
+
+
+==== http11-4.1 normal post request, check query length FAILED
+==== Contents of test case:
+
+    set query [http::formatQuery q 1 z 2]
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -headers [list x-check-query yes]  -query $query -timeout 10000]
+    http::wait $tok
+    list status [http::status $tok] code [http::code $tok] crc [check_crc $tok] connection [meta $tok connection] query-length [meta $tok x-query-length]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-4.1 FAILED
+
+
+
+==== http11-4.2 normal post request, check long query length FAILED
+==== Contents of test case:
+
+    set query [string repeat a 24576]
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html -headers [list x-check-query yes] -query $query -timeout 10000]
+    http::wait $tok
+    list status [http::status $tok] code [http::code $tok] crc [check_crc $tok] connection [meta $tok connection] query-length [meta $tok x-query-length]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-4.2 FAILED
+
+
+
+==== http11-4.3 normal post request, check channel query length FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html -headers [list x-check-query yes] -querychannel $chan -timeout 10000]
+    http::wait $tok
+    list status [http::status $tok] code [http::code $tok] crc [check_crc $tok] connection [meta $tok connection] query-length [meta $tok x-query-length]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-4.3 FAILED
+
+Test file error: eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+httpPipeline.test
+httpold.test
+Cannot start http server, http test skipped
+if-old.test
+if.test
+incr-old.test
+incr.test
+indexObj.test
+info.test
+libc_freebsd.go:903:Xgetpwnam: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x9f
+modernc.org/libc.todo({0x0, 0x0}, {0x0, 0x0, 0x0})
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.55/etc.go:100 +0x20f
+modernc.org/libc.Xgetpwnam(0xc0001940a0, 0x827e006c0)
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.55/libc_freebsd.go:903 +0x5cc
+modernc.org/tcl/lib.XTclpGetPwNam(...)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:365269
+modernc.org/tcl/lib.XTclpGetUserHome(0xc0001940a0, 0x827e005b8, 0x827e004c8)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:368673 +0xc5
+modernc.org/tcl/lib.sSetFsPathFromAny(0xc0001940a0, 0x828000020, 0x828198c20)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:333163 +0x6e5
+modernc.org/tcl/lib.XTcl_FSConvertToPathType(0xc0001940a0, 0x828000020, 0x828198c20)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:331818 +0xc6
+modernc.org/tcl/lib.XTcl_FSGetNormalizedPath(0xc0001940a0, 0x828000020, 0x828198c20)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:332415 +0xc5
+modernc.org/tcl/lib.XTclNREvalFile(0xc0001940a0, 0x828000020, 0x828198c20, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:285906 +0xc5
+modernc.org/tcl/lib.XTclNRSourceObjCmd(0xc0001940a0, 0x0, 0x828000020, 0x2, 0x828200da8)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:110487 +0x1f7
+modernc.org/tcl/lib.sDispatch(0xc0001940a0, 0x8281aeda8, 0x828000020, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:86314 +0x6c
+modernc.org/tcl/lib.XTclNRRunCallbacks(0xc0001940a0, 0x828000020, 0x0, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:86341 +0xa4
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0001940a0, 0x828000020, 0x5, 0x828200300, 0x200010)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:85896 +0x99
+modernc.org/tcl/lib.XTclEvalEx(0xc0001940a0, 0x828000020, 0x828500020, 0x12776, 0x0, 0x1, 0x0, 0x828500020)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:87529 +0x1410
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0001940a0, 0x828000020, 0x828110bc0, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:285811 +0xb85
+modernc.org/tcl/lib.XTcl_MainEx(0xc0001940a0, 0xffffffff, 0x827900040, 0x870008, 0x828000020)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_freebsd_amd64.go:301822 +0x66e
+main.main1(0xc0001940a0, 0x4, 0x827900020)
+	/home/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_freebsd_amd64.go:5646 +0x65
+modernc.org/libc.Start(0x8703b8)
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.55/libc.go:124 +0x1dd
+main.main()
+	/home/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_freebsd_amd64.go:22 +0x2d
+
+Test file error: child process exited abnormally
+init.test
+interp.test
+io.test
+
+
+==== io-29.34 Tcl_Close, async flush on close, using sockets FAILED
+==== Contents of test case:
+
+    variable c 0
+    variable x running
+    set l abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
+    proc writelots {s l} {
+	for {set i 0} {$i < 9000} {incr i} {
+	    puts $s $l
+	}
+    }
+    proc accept {s a p} {
+	variable x
+	fileevent $s readable [namespace code [list readit $s]]
+	fconfigure $s -blocking off
+	set x accepted
+    }
+    proc readit {s} {
+	variable c
+	variable x
+	set l [gets $s]
+
+	if {[eof $s]} {
+	    close $s
+	    set x done
+	} elseif {([string length $l] > 0) || ![fblocked $s]} {
+	    incr c
+	}
+    }
+    set ss [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set cs [socket 127.0.0.1 [lindex [fconfigure $ss -sockname] 2]]
+    vwait [namespace which -variable x]
+    fconfigure $cs -blocking off
+    writelots $cs $l
+    close $cs
+    close $ss
+    vwait [namespace which -variable x]
+    set c
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 28)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+==== io-29.34 FAILED
+
+
+
+==== io-29.35 Tcl_Close vs fileevent vs multiple interpreters FAILED
+==== Contents of test case:
+
+    # On Mac, this test screws up sockets such that subsequent tests using port 2828
+    # either cause errors or panic().
+
+    catch {interp delete x}
+    catch {interp delete y}
+    interp create x
+    interp create y
+    set s [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    proc accept {s a p} {
+	puts $s hello
+	close $s
+    }
+    set c [socket 127.0.0.1 [lindex [fconfigure $s -sockname] 2]]
+    interp share {} $c x
+    interp share {} $c y
+    close $c
+    x eval {
+	proc readit {s} {
+	    gets $s
+	    if {[eof $s]} {
+		close $s
+	    }
+	}
+    }
+    y eval {
+	proc readit {s} {
+	    gets $s
+	    if {[eof $s]} {
+		close $s
+	    }
+	}
+    }
+    x eval "fileevent $c readable \{readit $c\}"
+    y eval "fileevent $c readable \{readit $c\}"
+    y eval [list close $c]
+    update
+    close $s
+    interp delete x
+    interp delete y
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 9)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+==== io-29.35 FAILED
+
+
+
+==== io-39.18 Tcl_SetChannelOption, setting read mode independently FAILED
+==== Contents of test case:
+
+    proc accept {s a p} {close $s}
+    set s1 [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set port [lindex [fconfigure $s1 -sockname] 2]
+    set s2 [socket 127.0.0.1 $port]
+    update
+    fconfigure $s2 -translation {auto lf}
+    set modes [fconfigure $s2 -translation]
+    close $s1
+    close $s2
+    set modes
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+==== io-39.18 FAILED
+
+
+
+==== io-39.19 Tcl_SetChannelOption, setting read mode independently FAILED
+==== Contents of test case:
+
+    proc accept {s a p} {close $s}
+    set s1 [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set port [lindex [fconfigure $s1 -sockname] 2]
+    set s2 [socket 127.0.0.1 $port]
+    update
+    fconfigure $s2 -translation {auto crlf}
+    set modes [fconfigure $s2 -translation]
+    close $s1
+    close $s2
+    set modes
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+==== io-39.19 FAILED
+
+
+
+==== io-39.20 Tcl_SetChannelOption, setting read mode independently FAILED
+==== Contents of test case:
+
+    proc accept {s a p} {close $s}
+    set s1 [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set port [lindex [fconfigure $s1 -sockname] 2]
+    set s2 [socket 127.0.0.1 $port]
+    update
+    fconfigure $s2 -translation {auto cr}
+    set modes [fconfigure $s2 -translation]
+    close $s1
+    close $s2
+    set modes
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+==== io-39.20 FAILED
+
+
+
+==== io-39.21 Tcl_SetChannelOption, setting read mode independently FAILED
+==== Contents of test case:
+
+    proc accept {s a p} {close $s}
+    set s1 [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set port [lindex [fconfigure $s1 -sockname] 2]
+    set s2 [socket 127.0.0.1 $port]
+    update
+    fconfigure $s2 -translation {auto auto}
+    set modes [fconfigure $s2 -translation]
+    close $s1
+    close $s2
+    set modes
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+==== io-39.21 FAILED
+
+
+
+==== io-39.23 Tcl_GetChannelOption, server socket is not readable or
+        writeable, it should still have valid -eofchar and -translation options FAILED
+==== Contents of test case:
+
+    set l [list]
+    set sock [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    lappend l [fconfigure $sock -eofchar] [fconfigure $sock -translation]
+    close $sock
+    set l
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+==== io-39.23 FAILED
+
+
+
+==== io-39.24 Tcl_SetChannelOption, server socket is not readable or
+        writable so we can't change -eofchar or -translation FAILED
+==== Contents of test case:
+
+    set l [list]
+    set sock [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    fconfigure $sock -eofchar D -translation lf
+    lappend l [fconfigure $sock -eofchar] [fconfigure $sock -translation]
+    close $sock
+    set l
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+==== io-39.24 FAILED
+
+
+
+==== io-51.1 Test old socket deletion on Macintosh FAILED
+==== Contents of test case:
+
+    set x 0
+    set result ""
+    proc accept {s a p} {
+	variable x
+	variable wait
+	fconfigure $s -blocking off
+	puts $s "sock[incr x]"
+	close $s
+	set wait done
+    }
+    set ss [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set port [lindex [fconfigure $ss -sockname] 2]
+
+    variable wait ""
+    set cs [socket 127.0.0.1 $port]
+    vwait [namespace which -variable wait]
+    lappend result [gets $cs]
+    close $cs
+
+    set wait ""
+    set cs [socket 127.0.0.1 $port]
+    vwait [namespace which -variable wait]
+    lappend result [gets $cs]
+    close $cs
+
+    set wait ""
+    set cs [socket 127.0.0.1 $port]
+    vwait [namespace which -variable wait]
+    lappend result [gets $cs]
+    close $cs
+
+    set wait ""
+    set cs [socket 127.0.0.1 $port]
+    vwait [namespace which -variable wait]
+    lappend result [gets $cs]
+    close $cs
+    close $ss
+    set result
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 12)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+==== io-51.1 FAILED
+
+
+
+==== io-53.5 CopyData: error during fcopy FAILED
+==== Contents of test case:
+
+    variable fcopyTestDone
+    set listen [socket -server [namespace code FcopyTestAccept] -myaddr 127.0.0.1 0]
+    set in [open $thisScript]	;# 126 K
+    set out [socket 127.0.0.1 [lindex [fconfigure $listen -sockname] 2]]
+    catch {unset fcopyTestDone}
+    close $listen	;# This means the socket open never really succeeds
+    fcopy $in $out -command [namespace code FcopyTestDone]
+    variable fcopyTestDone
+    if ![info exists fcopyTestDone] {
+	vwait [namespace which -variable fcopyTestDone]		;# The error occurs here in the b.g.
+    }
+    close $in
+    close $out
+    set fcopyTestDone	;# 1 for error condition
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code FcopyTestAccept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+==== io-53.5 FAILED
+
+
+
+==== io-53.10 Bug 1350564, multi-directional fcopy FAILED
+==== Contents of test case:
+
+    # Now pass data through the server in both directions.
+    set ::forever {}
+    puts $a AB
+    vwait ::forever
+    puts $b BA
+    vwait ::forever
+    set ::forever
+
+---- Test setup failed:
+couldn't open socket: bad address in system call argument
+---- errorInfo(setup): couldn't open socket: bad address in system call argument
+    while executing
+"socket 127.0.0.1 9999"
+    ("uplevel" body line 48)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): POSIX EFAULT {bad address in system call argument}
+==== io-53.10 FAILED
+
+
+
+==== io-54.1 Recursive channel events FAILED
+==== Contents of test case:
+
+    # This test checks to see if file events are delivered during recursive
+    # event loops when there is buffered data on the channel.
+
+    proc accept {s a p} {
+	variable as
+	fconfigure $s -translation lf
+	puts $s "line 1\nline2\nline3"
+	flush $s
+	set as $s
+    }
+    proc readit {s next} {
+	variable x
+	variable result
+	lappend result $next
+	if {$next == 1} {
+	    fileevent $s readable [namespace code [list readit $s 2]]
+	    vwait [namespace which -variable x]
+	}
+	incr x
+    }
+    set ss [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+
+    # We need to delay on some systems until the creation of the
+    # server socket completes.
+
+    set done 0
+    for {set i 0} {$i < 10} {incr i} {
+	if {![catch {set cs [socket 127.0.0.1 [lindex [fconfigure $ss -sockname] 2]]}]} {
+	    set done 1
+	    break
+	}
+	after 100
+    }
+    if {$done == 0} {
+	close $ss
+	error "failed to connect to server"
+    }
+    variable result {}
+    variable x 0
+    variable as
+    vwait [namespace which -variable as]
+    fconfigure $cs -translation lf
+    lappend result [gets $cs]
+    fconfigure $cs -blocking off
+    fileevent $cs readable [namespace code [list readit $cs 1]]
+    set a [after 2000 [namespace code { set x failure }]]
+    vwait [namespace which -variable x]
+    after cancel $a
+    close $as
+    close $ss
+    close $cs
+    list $result $x
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 22)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+==== io-54.1 FAILED
+
+
+
+==== io-54.2 Testing for busy-wait in recursive channel events FAILED
+==== Contents of test case:
+
+    set accept {}
+    set after {}
+    variable s [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    proc accept {s a p} {
+	variable counter
+	variable accept
+
+	set accept $s
+	set counter 0
+	fconfigure $s -blocking off -buffering line -translation lf
+	fileevent $s readable [namespace code "doit $s"]
+    }
+    proc doit {s} {
+	variable counter
+	variable after
+
+	incr counter
+	set l [gets $s]
+	if {"$l" == ""} {
+	    fileevent $s readable [namespace code "doit1 $s"]
+	    set after [after 1000 [namespace code newline]]
+	}
+    }
+    proc doit1 {s} {
+	variable counter
+	variable accept
+
+	incr counter
+	set l [gets $s]
+	close $s
+	set accept {}
+    }
+    proc producer {} {
+	variable s
+	variable writer
+
+	set writer [socket 127.0.0.1 [lindex [fconfigure $s -sockname] 2]]
+	fconfigure $writer -buffering line
+	puts -nonewline $writer hello
+	flush $writer
+    }
+    proc newline {} {
+	variable done
+	variable writer
+
+	puts $writer hello
+	flush $writer
+	set done 1
+    }
+    producer
+    variable done
+    vwait [namespace which -variable done]
+    close $writer
+    close $s
+    after cancel $after
+    if {$accept != {}} {close $accept}
+    set counter
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 4)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+==== io-54.2 FAILED
+
+
+
+==== io-57.1 buffered data and file events, gets FAILED
+==== Contents of test case:
+
+    proc accept {sock args} {
+	variable s2
+	set s2 $sock
+    }
+    set server [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set s [socket 127.0.0.1 [lindex [fconfigure $server -sockname] 2]]
+    variable s2
+    vwait [namespace which -variable s2]
+    update
+    fileevent $s2 readable [namespace code {lappend result readable}]
+    puts $s "12\n34567890"
+    flush $s
+    variable result [gets $s2]
+    after 1000 [namespace code {lappend result timer}]
+    vwait [namespace which -variable result]
+    lappend result [gets $s2]
+    vwait [namespace which -variable result]
+    close $s
+    close $s2
+    close $server
+    set result
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 6)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+==== io-57.1 FAILED
+
+
+
+==== io-57.2 buffered data and file events, read FAILED
+==== Contents of test case:
+
+    proc accept {sock args} {
+	variable s2
+	set s2 $sock
+    }
+    set server [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set s [socket 127.0.0.1 [lindex [fconfigure $server -sockname] 2]]
+    variable s2
+    vwait [namespace which -variable s2]
+    update
+    fileevent $s2 readable [namespace code {lappend result readable}]
+    puts -nonewline $s "1234567890"
+    flush $s
+    variable result [read $s2 1]
+    after 1000 [namespace code {lappend result timer}]
+    vwait [namespace which -variable result]
+    lappend result [read $s2 9]
+    vwait [namespace which -variable result]
+    close $s
+    close $s2
+    close $server
+    set result
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: cannot assign requested address
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 6)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EADDRNOTAVAIL {cannot assign requested address}
+==== io-57.2 FAILED
+
+ioCmd.test
+
+
+==== iocmd-8.15.1 fconfigure command / tcp channel FAILED
+==== Contents of test case:
+
+    fconfigure $cli -blah
+
+---- Test setup failed:
+couldn't open socket: cannot assign requested address
+---- errorInfo(setup): couldn't open socket: cannot assign requested address
+    while executing
+"socket -server iocmdSRV -myaddr 127.0.0.1 0"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): POSIX EADDRNOTAVAIL {cannot assign requested address}
+---- Test cleanup failed:
+can't read "cli": no such variable
+---- errorInfo(cleanup): can't read "cli": no such variable
+    while executing
+"close $cli"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME cli
+==== iocmd-8.15.1 FAILED
+
+
+
+==== iocmd-8.16 fconfigure command / tcp channel FAILED
+==== Contents of test case:
+
+    expr {[lindex [fconfigure $cli -peername] 2] == $port}
+
+---- Test setup failed:
+couldn't open socket: cannot assign requested address
+---- errorInfo(setup): couldn't open socket: cannot assign requested address
+    while executing
+"socket -server iocmdSRV -myaddr 127.0.0.1 0"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): POSIX EADDRNOTAVAIL {cannot assign requested address}
+---- Test cleanup failed:
+can't read "cli": no such variable
+---- errorInfo(cleanup): can't read "cli": no such variable
+    while executing
+"close $cli"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME cli
+==== iocmd-8.16 FAILED
+
+ioTrans.test
+iogt.test
+join.test
