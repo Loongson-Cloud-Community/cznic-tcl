@@ -1,0 +1,2899 @@
+Tests running in interp:  /tmp/tcl-test-2843733035/tcltest
+Tests located in:  /tmp/tcl-test-2843733035
+Tests running in:  /tmp/tcl-test-2843733035
+Temporary files stored in /tmp/tcl-test-2843733035
+Test files run in separate interpreters
+Running tests that match:  *
+Only running test files that match:  *.test
+Tests began at Mon Nov 08 19:31:06 CET 2021
+aaa_exit.test
+append.test
+appendComp.test
+apply.test
+assemble.test
+assocd.test
+async.test
+autoMkindex.test
+basic.test
+binary.test
+case.test
+chan.test
+
+
+==== chan-16.9 chan command: pending input subcommand FAILED
+==== Contents of test case:
+
+    after idle chan-16.9-client 
+    vwait ::chan-16.9-done
+    set ::chan-16.9-data
+
+---- Test setup failed:
+couldn't open socket: address family not supported by protocol
+---- errorInfo(setup): couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server chan-16.9-accept -myaddr 127.0.0.1 0"
+    ("uplevel" body line 32)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): POSIX EAFNOSUPPORT {address family not supported by protocol}
+==== chan-16.9 FAILED
+
+chanio.test
+
+
+==== chan-io-28.7 Tcl_CloseEx (half-close) socket FAILED
+==== Contents of test case:
+
+    set s [socket 127.0.0.1 $port]
+    puts $s Hey
+    close $s w
+    set timer [after 1000 [namespace code {set done Failed}]]
+    set acc {}
+    fileevent $s readable [namespace code {
+	if {[gets $s line]<0} {
+	    set done Succeeded
+	} else {
+	    lappend acc $line
+	}
+    }]
+    vwait [namespace which -variable done]
+    list $done $acc
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: expected integer but got ""
+    while executing
+"socket 127.0.0.1 $port"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: TCL VALUE NUMBER
+---- Test cleanup failed:
+couldn't open socket: bad address in system call argument
+    while executing
+"socket -server accept 0"
+    invoked from within
+"set s [socket -server accept 0]"
+    (file "/tmp/tcl-test-2843733035/echo.tcl" line 3)
+---- errorInfo(cleanup): couldn't open socket: bad address in system call argument
+    while executing
+"socket -server accept 0"
+    invoked from within
+"set s [socket -server accept 0]"
+    (file "/tmp/tcl-test-2843733035/echo.tcl" line 3)
+    while executing
+"close $ff"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): CHILDSTATUS 9991 1
+==== chan-io-28.7 FAILED
+
+
+
+==== chan-io-29.34 Tcl_Chan Close, async flush on chan close, using sockets FAILED
+==== Contents of test case:
+
+    proc accept {s a p} {
+	variable x
+	chan event $s readable [namespace code [list readit $s]]
+	chan configure $s -blocking off
+	set x accepted
+    }
+    proc readit {s} {
+	variable c
+	variable x
+	set l [chan gets $s]
+	if {[chan eof $s]} {
+	    chan close $s
+	    set x done
+	} elseif {([string length $l] > 0) || ![chan blocked $s]} {
+	    incr c
+	}
+    }
+    set ss [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set cs [socket 127.0.0.1 [lindex [chan configure $ss -sockname] 2]]
+    vwait [namespace which -variable x]
+    chan configure $cs -blocking off
+    writelots $cs $l
+    chan close $cs
+    chan close $ss
+    vwait [namespace which -variable x]
+    set c
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 19)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+==== chan-io-29.34 FAILED
+
+
+
+==== chan-io-29.35 Tcl_Chan Close vs chan event vs multiple interpreters FAILED
+==== Contents of test case:
+
+    # On Mac, this test screws up sockets such that subsequent tests using
+    # port 2828 either cause errors or panic().
+    interp create x
+    interp create y
+    set s [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    proc accept {s a p} {
+	chan puts $s hello
+	chan close $s
+    }
+    set c [socket 127.0.0.1 [lindex [chan configure $s -sockname] 2]]
+    interp share {} $c x
+    interp share {} $c y
+    chan close $c
+    x eval {
+	proc readit {s} {
+	    chan gets $s
+	    if {[chan eof $s]} {
+		chan close $s
+	    }
+	}
+    }
+    y eval {
+	proc readit {s} {
+	    chan gets $s
+	    if {[chan eof $s]} {
+		chan close $s
+	    }
+	}
+    }
+    x eval "chan event $c readable \{readit $c\}"
+    y eval "chan event $c readable \{readit $c\}"
+    y eval [list chan close $c]
+    update
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 6)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+---- Test cleanup failed:
+can't read "s": no such variable
+---- errorInfo(cleanup): can't read "s": no such variable
+    while executing
+"chan close $s"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME s
+==== chan-io-29.35 FAILED
+
+
+
+==== chan-io-34.21 Tcl_Seek and Tcl_Tell on large files FAILED
+==== Contents of test case:
+
+    set f [open $path(test3) w]
+    chan configure $f -encoding binary
+    lappend l [chan tell $f]
+    chan puts -nonewline $f abcdef
+    lappend l [chan tell $f]
+    chan flush $f
+    lappend l [chan tell $f]
+    # 4GB offset!
+    chan seek $f 0x100000000
+    lappend l [chan tell $f]
+    chan puts -nonewline $f abcdef
+    lappend l [chan tell $f]
+    chan close $f
+    lappend l [file size $path(test3)]
+    # truncate...
+    chan close [open $path(test3) w]
+    lappend l [file size $path(test3)]
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: no space left on device
+    while executing
+"chan close $f"
+    ("uplevel" body line 14)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX ENOSPC {no space left on device}
+==== chan-io-34.21 FAILED
+
+
+
+==== chan-io-39.18 Tcl_SetChannelOption, setting read mode independently FAILED
+==== Contents of test case:
+
+    proc accept {s a p} {chan close $s}
+    set s1 [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set port [lindex [chan configure $s1 -sockname] 2]
+    set s2 [socket 127.0.0.1 $port]
+    update
+    chan configure $s2 -translation {auto lf}
+    chan configure $s2 -translation
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+---- Test cleanup failed:
+can't read "s1": no such variable
+---- errorInfo(cleanup): can't read "s1": no such variable
+    while executing
+"chan close $s1"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME s1
+==== chan-io-39.18 FAILED
+
+
+
+==== chan-io-39.19 Tcl_SetChannelOption, setting read mode independently FAILED
+==== Contents of test case:
+
+    proc accept {s a p} {chan close $s}
+    set s1 [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set port [lindex [chan configure $s1 -sockname] 2]
+    set s2 [socket 127.0.0.1 $port]
+    update
+    chan configure $s2 -translation {auto crlf}
+    chan configure $s2 -translation
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+---- Test cleanup failed:
+can't read "s1": no such variable
+---- errorInfo(cleanup): can't read "s1": no such variable
+    while executing
+"chan close $s1"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME s1
+==== chan-io-39.19 FAILED
+
+
+
+==== chan-io-39.20 Tcl_SetChannelOption, setting read mode independently FAILED
+==== Contents of test case:
+
+    proc accept {s a p} {chan close $s}
+    set s1 [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set port [lindex [chan configure $s1 -sockname] 2]
+    set s2 [socket 127.0.0.1 $port]
+    update
+    chan configure $s2 -translation {auto cr}
+    chan configure $s2 -translation
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+---- Test cleanup failed:
+can't read "s1": no such variable
+---- errorInfo(cleanup): can't read "s1": no such variable
+    while executing
+"chan close $s1"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME s1
+==== chan-io-39.20 FAILED
+
+
+
+==== chan-io-39.21 Tcl_SetChannelOption, setting read mode independently FAILED
+==== Contents of test case:
+
+    proc accept {s a p} {chan close $s}
+    set s1 [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set port [lindex [chan configure $s1 -sockname] 2]
+    set s2 [socket 127.0.0.1 $port]
+    update
+    chan configure $s2 -translation {auto auto}
+    chan configure $s2 -translation
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+---- Test cleanup failed:
+can't read "s1": no such variable
+---- errorInfo(cleanup): can't read "s1": no such variable
+    while executing
+"chan close $s1"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME s1
+==== chan-io-39.21 FAILED
+
+
+
+==== chan-io-39.23 Tcl_GetChannelOption, server socket is not readable or writeable, it should still have valid -eofchar and -translation options FAILED
+==== Contents of test case:
+
+    set sock [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    lappend l [chan configure $sock -eofchar]  [chan configure $sock -translation]
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+---- Test cleanup failed:
+can't read "sock": no such variable
+---- errorInfo(cleanup): can't read "sock": no such variable
+    while executing
+"chan close $sock"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME sock
+==== chan-io-39.23 FAILED
+
+
+
+==== chan-io-39.24 Tcl_SetChannelOption, server socket is not readable or writable so we can't change -eofchar or -translation FAILED
+==== Contents of test case:
+
+    set sock [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    chan configure $sock -eofchar D -translation lf
+    lappend l [chan configure $sock -eofchar]  [chan configure $sock -translation]
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+---- Test cleanup failed:
+can't read "sock": no such variable
+---- errorInfo(cleanup): can't read "sock": no such variable
+    while executing
+"chan close $sock"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME sock
+==== chan-io-39.24 FAILED
+
+
+
+==== chan-io-51.1 Test old socket deletion on Macintosh FAILED
+==== Contents of test case:
+
+    proc accept {s a p} {
+	variable x
+	chan configure $s -blocking off
+	chan puts $s "sock[incr x]"
+	chan close $s
+	variable wait done
+    }
+    set ss [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set port [lindex [chan configure $ss -sockname] 2]
+    set cs [socket 127.0.0.1 $port]
+    vwait [namespace which -variable wait]
+    lappend result [chan gets $cs]
+    chan close $cs
+    set cs [socket 127.0.0.1 $port]
+    vwait [namespace which -variable wait]
+    lappend result [chan gets $cs]
+    chan close $cs
+    set cs [socket 127.0.0.1 $port]
+    vwait [namespace which -variable wait]
+    lappend result [chan gets $cs]
+    chan close $cs
+    set cs [socket 127.0.0.1 $port]
+    vwait [namespace which -variable wait]
+    lappend result [chan gets $cs]
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 9)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+---- Test cleanup failed:
+can't read "cs": no such variable
+---- errorInfo(cleanup): can't read "cs": no such variable
+    while executing
+"chan close $cs"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME cs
+==== chan-io-51.1 FAILED
+
+
+
+==== chan-io-53.5 CopyData: error during chan copy FAILED
+==== Contents of test case:
+
+    variable fcopyTestDone
+    set listen [socket -server [namespace code FcopyTestAccept] -myaddr 127.0.0.1 0]
+    set in [open $thisScript]	;# 126 K
+    set out [socket 127.0.0.1 [lindex [chan configure $listen -sockname] 2]]
+    catch {unset fcopyTestDone}
+    chan close $listen	;# This means the socket open never really succeeds
+    chan copy $in $out -command [namespace code FcopyTestDone]
+    variable fcopyTestDone
+    if ![info exists fcopyTestDone] {
+	vwait [namespace which -variable fcopyTestDone]		;# The error occurs here in the b.g.
+    }
+    chan close $in
+    chan close $out
+    set fcopyTestDone	;# 1 for error condition
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code FcopyTestAccept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+==== chan-io-53.5 FAILED
+
+
+
+==== chan-io-53.10 Bug 1350564, multi-directional fcopy FAILED
+==== Contents of test case:
+
+    # Now pass data through the server in both directions.
+    set ::forever {}
+    chan puts $a AB
+    vwait ::forever
+    chan puts $b BA
+    vwait ::forever
+    set ::forever
+
+---- Test setup failed:
+couldn't open socket: bad address in system call argument
+---- errorInfo(setup): couldn't open socket: bad address in system call argument
+    while executing
+"socket 127.0.0.1 9999"
+    ("uplevel" body line 48)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): POSIX EFAULT {bad address in system call argument}
+==== chan-io-53.10 FAILED
+
+
+
+==== chan-io-54.1 Recursive channel events FAILED
+==== Contents of test case:
+
+    # This test checks to see if file events are delivered during recursive
+    # event loops when there is buffered data on the channel.
+    proc accept {s a p} {
+	variable as
+	chan configure $s -translation lf
+	chan puts $s "line 1\nline2\nline3"
+	chan flush $s
+	set as $s
+    }
+    proc readit {s next} {
+	variable x
+	variable result
+	lappend result $next
+	if {$next == 1} {
+	    chan event $s readable [namespace code [list readit $s 2]]
+	    vwait [namespace which -variable x]
+	}
+	incr x
+    }
+    set ss [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    # We need to delay on some systems until the creation of the server socket
+    # completes.
+    set done 0
+    for {set i 0} {$i < 10} {incr i} {
+	if {![catch {
+	    set cs [socket 127.0.0.1 [lindex [chan configure $ss -sockname] 2]]
+	}]} {
+	    set done 1
+	    break
+	}
+	after 100
+    }
+    if {$done == 0} {
+	chan close $ss
+	error "failed to connect to server"
+    }
+    variable result {}
+    variable x 0
+    variable as
+    vwait [namespace which -variable as]
+    chan configure $cs -translation lf
+    lappend result [chan gets $cs]
+    chan configure $cs -blocking off
+    chan event $cs readable [namespace code [list readit $cs 1]]
+    set a [after 2000 [namespace code { set x failure }]]
+    vwait [namespace which -variable x]
+    after cancel $a
+    chan close $as
+    chan close $ss
+    chan close $cs
+    list $result $x
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 21)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+==== chan-io-54.1 FAILED
+
+
+
+==== chan-io-54.2 Testing for busy-wait in recursive channel events FAILED
+==== Contents of test case:
+
+    variable s [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    proc accept {s a p} {
+	variable counter 0
+	variable accept $s
+	chan configure $s -blocking off -buffering line -translation lf
+	chan event $s readable [namespace code "doit $s"]
+    }
+    proc doit {s} {
+	variable counter
+	variable after
+	incr counter
+	if {[chan gets $s] eq ""} {
+	    chan event $s readable [namespace code "doit1 $s"]
+	    set after [after 1000 [namespace code {
+		chan puts $writer hello
+		chan flush $writer
+		set done 1
+	    }]]
+	}
+    }
+    proc doit1 {s} {
+	variable counter
+	variable accept
+	incr counter
+	chan gets $s
+	chan close $s
+	set accept {}
+    }
+    proc producer {} {
+	variable s
+	variable writer
+	set writer [socket 127.0.0.1 [lindex [chan configure $s -sockname] 2]]
+	chan configure $writer -buffering line
+	chan puts -nonewline $writer hello
+	chan flush $writer
+    }
+    producer
+    vwait [namespace which -variable done]
+    chan close $writer
+    chan close $s
+    after cancel $after
+    set counter
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+==== chan-io-54.2 FAILED
+
+
+
+==== chan-io-57.1 buffered data and file events, gets FAILED
+==== Contents of test case:
+
+    proc accept {sock args} {
+	variable s2
+	set s2 $sock
+    }
+    set server [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set s [socket 127.0.0.1 [lindex [chan configure $server -sockname] 2]]
+    vwait [namespace which -variable s2]
+    update
+    chan event $s2 readable [namespace code {lappend result readable}]
+    chan puts $s "12\n34567890"
+    chan flush $s
+    variable result [chan gets $s2]
+    after 1000 [namespace code {lappend result timer}]
+    vwait [namespace which -variable result]
+    lappend result [chan gets $s2]
+    vwait [namespace which -variable result]
+    set result
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 6)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+---- Test cleanup failed:
+can not find channel named "11"
+---- errorInfo(cleanup): can not find channel named "11"
+    while executing
+"chan close $s"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP CHANNEL 11
+==== chan-io-57.1 FAILED
+
+
+
+==== chan-io-57.2 buffered data and file events, read FAILED
+==== Contents of test case:
+
+    proc accept {sock args} {
+	variable s2
+	set s2 $sock
+    }
+    set server [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set s [socket 127.0.0.1 [lindex [chan configure $server -sockname] 2]]
+    vwait [namespace which -variable s2]
+    update
+    chan event $s2 readable [namespace code {lappend result readable}]
+    chan puts -nonewline $s "1234567890"
+    chan flush $s
+    variable result [chan read $s2 1]
+    after 1000 [namespace code {lappend result timer}]
+    vwait [namespace which -variable result]
+    lappend result [chan read $s2 9]
+    vwait [namespace which -variable result]
+    set result
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 6)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+---- Test cleanup failed:
+can not find channel named "11"
+---- errorInfo(cleanup): can not find channel named "11"
+    while executing
+"chan close $s"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP CHANNEL 11
+==== chan-io-57.2 FAILED
+
+clock.test
+libc_netbsd.go:264:Xlocaltime_r: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/home/jnml/goroot/src/runtime/debug/stack.go:24 +0x9f
+modernc.org/libc.todo({0x0, 0x0}, {0x0, 0x0, 0x0})
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.56/etc.go:100 +0x20f
+modernc.org/libc.Xlocaltime_r(...)
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.56/libc_netbsd.go:264
+modernc.org/tcl/lib.sThreadSafeLocalTime(0xc0002c00a0, 0x7f7fd0600298)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_netbsd_amd64.go:98361 +0x67
+modernc.org/tcl/lib.sConvertUTCToLocalUsingC(0xc0002c00a0, 0x7f7fd0000020, 0x7f7fd06001f0, 0x231519)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_netbsd_amd64.go:97813 +0xf2
+modernc.org/tcl/lib.sConvertUTCToLocal(0xc0002c00a0, 0x7f7fd0000020, 0x7f7fd06001f0, 0x7f7fcff10590, 0x231519)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_netbsd_amd64.go:97710 +0xec
+modernc.org/tcl/lib.XClockGetdatefieldsObjCmd(0xc0002c00a0, 0x7f7fd0c01770, 0x7f7fd0000020, 0x4, 0x7f7fcfe010d0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_netbsd_amd64.go:97184 +0x18d
+modernc.org/tcl/lib.sDispatch(0xc0002c00a0, 0x7f7fce479018, 0x7f7fd0000020, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_netbsd_amd64.go:87030 +0x6c
+modernc.org/tcl/lib.XTclNRRunCallbacks(0xc0002c00a0, 0x7f7fd0000020, 0x0, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_netbsd_amd64.go:87057 +0xa4
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0002c00a0, 0x7f7fd0000020, 0xb, 0x7f7fcfe00300, 0x200010)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_netbsd_amd64.go:86612 +0x99
+modernc.org/tcl/lib.XTclEvalEx(0xc0002c00a0, 0x7f7fd0000020, 0x7f7fcf800020, 0x1d460d, 0x0, 0x1, 0x0, 0x7f7fcf800020)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_netbsd_amd64.go:88245 +0x1410
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0002c00a0, 0x7f7fd0000020, 0x7f7fcff110a0, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_netbsd_amd64.go:286560 +0xb85
+modernc.org/tcl/lib.XTcl_MainEx(0xc0002c00a0, 0xffffffff, 0x7f7fd0e00040, 0x86cd38, 0x7f7fd0000020)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_netbsd_amd64.go:302571 +0x66e
+main.main1(0xc0002c00a0, 0x4, 0x7f7fd0e00020)
+	/home/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_netbsd_amd64.go:5394 +0x65
+modernc.org/libc.Start(0x86d0e8)
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.56/libc.go:124 +0x1dd
+main.main()
+	/home/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_netbsd_amd64.go:22 +0x2d
+
+Test file error: child process exited abnormally
+cmdAH.test
+cmdIL.test
+cmdInfo.test
+cmdMZ.test
+compExpr-old.test
+compExpr.test
+compile.test
+concat.test
+config.test
+coroutine.test
+dcall.test
+dict.test
+dstring.test
+encoding.test
+env.test
+error.test
+eval.test
+event.test
+
+
+==== event-11.5 Tcl_VwaitCmd procedure: round robin scheduling, 2 sources FAILED
+==== Contents of test case:
+
+    set f1 [open $test1file w]
+    proc accept {s args} {
+	puts $s foobar
+	close $s
+    }
+    set s1 [socket -server accept -myaddr 127.0.0.1 0]
+    after 1000
+    set s2 [socket 127.0.0.1 [lindex [fconfigure $s1 -sockname] 2]]
+    close $s1
+    set x 0
+    set y 0
+    set z 0
+    fileevent $s2 readable {incr z}
+    vwait z
+    fileevent $f1 writable {incr x; if {$y == 3} {set z done}}
+    fileevent $s2 readable {incr y; if {$x == 3} {set z done}}
+    vwait z
+    close $f1
+    close $s2
+    list $x $y $z
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server accept -myaddr 127.0.0.1 0"
+    ("uplevel" body line 7)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+==== event-11.5 FAILED
+
+exec.test
+execute.test
+expr-old.test
+expr.test
+fCmd.test
+libc_netbsd_amd64.go:340:Xchown: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/home/jnml/goroot/src/runtime/debug/stack.go:24 +0x9f
+modernc.org/libc.todo({0x0, 0x0}, {0x0, 0x0, 0x0})
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.56/etc.go:100 +0x20f
+modernc.org/libc.Xchown(...)
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.56/libc_netbsd_amd64.go:340
+modernc.org/tcl/lib.sSetGroupAttribute(0xc0002480a0, 0x7f7fd0000020, 0x0, 0x7f7fcfffcc80, 0x7f7fcfffc7d0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_netbsd_amd64.go:367841 +0x4e6
+modernc.org/tcl/lib.sNativeFileAttrsSet(0xc0002480a0, 0x7f7fd0000020, 0x0, 0x7f7fcfffcc80, 0x7f7fcfffc7d0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_netbsd_amd64.go:287184 +0x6a
+modernc.org/tcl/lib.XTcl_FSFileAttrsSet(0xc0002480a0, 0x7f7fd0000020, 0x0, 0x7f7fcfffcc80, 0x7f7fcfffc7d0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_netbsd_amd64.go:287432 +0x8d
+modernc.org/tcl/lib.XTclFileAttrsCmd(0xc0002480a0, 0x0, 0x7f7fd0000020, 0x4, 0x7f7fd0e10240)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_netbsd_amd64.go:259936 +0xf45
+modernc.org/tcl/lib.sDispatch(0xc0002480a0, 0x7f7fcffb4f88, 0x7f7fd0000020, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_netbsd_amd64.go:87030 +0x6c
+modernc.org/tcl/lib.XTclNRRunCallbacks(0xc0002480a0, 0x7f7fd0000020, 0x0, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_netbsd_amd64.go:87057 +0xa4
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0002480a0, 0x7f7fd0000020, 0xd, 0x7f7fcfe00300, 0x200010)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_netbsd_amd64.go:86612 +0x99
+modernc.org/tcl/lib.XTclEvalEx(0xc0002480a0, 0x7f7fd0000020, 0x7f7fcf900020, 0x159cc, 0x0, 0x1, 0x0, 0x7f7fcf900020)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_netbsd_amd64.go:88245 +0x1410
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0002480a0, 0x7f7fd0000020, 0x7f7fcff110a0, 0x0)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_netbsd_amd64.go:286560 +0xb85
+modernc.org/tcl/lib.XTcl_MainEx(0xc0002480a0, 0xffffffff, 0x7f7fd0e00040, 0x86cd38, 0x7f7fd0000020)
+	/home/jnml/src/modernc.org/tcl/lib/tcl_netbsd_amd64.go:302571 +0x66e
+main.main1(0xc0002480a0, 0x4, 0x7f7fd0e00020)
+	/home/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_netbsd_amd64.go:5394 +0x65
+modernc.org/libc.Start(0x86d0e8)
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.56/libc.go:124 +0x1dd
+main.main()
+	/home/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_netbsd_amd64.go:22 +0x2d
+
+Test file error: child process exited abnormally
+fileName.test
+fileSystem.test
+fileSystemEncoding.test
+for-old.test
+for.test
+foreach.test
+format.test
+get.test
+history.test
+http.test
+Cannot start http server, http test skipped
+http11.test
+
+
+==== http11-1.0 normal request for document FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html -timeout 10000]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok] [meta $tok connection]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.0 FAILED
+
+
+
+==== http11-1.1 normal,gzip,non-chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 10000 -headers {accept-encoding gzip}]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.1 FAILED
+
+
+
+==== http11-1.2 normal,deflated,non-chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 10000 -headers {accept-encoding deflate}]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.2 FAILED
+
+
+
+==== http11-1.3 normal,compressed,non-chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 10000 -headers {accept-encoding compress}]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.3 FAILED
+
+
+
+==== http11-1.4 normal,identity,non-chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 10000 -headers {accept-encoding identity}]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.4 FAILED
+
+
+
+==== http11-1.5 normal request for document, unsupported coding FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 10000 -headers {accept-encoding unsupported}]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok content-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.5 FAILED
+
+
+
+==== http11-1.6 normal, specify 1.1 FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -protocol 1.1 -timeout 10000]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok connection] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.6 FAILED
+
+
+
+==== http11-1.7 normal, 1.1 and keepalive FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -protocol 1.1 -keepalive 1 -timeout 10000]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok connection] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.7 FAILED
+
+
+
+==== http11-1.8 normal, 1.1 and keepalive, server close FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -protocol 1.1 -keepalive 1 -timeout 10000]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok connection] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.8 FAILED
+
+
+
+==== http11-1.9 normal,gzip,chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 10000 -headers {accept-encoding gzip}]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.9 FAILED
+
+
+
+==== http11-1.10 normal,deflate,chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 10000 -headers {accept-encoding deflate}]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.10 FAILED
+
+
+
+==== http11-1.11 normal,compress,chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 10000 -headers {accept-encoding compress}]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.11 FAILED
+
+
+
+==== http11-1.12 normal,identity,chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 10000 -headers {accept-encoding identity}]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok]  [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-1.12 FAILED
+
+
+
+==== http11-2.0 -channel FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.0 FAILED
+
+
+
+==== http11-2.1 -channel, encoding gzip FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan -headers {accept-encoding gzip}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.1 FAILED
+
+
+
+==== http11-2.2 -channel, encoding deflate FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan -headers {accept-encoding deflate}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.2 FAILED
+
+
+
+==== http11-2.3 -channel,encoding compress FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan  -headers {accept-encoding compress}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.3 FAILED
+
+
+
+==== http11-2.4 -channel,encoding identity FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan  -headers {accept-encoding identity}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.4 FAILED
+
+
+
+==== http11-2.5 -channel,encoding unsupported FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan  -headers {accept-encoding unsupported}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.5 FAILED
+
+
+
+==== http11-2.6 -channel,encoding gzip,non-chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 5000 -channel $chan -headers {accept-encoding gzip}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding] [expr {[file size testdoc.html]-[file size testfile.tmp]}]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.6 FAILED
+
+
+
+==== http11-2.7 -channel,encoding deflate,non-chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 5000 -channel $chan -headers {accept-encoding deflate}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding] [expr {[file size testdoc.html]-[file size testfile.tmp]}]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.7 FAILED
+
+
+
+==== http11-2.8 -channel,encoding compress,non-chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 5000 -channel $chan -headers {accept-encoding compress}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding] [expr {[file size testdoc.html]-[file size testfile.tmp]}]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.8 FAILED
+
+
+
+==== http11-2.9 -channel,encoding identity,non-chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 5000 -channel $chan -headers {accept-encoding identity}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding] [expr {[file size testdoc.html]-[file size testfile.tmp]}]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.9 FAILED
+
+
+
+==== http11-2.10 -channel,deflate,keepalive FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan -keepalive 1  -headers {accept-encoding deflate}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding] [expr {[file size testdoc.html]-[file size testfile.tmp]}]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.10 FAILED
+
+
+
+==== http11-2.11 -channel,identity,keepalive FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -headers {accept-encoding identity}  -timeout 5000 -channel $chan -keepalive 1]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.11 FAILED
+
+
+
+==== http11-2.12 -channel,negotiate,keepalive FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan -keepalive 1]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding] [meta $tok x-requested-encodings] [expr {[file size testdoc.html]-[file size testfile.tmp]}]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-2.12 FAILED
+
+
+
+==== http11-3.0 -handler,close,identity FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 10000 -handler [namespace code [list handler testdata]]]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok $testdata] [meta $tok connection] [meta $tok content-encoding]  [meta $tok transfer-encoding]  [expr {[file size testdoc.html]-[string length $testdata]}]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-3.0 FAILED
+
+
+
+==== http11-3.1 -handler,protocol1.0 FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 10000 -protocol 1.0  -handler [namespace code [list handler testdata]]]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok $testdata] [meta $tok connection] [meta $tok content-encoding]  [meta $tok transfer-encoding]  [expr {[file size testdoc.html]-[string length $testdata]}]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-3.1 FAILED
+
+
+
+==== http11-3.2 -handler,close,chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 10000 -keepalive 0 -binary 1 -handler [namespace code [list handler testdata]]]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok $testdata] [meta $tok connection] [meta $tok content-encoding]  [meta $tok transfer-encoding]  [expr {[file size testdoc.html]-[string length $testdata]}]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-3.2 FAILED
+
+
+
+==== http11-3.3 -handler,keepalive,chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 10000 -keepalive 1 -binary 1 -handler [namespace code [list handler testdata]]]
+    http::wait $tok
+    list [http::status $tok] [http::code $tok] [check_crc $tok $testdata] [meta $tok connection] [meta $tok content-encoding]  [meta $tok transfer-encoding]  [expr {[file size testdoc.html]-[string length $testdata]}]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-3.3 FAILED
+
+
+
+==== http11-4.0 normal post request FAILED
+==== Contents of test case:
+
+    set query [http::formatQuery q 1 z 2]
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -query $query -timeout 10000]
+    http::wait $tok
+    list status [http::status $tok] code [http::code $tok] crc [check_crc $tok] connection [meta $tok connection] query-length [meta $tok x-query-length]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-4.0 FAILED
+
+
+
+==== http11-4.1 normal post request, check query length FAILED
+==== Contents of test case:
+
+    set query [http::formatQuery q 1 z 2]
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -headers [list x-check-query yes]  -query $query -timeout 10000]
+    http::wait $tok
+    list status [http::status $tok] code [http::code $tok] crc [check_crc $tok] connection [meta $tok connection] query-length [meta $tok x-query-length]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-4.1 FAILED
+
+
+
+==== http11-4.2 normal post request, check long query length FAILED
+==== Contents of test case:
+
+    set query [string repeat a 24576]
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html -headers [list x-check-query yes] -query $query -timeout 10000]
+    http::wait $tok
+    list status [http::status $tok] code [http::code $tok] crc [check_crc $tok] connection [meta $tok connection] query-length [meta $tok x-query-length]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-4.2 FAILED
+
+
+
+==== http11-4.3 normal post request, check channel query length FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html -headers [list x-check-query yes] -querychannel $chan -timeout 10000]
+    http::wait $tok
+    list status [http::status $tok] code [http::code $tok] crc [check_crc $tok] connection [meta $tok connection] query-length [meta $tok x-query-length]
+
+---- Test setup failed:
+can't wait for variable "httpd_output": would wait forever
+---- errorInfo(setup): can't wait for variable "httpd_output": would wait forever
+    while executing
+"vwait httpd_output"
+    (procedure "create_httpd" line 19)
+    invoked from within
+"create_httpd"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): TCL EVENT NO_SOURCES
+---- Test cleanup failed:
+can't read "tok": no such variable
+---- errorInfo(cleanup): can't read "tok": no such variable
+    while executing
+"http::cleanup $tok"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME tok
+==== http11-4.3 FAILED
+
+Test file error: eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+eof from httpd
+httpPipeline.test
+httpold.test
+Cannot start http server, http test skipped
+if-old.test
+if.test
+incr-old.test
+incr.test
+indexObj.test
+info.test
+init.test
+interp.test
+io.test
+
+
+==== io-29.34 Tcl_Close, async flush on close, using sockets FAILED
+==== Contents of test case:
+
+    variable c 0
+    variable x running
+    set l abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
+    proc writelots {s l} {
+	for {set i 0} {$i < 9000} {incr i} {
+	    puts $s $l
+	}
+    }
+    proc accept {s a p} {
+	variable x
+	fileevent $s readable [namespace code [list readit $s]]
+	fconfigure $s -blocking off
+	set x accepted
+    }
+    proc readit {s} {
+	variable c
+	variable x
+	set l [gets $s]
+
+	if {[eof $s]} {
+	    close $s
+	    set x done
+	} elseif {([string length $l] > 0) || ![fblocked $s]} {
+	    incr c
+	}
+    }
+    set ss [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set cs [socket 127.0.0.1 [lindex [fconfigure $ss -sockname] 2]]
+    vwait [namespace which -variable x]
+    fconfigure $cs -blocking off
+    writelots $cs $l
+    close $cs
+    close $ss
+    vwait [namespace which -variable x]
+    set c
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 28)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+==== io-29.34 FAILED
+
+
+
+==== io-29.35 Tcl_Close vs fileevent vs multiple interpreters FAILED
+==== Contents of test case:
+
+    # On Mac, this test screws up sockets such that subsequent tests using port 2828
+    # either cause errors or panic().
+
+    catch {interp delete x}
+    catch {interp delete y}
+    interp create x
+    interp create y
+    set s [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    proc accept {s a p} {
+	puts $s hello
+	close $s
+    }
+    set c [socket 127.0.0.1 [lindex [fconfigure $s -sockname] 2]]
+    interp share {} $c x
+    interp share {} $c y
+    close $c
+    x eval {
+	proc readit {s} {
+	    gets $s
+	    if {[eof $s]} {
+		close $s
+	    }
+	}
+    }
+    y eval {
+	proc readit {s} {
+	    gets $s
+	    if {[eof $s]} {
+		close $s
+	    }
+	}
+    }
+    x eval "fileevent $c readable \{readit $c\}"
+    y eval "fileevent $c readable \{readit $c\}"
+    y eval [list close $c]
+    update
+    close $s
+    interp delete x
+    interp delete y
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 9)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+==== io-29.35 FAILED
+
+
+
+==== io-34.21 Tcl_Seek and Tcl_Tell on large files FAILED
+==== Contents of test case:
+
+    file delete $path(test3)
+    set f [open $path(test3) w]
+    fconfigure $f -encoding binary
+    set l ""
+    lappend l [tell $f]
+    puts -nonewline $f abcdef
+    lappend l [tell $f]
+    flush $f
+    lappend l [tell $f]
+    # 4GB offset!
+    seek $f 0x100000000
+    lappend l [tell $f]
+    puts -nonewline $f abcdef
+    lappend l [tell $f]
+    close $f
+    lappend l [file size $path(test3)]
+    # truncate...
+    close [open $path(test3) w]
+    lappend l [file size $path(test3)]
+    set l
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: no space left on device
+    while executing
+"close $f"
+    ("uplevel" body line 16)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX ENOSPC {no space left on device}
+==== io-34.21 FAILED
+
+
+
+==== io-39.18 Tcl_SetChannelOption, setting read mode independently FAILED
+==== Contents of test case:
+
+    proc accept {s a p} {close $s}
+    set s1 [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set port [lindex [fconfigure $s1 -sockname] 2]
+    set s2 [socket 127.0.0.1 $port]
+    update
+    fconfigure $s2 -translation {auto lf}
+    set modes [fconfigure $s2 -translation]
+    close $s1
+    close $s2
+    set modes
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+==== io-39.18 FAILED
+
+
+
+==== io-39.19 Tcl_SetChannelOption, setting read mode independently FAILED
+==== Contents of test case:
+
+    proc accept {s a p} {close $s}
+    set s1 [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set port [lindex [fconfigure $s1 -sockname] 2]
+    set s2 [socket 127.0.0.1 $port]
+    update
+    fconfigure $s2 -translation {auto crlf}
+    set modes [fconfigure $s2 -translation]
+    close $s1
+    close $s2
+    set modes
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+==== io-39.19 FAILED
+
+
+
+==== io-39.20 Tcl_SetChannelOption, setting read mode independently FAILED
+==== Contents of test case:
+
+    proc accept {s a p} {close $s}
+    set s1 [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set port [lindex [fconfigure $s1 -sockname] 2]
+    set s2 [socket 127.0.0.1 $port]
+    update
+    fconfigure $s2 -translation {auto cr}
+    set modes [fconfigure $s2 -translation]
+    close $s1
+    close $s2
+    set modes
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+==== io-39.20 FAILED
+
+
+
+==== io-39.21 Tcl_SetChannelOption, setting read mode independently FAILED
+==== Contents of test case:
+
+    proc accept {s a p} {close $s}
+    set s1 [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set port [lindex [fconfigure $s1 -sockname] 2]
+    set s2 [socket 127.0.0.1 $port]
+    update
+    fconfigure $s2 -translation {auto auto}
+    set modes [fconfigure $s2 -translation]
+    close $s1
+    close $s2
+    set modes
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+==== io-39.21 FAILED
+
+
+
+==== io-39.23 Tcl_GetChannelOption, server socket is not readable or
+        writeable, it should still have valid -eofchar and -translation options FAILED
+==== Contents of test case:
+
+    set l [list]
+    set sock [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    lappend l [fconfigure $sock -eofchar] [fconfigure $sock -translation]
+    close $sock
+    set l
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+==== io-39.23 FAILED
+
+
+
+==== io-39.24 Tcl_SetChannelOption, server socket is not readable or
+        writable so we can't change -eofchar or -translation FAILED
+==== Contents of test case:
+
+    set l [list]
+    set sock [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    fconfigure $sock -eofchar D -translation lf
+    lappend l [fconfigure $sock -eofchar] [fconfigure $sock -translation]
+    close $sock
+    set l
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+==== io-39.24 FAILED
+
+
+
+==== io-51.1 Test old socket deletion on Macintosh FAILED
+==== Contents of test case:
+
+    set x 0
+    set result ""
+    proc accept {s a p} {
+	variable x
+	variable wait
+	fconfigure $s -blocking off
+	puts $s "sock[incr x]"
+	close $s
+	set wait done
+    }
+    set ss [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set port [lindex [fconfigure $ss -sockname] 2]
+
+    variable wait ""
+    set cs [socket 127.0.0.1 $port]
+    vwait [namespace which -variable wait]
+    lappend result [gets $cs]
+    close $cs
+
+    set wait ""
+    set cs [socket 127.0.0.1 $port]
+    vwait [namespace which -variable wait]
+    lappend result [gets $cs]
+    close $cs
+
+    set wait ""
+    set cs [socket 127.0.0.1 $port]
+    vwait [namespace which -variable wait]
+    lappend result [gets $cs]
+    close $cs
+
+    set wait ""
+    set cs [socket 127.0.0.1 $port]
+    vwait [namespace which -variable wait]
+    lappend result [gets $cs]
+    close $cs
+    close $ss
+    set result
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 12)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+==== io-51.1 FAILED
+
+
+
+==== io-53.5 CopyData: error during fcopy FAILED
+==== Contents of test case:
+
+    variable fcopyTestDone
+    set listen [socket -server [namespace code FcopyTestAccept] -myaddr 127.0.0.1 0]
+    set in [open $thisScript]	;# 126 K
+    set out [socket 127.0.0.1 [lindex [fconfigure $listen -sockname] 2]]
+    catch {unset fcopyTestDone}
+    close $listen	;# This means the socket open never really succeeds
+    fcopy $in $out -command [namespace code FcopyTestDone]
+    variable fcopyTestDone
+    if ![info exists fcopyTestDone] {
+	vwait [namespace which -variable fcopyTestDone]		;# The error occurs here in the b.g.
+    }
+    close $in
+    close $out
+    set fcopyTestDone	;# 1 for error condition
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code FcopyTestAccept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 3)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+==== io-53.5 FAILED
+
+
+
+==== io-53.10 Bug 1350564, multi-directional fcopy FAILED
+==== Contents of test case:
+
+    # Now pass data through the server in both directions.
+    set ::forever {}
+    puts $a AB
+    vwait ::forever
+    puts $b BA
+    vwait ::forever
+    set ::forever
+
+---- Test setup failed:
+couldn't open socket: bad address in system call argument
+---- errorInfo(setup): couldn't open socket: bad address in system call argument
+    while executing
+"socket 127.0.0.1 9999"
+    ("uplevel" body line 48)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): POSIX EFAULT {bad address in system call argument}
+==== io-53.10 FAILED
+
+
+
+==== io-54.1 Recursive channel events FAILED
+==== Contents of test case:
+
+    # This test checks to see if file events are delivered during recursive
+    # event loops when there is buffered data on the channel.
+
+    proc accept {s a p} {
+	variable as
+	fconfigure $s -translation lf
+	puts $s "line 1\nline2\nline3"
+	flush $s
+	set as $s
+    }
+    proc readit {s next} {
+	variable x
+	variable result
+	lappend result $next
+	if {$next == 1} {
+	    fileevent $s readable [namespace code [list readit $s 2]]
+	    vwait [namespace which -variable x]
+	}
+	incr x
+    }
+    set ss [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+
+    # We need to delay on some systems until the creation of the
+    # server socket completes.
+
+    set done 0
+    for {set i 0} {$i < 10} {incr i} {
+	if {![catch {set cs [socket 127.0.0.1 [lindex [fconfigure $ss -sockname] 2]]}]} {
+	    set done 1
+	    break
+	}
+	after 100
+    }
+    if {$done == 0} {
+	close $ss
+	error "failed to connect to server"
+    }
+    variable result {}
+    variable x 0
+    variable as
+    vwait [namespace which -variable as]
+    fconfigure $cs -translation lf
+    lappend result [gets $cs]
+    fconfigure $cs -blocking off
+    fileevent $cs readable [namespace code [list readit $cs 1]]
+    set a [after 2000 [namespace code { set x failure }]]
+    vwait [namespace which -variable x]
+    after cancel $a
+    close $as
+    close $ss
+    close $cs
+    list $result $x
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 22)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+==== io-54.1 FAILED
+
+
+
+==== io-54.2 Testing for busy-wait in recursive channel events FAILED
+==== Contents of test case:
+
+    set accept {}
+    set after {}
+    variable s [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    proc accept {s a p} {
+	variable counter
+	variable accept
+
+	set accept $s
+	set counter 0
+	fconfigure $s -blocking off -buffering line -translation lf
+	fileevent $s readable [namespace code "doit $s"]
+    }
+    proc doit {s} {
+	variable counter
+	variable after
+
+	incr counter
+	set l [gets $s]
+	if {"$l" == ""} {
+	    fileevent $s readable [namespace code "doit1 $s"]
+	    set after [after 1000 [namespace code newline]]
+	}
+    }
+    proc doit1 {s} {
+	variable counter
+	variable accept
+
+	incr counter
+	set l [gets $s]
+	close $s
+	set accept {}
+    }
+    proc producer {} {
+	variable s
+	variable writer
+
+	set writer [socket 127.0.0.1 [lindex [fconfigure $s -sockname] 2]]
+	fconfigure $writer -buffering line
+	puts -nonewline $writer hello
+	flush $writer
+    }
+    proc newline {} {
+	variable done
+	variable writer
+
+	puts $writer hello
+	flush $writer
+	set done 1
+    }
+    producer
+    variable done
+    vwait [namespace which -variable done]
+    close $writer
+    close $s
+    after cancel $after
+    if {$accept != {}} {close $accept}
+    set counter
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 4)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+==== io-54.2 FAILED
+
+
+
+==== io-57.1 buffered data and file events, gets FAILED
+==== Contents of test case:
+
+    proc accept {sock args} {
+	variable s2
+	set s2 $sock
+    }
+    set server [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set s [socket 127.0.0.1 [lindex [fconfigure $server -sockname] 2]]
+    variable s2
+    vwait [namespace which -variable s2]
+    update
+    fileevent $s2 readable [namespace code {lappend result readable}]
+    puts $s "12\n34567890"
+    flush $s
+    variable result [gets $s2]
+    after 1000 [namespace code {lappend result timer}]
+    vwait [namespace which -variable result]
+    lappend result [gets $s2]
+    vwait [namespace which -variable result]
+    close $s
+    close $s2
+    close $server
+    set result
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 6)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+==== io-57.1 FAILED
+
+
+
+==== io-57.2 buffered data and file events, read FAILED
+==== Contents of test case:
+
+    proc accept {sock args} {
+	variable s2
+	set s2 $sock
+    }
+    set server [socket -server [namespace code accept] -myaddr 127.0.0.1 0]
+    set s [socket 127.0.0.1 [lindex [fconfigure $server -sockname] 2]]
+    variable s2
+    vwait [namespace which -variable s2]
+    update
+    fileevent $s2 readable [namespace code {lappend result readable}]
+    puts -nonewline $s "1234567890"
+    flush $s
+    variable result [read $s2 1]
+    after 1000 [namespace code {lappend result timer}]
+    vwait [namespace which -variable result]
+    lappend result [read $s2 9]
+    vwait [namespace which -variable result]
+    close $s
+    close $s2
+    close $server
+    set result
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server [namespace code accept] -myaddr 127.0.0.1 0"
+    ("uplevel" body line 6)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EAFNOSUPPORT {address family not supported by protocol}
+==== io-57.2 FAILED
+
+ioCmd.test
+
+
+==== iocmd-8.15.1 fconfigure command / tcp channel FAILED
+==== Contents of test case:
+
+    fconfigure $cli -blah
+
+---- Test setup failed:
+couldn't open socket: address family not supported by protocol
+---- errorInfo(setup): couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server iocmdSRV -myaddr 127.0.0.1 0"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): POSIX EAFNOSUPPORT {address family not supported by protocol}
+---- Test cleanup failed:
+can't read "cli": no such variable
+---- errorInfo(cleanup): can't read "cli": no such variable
+    while executing
+"close $cli"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME cli
+==== iocmd-8.15.1 FAILED
+
+
+
+==== iocmd-8.16 fconfigure command / tcp channel FAILED
+==== Contents of test case:
+
+    expr {[lindex [fconfigure $cli -peername] 2] == $port}
+
+---- Test setup failed:
+couldn't open socket: address family not supported by protocol
+---- errorInfo(setup): couldn't open socket: address family not supported by protocol
+    while executing
+"socket -server iocmdSRV -myaddr 127.0.0.1 0"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $setup"
+---- errorCode(setup): POSIX EAFNOSUPPORT {address family not supported by protocol}
+---- Test cleanup failed:
+can't read "cli": no such variable
+---- errorInfo(cleanup): can't read "cli": no such variable
+    while executing
+"close $cli"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP VARNAME cli
+==== iocmd-8.16 FAILED
+
+ioTrans.test
+iogt.test
+join.test
+lindex.test
+link.test
+linsert.test
+list.test
+listObj.test
+llength.test
+lmap.test
+load.test
+lrange.test
+lrepeat.test
+lreplace.test
+lsearch.test
+lset.test
+lsetComp.test
+macOSXFCmd.test
+macOSXLoad.test
+main.test
+
+
+==== Tcl_Main-1.3  FAILED
+==== Contents of test case:
+
+	read $f
+    
+---- Result was:
+script À 0
+
+---- Result should have been (exact matching):
+script � 0
+
+==== Tcl_Main-1.3 FAILED
+
+
+
+==== Tcl_Main-1.4  FAILED
+==== Contents of test case:
+
+	read $f
+    
+---- Result was:
+script € 0
+
+---- Result should have been (exact matching):
+script ? 0
+
+==== Tcl_Main-1.4 FAILED
+
+
+
+==== Tcl_Main-1.5  FAILED
+==== Contents of test case:
+
+	read $f
+    
+---- Result was:
+
+---- Result should have been (exact matching):
+� {} 0
+
+---- Test cleanup failed:
+couldn't read file "À": no such file or directory
+---- errorInfo(cleanup): couldn't read file "À": no such file or directory
+    while executing
+"close $f"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): CHILDSTATUS 6817 1
+==== Tcl_Main-1.5 FAILED
+
+
+
+==== Tcl_Main-1.6  FAILED
+==== Contents of test case:
+
+	read $f
+    
+---- Result was:
+
+---- Result should have been (exact matching):
+? {} 0
+
+---- Test cleanup failed:
+couldn't read file "€": no such file or directory
+---- errorInfo(cleanup): couldn't read file "€": no such file or directory
+    while executing
+"close $f"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): CHILDSTATUS 6065 1
+==== Tcl_Main-1.6 FAILED
+
+mathop.test
+misc.test
+msgcat.test
+namespace-old.test
+namespace.test
+notify.test
+nre.test
+obj.test
+oo.test
+ooNext2.test
+opt.test
+package.test
+parse.test
+parseExpr.test
+parseOld.test
+pid.test
+pkgMkIndex.test
+platform.test
+proc-old.test
+proc.test
+pwd.test
+reg.test
+regexp.test
+regexpComp.test
+registry.test
+rename.test
+resolver.test
+result.test
+safe.test
+scan.test
+security.test
+set-old.test
+set.test
+socket.test
+Test file error: couldn't open socket: bad address in system call argument
+    while executing
+"socket -server {apply {{s a p} {set ::s1 $s}}} 0"
+    invoked from within
+"set server [socket -server {apply {{s a p} {set ::s1 $s}}} 0]"
+    (file "/tmp/tcl-test-2843733035/socket.test" line 98)
+source.test
+split.test
+stack.test
+string.test
+stringComp.test
+stringObj.test
+subst.test
+switch.test
+tailcall.test
+tcltest.test
+
+
+==== tcltest-9.5 GetMatchingFiles: Bug 1119798 FAILED
+==== Contents of test case:
+
+    slave msg [file join [temporaryDirectory] all.tcl] -file f*
+    regexp {exiting with errors:} $msg
+
+---- Result was:
+1
+---- Result should have been (exact matching):
+0
+==== tcltest-9.5 FAILED
+
+thread.test
+timer.test
+tm.test
+trace.test
+unixFCmd.test
+libc_netbsd.go:555:Xmkfifo: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/home/jnml/goroot/src/runtime/debug/stack.go:24 +0x9f
+modernc.org/libc.todo({0x0, 0x0}, {0x0, 0x0, 0x0})
+	/home/jnml/pkg/mod/modernc.org/libc@v1.11.56/etc.go:100 +0x20f
+modernc.org/libc.Xmkfifo(...)
+	/home/jnml/pkg/mod/modernc.org/
