@@ -1,0 +1,1694 @@
+Tests running in interp:  /var/folders/b1/8mwd0y2x52l16_sqf8zbtz8r0000gn/T/tcl-test-4121395582/tcltest
+Tests located in:  /private/var/folders/b1/8mwd0y2x52l16_sqf8zbtz8r0000gn/T/tcl-test-4121395582
+Tests running in:  /private/var/folders/b1/8mwd0y2x52l16_sqf8zbtz8r0000gn/T/tcl-test-4121395582
+Temporary files stored in /private/var/folders/b1/8mwd0y2x52l16_sqf8zbtz8r0000gn/T/tcl-test-4121395582
+Test files run in separate interpreters
+Running tests that match:  *
+Only running test files that match:  *.test
+Tests began at Wed Nov 10 13:51:09 CET 2021
+aaa_exit.test
+libc_darwin.go:1949:X__darwin_fd_set: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+modernc.org/libc.todo({0x0, 0x28}, {0x0, 0x293ff3e0, 0x0})
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/etc.go:100 +0x14d
+modernc.org/libc.X__darwin_fd_set(...)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc_darwin.go:1949
+modernc.org/tcl/lib.XTcl_CreateFileHandler(0xc00053c050, 0x7, 0x2, 0x1433450, 0x293ff420)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:388388 +0xfc
+modernc.org/tcl/lib.sPipeWatchProc(0x110b1ca, 0x29700200, 0x2)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:389475 +0x51
+modernc.org/tcl/lib.sChanWatch(...)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:279258
+modernc.org/tcl/lib.sUpdateInterest(0xc00053c050, 0x28)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287103 +0xd3
+modernc.org/tcl/lib.XTcl_CreateChannelHandler(0xc00053c050, 0x293ff420, 0x2, 0x14319f0, 0x293ff320)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287201 +0x117
+modernc.org/tcl/lib.sCreateScriptRecord(0xc00053c050, 0x29a00020, 0x293ff420, 0x2, 0x29b44320)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287418 +0x1d1
+modernc.org/tcl/lib.XTcl_FileEventObjCmd(0xc00053c050, 0x131a280, 0x29a00020, 0x4, 0x29c00da0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287570 +0x2d9
+modernc.org/tcl/lib.sDispatch(0xc00053c050, 0x29b44bc8, 0x29a00020, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0x297001f0, 0x29a00020, 0x5, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc00053c050, 0x29a00020, 0x29c00300, 0x5, 0x29c002a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99332 +0x52
+modernc.org/tcl/lib.XTclEvalEx(0xc00053c050, 0x29a00020, 0x2970b020, 0x6a2, 0x0, 0x1, 0x0, 0x2970b020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100965 +0x1292
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc00053c050, 0x29a00020, 0x29b10c80, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300216 +0x89c
+modernc.org/tcl/lib.XTcl_MainEx(0xc00053c050, 0xffffffff, 0x29300040, 0x14312c0, 0x29a00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319211 +0x517
+main.main1(0x0, 0x12380, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+
+Test file error: child process exited abnormally
+append.test
+appendComp.test
+apply.test
+assemble.test
+assocd.test
+async.test
+autoMkindex.test
+basic.test
+libc_darwin.go:1953:X__darwin_fd_clr: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+modernc.org/libc.todo({0x0, 0x28}, {0x0, 0x1125dea, 0x0})
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/etc.go:100 +0x14d
+modernc.org/libc.X__darwin_fd_clr(...)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc_darwin.go:1953
+modernc.org/tcl/lib.XTcl_CreateFileHandler(0xc0000b60f0, 0x6, 0x4, 0x1433450, 0x51f9ee0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:388390 +0x126
+modernc.org/tcl/lib.sFileWatchProc(0x110b1ca, 0x5500200, 0xb60f0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:381305 +0x30
+modernc.org/tcl/lib.sChanWatch(...)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:279258
+modernc.org/tcl/lib.sUpdateInterest(0xc0000b60f0, 0x28)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287103 +0xd3
+modernc.org/tcl/lib.XTcl_CreateChannelHandler(0xc0000b60f0, 0x51f9ee0, 0x4, 0x14319f0, 0x51f1760)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287201 +0x117
+modernc.org/tcl/lib.sCreateScriptRecord(0xc0000b60f0, 0x5800020, 0x51f9ee0, 0x4, 0x59c2d70)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287418 +0x1d1
+modernc.org/tcl/lib.XTcl_FileEventObjCmd(0xc0000b60f0, 0x131a280, 0x5800020, 0x4, 0x5a00da0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287570 +0x2d9
+modernc.org/tcl/lib.sDispatch(0xc0000b60f0, 0x59ba268, 0x5800020, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0x55001f0, 0x5800020, 0xb, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0000b60f0, 0x5800020, 0x5a00300, 0xb, 0x5a002a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99332 +0x52
+modernc.org/tcl/lib.XTclEvalEx(0xc0000b60f0, 0x5800020, 0x5c00020, 0x7fdc, 0x0, 0x1, 0x0, 0x5c00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100965 +0x1292
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0000b60f0, 0x5800020, 0x5910c80, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300216 +0x89c
+modernc.org/tcl/lib.XTcl_MainEx(0xc0000b60f0, 0xffffffff, 0x5100040, 0x14312c0, 0x5800020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319211 +0x517
+main.main1(0x0, 0xa81c0, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+
+Test file error: child process exited abnormally
+binary.test
+case.test
+chan.test
+libc_darwin.go:789:Xsocket: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+modernc.org/libc.todo({0x0, 0x29b00020}, {0x0, 0x29635960, 0x0})
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/etc.go:100 +0x14d
+modernc.org/libc.Xsocket(...)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc_darwin.go:789
+modernc.org/tcl/lib.XTcl_OpenTcpServer(0xc0000be0a0, 0x29b00020, 0x29c566b0, 0x174a8c0, 0x298001f8, 0x29b00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:390926 +0x252
+modernc.org/tcl/lib.XTcl_SocketObjCmd(0xc0000be0a0, 0x29c566b0, 0x29b00020, 0x6, 0x29d00a28)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:292241 +0x9d8
+modernc.org/tcl/lib.sDispatch(0xc0000be0a0, 0x29cb4a78, 0x29b00020, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0x298001f0, 0x29b00020, 0xb, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0000be0a0, 0x29b00020, 0x29d00300, 0xb, 0x29d002a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99332 +0x52
+modernc.org/tcl/lib.XTclEvalEx(0xc0000be0a0, 0x29b00020, 0x29e00020, 0x2791, 0x0, 0x1, 0x0, 0x29e00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100965 +0x1292
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0000be0a0, 0x29b00020, 0x29c10c80, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300216 +0x89c
+modernc.org/tcl/lib.XTcl_MainEx(0xc0000be0a0, 0xffffffff, 0x29400040, 0x14312c0, 0x29b00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319211 +0x517
+main.main1(0x13fae60, 0x12380, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+
+Test file error: child process exited abnormally
+chanio.test
+
+
+==== chan-io-6.31 Tcl_GetsObj: crlf mode: buffer exhausted, blocked FAILED
+==== Contents of test case:
+
+    # (FilterInputBytes() != 0)
+    set f [openpipe w+ $path(cat)]
+    chan configure $f -translation {crlf lf} -buffering none
+    chan puts -nonewline $f "bbbbbbbbbbbbbb\r\n123456789012345\r"
+    chan configure $f -buffersize 16
+    lappend x [chan gets $f]
+    chan configure $f -blocking 0
+    lappend x [chan gets $f line] $line [chan blocked $f]  [testchannel inputbuffered $f]
+
+---- Result was:
+{libc_darwin.go:1949:X__darwin_fd_set: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+modernc.org/libc.todo({0x0, 0x28}, {0x0, 0x1125dea, 0x0})
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/etc.go:100 +0x14d
+modernc.org/libc.X__darwin_fd_set(...)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc_darwin.go:1949
+modernc.org/tcl/lib.XTcl_CreateFileHandler(0xc0000be0a0, 0x0, 0x2, 0x1433450, 0x9424760)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:388388 +0xfc
+modernc.org/tcl/lib.sFileWatchProc(0x12f8fd3, 0x9500200, 0x28)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:381305 +0x30
+modernc.org/tcl/lib.sChanWatch(...)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:279258
+modernc.org/tcl/lib.sUpdateInterest(0xc0000be0a0, 0x28)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287103 +0xd3
+modernc.org/tcl/lib.XTcl_CreateChannelHandler(0xc0000be0a0, 0x9424760, 0x2, 0x14319f0, 0x9424ca0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287201 +0x117
+modernc.org/tcl/lib.sCreateScriptRecord(0xc0000be0a0, 0x9800020, 0x9424760, 0x2, 0x9910e00)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287418 +0x1d1
+modernc.org/tcl/lib.XTcl_FileEventObjCmd(0xc0000be0a0, 0x9000a20, 0x9800020, 0x4, 0x9424c30)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287570 +0x2d9
+modernc.org/tcl/lib.sDispatch(0xc0000be0a0, 0x9912f58, 0x9800020, 0x107ae8)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0x95001f0, 0x9800020, 0x5, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0000be0a0, 0x9800020, 0x9a00300, 0x5, 0x9a002a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99332 +0x52
+modernc.org/tcl/lib.XTclEvalEx(0xc0000be0a0, 0x9800020, 0x9720420, 0x19f, 0x0, 0x1, 0x0, 0x9720420)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100965 +0x1292
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0000be0a0, 0x9800020, 0x9910c80, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300216 +0x89c
+modernc.org/tcl/lib.XTcl_MainEx(0xc0000be0a0, 0xffffffff, 0x9100030, 0x14312c0, 0x9800020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319211 +0x517
+main.main1(0x0, 0x12380, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+
+} -1 {} 0 0
+---- Result should have been (exact matching):
+bbbbbbbbbbbbbb -1 {} 1 16
+==== chan-io-6.31 FAILED
+
+
+
+==== chan-io-6.43 Tcl_GetsObj: input saw cr FAILED
+==== Contents of test case:
+
+    # if (chanPtr->flags & INPUT_SAW_CR)
+    set f [openpipe w+ $path(cat)]
+    chan configure $f -translation {auto lf} -buffering none
+    chan puts -nonewline $f "bbbbbbbbbbbbbbb\n123456789abcdef\r"
+    chan configure $f -buffersize 16
+    lappend x [chan gets $f]
+    chan configure $f -blocking 0
+    lappend x [chan gets $f line] $line [testchannel queuedcr $f]
+    chan configure $f -blocking 1
+    chan puts -nonewline $f "\nabcd\refg\x1a"
+    lappend x [chan gets $f line] $line [testchannel queuedcr $f]
+    lappend x [chan gets $f line] $line
+
+---- Result was:
+{libc_darwin.go:1949:X__darwin_fd_set: TODOTODO } -1 {} 0 40 {goroutine 1 [running, locked to thread]:} 0 21 runtime/debug.Stack()
+---- Result should have been (exact matching):
+bbbbbbbbbbbbbbb 15 123456789abcdef 1 4 abcd 0 3 efg
+---- Test cleanup failed:
+child process exited abnormally
+---- errorInfo(cleanup): child process exited abnormally
+    while executing
+"chan close $f"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): CHILDSTATUS 48366 1
+==== chan-io-6.43 FAILED
+
+
+
+==== chan-io-6.44 Tcl_GetsObj: input saw cr, not followed by cr FAILED
+==== Contents of test case:
+
+    # not (*eol == '\n')
+    set f [openpipe w+ $path(cat)]
+    chan configure $f -translation {auto lf} -buffering none
+    chan puts -nonewline $f "bbbbbbbbbbbbbbb\n123456789abcdef\r"
+    chan configure $f -buffersize 16
+    lappend x [chan gets $f]
+    chan configure $f -blocking 0
+    lappend x [chan gets $f line] $line [testchannel queuedcr $f]
+    chan configure $f -blocking 1
+    chan puts -nonewline $f "abcd\refg\x1a"
+    lappend x [chan gets $f line] $line [testchannel queuedcr $f]
+    lappend x [chan gets $f line] $line
+
+---- Result was:
+{libc_darwin.go:1949:X__darwin_fd_set: TODOTODO } 40 {goroutine 1 [running, locked to thread]:} 0 21 runtime/debug.Stack() 0 50 {	/usr/local/go/src/runtime/debug/stack.go:24 +0x65}
+---- Result should have been (exact matching):
+bbbbbbbbbbbbbbb 15 123456789abcdef 1 4 abcd 0 3 efg
+---- Test cleanup failed:
+child process exited abnormally
+---- errorInfo(cleanup): child process exited abnormally
+    while executing
+"chan close $f"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): CHILDSTATUS 48367 1
+==== chan-io-6.44 FAILED
+
+
+
+==== chan-io-6.45 Tcl_GetsObj: input saw cr, skip right number of bytes FAILED
+==== Contents of test case:
+
+    # Tcl_ExternalToUtf()
+    set f [openpipe w+ $path(cat)]
+    chan configure $f -translation {auto lf} -buffering none
+    chan configure $f -encoding unicode
+    chan puts -nonewline $f "bbbbbbbbbbbbbbb\n123456789abcdef\r"
+    chan configure $f -buffersize 16
+    chan gets $f
+    chan configure $f -blocking 0
+    lappend x [chan gets $f line] $line [testchannel queuedcr $f]
+    chan configure $f -blocking 1
+    chan puts -nonewline $f "\nabcd\refg"
+    lappend x [chan gets $f line] $line [testchannel queuedcr $f]
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: error writing "file8": broken pipe
+    while executing
+"chan puts -nonewline $f "\nabcd\refg""
+    ("uplevel" body line 12)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EPIPE {broken pipe}
+---- Test cleanup failed:
+child process exited abnormally
+---- errorInfo(cleanup): child process exited abnormally
+    while executing
+"chan close $f"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): CHILDSTATUS 48368 1
+==== chan-io-6.45 FAILED
+
+
+
+==== chan-io-6.46 Tcl_GetsObj: input saw cr, followed by just \n should give eof FAILED
+==== Contents of test case:
+
+    # memmove()
+    set f [openpipe w+ $path(cat)]
+    chan configure $f -translation {auto lf} -buffering none
+    chan puts -nonewline $f "bbbbbbbbbbbbbbb\n123456789abcdef\r"
+    chan configure $f -buffersize 16
+    chan gets $f
+    chan configure $f -blocking 0
+    lappend x [chan gets $f line] $line [testchannel queuedcr $f]
+    chan configure $f -blocking 1
+    chan puts -nonewline $f "\n\x1a"
+    lappend x [chan gets $f line] $line [testchannel queuedcr $f]
+
+---- Result was:
+-1 {} 0 40 {goroutine 1 [running, locked to thread]:} 0
+---- Result should have been (exact matching):
+15 123456789abcdef 1 -1 {} 0
+---- Test cleanup failed:
+child process exited abnormally
+---- errorInfo(cleanup): child process exited abnormally
+    while executing
+"chan close $f"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): CHILDSTATUS 48369 1
+==== chan-io-6.46 FAILED
+
+libc_darwin.go:1949:X__darwin_fd_set: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+modernc.org/libc.todo({0x0, 0x28}, {0x0, 0x91f9920, 0x0})
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/etc.go:100 +0x14d
+modernc.org/libc.X__darwin_fd_set(...)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc_darwin.go:1949
+modernc.org/tcl/lib.XTcl_CreateFileHandler(0xc000070050, 0x8, 0x2, 0x1433450, 0x91fb1a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:388388 +0xfc
+modernc.org/tcl/lib.sPipeWatchProc(0x91fac70, 0x9500200, 0x2)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:389475 +0x51
+modernc.org/tcl/lib.sChanWatch(...)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:279258
+modernc.org/tcl/lib.sUpdateInterest(0xc000070050, 0x28)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287103 +0xd3
+modernc.org/tcl/lib.XTcl_CreateChannelHandler(0xc000070050, 0x91fb1a0, 0x2, 0x14319f0, 0x91f65a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287201 +0x117
+modernc.org/tcl/lib.sCreateScriptRecord(0xc000070050, 0x9800020, 0x91fb1a0, 0x2, 0x99f2e00)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287418 +0x1d1
+modernc.org/tcl/lib.XTcl_FileEventObjCmd(0xc000070050, 0x99f2c50, 0x9800020, 0x4, 0x9a00f00)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287570 +0x2d9
+modernc.org/tcl/lib.sDispatch(0xc000070050, 0x99f41a8, 0x9800020, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0x95001f0, 0x9800020, 0x4, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc000070050, 0x9800020, 0x9a00300, 0x4, 0x9a002a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99332 +0x52
+modernc.org/tcl/lib.XTclEvalEx(0xc000070050, 0x9800020, 0x1f00020, 0x3e4ef, 0x0, 0x1, 0x0, 0x1f00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100965 +0x1292
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc000070050, 0x9800020, 0x9910c80, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300216 +0x89c
+modernc.org/tcl/lib.XTcl_MainEx(0xc000070050, 0xffffffff, 0x9100040, 0x14312c0, 0x9800020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319211 +0x517
+main.main1(0x0, 0x12380, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+
+Test file error: child process exited abnormally
+clock.test
+libc_darwin.go:314:Xlocaltime_r: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+modernc.org/libc.todo({0x0, 0xc0005240a0}, {0x0, 0x293414e3, 0x0})
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/etc.go:100 +0x14d
+modernc.org/libc.Xlocaltime_r(...)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc_darwin.go:314
+modernc.org/tcl/lib.sThreadSafeLocalTime(0xc0005240a0, 0x29a00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:111116 +0x37
+modernc.org/tcl/lib.sConvertUTCToLocalUsingC(0xc0005240a0, 0x29be8d00, 0x297001f0, 0x110e4db)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:110553 +0xf7
+modernc.org/tcl/lib.sConvertUTCToLocal(0xc0005240a0, 0x0, 0x0, 0x29c010d0, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:110450 +0xe5
+modernc.org/tcl/lib.XClockGetdatefieldsObjCmd(0xc0005240a0, 0x29501840, 0x29a00020, 0x4, 0x29c010d0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:109924 +0x15c
+modernc.org/tcl/lib.sDispatch(0xc0005240a0, 0x2be92d48, 0x29a00020, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0x297001f0, 0x29a00020, 0xb, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0005240a0, 0x29a00020, 0x29c00300, 0xb, 0x29c002a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99332 +0x52
+modernc.org/tcl/lib.XTclEvalEx(0xc0005240a0, 0x29a00020, 0x29e00020, 0x1d460d, 0x0, 0x1, 0x0, 0x29e00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100965 +0x1292
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0005240a0, 0x29a00020, 0x29b10c80, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300216 +0x89c
+modernc.org/tcl/lib.XTcl_MainEx(0xc0005240a0, 0xffffffff, 0x29300040, 0x14312c0, 0x29a00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319211 +0x517
+main.main1(0x0, 0x540000, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+
+Test file error: child process exited abnormally
+cmdAH.test
+libc_darwin.go:1037:Xgetpwnam: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+modernc.org/libc.todo({0x0, 0x0}, {0x0, 0xffffffff, 0x0})
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/etc.go:100 +0x14d
+modernc.org/libc.Xgetpwnam(...)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc_darwin.go:1037
+modernc.org/tcl/lib.XTclpGetPwNam(...)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:382864
+modernc.org/tcl/lib.XTclpGetUserHome(0xc000070050, 0x9500418, 0x9503058)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:386581 +0xad
+modernc.org/tcl/lib.sSetFsPathFromAny(0xc000070050, 0x9800020, 0x99a6380)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:350687 +0x60e
+modernc.org/tcl/lib.XTcl_FSConvertToPathType(0x9800020, 0xc000107a20, 0x131a63d)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:349342 +0xaa
+modernc.org/tcl/lib.XTcl_CdObjCmd(0xc000070050, 0x131a280, 0x9800020, 0x2, 0x9a00da0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:112090 +0x14c
+modernc.org/tcl/lib.sDispatch(0xc000070050, 0x99b4c88, 0x9800020, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0x95001f0, 0x9800020, 0x9, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc000070050, 0x9800020, 0x9a00300, 0x9, 0x9a002a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99332 +0x52
+modernc.org/tcl/lib.XTclEvalEx(0xc000070050, 0x9800020, 0x9d00020, 0xe0da, 0x0, 0x1, 0x0, 0x9d00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100965 +0x1292
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc000070050, 0x9800020, 0x9910c80, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300216 +0x89c
+modernc.org/tcl/lib.XTcl_MainEx(0xc000070050, 0xffffffff, 0x9100040, 0x14312c0, 0x9800020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319211 +0x517
+main.main1(0x0, 0x12380, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+
+Test file error: child process exited abnormally
+cmdIL.test
+cmdInfo.test
+cmdMZ.test
+compExpr-old.test
+compExpr.test
+compile.test
+concat.test
+config.test
+coroutine.test
+dcall.test
+dict.test
+dstring.test
+encoding.test
+env.test
+error.test
+eval.test
+event.test
+libc_darwin.go:1949:X__darwin_fd_set: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+modernc.org/libc.todo({0x0, 0x28}, {0x0, 0x18, 0x0})
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/etc.go:100 +0x14d
+modernc.org/libc.X__darwin_fd_set(...)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc_darwin.go:1949
+modernc.org/tcl/lib.XTcl_CreateFileHandler(0xc000070050, 0x6, 0x2, 0x14312e8, 0x174cd20)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:388388 +0xfc
+main.TestfilehandlerCmd(0xc000070050, 0x99a6f20, 0x5, 0x5, 0x9a00dd0)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:38242 +0x1953
+modernc.org/tcl/lib.XTclInvokeStringCommand(0xc000070050, 0x9217320, 0x9800020, 0x5, 0x9a00da0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:97589 +0xc6
+modernc.org/tcl/lib.sDispatch(0xc000070050, 0x99a6508, 0x9800020, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0x95001f0, 0x9800020, 0xd, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc000070050, 0x9800020, 0x9a00300, 0xd, 0x9a002a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99332 +0x52
+modernc.org/tcl/lib.XTclEvalEx(0xc000070050, 0x9800020, 0x9c00020, 0x703f, 0x0, 0x1, 0x0, 0x9c00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100965 +0x1292
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc000070050, 0x9800020, 0x9910c80, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300216 +0x89c
+modernc.org/tcl/lib.XTcl_MainEx(0xc000070050, 0xffffffff, 0x9100040, 0x14312c0, 0x9800020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319211 +0x517
+main.main1(0x13fae60, 0x534000, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+
+Test file error: child process exited abnormally
+exec.test
+libc_darwin.go:1037:Xgetpwnam: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+modernc.org/libc.todo({0x0, 0x0}, {0x0, 0xffffffff, 0x0})
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/etc.go:100 +0x14d
+modernc.org/libc.Xgetpwnam(...)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc_darwin.go:1037
+modernc.org/tcl/lib.XTclpGetPwNam(...)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:382864
+modernc.org/tcl/lib.XTclpGetUserHome(0xc0000b60f0, 0x297006b8, 0x300000002)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:386581 +0xad
+modernc.org/tcl/lib.sSetFsPathFromAny(0xc0000b60f0, 0x29a00020, 0x29b98260)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:350687 +0x60e
+modernc.org/tcl/lib.XTcl_FSConvertToPathType(0x1335ea5, 0xc0000b60f0, 0x296895a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:349342 +0xaa
+modernc.org/tcl/lib.XTcl_FSGetTranslatedPath(0x297004a0, 0x29689560, 0x29b98260)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:349811 +0x2c
+modernc.org/tcl/lib.XTcl_TranslateFileName(0xc0000b60f0, 0x8, 0x29700478, 0x29700378)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:275208 +0x4d
+modernc.org/tcl/lib.XTclCreatePipeline(0xc0000b60f0, 0x11df9c0, 0x1, 0x29c00dc0, 0x29700290, 0x0, 0x29700280, 0x29700288)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:352144 +0x1f05
+modernc.org/tcl/lib.XTcl_OpenCommandChannel(0xc0000b60f0, 0x29a00020, 0x637a58, 0x110c33e, 0xc)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:352454 +0x171
+modernc.org/tcl/lib.XTcl_ExecObjCmd(0xc0000b60f0, 0x131a280, 0x29a00020, 0x2, 0x29c00da0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:291465 +0x3c5
+modernc.org/tcl/lib.sDispatch(0xc0000b60f0, 0x29b98268, 0x29a00020, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0x297001f0, 0x29a00020, 0xb, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0000b60f0, 0x29a00020, 0x29c00300, 0xb, 0x29c002a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99332 +0x52
+modernc.org/tcl/lib.XTclEvalEx(0xc0000b60f0, 0x29a00020, 0x29e00020, 0x6e29, 0x0, 0x1, 0x0, 0x29e00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100965 +0x1292
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0000b60f0, 0x29a00020, 0x29b10c80, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300216 +0x89c
+modernc.org/tcl/lib.XTcl_MainEx(0xc0000b60f0, 0xffffffff, 0x29300040, 0x14312c0, 0x29a00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319211 +0x517
+main.main1(0x0, 0x121c0, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+
+Test file error: child process exited abnormally
+execute.test
+expr-old.test
+expr.test
+fCmd.test
+libc_darwin.go:1037:Xgetpwnam: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+modernc.org/libc.todo({0x0, 0x0}, {0x0, 0xffffffff, 0x0})
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/etc.go:100 +0x14d
+modernc.org/libc.Xgetpwnam(...)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc_darwin.go:1037
+modernc.org/tcl/lib.XTclpGetPwNam(...)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:382864
+modernc.org/tcl/lib.XTclpGetUserHome(0xc0000b60f0, 0x9500498, 0x12a96ca)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:386581 +0xad
+modernc.org/tcl/lib.sSetFsPathFromAny(0xc0000b60f0, 0x0, 0x9912bf0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:350687 +0x60e
+modernc.org/tcl/lib.XTcl_FSConvertToPathType(0x99043e0, 0x99c0c70, 0x2)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:349342 +0xaa
+modernc.org/tcl/lib.XTclFSGetPathType(0x13229a7, 0x9912bf0, 0x2, 0x94783f0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:348153 +0x39
+modernc.org/tcl/lib.XTcl_FSSplitPath(0xc0000b60f0, 0x110e4db, 0x9500260)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:302738 +0xdb
+modernc.org/tcl/lib.XTclPathPart(0xc0000b60f0, 0x80000, 0x9912bf0, 0x1)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:348427 +0x40f
+modernc.org/tcl/lib.sPathTailCmd(0xc0000b60f0, 0x9000d20, 0x9800020, 0x3, 0xc00010f728)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:113691 +0x3e
+modernc.org/tcl/lib.sDispatch(0xc0000b60f0, 0x99c0bf8, 0x9800020, 0x10f818)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0x9500250, 0x9800020, 0x3, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0000b60f0, 0x9800020, 0x9a00720, 0x3, 0x9a006c0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99332 +0x52
+modernc.org/tcl/lib.XTclEvalEx(0xc0000b60f0, 0x9800020, 0x9d0617e, 0x10, 0x0, 0x2f4, 0x0, 0x9d00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100965 +0x1292
+modernc.org/tcl/lib.XTclSubstTokens(0xc0000b60f0, 0x9800020, 0x97f6e78, 0xc, 0x0, 0x2f4, 0x0, 0x9d00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:347086 +0xc48
+modernc.org/tcl/lib.XTclEvalEx(0xc0000b60f0, 0x9800020, 0x9d00020, 0x159cc, 0x0, 0x1, 0x0, 0x9d00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100768 +0xdef
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0000b60f0, 0x9800020, 0x9910c80, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300216 +0x89c
+modernc.org/tcl/lib.XTcl_MainEx(0xc0000b60f0, 0xffffffff, 0x9100040, 0x14312c0, 0x9800020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319211 +0x517
+main.main1(0x0, 0x121c0, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+
+Test file error: child process exited abnormally
+fileName.test
+libc_darwin.go:1037:Xgetpwnam: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+modernc.org/libc.todo({0x0, 0x0}, {0x0, 0xffffffff, 0x0})
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/etc.go:100 +0x14d
+modernc.org/libc.Xgetpwnam(...)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc_darwin.go:1037
+modernc.org/tcl/lib.XTclpGetPwNam(...)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:382864
+modernc.org/tcl/lib.XTclpGetUserHome(0xc0004d20a0, 0x3500408, 0x39571c0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:386581 +0xad
+modernc.org/tcl/lib.sSetFsPathFromAny(0xc0004d20a0, 0x0, 0x39a4b00)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:350687 +0x60e
+modernc.org/tcl/lib.XTcl_FSConvertToPathType(0xc0004d20a0, 0xc0000cd9c0, 0x12f2ba0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:349342 +0xaa
+modernc.org/tcl/lib.XTclFSGetPathType(0x2, 0x39a4b00, 0x3500210, 0x110c400)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:348153 +0x39
+modernc.org/tcl/lib.XTcl_FSGetPathType(...)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:348126
+modernc.org/tcl/lib.sPathTypeCmd(0xc0004d20a0, 0x3216320, 0x3800020, 0x2, 0xc0000cd9f8)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:113897 +0x38
+modernc.org/tcl/lib.sDispatch(0xc0004d20a0, 0x393a478, 0x3800020, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0x35001f0, 0x3800020, 0x6, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0004d20a0, 0x3800020, 0x3a00300, 0x6, 0x3a002a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99332 +0x52
+modernc.org/tcl/lib.XTclEvalEx(0xc0004d20a0, 0x3800020, 0x3c00020, 0xdcd8, 0x0, 0x1, 0x0, 0x3c00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100965 +0x1292
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0004d20a0, 0x3800020, 0x3910c80, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300216 +0x89c
+modernc.org/tcl/lib.XTcl_MainEx(0xc0004d20a0, 0xffffffff, 0x3100040, 0x14312c0, 0x3800020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319211 +0x517
+main.main1(0x13fae60, 0x4ee000, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+
+Test file error: child process exited abnormally
+fileSystem.test
+libc_darwin.go:1037:Xgetpwnam: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+modernc.org/libc.todo({0x0, 0x0}, {0x0, 0xffffffff, 0x0})
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/etc.go:100 +0x14d
+modernc.org/libc.Xgetpwnam(...)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc_darwin.go:1037
+modernc.org/tcl/lib.XTclpGetPwNam(...)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:382864
+modernc.org/tcl/lib.XTclpGetUserHome(0xc0000be0a0, 0x29800428, 0x29803058)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:386581 +0xad
+modernc.org/tcl/lib.sSetFsPathFromAny(0xc0000be0a0, 0x29b00020, 0x29ceead0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:350687 +0x60e
+modernc.org/tcl/lib.XTcl_FSConvertToPathType(0x5e9950, 0x29c40eb0, 0xc0005e9968)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:349342 +0xaa
+modernc.org/tcl/lib.XTcl_FSGetNormalizedPath(0xc0000be0a0, 0x29800210, 0x29ceead0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:349939 +0xd7
+modernc.org/tcl/lib.sPathNormalizeCmd(0xc0000be0a0, 0x131a280, 0x29b00020, 0x3, 0xc0005e99f8)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:113824 +0x39
+modernc.org/tcl/lib.sDispatch(0xc0000be0a0, 0x29ceeb08, 0x29b00020, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0x298001f0, 0x29b00020, 0x4, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0000be0a0, 0x29b00020, 0x29d00300, 0x4, 0x29d002a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99332 +0x52
+modernc.org/tcl/lib.XTclEvalEx(0xc0000be0a0, 0x29b00020, 0x29f00020, 0x8ad9, 0x0, 0x1, 0x0, 0x29f00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100965 +0x1292
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0000be0a0, 0x29b00020, 0x29c10c80, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300216 +0x89c
+modernc.org/tcl/lib.XTcl_MainEx(0xc0000be0a0, 0xffffffff, 0x7100040, 0x14312c0, 0x29b00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319211 +0x517
+main.main1(0x0, 0x12380, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+
+Test file error: child process exited abnormally
+fileSystemEncoding.test
+for-old.test
+for.test
+foreach.test
+format.test
+get.test
+history.test
+http.test
+libc_darwin.go:789:Xsocket: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+modernc.org/libc.todo({0x0, 0xc0005b9788}, {0x0, 0xc0000b60f0, 0x0})
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/etc.go:100 +0x14d
+modernc.org/libc.Xsocket(...)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc_darwin.go:789
+modernc.org/libc.X__lookup_name(0xc0000b60f0, 0x9500408, 0x9500948, 0x0, 0x0, 0x1)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/musl_darwin_amd64.go:3948 +0x33e
+modernc.org/libc.Xgetaddrinfo(0xc0000b60f0, 0x0, 0x95003b8, 0x95003d0, 0x9500220)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/musl_darwin_amd64.go:2542 +0x245
+modernc.org/tcl/lib.XTclCreateSocketAddress(0xc0000b60f0, 0x9800020, 0x9500220, 0x0, 0x0, 0x1, 0x9500228)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:298395 +0x218
+modernc.org/tcl/lib.XTcl_OpenTcpServer(0xc0000b60f0, 0x9800020, 0x9910e00, 0x174a8c0, 0x95001f8, 0x9800020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:390913 +0xfe
+modernc.org/tcl/lib.XTcl_SocketObjCmd(0xc0000b60f0, 0x1111920, 0x9800020, 0x4, 0x9a00690)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:292241 +0x9d8
+modernc.org/tcl/lib.sDispatch(0xc0000b60f0, 0x9931228, 0x9800020, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0x95001f0, 0x9800020, 0x5, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0000b60f0, 0x9800020, 0x9a00300, 0x5, 0x9a002a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99332 +0x52
+modernc.org/tcl/lib.XTclEvalEx(0xc0000b60f0, 0x9800020, 0x9b00020, 0x5881, 0x0, 0x1, 0x0, 0x9b00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100965 +0x1292
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0000b60f0, 0x9800020, 0x9910c80, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300216 +0x89c
+modernc.org/tcl/lib.XTcl_MainEx(0xc0000b60f0, 0xffffffff, 0x9100040, 0x14312c0, 0x9800020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319211 +0x517
+main.main1(0x0, 0xa81c0, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+
+Test file error: child process exited abnormally
+http11.test
+libc_darwin.go:1949:X__darwin_fd_set: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+modernc.org/libc.todo({0x0, 0x28}, {0x0, 0x91fe3a0, 0x0})
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/etc.go:100 +0x14d
+modernc.org/libc.X__darwin_fd_set(...)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc_darwin.go:1949
+modernc.org/tcl/lib.XTcl_CreateFileHandler(0xc0000be0a0, 0x8, 0x2, 0x1433450, 0x91fe820)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:388388 +0xfc
+modernc.org/tcl/lib.sPipeWatchProc(0x94542d0, 0x9500200, 0x2)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:389475 +0x51
+modernc.org/tcl/lib.sChanWatch(...)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:279258
+modernc.org/tcl/lib.sUpdateInterest(0xc0000be0a0, 0x28)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287103 +0xd3
+modernc.org/tcl/lib.XTcl_CreateChannelHandler(0xc0000be0a0, 0x91fe820, 0x2, 0x14319f0, 0x91fde60)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287201 +0x117
+modernc.org/tcl/lib.sCreateScriptRecord(0xc0000be0a0, 0x9800020, 0x91fe820, 0x2, 0x99aa710)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287418 +0x1d1
+modernc.org/tcl/lib.XTcl_FileEventObjCmd(0xc0000be0a0, 0x99ab100, 0x9800020, 0x4, 0x9a00b70)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287570 +0x2d9
+modernc.org/tcl/lib.sDispatch(0xc0000be0a0, 0x99aa6e8, 0x9800020, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0x95001f0, 0x9800020, 0xb, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0000be0a0, 0x9800020, 0x9a00300, 0xb, 0x9a002a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99332 +0x52
+modernc.org/tcl/lib.XTclEvalEx(0xc0000be0a0, 0x9800020, 0x9c00020, 0x6082, 0x0, 0x1, 0x0, 0x9c00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100965 +0x1292
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0000be0a0, 0x9800020, 0x9910c80, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300216 +0x89c
+modernc.org/tcl/lib.XTcl_MainEx(0xc0000be0a0, 0xffffffff, 0x9100040, 0x14312c0, 0x9800020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319211 +0x517
+main.main1(0x0, 0xd8000, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+
+Test file error: child process exited abnormally
+httpPipeline.test
+httpold.test
+libc_darwin.go:789:Xsocket: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+modernc.org/libc.todo({0x0, 0xc0001074b8}, {0x0, 0xc0000700a0, 0x0})
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/etc.go:100 +0x14d
+modernc.org/libc.Xsocket(...)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc_darwin.go:789
+modernc.org/libc.X__lookup_name(0xc0000700a0, 0x3500468, 0x35009a8, 0x0, 0x0, 0x1)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/musl_darwin_amd64.go:3948 +0x33e
+modernc.org/libc.Xgetaddrinfo(0xc0000700a0, 0x0, 0x3500418, 0x3500430, 0x3500280)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/musl_darwin_amd64.go:2542 +0x245
+modernc.org/tcl/lib.XTclCreateSocketAddress(0xc0000700a0, 0x3800020, 0x3500280, 0x0, 0x1f4a, 0x1, 0x3500288)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:298395 +0x218
+modernc.org/tcl/lib.XTcl_OpenTcpServer(0xc0000700a0, 0x3800020, 0x398ed10, 0x174a8c0, 0x3500258, 0x3800020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:390913 +0xfe
+modernc.org/tcl/lib.XTcl_SocketObjCmd(0xc0000700a0, 0x3322f50, 0x3800020, 0x4, 0x3a00a20)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:292241 +0x9d8
+modernc.org/tcl/lib.sDispatch(0xc0000700a0, 0x398f168, 0x3800020, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0x3500250, 0x3800020, 0x3, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0000700a0, 0x3800020, 0x3a00720, 0x3, 0x3a006c0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99332 +0x52
+modernc.org/tcl/lib.XTclEvalEx(0xc0000700a0, 0x3800020, 0x3a08620, 0x1f, 0x0, 0x34, 0x0, 0x3a08020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100965 +0x1292
+modernc.org/tcl/lib.XTclSubstTokens(0xc0000700a0, 0x3800020, 0x3a000f8, 0x1, 0x0, 0x34, 0x0, 0x3a08020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:347086 +0xc48
+modernc.org/tcl/lib.XTclEvalEx(0xc0000700a0, 0x3800020, 0x3a08020, 0x1f3f, 0x0, 0x1, 0x0, 0x3a08020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100768 +0xdef
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0000700a0, 0x3800020, 0x3910c80, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300216 +0x89c
+modernc.org/tcl/lib.XTcl_MainEx(0xc0000700a0, 0xffffffff, 0x3100040, 0x14312c0, 0x3800020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319211 +0x517
+main.main1(0x0, 0x12380, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+
+Test file error: child process exited abnormally
+if-old.test
+if.test
+incr-old.test
+incr.test
+indexObj.test
+info.test
+libc_darwin.go:1037:Xgetpwnam: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+modernc.org/libc.todo({0x0, 0x0}, {0x0, 0xffffffff, 0x0})
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/etc.go:100 +0x14d
+modernc.org/libc.Xgetpwnam(...)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc_darwin.go:1037
+modernc.org/tcl/lib.XTclpGetPwNam(...)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:382864
+modernc.org/tcl/lib.XTclpGetUserHome(0xc0005060a0, 0x29800508, 0x11e746a)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:386581 +0xad
+modernc.org/tcl/lib.sSetFsPathFromAny(0xc0005060a0, 0x29b00020, 0x29c56da0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:350687 +0x60e
+modernc.org/tcl/lib.XTcl_FSConvertToPathType(0x0, 0x29803050, 0x29803058)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:349342 +0xaa
+modernc.org/tcl/lib.XTcl_FSGetNormalizedPath(0xc0005060a0, 0x8004c0, 0x29c56da0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:349939 +0xd7
+modernc.org/tcl/lib.XTclNREvalFile(0xc0005060a0, 0x29b00020, 0x29c56da0, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300311 +0xcc
+modernc.org/tcl/lib.XTclNRSourceObjCmd(0xc0005060a0, 0x131a280, 0x29b00020, 0x2, 0x29d00da8)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:124050 +0x1ae
+modernc.org/tcl/lib.sDispatch(0xc0005060a0, 0x29cb68c8, 0x29b00020, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0x298001f0, 0x29b00020, 0x5, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0005060a0, 0x29b00020, 0x29d00300, 0x5, 0x29d002a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99332 +0x52
+modernc.org/tcl/lib.XTclEvalEx(0xc0005060a0, 0x29b00020, 0x2a000020, 0x12776, 0x0, 0x1, 0x0, 0x2a000020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100965 +0x1292
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0005060a0, 0x29b00020, 0x29c10c80, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300216 +0x89c
+modernc.org/tcl/lib.XTcl_MainEx(0xc0005060a0, 0xffffffff, 0x5100040, 0x14312c0, 0x29b00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319211 +0x517
+main.main1(0x0, 0x12380, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+
+Test file error: child process exited abnormally
+init.test
+interp.test
+io.test
+
+
+==== io-6.31 Tcl_GetsObj: crlf mode: buffer exhausted, blocked FAILED
+==== Contents of test case:
+
+    # (FilterInputBytes() != 0)
+
+    set f [open "|[list [interpreter] $path(cat)]" w+]
+    fconfigure $f -translation {crlf lf} -buffering none
+    puts -nonewline $f "bbbbbbbbbbbbbb\r\n123456789012345\r"
+    fconfigure $f -buffersize 16
+    set x [gets $f]
+    fconfigure $f -blocking 0
+    lappend x [gets $f line] $line [fblocked $f] [testchannel inputbuffered $f]
+    close $f
+    set x
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: list element in braces followed by ")" instead of space
+    while executing
+"lappend x [gets $f line] $line [fblocked $f] [testchannel inputbuffered $f]"
+    ("uplevel" body line 10)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: TCL VALUE LIST JUNK
+==== io-6.31 FAILED
+
+
+
+==== io-6.43 Tcl_GetsObj: input saw cr FAILED
+==== Contents of test case:
+
+    # if (chanPtr->flags & INPUT_SAW_CR)
+
+    set f [open "|[list [interpreter] $path(cat)]" w+]
+    fconfigure $f -translation {auto lf} -buffering none
+    puts -nonewline $f "bbbbbbbbbbbbbbb\n123456789abcdef\r"
+    fconfigure $f -buffersize 16
+    set x [list [gets $f]]
+    fconfigure $f -blocking 0
+    lappend x [gets $f line] $line [testchannel queuedcr $f] 
+    fconfigure $f -blocking 1
+    puts -nonewline $f "\nabcd\refg\x1a"
+    lappend x [gets $f line] $line [testchannel queuedcr $f]
+    lappend x [gets $f line] $line
+    close $f
+    set x
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: child process exited abnormally
+    while executing
+"close $f"
+    ("uplevel" body line 15)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: CHILDSTATUS 48532 1
+==== io-6.43 FAILED
+
+
+
+==== io-6.44 Tcl_GetsObj: input saw cr, not followed by cr FAILED
+==== Contents of test case:
+
+    # not (*eol == '\n') 
+
+    set f [open "|[list [interpreter] $path(cat)]" w+]
+    fconfigure $f -translation {auto lf} -buffering none
+    puts -nonewline $f "bbbbbbbbbbbbbbb\n123456789abcdef\r"
+    fconfigure $f -buffersize 16
+    set x [list [gets $f]]
+    fconfigure $f -blocking 0
+    lappend x [gets $f line] $line [testchannel queuedcr $f] 
+    fconfigure $f -blocking 1
+    puts -nonewline $f "abcd\refg\x1a"
+    lappend x [gets $f line] $line [testchannel queuedcr $f]
+    lappend x [gets $f line] $line
+    close $f
+    set x
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: child process exited abnormally
+    while executing
+"close $f"
+    ("uplevel" body line 15)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: CHILDSTATUS 48533 1
+==== io-6.44 FAILED
+
+
+
+==== io-6.45 Tcl_GetsObj: input saw cr, skip right number of bytes FAILED
+==== Contents of test case:
+
+    # Tcl_ExternalToUtf()
+
+    set f [open "|[list [interpreter] $path(cat)]" w+]
+    fconfigure $f -translation {auto lf} -buffering none
+    fconfigure $f -encoding unicode
+    puts -nonewline $f "bbbbbbbbbbbbbbb\n123456789abcdef\r"
+    fconfigure $f -buffersize 16
+    gets $f
+    fconfigure $f -blocking 0
+    set x [list [gets $f line] $line [testchannel queuedcr $f]]
+    fconfigure $f -blocking 1
+    puts -nonewline $f "\nabcd\refg"
+    lappend x [gets $f line] $line [testchannel queuedcr $f]
+    close $f
+    set x
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: error writing "file11": broken pipe
+    while executing
+"puts -nonewline $f "\nabcd\refg""
+    ("uplevel" body line 13)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX EPIPE {broken pipe}
+==== io-6.45 FAILED
+
+
+
+==== io-6.46 Tcl_GetsObj: input saw cr, followed by just \n should give eof FAILED
+==== Contents of test case:
+
+    # memmove()
+
+    set f [open "|[list [interpreter] $path(cat)]" w+]
+    fconfigure $f -translation {auto lf} -buffering none
+    puts -nonewline $f "bbbbbbbbbbbbbbb\n123456789abcdef\r"
+    fconfigure $f -buffersize 16
+    gets $f
+    fconfigure $f -blocking 0
+    set x [list [gets $f line] $line [testchannel queuedcr $f]]
+    fconfigure $f -blocking 1
+    puts -nonewline $f "\n\x1a"
+    lappend x [gets $f line] $line [testchannel queuedcr $f]
+    close $f
+    set x
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: child process exited abnormally
+    while executing
+"close $f"
+    ("uplevel" body line 14)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: CHILDSTATUS 48535 1
+==== io-6.46 FAILED
+
+libc_darwin.go:1949:X__darwin_fd_set: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+modernc.org/libc.todo({0x0, 0x28}, {0x0, 0x31f5a60, 0x0})
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/etc.go:100 +0x14d
+modernc.org/libc.X__darwin_fd_set(...)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc_darwin.go:1949
+modernc.org/tcl/lib.XTcl_CreateFileHandler(0xc0000b60f0, 0xe, 0x2, 0x1433450, 0x31fa060)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:388388 +0xfc
+modernc.org/tcl/lib.sPipeWatchProc(0x31f8af0, 0x3500200, 0x2)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:389475 +0x51
+modernc.org/tcl/lib.sChanWatch(...)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:279258
+modernc.org/tcl/lib.sUpdateInterest(0xc0000b60f0, 0x28)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287103 +0xd3
+modernc.org/tcl/lib.XTcl_CreateChannelHandler(0xc0000b60f0, 0x31fa060, 0x2, 0x14319f0, 0x31f2760)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287201 +0x117
+modernc.org/tcl/lib.sCreateScriptRecord(0xc0000b60f0, 0x3800020, 0x31fa060, 0x2, 0x39f10d0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287418 +0x1d1
+modernc.org/tcl/lib.XTcl_FileEventObjCmd(0xc0000b60f0, 0x131a280, 0x3800020, 0x4, 0x3a00ec0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287570 +0x2d9
+modernc.org/tcl/lib.sDispatch(0xc0000b60f0, 0x39e0478, 0x3800020, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0x35001f0, 0x3800020, 0x4, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0000b60f0, 0x3800020, 0x3a00300, 0x4, 0x3a002a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99332 +0x52
+modernc.org/tcl/lib.XTclEvalEx(0xc0000b60f0, 0x3800020, 0x1f00020, 0x3fa9c, 0x0, 0x1, 0x0, 0x1f00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100965 +0x1292
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0000b60f0, 0x3800020, 0x3910c80, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300216 +0x89c
+modernc.org/tcl/lib.XTcl_MainEx(0xc0000b60f0, 0xffffffff, 0x3100040, 0x14312c0, 0x3800020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319211 +0x517
+main.main1(0x0, 0x121c0, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+
+Test file error: child process exited abnormally
+ioCmd.test
+libc_darwin.go:789:Xsocket: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+modernc.org/libc.todo({0x0, 0x9800020}, {0x0, 0x933dad0, 0x0})
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/etc.go:100 +0x14d
+modernc.org/libc.Xsocket(...)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc_darwin.go:789
+modernc.org/tcl/lib.XTcl_OpenTcpServer(0xc0000700f0, 0x9800020, 0x99d4c80, 0x174a8c0, 0x95001f8, 0x9800020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:390926 +0x252
+modernc.org/tcl/lib.XTcl_SocketObjCmd(0xc0000700f0, 0x99d4800, 0x9800020, 0x6, 0x9a00a28)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:292241 +0x9d8
+modernc.org/tcl/lib.sDispatch(0xc0000700f0, 0x99d4988, 0x9800020, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0x95001f0, 0x9800020, 0xf, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0000700f0, 0x9800020, 0x9a00300, 0xf, 0x9a002a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99332 +0x52
+modernc.org/tcl/lib.XTclEvalEx(0xc0000700f0, 0x9800020, 0x9b00020, 0x1edec, 0x0, 0x1, 0x0, 0x9b00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100965 +0x1292
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0000700f0, 0x9800020, 0x9910c80, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300216 +0x89c
+modernc.org/tcl/lib.XTcl_MainEx(0xc0000700f0, 0xffffffff, 0x9100040, 0x14312c0, 0x9800020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319211 +0x517
+main.main1(0x0, 0x12380, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+
+Test file error: child process exited abnormally
+ioTrans.test
+libc_darwin.go:1949:X__darwin_fd_set: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+modernc.org/libc.todo({0x0, 0x28}, {0x0, 0x10b61a2, 0x0})
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/etc.go:100 +0x14d
+modernc.org/libc.X__darwin_fd_set(...)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc_darwin.go:1949
+modernc.org/tcl/lib.XTcl_CreateFileHandler(0xc0000b6050, 0x3, 0x2, 0x1433450, 0x71f7760)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:388388 +0xfc
+modernc.org/tcl/lib.sFileWatchProc(0x1125d66, 0xc000129670, 0x1125dea)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:381305 +0x30
+modernc.org/tcl/lib.sReflectWatch1(0x110b1ca, 0x72c1420, 0x2)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:297103 +0x3c
+modernc.org/tcl/lib.sChanWatch(...)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:279258
+modernc.org/tcl/lib.sUpdateInterest(0xc0000b6050, 0x28)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287103 +0xd3
+modernc.org/tcl/lib.XTcl_CreateChannelHandler(0xc0000b6050, 0x71f7760, 0x2, 0x14319f0, 0x71d7560)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287201 +0x117
+modernc.org/tcl/lib.sCreateScriptRecord(0xc0000b6050, 0x78c7820, 0x71f7760, 0x2, 0x79f1220)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287418 +0x1d1
+modernc.org/tcl/lib.XTcl_FileEventObjCmd(0xc0000b6050, 0x400129828, 0x78c7820, 0x4, 0x7ae40c0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287570 +0x2d9
+modernc.org/tcl/lib.sDispatch(0xc0000b6050, 0x79eee38, 0x78c7820, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0xc0000b6050, 0x78c7820, 0x79b6560, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTclEvalObjEx(0xc0000b6050, 0x78c7820, 0x0, 0x7500200, 0x7500208, 0x79bebe0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:101677 +0x4f
+modernc.org/tcl/lib.sSlaveEval(0xc0000b6050, 0x7800020, 0x78c7820, 0x1, 0x7a00db0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:308292 +0x1c7
+modernc.org/tcl/lib.sNRSlaveCmd(0xc0000b6050, 0x78c7820, 0x7800020, 0x3, 0x7a00da0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:308031 +0x5b0
+modernc.org/tcl/lib.sDispatch(0xc0000b6050, 0x79eee08, 0x7800020, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0x75001f0, 0x7800020, 0xd, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0000b6050, 0x7800020, 0x7a00300, 0xd, 0x7a002a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99332 +0x52
+modernc.org/tcl/lib.XTclEvalEx(0xc0000b6050, 0x7800020, 0x7d00020, 0xe95b, 0x0, 0x1, 0x0, 0x7d00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100965 +0x1292
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0000b6050, 0x7800020, 0x7910c80, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300216 +0x89c
+modernc.org/tcl/lib.XTcl_MainEx(0xc0000b6050, 0xffffffff, 0x7100040, 0x14312c0, 0x7800020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319211 +0x517
+main.main1(0x13fae60, 0xa81c0, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+
+Test file error: child process exited abnormally
+iogt.test
+join.test
+lindex.test
+link.test
+linsert.test
+list.test
+listObj.test
+llength.test
+lmap.test
+load.test
+lrange.test
+lrepeat.test
+lreplace.test
+lsearch.test
+lset.test
+lsetComp.test
+macOSXFCmd.test
+Test file error: panic: /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/libkern/i386/_OSByteOrder.h:62:2: assembler statements not supported
+
+goroutine 1 [running, locked to thread]:
+modernc.org/tcl/lib._OSSwapInt32(...)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:13006
+modernc.org/tcl/lib.XTclMacOSXGetFileAttribute.func3(...)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:318258
+modernc.org/tcl/lib.XTclMacOSXGetFileAttribute(0xc0000b60f0, 0x1290320, 0x4, 0x998e2c0, 0x95002b8)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:318259 +0x58a
+modernc.org/tcl/lib.sNativeFileAttrsGet(0xc0000b60f0, 0x998e2c0, 0xcd8b8, 0x128ba95, 0xc0000b60f0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300817 +0x32
+modernc.org/tcl/lib.XTcl_FSFileAttrsGet(0xc0000b60f0, 0x9800020, 0x9956050, 0x174b180, 0x8)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:301060 +0x6f
+modernc.org/tcl/lib.XTclFileAttrsCmd(0xc0000b60f0, 0x91d5d60, 0x998e440, 0x3, 0x91d8e00)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:273359 +0x8c5
+modernc.org/tcl/lib.sDispatch(0xc0000b60f0, 0x998ecb8, 0x9800020, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0x95001f0, 0x9800020, 0x3, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0000b60f0, 0x9800020, 0x9a00300, 0x3, 0x9a002a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99332 +0x52
+modernc.org/tcl/lib.XTclEvalEx(0xc0000b60f0, 0x9800020, 0x9a08020, 0x1cb0, 0x0, 0x1, 0x0, 0x9a08020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100965 +0x1292
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0000b60f0, 0x9800020, 0x9910c80, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300216 +0x89c
+modernc.org/tcl/lib.XTcl_MainEx(0xc0000b60f0, 0xffffffff, 0x9100040, 0x14312c0, 0x9800020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319211 +0x517
+main.main1(0x0, 0xa81c0, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+macOSXLoad.test
+main.test
+
+
+==== Tcl_Main-4.4 Tcl_Main: rcFile evaluation sets main loop FAILED
+==== Contents of test case:
+
+	exec [interpreter] << {}  -appinitprocsetrcfile $rc >& result
+	set f [open result]
+	read $f
+    
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: child process exited abnormally
+    while executing
+"exec [interpreter] << {}  -appinitprocsetrcfile $rc >& result"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: CHILDSTATUS 48588 1
+---- Test cleanup failed:
+can not find channel named "file6"
+---- errorInfo(cleanup): can not find channel named "file6"
+    while executing
+"close $f"
+    ("uplevel" body line 2)
+    invoked from within
+"uplevel 1 $cleanup"
+---- errorCode(cleanup): TCL LOOKUP CHANNEL file6
+==== Tcl_Main-4.4 FAILED
+
+
+
+==== Tcl_Main-4.5 Tcl_Main: Bug 1481986 FAILED
+==== Contents of test case:
+
+        set f [open "|[list [interpreter] -appinitprocsetrcfile $rc]" w+]
+        after 1000
+        type $f {puts {Interactive output}
+            exit
+        }
+        read $f
+    
+---- Result was:
+libc_darwin.go:1949:X__darwin_fd_set: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+modernc.org/libc.todo({0x0, 0x28}, {0x0, 0x1125dea, 0x0})
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/etc.go:100 +0x14d
+modernc.org/libc.X__darwin_fd_set(...)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc_darwin.go:1949
+modernc.org/tcl/lib.XTcl_CreateFileHandler(0xc0000c60a0, 0x0, 0x2, 0x1433450, 0x29723e20)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:388388 +0xfc
+modernc.org/tcl/lib.sFileWatchProc(0x29723e20, 0x298000b0, 0x29723e20)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:381305 +0x30
+modernc.org/tcl/lib.sChanWatch(...)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:279258
+modernc.org/tcl/lib.sUpdateInterest(0xc0000c60a0, 0x28)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287103 +0xd3
+modernc.org/tcl/lib.XTcl_CreateChannelHandler(0xc0000c60a0, 0x29723e20, 0x2, 0x1434c48, 0x29800078)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287201 +0x117
+modernc.org/tcl/lib.XTcl_MainEx(0xc0000c60a0, 0xffffffff, 0x29400038, 0x14312c0, 0x29b00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319544 +0xef5
+main.main1(0x13fae60, 0x12380, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+
+
+---- Result should have been (exact matching):
+Event callback
+Interactive output
+
+==== Tcl_Main-4.5 FAILED
+
+libc_darwin.go:1949:X__darwin_fd_set: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+modernc.org/libc.todo({0x0, 0x28}, {0x0, 0x51f5960, 0x0})
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/etc.go:100 +0x14d
+modernc.org/libc.X__darwin_fd_set(...)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc_darwin.go:1949
+modernc.org/tcl/lib.XTcl_CreateFileHandler(0xc00012c0f0, 0x8, 0x2, 0x1433450, 0x51fd7a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:388388 +0xfc
+modernc.org/tcl/lib.sPipeWatchProc(0x51f9e30, 0x29800200, 0x2)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:389475 +0x51
+modernc.org/tcl/lib.sChanWatch(...)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:279258
+modernc.org/tcl/lib.sUpdateInterest(0xc00012c0f0, 0x28)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287103 +0xd3
+modernc.org/tcl/lib.XTcl_CreateChannelHandler(0xc00012c0f0, 0x51fd7a0, 0x2, 0x14319f0, 0x51fc960)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287201 +0x117
+modernc.org/tcl/lib.sCreateScriptRecord(0xc00012c0f0, 0x29b00020, 0x51fd7a0, 0x2, 0x29cc2260)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287418 +0x1d1
+modernc.org/tcl/lib.XTcl_FileEventObjCmd(0xc00012c0f0, 0x29cc3010, 0x29b00020, 0x4, 0x29d00ef0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:287570 +0x2d9
+modernc.org/tcl/lib.sDispatch(0xc00012c0f0, 0x29cb2268, 0x29b00020, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0x298001f0, 0x29b00020, 0x4, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc00012c0f0, 0x29b00020, 0x29d00300, 0x4, 0x29d002a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99332 +0x52
+modernc.org/tcl/lib.XTclEvalEx(0xc00012c0f0, 0x29b00020, 0x29f00020, 0x6fb7, 0x0, 0x1, 0x0, 0x29f00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100965 +0x1292
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc00012c0f0, 0x29b00020, 0x29c10c80, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300216 +0x89c
+modernc.org/tcl/lib.XTcl_MainEx(0xc00012c0f0, 0xffffffff, 0x5100040, 0x14312c0, 0x29b00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319211 +0x517
+main.main1(0x0, 0x121c0, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+
+Test file error: child process exited abnormally
+mathop.test
+misc.test
+msgcat.test
+namespace-old.test
+namespace.test
+notify.test
+nre.test
+obj.test
+oo.test
+Test file error: unexpected fault address 0x2400038422f
+fatal error: fault
+[signal SIGSEGV: segmentation violation code=0x1 addr=0x2400038422f pc=0x1428b92]
+
+goroutine 1 [running, locked to thread]:
+runtime.throw({0x1403880, 0x12a7122})
+	/usr/local/go/src/runtime/panic.go:1198 +0x71 fp=0xc000143658 sp=0xc000143628 pc=0x1031151
+runtime: unexpected return pc for runtime.sigpanic called from 0x1428b92
+stack: frame={sp:0xc000143658, fp:0xc0001436a8} stack=[0xc00013c000,0xc000144000)
+0x000000c000143558:  0x0000000001060c60 <runtime.write_trampoline+0x0000000000000000>  0x000000c0001435a8 
+0x000000c000143568:  0x0000000000000001  0x000000000171a280 
+0x000000c000143578:  0x000000c000143598  0x000000000104ed54 <runtime.write1+0x0000000000000034> 
+0x000000c000143588:  0x0000000000000001  0x0000000000000000 
+0x000000c000143598:  0x000000c0001435d8  0x0000000001032adf <runtime.gwrite+0x00000000000000ff> 
+0x000000c0001435a8:  0x0000000000000002  0x0000000001498c30 
+0x000000c0001435b8:  0x0000000000000001  0x0000000000000001 
+0x000000c0001435c8:  0x000000c00014363b  0x000000000000000d 
+0x000000c0001435d8:  0x000000c000143628  0x000000000105d42e <runtime.systemstack+0x000000000000002e> 
+0x000000c0001435e8:  0x0000000001031390 <runtime.fatalthrow+0x0000000000000050>  0x000000c0001435f8 
+0x000000c0001435f8:  0x00000000010313c0 <runtime.fatalthrow.func1+0x0000000000000000>  0x000000c0000001a0 
+0x000000c000143608:  0x0000000001031151 <runtime.throw+0x0000000000000071>  0x000000c000143628 
+0x000000c000143618:  0x000000c000143648  0x0000000001031151 <runtime.throw+0x0000000000000071> 
+0x000000c000143628:  0x000000c000143630  0x0000000001031180 <runtime.throw.func1+0x0000000000000000> 
+0x000000c000143638:  0x0000000001403880  0x0000000000000005 
+0x000000c000143648:  0x000000c000143698  0x0000000001046af6 <runtime.sigpanic+0x00000000000002f6> 
+0x000000c000143658: <0x0000000001403880  0x00000000012a7122 <modernc.org/tcl/lib.sNewListIntRep+0x0000000000000282> 
+0x000000c000143668:  0x00000000012bc28b <modernc.org/tcl/lib.XTclGetNamespaceForQualName+0x00000000000005ab>  0x00000000000003d8 
+0x000000c000143678:  0x000002400038422f  0x000000000131c90a <modernc.org/tcl/lib.sInterpProcNR2·dwrap·895+0x000000000000002a> 
+0x000000c000143688:  0x00000000099bc6b0  0x00000000091e6760 
+0x000000c000143698:  0x000000c000143720 !0x0000000001428b92 
+0x000000c0001436a8: >0x000000c0001436b0  0x00000000012f2a88 <modernc.org/tcl/lib.XTcl_GetString+0x0000000000000128> 
+0x000000c0001436b8:  0x000000c0001436d8  0x00000000012a756a <modernc.org/tcl/lib.sAttemptNewList·dwrap·643+0x000000000000002a> 
+0x000000c0001436c8:  0x000000c00012c0a0  0x000000c0001436b8 
+0x000000c0001436d8:  0x010000c000143790  0x0000000000000000 
+0x000000c0001436e8:  0x00000000095002b0  0x00000000012a96ca <modernc.org/tcl/lib.XTcl_ListObjReplace·dwrap·647+0x000000000000002a> 
+0x000000c0001436f8:  0x0000000000000000  0x00000000012f2ba0 <modernc.org/tcl/lib.XTcl_GetString·dwrap·810+0x0000000000000000> 
+0x000000c000143708:  0x0000000000000010  0x000000c00012c0a0 
+0x000000c000143718:  0x000000c000143700  0x000000c000143748 
+0x000000c000143728:  0x00000000012ac705 <modernc.org/tcl/lib.sUpdateStringOfList.func2+0x0000000000000045>  0x000000c00012c0a0 
+0x000000c000143738:  0x00000000094f8640  0x00000000094f8640 
+0x000000c000143748:  0x000000c0001437f0  0x00000000012ac33a <modernc.org/tcl/lib.sUpdateStringOfList+0x00000000000001da> 
+0x000000c000143758:  0x000000c000000001  0x00000000010b61a2 <modernc.org/libc.Xmalloc+0x0000000000000102> 
+0x000000c000143768:  0x0000000009500250  0x000000c000143790 
+0x000000c000143778:  0x000000c000143798  0x01000000012a96ca 
+0x000000c000143788:  0x0000000000000002  0x000000c000000000 
+0x000000c000143798:  0x0000000009500260  0x00000000091f1c70 
+runtime.sigpanic()
+	/usr/local/go/src/runtime/signal_unix.go:742 +0x2f6 fp=0xc0001436a8 sp=0xc000143658 pc=0x1046af6
+ooNext2.test
+opt.test
+package.test
+parse.test
+parseExpr.test
+parseOld.test
+pid.test
+pkgMkIndex.test
+platform.test
+proc-old.test
+proc.test
+pwd.test
+reg.test
+regexp.test
+regexpComp.test
+registry.test
+rename.test
+resolver.test
+result.test
+safe.test
+
+
+==== safe-16.2 Bug 3529949: defang ~user in paths FAILED
+==== Contents of test case:
+
+    string map [list $user USER] [$i eval  "file join \[file dirname ~$user\] \[file tail ~$user\]"]
+
+---- Result was:
+./~
+---- Result should have been (exact matching):
+./~USER
+==== safe-16.2 FAILED
+
+scan.test
+security.test
+set-old.test
+set.test
+socket.test
+libc_darwin.go:789:Xsocket: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+modernc.org/libc.todo({0x0, 0xc0001074b8}, {0x0, 0xc0000ac0a0, 0x0})
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/etc.go:100 +0x14d
+modernc.org/libc.Xsocket(...)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc_darwin.go:789
+modernc.org/libc.X__lookup_name(0xc0000ac0a0, 0x29800468, 0x298009a8, 0x0, 0x0, 0x1)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/musl_darwin_amd64.go:3948 +0x33e
+modernc.org/libc.Xgetaddrinfo(0xc0000ac0a0, 0x0, 0x29800418, 0x29800430, 0x29800280)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/musl_darwin_amd64.go:2542 +0x245
+modernc.org/tcl/lib.XTclCreateSocketAddress(0xc0000ac0a0, 0x29b00020, 0x29800280, 0x0, 0x0, 0x1, 0x29800288)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:298395 +0x218
+modernc.org/tcl/lib.XTcl_OpenTcpServer(0xc0000ac0a0, 0x29b00020, 0x29c8e620, 0x174a8c0, 0x29800258, 0x29b00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:390913 +0xfe
+modernc.org/tcl/lib.XTcl_SocketObjCmd(0xc0000ac0a0, 0x296292b0, 0x29b00020, 0x4, 0x29d00720)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:292241 +0x9d8
+modernc.org/tcl/lib.sDispatch(0xc0000ac0a0, 0x29c1e7d8, 0x29b00020, 0x107818)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0x29800250, 0x29b00020, 0x4, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc0000ac0a0, 0x29b00020, 0x29d00720, 0x4, 0x29d006c0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99332 +0x52
+modernc.org/tcl/lib.XTclEvalEx(0xc0000ac0a0, 0x29b00020, 0x2a000f8c, 0x30, 0x0, 0x62, 0x0, 0x2a000020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100965 +0x1292
+modernc.org/tcl/lib.XTclSubstTokens(0xc0000ac0a0, 0x29b00020, 0x29d00128, 0x1, 0x0, 0x62, 0x0, 0x2a000020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:347086 +0xc48
+modernc.org/tcl/lib.XTclEvalEx(0xc0000ac0a0, 0x29b00020, 0x2a000020, 0x11e24, 0x0, 0x1, 0x0, 0x2a000020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100768 +0xdef
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc0000ac0a0, 0x29b00020, 0x29c10c80, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300216 +0x89c
+modernc.org/tcl/lib.XTcl_MainEx(0xc0000ac0a0, 0xffffffff, 0x29400040, 0x14312c0, 0x29b00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319211 +0x517
+main.main1(0x0, 0x12380, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+
+Test file error: child process exited abnormally
+source.test
+split.test
+stack.test
+string.test
+stringComp.test
+stringObj.test
+subst.test
+switch.test
+tailcall.test
+tcltest.test
+
+
+==== tcltest-9.5 GetMatchingFiles: Bug 1119798 FAILED
+==== Contents of test case:
+
+    slave msg [file join [temporaryDirectory] all.tcl] -file f*
+    regexp {exiting with errors:} $msg
+
+---- Result was:
+1
+---- Result should have been (exact matching):
+0
+==== tcltest-9.5 FAILED
+
+thread.test
+timer.test
+tm.test
+trace.test
+unixFCmd.test
+unixFile.test
+unixForkEvent.test
+unixInit.test
+
+
+==== unixInit-1.2 initialisation: standard channel type deduction FAILED
+==== Contents of test case:
+
+    # pipe1 is a connection to a server that reports what port it starts on,
+    # and delivers a constant string to the first client to connect to that
+    # port before exiting.
+    set pipe1 [open "|[list [interpreter]]" r+]
+    puts $pipe1 {
+	proc accept {channel host port} {
+	    puts $channel {puts [chan configure stdin -peername]; exit}
+	    close $channel
+	    exit
+	}
+	puts [chan configure [socket -server accept -myaddr 127.0.0.1 0] -sockname]
+	vwait forever  }
+    # Note the backslash above; this is important to make sure that the whole
+    # string is read before an [exit] can happen...
+    flush $pipe1
+    set port [lindex [gets $pipe1] 2]
+    set sock [socket localhost $port]
+    # pipe2 is a connection to a Tcl interpreter that takes its orders from
+    # the socket we hand it (i.e. the server we create above.)  These orders
+    # will tell it to print out the details about the socket it is taking
+    # instructions from, hopefully identifying it as a socket.  Which is what
+    # this test is all about.
+    set pipe2 [open "|[list [interpreter] <@$sock]" r]
+    set result [gets $pipe2]
+    # Clear any pending data; stops certain kinds of (non-important) errors
+    chan configure $pipe1 -blocking 0; gets $pipe1
+    chan configure $pipe2 -blocking 0; gets $pipe2
+    # Close the pipes and the socket.
+    close $pipe2
+    close $pipe1
+    catch {close $sock}
+    # Can't use normal comparison, as hostname varies due to some
+    # installations having a messed up /etc/hosts file.
+    if {
+	"127.0.0.1" eq [lindex $result 0] && $port == [lindex $result 2]
+    } then {
+	subst "OK"
+    } else {
+	subst "Expected: `[list 127.0.0.1 localhost $port]', Got `$result'"
+    }
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: expected integer but got ""
+    while executing
+"socket localhost $port"
+    ("uplevel" body line 18)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: TCL VALUE NUMBER
+==== unixInit-1.2 FAILED
+
+unixNotfy.test
+unknown.test
+unload.test
+uplevel.test
+upvar.test
+utf.test
+util.test
+var.test
+while-old.test
+while.test
+winConsole.test
+winDde.test
+winFCmd.test
+winFile.test
+winNotify.test
+winPipe.test
+winTime.test
+zlib.test
+libc_darwin.go:789:Xsocket: TODOTODO 
+goroutine 1 [running, locked to thread]:
+runtime/debug.Stack()
+	/usr/local/go/src/runtime/debug/stack.go:24 +0x65
+modernc.org/libc.todo({0x0, 0x9500408}, {0x0, 0x95002f0, 0x0})
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/etc.go:100 +0x14d
+modernc.org/libc.Xsocket(...)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc_darwin.go:789
+modernc.org/libc.X__lookup_name(0xc00012c0f0, 0x9500408, 0x9500948, 0x95002f0, 0x0, 0x1)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/musl_darwin_amd64.go:3948 +0x33e
+modernc.org/libc.Xgetaddrinfo(0xc00012c0f0, 0x95002f0, 0x0, 0x95003d0, 0x9500220)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/musl_darwin_amd64.go:2542 +0x245
+modernc.org/tcl/lib.XTclCreateSocketAddress(0xc00012c0f0, 0x9800020, 0x9500220, 0x9353450, 0x0, 0x1, 0x9500228)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:298395 +0x218
+modernc.org/tcl/lib.XTcl_OpenTcpServer(0xc00012c0f0, 0x9800020, 0x99b4320, 0x174a8c0, 0x95001f8, 0x9800020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:390913 +0xfe
+modernc.org/tcl/lib.XTcl_SocketObjCmd(0xc00012c0f0, 0x99446b0, 0x9800020, 0x6, 0x9a00a28)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:292241 +0x9d8
+modernc.org/tcl/lib.sDispatch(0xc00012c0f0, 0x99b6dd8, 0x9800020, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99750 +0x43
+modernc.org/tcl/lib.XTclNRRunCallbacks(0x95001f0, 0x9800020, 0xd, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99777 +0x9f
+modernc.org/tcl/lib.XTcl_EvalObjv(0xc00012c0f0, 0x9800020, 0x9a00300, 0xd, 0x9a002a0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:99332 +0x52
+modernc.org/tcl/lib.XTclEvalEx(0xc00012c0f0, 0x9800020, 0x9c00020, 0x8a63, 0x0, 0x1, 0x0, 0x9c00020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:100965 +0x1292
+modernc.org/tcl/lib.XTcl_FSEvalFileEx(0xc00012c0f0, 0x9800020, 0x9910c80, 0x0)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:300216 +0x89c
+modernc.org/tcl/lib.XTcl_MainEx(0xc00012c0f0, 0xffffffff, 0x9100040, 0x14312c0, 0x9800020)
+	/Users/jnml/src/modernc.org/tcl/lib/tcl_darwin_amd64.go:319211 +0x517
+main.main1(0x0, 0x121c0, 0x1c)
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:6566 +0x45
+modernc.org/libc.Start(0x1431670)
+	/Users/jnml/pkg/mod/modernc.org/libc@v1.11.57/libc.go:124 +0x190
+main.main()
+	/Users/jnml/src/modernc.org/tcl/internal/tcltest/tcltest_darwin_amd64.go:22 +0x25
+
+Test file error: child process exited abnormally
+
+Tests ended at Wed Nov 10 13:52:29 CET 2021
+all.tcl:	Total	20644	Passed	17614	Skipped	3027	Failed	3
+Sourced 150 Test Files.
+Files with failing tests: safe.test tcltest.test unixInit.test
+Number of tests skipped for each constraint:
+	9	!ieeeFloatingPoint
+	76	bigEndian
+	5	bug-3057639
+	49	dde
+	19	emptyTest
+	5	fullutf
+	2	hasIsoLocale
+	1	knownBadTest
+	35	knownBug
+	100	localeRegexp
+	52	longIs32bit
+	66	memory
+	5	nonPortable
+	41	notRoot
+	1	notValgrind
+	9	nt
+	17	pkga.bundleRequired
+	19	pkgaRequired
+	20	pkgua.bundleRequired
+	20	pkguaRequired
+	1996	serverNeeded
+	1	testCPUID
+	1	testexprparser && !ieeeFloatingPoint
+	1	testwinclock
+	21	testwordend
+	54	thread
+	3	threaded
+	3	tip389
+	2	unthreaded
+	2	wideBiggerThanInt
+	377	win
+	4	winVista
+
+Test files exiting with errors:  
+
+  aaa_exit.test
+
+  basic.test
+
+  chan.test
+
+  chanio.test
+
+  clock.test
+
+  cmdAH.test
+
+  event.test
+
+  exec.test
+
+  fCmd.test
+
+  fileName.test
+
+  fileSystem.test
+
+  http.test
+
+  http11.test
+
+  httpold.test
+
+  info.test
+
+  io.test
+
+  ioCmd.test
+
+  ioTrans.test
+
+  macOSXFCmd.test
+
+  main.test
+
+  oo.test
+
+  socket.test
+
+  zlib.test
+
