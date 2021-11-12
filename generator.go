@@ -97,6 +97,13 @@ func main() {
 	}
 	cfg = append(cfg, thr)
 	platformDir := "/unix"
+	var hide string
+	switch goos {
+	case "windows":
+		hide = "TclWinCPUID"
+	default:
+		hide = "TclpCreateProcess"
+	}
 	lib := []string{
 		"-D__printf__=printf",
 		"-export-defines", "",
@@ -105,7 +112,7 @@ func main() {
 		"-export-fields", "F",
 		"-export-structs", "",
 		"-export-typedefs", "",
-		"-hide", "TclpCreateProcess",
+		"-hide", hide,
 		"-lmodernc.org/z/lib",
 		"-o", filepath.Join("lib", fmt.Sprintf("tcl_%s_%s.go", goos, goarch)),
 		"-pkgname", "tcl",
@@ -119,22 +126,20 @@ func main() {
 	}
 	switch goos {
 	case "windows":
-		platformDir = "/win"
-		lib = append(lib,
-			"libtcl86.a",
-			"libtclstub86.a",
-		)
-		if goarch == "amd64" {
-			cfg = append(cfg, "--enable-64bit")
-		}
 		switch s := runtime.GOOS; s {
-		case "windows":
-			// ok
 		case "linux":
 			cfg = append(cfg, "--host=linux")
 		default:
 			ccgo.Fatal(true, "unsupported cross compilation host: %s", s)
 		}
+
+		platformDir = "/win"
+		lib = append(lib,
+			"libtcl86.a",
+			"libtclstub86.a",
+		)
+		cfg = append(cfg, "RC=x86_64-w64-mingw32-windres")
+		cfg = append(cfg, "CFLAGS=-D_ATL_XP_TARGETING -DMP_FIXED_CUTOFFS -DMP_NO_STDINT -UHAVE_CAST_TO_UNION")
 	case "darwin":
 		cfg = append(cfg, "--enable-corefoundation=no")
 		fallthrough
@@ -165,6 +170,8 @@ func main() {
 			switch goos {
 			case "freebsd", "netbsd":
 				ccgo.MustRun(true, "-compiledb", cdb, "gmake", "CFLAGS='-DNO_ISNAN -UHAVE_CPUID'", "binaries", "tcltest")
+			case "windows":
+				ccgo.MustRun(true, "-compiledb", cdb, "make", "binaries", "tcltest")
 			default:
 				// -UHAVE_COPYFILE disables the tcl macOS bits trying to use copyfile/libc.Xcopyfile.
 				ccgo.MustRun(true, "-compiledb", cdb, "make", "CFLAGS='-UHAVE_CPUID -UHAVE_COPYFILE'", "binaries", "tcltest")
@@ -173,6 +180,8 @@ func main() {
 		})
 	}
 
+	//TODO- use -save-config/--load-config instead
+	//
 	// s390x hack. The VM has only 4GB, so we do the above in the VM, but
 	// the bellow on linux/amd64 after pulling the configured sources and
 	// the CDB from the VM.
@@ -182,34 +191,64 @@ func main() {
 	}
 
 	ccgo.MustRun(true, lib...)
-	ccgo.MustRun(true,
-		"-export-defines", "",
-		"-lmodernc.org/tcl/lib",
-		"-nocapi",
-		"-o", filepath.Join("internal", "tclsh", fmt.Sprintf("tclsh_%s_%s.go", goos, goarch)),
-		"-pkgname", "tclsh",
-		"-replace-fd-zero", "__ccgo_fd_zero",
-		"-replace-tcl-default-double-rounding", "__ccgo_tcl_default_double_rounding",
-		"-replace-tcl-ieee-double-rounding", "__ccgo_tcl_ieee_double_rounding",
-		"-trace-translation-units",
-		"--load-config", loadConfig,
-		"-save-config", saveConfig,
-		cdb, "tclsh",
-	)
-	ccgo.MustRun(true,
-		"-export-defines", "",
-		"-lmodernc.org/tcl/lib",
-		"-nocapi",
-		"-o", filepath.Join("internal", "tcltest", fmt.Sprintf("tcltest_%s_%s.go", goos, goarch)),
-		"-trace-translation-units",
-		"--load-config", loadConfig,
-		"-save-config", saveConfig,
-		cdb,
-		"tclAppInit.o#1",
-		"tclTest.o",
-		"tclTestObj.o",
-		"tclTestProcBodyObj.o",
-		"tclThreadTest.o",
-		"tclUnixTest.o",
-	)
+	switch goos {
+	case "windows":
+		ccgo.MustRun(true,
+			"-DTCL_BROKEN_MAINARGS",
+			"-export-defines", "",
+			"-lmodernc.org/tcl/lib",
+			"-nocapi",
+			"-o", filepath.Join("internal", "tclsh", fmt.Sprintf("tclsh_%s_%s.go", goos, goarch)),
+			"-pkgname", "tclsh",
+			"-replace-fd-zero", "__ccgo_fd_zero",
+			"-replace-tcl-default-double-rounding", "__ccgo_tcl_default_double_rounding",
+			"-replace-tcl-ieee-double-rounding", "__ccgo_tcl_ieee_double_rounding",
+			"-trace-translation-units",
+			"--load-config", loadConfig,
+			"-save-config", saveConfig,
+			cdb, "tclsh86s.exe",
+		)
+		ccgo.MustRun(true,
+			"-DTCL_BROKEN_MAINARGS",
+			"-export-defines", "",
+			"-lmodernc.org/tcl/lib",
+			"-nocapi",
+			"-o", filepath.Join("internal", "tcltest", fmt.Sprintf("tcltest_%s_%s.go", goos, goarch)),
+			"-trace-translation-units",
+			"--load-config", loadConfig,
+			"-save-config", saveConfig,
+			cdb, "tcltests.exe",
+		)
+	default:
+		ccgo.MustRun(true,
+			"-export-defines", "",
+			"-lmodernc.org/tcl/lib",
+			"-nocapi",
+			"-o", filepath.Join("internal", "tclsh", fmt.Sprintf("tclsh_%s_%s.go", goos, goarch)),
+			"-pkgname", "tclsh",
+			"-replace-fd-zero", "__ccgo_fd_zero",
+			"-replace-tcl-default-double-rounding", "__ccgo_tcl_default_double_rounding",
+			"-replace-tcl-ieee-double-rounding", "__ccgo_tcl_ieee_double_rounding",
+			"-trace-translation-units",
+			"--load-config", loadConfig,
+			"-save-config", saveConfig,
+			cdb, "tclsh",
+		)
+		ccgo.MustRun(true,
+			"-export-defines", "",
+			"-lmodernc.org/tcl/lib",
+			"-nocapi",
+			"-o", filepath.Join("internal", "tcltest", fmt.Sprintf("tcltest_%s_%s.go", goos, goarch)),
+			"-trace-translation-units",
+			"--load-config", loadConfig,
+			"-save-config", saveConfig,
+			cdb,
+			"tclAppInit.o#1",
+			"tclTest.o",
+			"tclTestObj.o",
+			"tclTestProcBodyObj.o",
+			"tclThreadTest.o",
+			"tclUnixTest.o",
+		)
+	}
 }

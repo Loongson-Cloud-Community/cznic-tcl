@@ -43,7 +43,7 @@ all: editor
 generate:
 	go generate 2>&1 | tee log-generate
 	gofmt -l -s -w *.go 2>&1 | tee -a log-generate
-	go build -v ./... 2>&1 | tee -a log-generate
+	go build -v ./... 
 
 gotclsh:
 	go install -v modernc.org/tcl/gotclsh && \
@@ -76,27 +76,27 @@ build_all_targets:
 darwin_amd64:
 	@echo "Should be executed only on darwin/amd64."
 	go generate 2>&1 | tee log-generate
-	go build -v ./...
+	go build -v ./... 2>&1 | tee -a log-generate
 
 darwin_arm64:
 	@echo "Should be executed only on darwin/arm64."
 	go generate 2>&1 | tee log-generate
-	go build -v ./...
+	go build -v ./... 2>&1 | tee -a log-generate
 
 freebsd_amd64:
 	@echo "Should be executed only on freebsd/amd64."
 	AR=$$(which ar) go generate 2>&1 | tee log-generate
-	go build -v ./...
+	go build -v ./... 2>&1 | tee -a log-generate
 
 netbsd_amd64:
 	@echo "Should be executed only on netbsd/amd64."
 	AR=$$(which ar) go generate 2>&1 | tee log-generate
-	go build -v ./...
+	go build -v ./... 2>&1 | tee -a log-generate
 
 linux_amd64:
 	@echo "Should be executed only on linux/amd64."
 	go generate 2>&1 | tee log-generate
-	go build -v ./...
+	go build -v ./... 2>&1 | tee -a log-generate
 
 linux_386_config:
 	@echo "Should be executed only on linux/386."
@@ -110,15 +110,15 @@ linux_386_pull:
 	mkdir tmp/
 	rsync -rp nuc32:src/modernc.org/tcl/tmp/ tmp/
 	GO_GENERATE_TMPDIR=tmp/src GO_GENERATE_LOAD_CONFIG=tmp/config TARGET_GOOS=linux TARGET_GOARCH=386 go generate 2>&1 | tee log-generate
-	go build -v ./...
+	go build -v ./... 2>&1 | tee -a log-generate
 
 linux_arm:
-	QEMU_LD_PREFIX=/usr/arm-linux-gnueabi CCGO_CPP=arm-linux-gnueabi-cpp GO_GENERATE_CC=arm-linux-gnueabi-gcc TARGET_GOOS=linux TARGET_GOARCH=arm go generate 2>&1 | tee /tmp/log-generate-tcl-linux-arm
-	GOOS=linux GOARCH=arm go build -v ./...
+	QEMU_LD_PREFIX=/usr/arm-linux-gnueabi CCGO_CPP=arm-linux-gnueabi-cpp GO_GENERATE_CC=arm-linux-gnueabi-gcc TARGET_GOOS=linux TARGET_GOARCH=arm go generate 2>&1 | tee log-generate
+	GOOS=linux GOARCH=arm go build -v ./... 2>&1 | tee -a log-generate
 
 linux_arm64:
-	QEMU_LD_PREFIX=/usr/aarch64-linux-gnu CCGO_CPP=aarch64-linux-gnu-cpp GO_GENERATE_CC=aarch64-linux-gnu-gcc TARGET_GOOS=linux TARGET_GOARCH=arm64 go generate 2>&1 | tee /tmp/log-generate-tcl-linux-arm64
-	GOOS=linux GOARCH=arm64 go build -v ./...
+	QEMU_LD_PREFIX=/usr/aarch64-linux-gnu CCGO_CPP=aarch64-linux-gnu-cpp GO_GENERATE_CC=aarch64-linux-gnu-gcc TARGET_GOOS=linux TARGET_GOARCH=arm64 go generate 2>&1 | tee log-generate
+	GOOS=linux GOARCH=arm64 go build -v ./... 2>&1 | tee -a log-generate
 
 # The part that is run inside the 4GB VM.
 linux_s390x_vm:
@@ -128,7 +128,7 @@ linux_s390x_vm:
 			   GO_GENERATE_CC=s390x-linux-gnu-gcc \
 			   TARGET_GOOS=linux \
 			   TARGET_GOARCH=s390x \
-			   go generate 2>&1 | tee /tmp/log-generate-tcl-linux-s390x
+			   go generate 2>&1 | tee log-generate
 
 # The part that is run first at the linux/amd64 dev machine.
 linux_s390x_pull:
@@ -143,16 +143,17 @@ linux_s390x_dev:
 			   CCGO_CPP=s390x-linux-gnu-cpp \
 			   TARGET_GOOS=linux \
 			   TARGET_GOARCH=s390x \
-			   go generate 2>&1 | tee /tmp/log-generate-tcl-linux-s390x
-	GOOS=linux GOARCH=s390x go build -v ./...
+			   go generate 2>&1 | tee log-generate
+	GOOS=linux GOARCH=s390x go build -v ./... 2>&1 | tee -a log-generate
 
 windows_amd64:
-	GO_GENERATE_CC=x86_64-w64-mingw32-gcc CCGO_CPP=x86_64-w64-mingw32-cpp TARGET_GOOS=windows TARGET_GOARCH=amd64 go generate 2>&1 | tee /tmp/log-generate-tcl-windows-amd64
-	GOOS=windows GOARCH=amd64 go build -v ./...
+	@echo "Should be executed only on linux/amd64."
+	GO_GENERATE_CC=x86_64-w64-mingw32-gcc CCGO_CPP=x86_64-w64-mingw32-cpp TARGET_GOOS=windows TARGET_GOARCH=amd64 go generate 2>&1 | tee log-generate
+	GOOS=windows GOARCH=amd64 go build -v ./... 2>&1 | tee -a log-generate
 
 windows_386:
-	GO_GENERATE_CC=i686-w64-mingw32-gcc CCGO_CPP=i686-w64-mingw32-cpp TARGET_GOOS=windows TARGET_GOARCH=386 go generate 2>&1 | tee /tmp/log-generate-tcl-windows-386
-	GOOS=windows GOARCH=386 go build -v ./...
+	GO_GENERATE_CC=i686-w64-mingw32-gcc CCGO_CPP=i686-w64-mingw32-cpp TARGET_GOOS=windows TARGET_GOARCH=386 go generate 2>&1 | tee log-generate
+	GOOS=windows GOARCH=386 go build -v ./... 2>&1 | tee -a log-generate
 
 # darwin can be generated only on darwin
 # windows can be generated only on windows
