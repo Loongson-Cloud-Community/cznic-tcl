@@ -66,16 +66,28 @@ func main() {
 		defer os.RemoveAll(tmpDir)
 	}
 	srcDir := tmpDir + "/" + tarDir
-	os.RemoveAll(srcDir)
-	ccgo.MustUntarFile(true, tmpDir, tarFile, nil)
-	ccgo.CopyDir(srcDir, filepath.Join("overlay", goos, goarch), nil)
-	ccgo.MustCopyDir(true, "assets", srcDir+"/library", nil)
-	ccgo.MustCopyDir(true, "testdata/tcl", srcDir+"/tests", nil)
-	ccgo.MustCopyFile(true, "assets/tcltests/pkgIndex.tcl", "testdata/tcl/pkgIndex.tcl", nil)
-	ccgo.MustCopyFile(true, "assets/tcltests/tcltests.tcl", "testdata/tcl/tcltests.tcl", nil)
 	cdb, err := filepath.Abs(tmpDir + "/cdb.json")
 	if err != nil {
 		ccgo.Fatal(true, err)
+	}
+
+	haveCDB := true
+	if _, err := os.Stat(cdb); err != nil {
+		if !os.IsNotExist(err) {
+			ccgo.Fatal(true, err)
+		}
+
+		haveCDB = false
+	}
+
+	if !haveCDB || saveConfig != "" {
+		os.RemoveAll(srcDir)
+		ccgo.MustUntarFile(true, tmpDir, tarFile, nil)
+		ccgo.CopyDir(srcDir, filepath.Join("overlay", goos, goarch), nil)
+		ccgo.MustCopyDir(true, "assets", srcDir+"/library", nil)
+		ccgo.MustCopyDir(true, "testdata/tcl", srcDir+"/tests", nil)
+		ccgo.MustCopyFile(true, "assets/tcltests/pkgIndex.tcl", "testdata/tcl/pkgIndex.tcl", nil)
+		ccgo.MustCopyFile(true, "assets/tcltests/tcltests.tcl", "testdata/tcl/tcltests.tcl", nil)
 	}
 
 	cc, err := exec.LookPath(gcc)
@@ -149,11 +161,7 @@ func main() {
 			"libtclstub8.6.a",
 		)
 	}
-	if _, err := os.Stat(cdb); err != nil {
-		if !os.IsNotExist(err) {
-			ccgo.Fatal(true, err)
-		}
-
+	if !haveCDB {
 		ccgo.MustInDir(true, srcDir+platformDir, func() error {
 			ccgo.MustShell(true, "./configure", cfg...)
 			switch goos {
@@ -169,12 +177,13 @@ func main() {
 			}
 			switch goos {
 			case "freebsd", "netbsd":
-				ccgo.MustRun(true, "-compiledb", cdb, "gmake", "CFLAGS='-DNO_ISNAN -UHAVE_CPUID'", "binaries", "tcltest")
+				ccgo.MustRun(true, "-compiledb", cdb, "gmake", "CFLAGS=-DNO_ISNAN -UHAVE_CPUID", "binaries", "tcltest")
 			case "windows":
 				ccgo.MustRun(true, "-compiledb", cdb, "make", "binaries", "tcltest")
 			default:
 				// -UHAVE_COPYFILE disables the tcl macOS bits trying to use copyfile/libc.Xcopyfile.
-				ccgo.MustRun(true, "-compiledb", cdb, "make", "CFLAGS='-UHAVE_CPUID -UHAVE_COPYFILE'", "binaries", "tcltest")
+				// ccgo.MustRun(true, "-compiledb", cdb, "make", "CFLAGS=-UHAVE_CPUID -UHAVE_COPYFILE -DTCL_MEM_DEBUG -DMEM_VALIDATE", "binaries", "tcltest")
+				ccgo.MustRun(true, "-compiledb", cdb, "make", "CFLAGS=-UHAVE_CPUID -UHAVE_COPYFILE", "binaries", "tcltest")
 			}
 			return nil
 		})

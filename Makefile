@@ -112,6 +112,14 @@ linux_386_pull:
 	GO_GENERATE_TMPDIR=tmp/src GO_GENERATE_LOAD_CONFIG=tmp/config TARGET_GOOS=linux TARGET_GOARCH=386 go generate 2>&1 | tee log-generate
 	go build -v ./... 2>&1 | tee -a log-generate
 
+devuan4-32_pull:
+	@echo "Can be executed everywhere"
+	rm -rf tmp/
+	mkdir tmp/
+	rsync -rp devuan4-32:src/modernc.org/tcl/tmp/ tmp/
+	GO_GENERATE_TMPDIR=tmp/src GO_GENERATE_LOAD_CONFIG=tmp/config TARGET_GOOS=linux TARGET_GOARCH=386 go generate 2>&1 | tee log-generate
+	go build -v ./... 2>&1 | tee -a log-generate
+
 linux_arm:
 	QEMU_LD_PREFIX=/usr/arm-linux-gnueabi CCGO_CPP=arm-linux-gnueabi-cpp GO_GENERATE_CC=arm-linux-gnueabi-gcc TARGET_GOOS=linux TARGET_GOARCH=arm go generate 2>&1 | tee log-generate
 	GOOS=linux GOARCH=arm go build -v ./... 2>&1 | tee -a log-generate
