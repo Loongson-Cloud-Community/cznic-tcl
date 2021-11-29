@@ -1,11 +1,11 @@
-Tests running in interp:  /tmp/tcl-test-446058916/tcltest
-Tests located in:  /tmp/tcl-test-446058916
-Tests running in:  /tmp/tcl-test-446058916
-Temporary files stored in /tmp/tcl-test-446058916
+Tests running in interp:  /tmp/tcl-test-2089225234/tcltest
+Tests located in:  /tmp/tcl-test-2089225234
+Tests running in:  /tmp/tcl-test-2089225234
+Temporary files stored in /tmp/tcl-test-2089225234
 Test files run in separate interpreters
 Running tests that match:  *
 Only running test files that match:  *.test
-Tests began at Sat Nov 13 09:27:48 CET 2021
+Tests began at Mon Nov 29 18:40:47 CET 2021
 aaa_exit.test
 append.test
 appendComp.test
@@ -15,13 +15,1445 @@ assocd.test
 async.test
 autoMkindex.test
 basic.test
+
+
+==== basic-46.1 Tcl_AllowExceptions: exception return not allowed FAILED
+==== Contents of test case:
+
+    catch {close $f}
+    set res [catch {
+	set f [open |[list [interpreter]] w+]
+	chan configure $f -buffering line
+	puts $f {chan configure stdout -buffering line}
+	puts $f continue
+	puts $f {puts $::errorInfo}
+	puts $f {puts DONE}
+	set newMsg {}
+	set msg {}
+	while {$newMsg != "DONE"} {
+	    set newMsg [gets $f]
+	    append msg "${newMsg}\n"
+	}
+	close $f
+    } error]
+    list $res $msg
+
+---- Result was:
+0 {invoked "continue" outside of a loop
+    while executing
+"continue"
+DONE
+}
+---- Result should have been (exact matching):
+1 {invoked "continue" outside of a loop
+    while executing
+"continue"
+DONE
+}
+==== basic-46.1 FAILED
+
+
+
+==== basic-46.2 Tcl_AllowExceptions: exception return not allowed FAILED
+==== Contents of test case:
+
+    exec [interpreter] $fName
+
+---- Result was:
+hello
+child process exited abnormally
+---- Result should have been (glob matching):
+hello
+invoked "break" outside of a loop
+    while executing
+"break"
+    (file "*BREAKtest" line 3)
+==== basic-46.2 FAILED
+
+
+
+==== basic-46.3 Tcl_AllowExceptions: exception return not allowed FAILED
+==== Contents of test case:
+
+    exec [interpreter] $fName
+
+---- Result was:
+child process exited abnormally
+---- Result should have been (glob matching):
+invoked "break" outside of a loop
+    while executing
+"break"
+    (file "*BREAKtest" line 4)
+==== basic-46.3 FAILED
+
+
+
+==== basic-46.4 Tcl_AllowExceptions: exception return not allowed FAILED
+==== Contents of test case:
+
+    exec [interpreter] $fName
+
+---- Result was:
+child process exited abnormally
+---- Result should have been (glob matching):
+invoked "break" outside of a loop
+    while executing*
+"foo \[set a 1] \[break]"
+    (file "*BREAKtest" line 2)
+==== basic-46.4 FAILED
+
+
+
+==== basic-46.5 Tcl_AllowExceptions: exception return not allowed FAILED
+==== Contents of test case:
+
+    exec [interpreter] $fName
+
+---- Result was:
+child process exited abnormally
+---- Result should have been (glob matching):
+command returned bad code: 2
+    while executing
+"return -code return"
+    (file "*BREAKtest" line 2)
+==== basic-46.5 FAILED
+
 binary.test
 case.test
 chan.test
+
+
+==== chan-15.2 chan command: truncate subcommand FAILED
+==== Contents of test case:
+
+    seek $f 0
+    puts -nonewline $f 12345
+    seek $f 0
+    chan truncate $f 2
+    read $f
+
+---- Result was:
+
+---- Result should have been (exact matching):
+12
+==== chan-15.2 FAILED
+
+
+
+==== chan-16.8 chan command: pending input subcommand FAILED
+==== Contents of test case:
+
+    chan puts $f foo
+    chan puts $f bar
+    chan puts $f baz
+    chan seek $f 0
+    chan gets $f
+    chan pending input $f
+
+---- Result was:
+0
+---- Result should have been (exact matching):
+8
+==== chan-16.8 FAILED
+
 chanio.test
+
+
+==== chan-io-6.3 Tcl_GetsObj: how many have we used? FAILED
+==== Contents of test case:
+
+    # if (bufPtr != NULL) {oldRemoved = bufPtr->nextRemoved}
+    set f [open $path(test1) w]
+    chan configure $f -translation crlf
+    chan puts $f "abc\ndefg"
+    chan close $f
+    set f [open $path(test1)]
+    list [chan tell $f] [chan gets $f line] [chan tell $f] [chan gets $f line] $line
+
+---- Result was:
+0 3 -6 4 defg
+---- Result should have been (exact matching):
+0 3 5 4 defg
+==== chan-io-6.3 FAILED
+
+
+
+==== chan-io-6.32 Tcl_GetsObj: crlf mode: buffer exhausted, more data FAILED
+==== Contents of test case:
+
+    # not (FilterInputBytes() != 0)
+    set f [open $path(test1) w]
+    chan configure $f -translation lf
+    chan puts -nonewline $f "123456789012345\r\n123"
+    chan close $f
+    set f [open $path(test1)]
+    chan configure $f -translation crlf -buffersize 16
+    list [chan gets $f line] $line [chan tell $f] [testchannel inputbuffered $f]
+
+---- Result was:
+15 123456789012345 -3 3
+---- Result should have been (exact matching):
+15 123456789012345 17 3
+==== chan-io-6.32 FAILED
+
+
+
+==== chan-io-6.34 Tcl_GetsObj: crlf mode: buffer exhausted, not followed by \n FAILED
+==== Contents of test case:
+
+    # not (*eol == '\n')
+    set f [open $path(test1) w]
+    chan configure $f -translation lf
+    chan puts -nonewline $f "123456789012345\rabcd\r\nefg"
+    chan close $f
+    set f [open $path(test1)]
+    chan configure $f -translation crlf -buffersize 16
+    list [chan gets $f line] $line [chan tell $f]
+
+---- Result was:
+20 {123456789012345
+abcd} -3
+---- Result should have been (exact matching):
+20 {123456789012345
+abcd} 22
+==== chan-io-6.34 FAILED
+
+
+
+==== chan-io-6.49 Tcl_GetsObj: auto mode: \r followed by \n FAILED
+==== Contents of test case:
+
+    # if (*eol == '\n') {skip++}
+    set f [open $path(test1) w]
+    chan configure $f -translation lf
+    chan puts -nonewline $f "123456\r\n78901"
+    chan close $f
+    set f [open $path(test1)]
+    list [chan gets $f] [testchannel queuedcr $f] [chan tell $f] [chan gets $f]
+
+---- Result was:
+123456 0 -5 78901
+---- Result should have been (exact matching):
+123456 0 8 78901
+==== chan-io-6.49 FAILED
+
+
+
+==== chan-io-6.50 Tcl_GetsObj: auto mode: \r not followed by \n FAILED
+==== Contents of test case:
+
+    # not (*eol == '\n')
+    set f [open $path(test1) w]
+    chan configure $f -translation lf
+    chan puts -nonewline $f "123456\r78901"
+    chan close $f
+    set f [open $path(test1)]
+    list [chan gets $f] [testchannel queuedcr $f] [chan tell $f] [chan gets $f]
+
+---- Result was:
+123456 0 -5 78901
+---- Result should have been (exact matching):
+123456 0 7 78901
+==== chan-io-6.50 FAILED
+
+
+
+==== chan-io-6.51 Tcl_GetsObj: auto mode: \n FAILED
+==== Contents of test case:
+
+    # else if (*eol == '\n') {goto gotoeol;}
+    set f [open $path(test1) w]
+    chan configure $f -translation lf
+    chan puts -nonewline $f "123456\n78901"
+    chan close $f
+    set f [open $path(test1)]
+    list [chan gets $f] [chan tell $f] [chan gets $f]
+
+---- Result was:
+123456 -5 78901
+---- Result should have been (exact matching):
+123456 7 78901
+==== chan-io-6.51 FAILED
+
+
+
+==== chan-io-6.52 Tcl_GetsObj: saw EOF character FAILED
+==== Contents of test case:
+
+    # if (eof != NULL)
+    set f [open $path(test1) w]
+    chan configure $f -translation lf
+    chan puts -nonewline $f "123456\x1ak9012345\r"
+    chan close $f
+    set f [open $path(test1)]
+    chan configure $f -eofchar \x1a
+    list [chan gets $f] [testchannel queuedcr $f] [chan tell $f] [chan gets $f]
+
+---- Result was:
+123456 0 -10 {}
+---- Result should have been (exact matching):
+123456 0 6 {}
+==== chan-io-6.52 FAILED
+
+
+
+==== chan-io-7.3 FilterInputBytes: split up character at EOF FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) w]
+    chan configure $f -encoding binary
+    chan puts -nonewline $f "1234567890123\x82\x4f\x82\x50\x82"
+    chan close $f
+    set f [open $path(test1)]
+    chan configure $f -encoding shiftjis
+    lappend x [chan gets $f line] $line
+    lappend x [chan tell $f] [testchannel inputbuffered $f] [chan eof $f]
+    lappend x [chan gets $f line] $line
+
+---- Result was:
+15 1234567890123０１ 0 0 1 -1 {}
+---- Result should have been (exact matching):
+15 1234567890123０１ 18 0 1 -1 {}
+==== chan-io-7.3 FAILED
+
+
+
+==== chan-io-20.5 Tcl_CreateChannel: install channel in empty slot FAILED
+==== Contents of test case:
+
+    set f [open $path(script) w]
+    chan puts -nonewline $f {
+	chan close stdout
+	set f1 [}
+    chan puts $f [list open $path(stdout) w]]
+    chan puts $f {
+	chan configure $f1 -buffersize 777
+	chan puts stderr [chan configure stdout -buffersize]
+    }
+    chan close $f
+    set f [openpipe r $path(script)]
+    chan close $f
+
+---- Test completed normally; Return code was: 0
+---- Return code should have been one of: 1
+==== chan-io-20.5 FAILED
+
+
+
+==== chan-io-25.1 Tcl_GetChannelHandle, input FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) w]
+    chan configure $f -translation lf -eofchar {}
+    chan puts $f "1234567890\n098765432"
+    chan close $f
+    set f [open $path(test1) r]
+    chan gets $f
+    lappend l [testchannel inputbuffered $f]
+    lappend l [chan tell $f]
+
+---- Result was:
+10 -10
+---- Result should have been (exact matching):
+10 11
+==== chan-io-25.1 FAILED
+
+
+
+==== chan-io-25.2 Tcl_GetChannelHandle, output FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) w]
+    chan configure $f -translation lf
+    chan puts $f hello
+    lappend l [testchannel outputbuffered $f]
+    lappend l [chan tell $f]
+    chan flush $f
+    lappend l [testchannel outputbuffered $f]
+    lappend l [chan tell $f]
+
+---- Result was:
+6 6 0 0
+---- Result should have been (exact matching):
+6 6 0 6
+==== chan-io-25.2 FAILED
+
+
+
+==== chan-io-31.1 Tcl_Write lf, Tcl_Gets auto FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) w]
+    chan configure $f -translation lf
+    chan puts $f hello\nthere\nand\nhere
+    chan close $f
+    set f [open $path(test1) r]
+    lappend l [chan gets $f]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+    lappend l [chan gets $f]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+
+---- Result was:
+hello -15 auto there -9 auto
+---- Result should have been (exact matching):
+hello 6 auto there 12 auto
+==== chan-io-31.1 FAILED
+
+
+
+==== chan-io-31.2 Tcl_Write cr, Tcl_Gets auto FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) w]
+    chan configure $f -translation cr
+    chan puts $f hello\nthere\nand\nhere
+    chan close $f
+    set f [open $path(test1) r]
+    lappend l [chan gets $f]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+    lappend l [chan gets $f]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+
+---- Result was:
+hello -15 auto there -9 auto
+---- Result should have been (exact matching):
+hello 6 auto there 12 auto
+==== chan-io-31.2 FAILED
+
+
+
+==== chan-io-31.3 Tcl_Write crlf, Tcl_Gets auto FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) w]
+    chan configure $f -translation crlf
+    chan puts $f hello\nthere\nand\nhere
+    chan close $f
+    set f [open $path(test1) r]
+    lappend l [chan gets $f]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+    lappend l [chan gets $f]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+
+---- Result was:
+hello -18 auto there -11 auto
+---- Result should have been (exact matching):
+hello 7 auto there 14 auto
+==== chan-io-31.3 FAILED
+
+
+
+==== chan-io-31.4 Tcl_Write lf, Tcl_Gets lf FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) w]
+    chan configure $f -translation lf
+    chan puts $f hello\nthere\nand\nhere
+    chan close $f
+    set f [open $path(test1) r]
+    chan configure $f -translation lf
+    lappend l [chan gets $f]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+    lappend l [chan gets $f]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+
+---- Result was:
+hello -15 lf there -9 lf
+---- Result should have been (exact matching):
+hello 6 lf there 12 lf
+==== chan-io-31.4 FAILED
+
+
+
+==== chan-io-31.5 Tcl_Write lf, Tcl_Gets cr FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) w]
+    chan configure $f -translation lf
+    chan puts $f hello\nthere\nand\nhere
+    chan close $f
+    set f [open $path(test1) r]
+    chan configure $f -translation cr
+    lappend l [string length [chan gets $f]]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+    lappend l [chan eof $f]
+    lappend l [chan gets $f]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+    lappend l [chan eof $f]
+
+---- Result was:
+21 0 cr 1 {} 0 cr 1
+---- Result should have been (exact matching):
+21 21 cr 1 {} 21 cr 1
+==== chan-io-31.5 FAILED
+
+
+
+==== chan-io-31.6 Tcl_Write lf, Tcl_Gets crlf FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) w]
+    chan configure $f -translation lf
+    chan puts $f hello\nthere\nand\nhere
+    chan close $f
+    set f [open $path(test1) r]
+    chan configure $f -translation crlf
+    lappend l [string length [chan gets $f]]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+    lappend l [chan eof $f]
+    lappend l [chan gets $f]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+    lappend l [chan eof $f]
+
+---- Result was:
+21 0 crlf 1 {} 0 crlf 1
+---- Result should have been (exact matching):
+21 21 crlf 1 {} 21 crlf 1
+==== chan-io-31.6 FAILED
+
+
+
+==== chan-io-31.7 Tcl_Write cr, Tcl_Gets cr FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) w]
+    chan configure $f -translation cr
+    chan puts $f hello\nthere\nand\nhere
+    chan close $f
+    set f [open $path(test1) r]
+    chan configure $f -translation cr
+    lappend l [chan gets $f]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+    lappend l [chan eof $f]
+    lappend l [chan gets $f]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+    lappend l [chan eof $f]
+
+---- Result was:
+hello -15 cr 0 there -9 cr 0
+---- Result should have been (exact matching):
+hello 6 cr 0 there 12 cr 0
+==== chan-io-31.7 FAILED
+
+
+
+==== chan-io-31.8 Tcl_Write cr, Tcl_Gets lf FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) w]
+    chan configure $f -translation cr
+    chan puts $f hello\nthere\nand\nhere
+    chan close $f
+    set f [open $path(test1) r]
+    chan configure $f -translation lf
+    lappend l [string length [chan gets $f]]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+    lappend l [chan eof $f]
+    lappend l [chan gets $f]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+    lappend l [chan eof $f]
+
+---- Result was:
+21 0 lf 1 {} 0 lf 1
+---- Result should have been (exact matching):
+21 21 lf 1 {} 21 lf 1
+==== chan-io-31.8 FAILED
+
+
+
+==== chan-io-31.9 Tcl_Write cr, Tcl_Gets crlf FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) w]
+    chan configure $f -translation cr
+    chan puts $f hello\nthere\nand\nhere
+    chan close $f
+    set f [open $path(test1) r]
+    chan configure $f -translation crlf
+    lappend l [string length [chan gets $f]]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+    lappend l [chan eof $f]
+    lappend l [chan gets $f]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+    lappend l [chan eof $f]
+
+---- Result was:
+21 0 crlf 1 {} 0 crlf 1
+---- Result should have been (exact matching):
+21 21 crlf 1 {} 21 crlf 1
+==== chan-io-31.9 FAILED
+
+
+
+==== chan-io-31.10 Tcl_Write crlf, Tcl_Gets crlf FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) w]
+    chan configure $f -translation crlf
+    chan puts $f hello\nthere\nand\nhere
+    chan close $f
+    set f [open $path(test1) r]
+    chan configure $f -translation crlf
+    lappend l [chan gets $f]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+    lappend l [chan eof $f]
+    lappend l [chan gets $f]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+    lappend l [chan eof $f]
+
+---- Result was:
+hello -18 crlf 0 there -11 crlf 0
+---- Result should have been (exact matching):
+hello 7 crlf 0 there 14 crlf 0
+==== chan-io-31.10 FAILED
+
+
+
+==== chan-io-31.11 Tcl_Write crlf, Tcl_Gets cr FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) w]
+    chan configure $f -translation crlf
+    chan puts $f hello\nthere\nand\nhere
+    chan close $f
+    set f [open $path(test1) r]
+    chan configure $f -translation cr
+    lappend l [chan gets $f]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+    lappend l [chan eof $f]
+    lappend l [string length [chan gets $f]]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+    lappend l [chan eof $f]
+
+---- Result was:
+hello -19 cr 0 6 -12 cr 0
+---- Result should have been (exact matching):
+hello 6 cr 0 6 13 cr 0
+==== chan-io-31.11 FAILED
+
+
+
+==== chan-io-31.12 Tcl_Write crlf, Tcl_Gets lf FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) w]
+    chan configure $f -translation crlf
+    chan puts $f hello\nthere\nand\nhere
+    chan close $f
+    set f [open $path(test1) r]
+    chan configure $f -translation lf
+    lappend l [string length [chan gets $f]]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+    lappend l [chan eof $f]
+    lappend l [string length [chan gets $f]]
+    lappend l [chan tell $f]
+    lappend l [chan configure $f -translation]
+    lappend l [chan eof $f]
+
+---- Result was:
+6 -18 lf 0 6 -11 lf 0
+---- Result should have been (exact matching):
+6 7 lf 0 6 14 lf 0
+==== chan-io-31.12 FAILED
+
+
+
+==== chan-io-34.2 Tcl_Seek to offset from start FAILED
+==== Contents of test case:
+
+    set f1 [open $path(test1) w]
+    chan configure $f1 -translation lf -eofchar {}
+    chan puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    chan puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    chan close $f1
+    set f1 [open $path(test1) r]
+    chan seek $f1 10 start
+    chan tell $f1
+
+---- Result was:
+1
+---- Result should have been (exact matching):
+10
+==== chan-io-34.2 FAILED
+
+
+
+==== chan-io-34.3 Tcl_Seek to end of file FAILED
+==== Contents of test case:
+
+    set f1 [open $path(test1) w]
+    chan configure $f1 -translation lf -eofchar {}
+    chan puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    chan puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    chan close $f1
+    set f1 [open $path(test1) r]
+    chan seek $f1 0 end
+    chan tell $f1
+
+---- Result was:
+0
+---- Result should have been (exact matching):
+54
+==== chan-io-34.3 FAILED
+
+
+
+==== chan-io-34.4 Tcl_Seek to offset from end of file FAILED
+==== Contents of test case:
+
+    set f1 [open $path(test1) w]
+    chan configure $f1 -translation lf -eofchar {}
+    chan puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    chan puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    chan close $f1
+    set f1 [open $path(test1) r]
+    chan seek $f1 -10 end
+    chan tell $f1
+
+---- Result was:
+1
+---- Result should have been (exact matching):
+44
+==== chan-io-34.4 FAILED
+
+
+
+==== chan-io-34.5 Tcl_Seek to offset from current position FAILED
+==== Contents of test case:
+
+    set f1 [open $path(test1) w]
+    chan configure $f1 -translation lf -eofchar {}
+    chan puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    chan puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    chan close $f1
+    set f1 [open $path(test1) r]
+    chan seek $f1 10 current
+    chan seek $f1 10 current
+    chan tell $f1
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: error during seek on "file8": strerror(0)
+    while executing
+"chan seek $f1 10 current"
+    ("uplevel" body line 9)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX {unknown error} strerror(0)
+==== chan-io-34.5 FAILED
+
+
+
+==== chan-io-34.6 Tcl_Seek to offset from end of file FAILED
+==== Contents of test case:
+
+    set f1 [open $path(test1) w]
+    chan configure $f1 -translation lf -eofchar {}
+    chan puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    chan puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    chan close $f1
+    set f1 [open $path(test1) r]
+    chan seek $f1 -10 end
+    list [chan tell $f1] [chan read $f1]
+
+---- Result was:
+1 {abcdefghijklmnopqrstuvwxyz
+abcdefghijklmnopqrstuvwxyz
+}
+---- Result should have been (exact matching):
+44 {rstuvwxyz
+}
+==== chan-io-34.6 FAILED
+
+
+
+==== chan-io-34.7 Tcl_Seek to offset from end of file, then to current position FAILED
+==== Contents of test case:
+
+    set f1 [open $path(test1) w]
+    chan configure $f1 -translation lf -eofchar {}
+    chan puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    chan puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    chan close $f1
+    set f1 [open $path(test1) r]
+    chan seek $f1 -10 end
+    set c1 [chan tell $f1]
+    set r1 [chan read $f1 5]
+    chan seek $f1 0 current
+    list $c1 $r1 [chan tell $f1]
+
+---- Result was:
+1 abcde 1
+---- Result should have been (exact matching):
+44 rstuv 49
+==== chan-io-34.7 FAILED
+
+
+
+==== chan-io-34.9 Tcl_Seek, testing buffered input flushing FAILED
+==== Contents of test case:
+
+    set f [open $path(test3) w]
+    chan configure $f -eofchar {}
+    chan puts -nonewline $f "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    chan close $f
+    set f [open $path(test3) RDWR]
+    set x [chan read $f 1]
+    chan seek $f 3
+    lappend x [chan read $f 1]
+    chan seek $f 0 start
+    lappend x [chan read $f 1]
+    chan seek $f 10 current
+    lappend x [chan read $f 1]
+    chan seek $f -2 end
+    lappend x [chan read $f 1]
+    chan seek $f 50 end
+    lappend x [chan read $f 1]
+    chan seek $f 1
+    lappend x [chan read $f 1]
+
+---- Result was:
+a {} {} {} {} {} {}
+---- Result should have been (exact matching):
+a d a l Y {} b
+==== chan-io-34.9 FAILED
+
+
+
+==== chan-io-34.10 Tcl_Seek testing flushing of buffered input FAILED
+==== Contents of test case:
+
+    set f [open $path(test3) w]
+    chan configure $f -translation lf
+    chan puts $f xyz\n123
+    chan close $f
+    set f [open $path(test3) r+]
+    chan configure $f -translation lf
+    set x [chan gets $f]
+    chan seek $f 0 current
+    chan puts $f 456
+    chan close $f
+    list $x [viewFile test3]
+
+---- Result was:
+xyz {xyz
+123
+456}
+---- Result should have been (exact matching):
+xyz {xyz
+456}
+==== chan-io-34.10 FAILED
+
+
+
+==== chan-io-34.11 Tcl_Seek testing flushing of buffered output FAILED
+==== Contents of test case:
+
+    set f [open $path(test3) w]
+    chan puts $f xyz\n123
+    chan close $f
+    set f [open $path(test3) w+]
+    chan puts $f xyzzy
+    chan seek $f 2
+    set x [chan gets $f]
+    chan close $f
+    list $x [viewFile test3]
+
+---- Result was:
+{} xyzzy
+---- Result should have been (exact matching):
+zzy xyzzy
+==== chan-io-34.11 FAILED
+
+
+
+==== chan-io-34.12 Tcl_Seek testing combination of write, seek back and read FAILED
+==== Contents of test case:
+
+    set f [open $path(test3) w]
+    chan configure $f -translation lf -eofchar {}
+    chan puts $f xyz\n123
+    chan close $f
+    set f [open $path(test3) a+]
+    chan configure $f -translation lf -eofchar {}
+    chan puts $f xyzzy
+    chan flush $f
+    set x [chan tell $f]
+    chan seek $f -4 cur
+    set y [chan gets $f]
+    chan close $f
+    list $x [viewFile test3] $y
+
+---- Result was:
+0 {xyzzy
+3} 3
+---- Result should have been (exact matching):
+14 {xyz
+123
+xyzzy} zzy
+==== chan-io-34.12 FAILED
+
+
+
+==== chan-io-34.14 Tcl_Tell after seek to end of file FAILED
+==== Contents of test case:
+
+    set f1 [open $path(test1) w]
+    chan configure $f1 -translation lf -eofchar {}
+    chan puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    chan puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    chan close $f1
+    set f1 [open $path(test1) r]
+    chan seek $f1 0 end
+    chan tell $f1
+
+---- Result was:
+0
+---- Result should have been (exact matching):
+54
+==== chan-io-34.14 FAILED
+
+
+
+==== chan-io-34.15 Tcl_Tell combined with seeking FAILED
+==== Contents of test case:
+
+    set f1 [open $path(test1) w]
+    chan configure $f1 -translation lf -eofchar {}
+    chan puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    chan puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    chan close $f1
+    set f1 [open $path(test1) r]
+    chan seek $f1 10 start
+    set c1 [chan tell $f1]
+    chan seek $f1 10 current
+    list $c1 [chan tell $f1]
+
+---- Result was:
+1 1
+---- Result should have been (exact matching):
+10 20
+==== chan-io-34.15 FAILED
+
+
+
+==== chan-io-34.18 Tcl_Tell combined with seeking and reading FAILED
+==== Contents of test case:
+
+    set f [open $path(test2) w]
+    chan configure $f -translation lf -eofchar {}
+    chan puts -nonewline $f "line1\nline2\nline3\nline4\nline5\n"
+    chan close $f
+    set f [open $path(test2)]
+    chan configure $f -translation lf
+    set x [chan tell $f]
+    chan read $f 3
+    lappend x [chan tell $f]
+    chan seek $f 2
+    lappend x [chan tell $f]
+    chan seek $f 10 current
+    lappend x [chan tell $f]
+    chan seek $f 0 end
+    lappend x [chan tell $f]
+
+---- Result was:
+0 -27 1 1 0
+---- Result should have been (exact matching):
+0 3 2 12 30
+==== chan-io-34.18 FAILED
+
+
+
+==== chan-io-34.19 Tcl_Tell combined with opening in append mode FAILED
+==== Contents of test case:
+
+    set f [open $path(test3) w]
+    chan configure $f -translation lf -eofchar {}
+    chan puts $f "abcdefghijklmnopqrstuvwxyz"
+    chan puts $f "abcdefghijklmnopqrstuvwxyz"
+    chan close $f
+    set f [open $path(test3) a]
+    chan tell $f
+
+---- Result was:
+0
+---- Result should have been (exact matching):
+54
+==== chan-io-34.19 FAILED
+
+
+
+==== chan-io-34.20 Tcl_Tell combined with writing FAILED
+==== Contents of test case:
+
+    set f [open $path(test3) w]
+    chan seek $f 29 start
+    lappend l [chan tell $f]
+    chan puts -nonewline $f a
+    chan seek $f 39 start
+    lappend l [chan tell $f]
+    chan puts -nonewline $f a
+    lappend l [chan tell $f]
+    chan seek $f 407 end
+    lappend l [chan tell $f]
+
+---- Result was:
+1 1 1 1
+---- Result should have been (exact matching):
+29 39 40 447
+==== chan-io-34.20 FAILED
+
+
+
+==== chan-io-34.21 Tcl_Seek and Tcl_Tell on large files FAILED
+==== Contents of test case:
+
+    set f [open $path(test3) w]
+    chan configure $f -encoding binary
+    lappend l [chan tell $f]
+    chan puts -nonewline $f abcdef
+    lappend l [chan tell $f]
+    chan flush $f
+    lappend l [chan tell $f]
+    # 4GB offset!
+    chan seek $f 0x100000000
+    lappend l [chan tell $f]
+    chan puts -nonewline $f abcdef
+    lappend l [chan tell $f]
+    chan close $f
+    lappend l [file size $path(test3)]
+    # truncate...
+    chan close [open $path(test3) w]
+    lappend l [file size $path(test3)]
+
+---- Result was:
+0 6 0 0 6 12 0
+---- Result should have been (exact matching):
+0 6 6 4294967296 4294967302 4294967302 0
+==== chan-io-34.21 FAILED
+
+
+
+==== chan-io-37.1 Tcl_InputBuffered FAILED
+==== Contents of test case:
+
+    set f [open $path(longfile) r]
+    chan configure $f -buffersize 4096
+    chan read $f 3
+    lappend l [testchannel inputbuffered $f]
+    lappend l [chan tell $f]
+
+---- Result was:
+4093 -4093
+---- Result should have been (exact matching):
+4093 3
+==== chan-io-37.1 FAILED
+
+
+
+==== chan-io-37.2 Tcl_InputBuffered, test input flushing on seek FAILED
+==== Contents of test case:
+
+    set f [open $path(longfile) r]
+    chan configure $f -buffersize 4096
+    chan read $f 3
+    lappend l [testchannel inputbuffered $f]
+    lappend l [chan tell $f]
+    chan seek $f 0 current
+    lappend l [testchannel inputbuffered $f]
+    lappend l [chan tell $f]
+
+---- Result was:
+4093 -4093 0 1
+---- Result should have been (exact matching):
+4093 3 0 3
+==== chan-io-37.2 FAILED
+
+
+
+==== chan-io-40.5 POSIX open access modes: APPEND FAILED
+==== Contents of test case:
+
+    set f [open $path(test3) w]
+    chan configure $f -translation lf -eofchar {}
+    chan puts $f xyzzy
+    chan close $f
+    set f [open $path(test3) {WRONLY APPEND}]
+    chan configure $f -translation lf
+    chan puts $f "new line"
+    chan seek $f 0
+    chan puts $f "abc"
+    chan close $f
+    set f [open $path(test3) r]
+    chan configure $f -translation lf
+    chan seek $f 6 current
+    lappend x [chan gets $f]
+    lappend x [chan gets $f]
+
+---- Result was:
+xyzzy {new line}
+---- Result should have been (exact matching):
+{new line} abc
+==== chan-io-40.5 FAILED
+
+
+
+==== chan-io-49.1 testing crlf reading, leftover cr disgorgment FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) w]
+    chan configure $f -translation lf
+    chan puts -nonewline $f "a\rb\rc\r\n"
+    chan close $f
+    set f [open $path(test1) r]
+    lappend l [file size $path(test1)]
+    chan configure $f -translation crlf
+    lappend l [chan read $f 1]
+    lappend l [chan tell $f]
+    lappend l [chan read $f 1]
+    lappend l [chan tell $f]
+    lappend l [chan read $f 1]
+    lappend l [chan tell $f]
+    lappend l [chan read $f 1]
+    lappend l [chan tell $f]
+    lappend l [chan read $f 1]
+    lappend l [chan tell $f]
+    lappend l [chan read $f 1]
+    lappend l [chan tell $f]
+    lappend l [chan eof $f]
+    lappend l [chan read $f 1]
+    lappend l [chan eof $f]
+
+---- Result was:
+7 a -6 {
+} -5 b -4 {
+} -3 c -2 {
+} 0 0 {} 1
+---- Result should have been (exact matching):
+7 a 1 {
+} 2 b 3 {
+} 4 c 5 {
+} 7 0 {} 1
+==== chan-io-49.1 FAILED
+
+
+
+==== chan-io-49.2 testing crlf reading, leftover cr disgorgment FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) w]
+    chan configure $f -translation lf
+    chan puts -nonewline $f "a\rb\rc\r\n"
+    chan close $f
+    set f [open $path(test1) r]
+    lappend l [file size $path(test1)]
+    chan configure $f -translation crlf
+    lappend l [chan read $f 2]
+    lappend l [chan tell $f]
+    lappend l [chan read $f 2]
+    lappend l [chan tell $f]
+    lappend l [chan read $f 2]
+    lappend l [chan tell $f]
+    lappend l [chan eof $f]
+    lappend l [chan read $f 2]
+    lappend l [chan tell $f]
+    lappend l [chan eof $f]
+
+---- Result was:
+7 {a
+} -5 {b
+} -3 {c
+} 0 0 {} 0 1
+---- Result should have been (exact matching):
+7 {a
+} 2 {b
+} 4 {c
+} 7 0 {} 7 1
+==== chan-io-49.2 FAILED
+
+
+
+==== chan-io-49.3 testing crlf reading, leftover cr disgorgment FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) w]
+    chan configure $f -translation lf
+    chan puts -nonewline $f "a\rb\rc\r\n"
+    chan close $f
+    set f [open $path(test1) r]
+    lappend l [file size $path(test1)]
+    chan configure $f -translation crlf
+    lappend l [chan read $f 3]
+    lappend l [chan tell $f]
+    lappend l [chan read $f 3]
+    lappend l [chan tell $f]
+    lappend l [chan eof $f]
+    lappend l [chan read $f 3]
+    lappend l [chan tell $f]
+    lappend l [chan eof $f]
+
+---- Result was:
+7 {a
+b} -4 {
+c
+} 0 0 {} 0 1
+---- Result should have been (exact matching):
+7 {a
+b} 3 {
+c
+} 7 0 {} 7 1
+==== chan-io-49.3 FAILED
+
+
+
+==== chan-io-49.4 testing crlf reading, leftover cr disgorgment FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) w]
+    chan configure $f -translation lf
+    chan puts -nonewline $f "a\rb\rc\r\n"
+    chan close $f
+    set f [open $path(test1) r]
+    lappend l [file size $path(test1)]
+    chan configure $f -translation crlf
+    lappend l [chan read $f 3]
+    lappend l [chan tell $f]
+    lappend l [chan gets $f]
+    lappend l [chan tell $f]
+    lappend l [chan eof $f]
+    lappend l [chan gets $f]
+    lappend l [chan tell $f]
+    lappend l [chan eof $f]
+
+---- Result was:
+7 {a
+b} -4 {
+c} 0 0 {} 0 1
+---- Result should have been (exact matching):
+7 {a
+b} 3 {
+c} 7 0 {} 7 1
+==== chan-io-49.4 FAILED
+
+
+
+==== chan-io-49.5 testing crlf reading, leftover cr disgorgment FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) w]
+    chan configure $f -translation lf
+    chan puts -nonewline $f "a\rb\rc\r\n"
+    chan close $f
+    set f [open $path(test1) r]
+    lappend l [file size $path(test1)]
+    chan configure $f -translation crlf
+    lappend l [set x [chan gets $f]]
+    lappend l [chan tell $f]
+    lappend l [chan gets $f]
+    lappend l [chan tell $f]
+    lappend l [chan eof $f]
+
+---- Result was:
+7 {a
+b
+c} 0 {} 0 1
+---- Result should have been (exact matching):
+7 {a
+b
+c} 7 {} 7 1
+==== chan-io-49.5 FAILED
+
+
+
+==== chan-io-53.8a CopyData: async callback and error handling, Bug 1932639, at eof FAILED
+==== Contents of test case:
+
+    # Initialize and force eof on the input.
+    chan seek $f 0 end ; chan read $f 1
+    set ::RES [chan eof $f]
+    # Run the copy. Should not invoke -command now.
+    chan copy $f $g -size 2 -command [namespace code cmd]
+    # Check that -command was not called synchronously
+    lappend ::RES [expr {([llength $::RES] > 1) ? "sync/FAIL" : "sync/OK"}]
+    # Now let the async part happen. Should capture the eof in cmd
+    # If not break the event loop via timer.
+    set token [after 1000 {
+	lappend ::RES {cmd/FAIL timeout}
+	set ::forever has-been-reached
+    }]
+    vwait ::forever
+    catch {after cancel $token}
+    # Report
+    return $::RES
+
+---- Result was:
+0 sync/OK {CMD 2}
+---- Result should have been (exact matching):
+1 sync/OK {CMD 0}
+==== chan-io-53.8a FAILED
+
+
+
+==== chan-io-58.1 Tcl_NotifyChannel and error when closing FAILED
+==== Contents of test case:
+
+    set out [open $path(script) w]
+    chan puts $out {
+	chan puts "normal message from pipe"
+	chan puts stderr "error message from pipe"
+	exit 1
+    }
+    proc readit {pipe} {
+	variable x
+	variable result
+	if {[chan eof $pipe]} {
+	    set x [catch {chan close $pipe} line]
+	    lappend result catch $line
+	} else {
+	    chan gets $pipe line
+	    lappend result chan gets $line
+	}
+    }
+    chan close $out
+    set pipe [openpipe r $path(script)]
+    chan event $pipe readable [namespace code [list readit $pipe]]
+    variable x ""
+    set result ""
+    vwait [namespace which -variable x]
+    list $x $result
+
+---- Result was:
+1 {chan gets {normal message from pipe} chan gets {} catch {child process exited abnormally}}
+---- Result should have been (exact matching):
+1 {chan gets {normal message from pipe} chan gets {} catch {error message from pipe}}
+==== chan-io-58.1 FAILED
+
+
+
+==== chan-io-60.1 writing illegal utf sequences FAILED
+==== Contents of test case:
+
+    # This test will hang in older revisions of the core.
+    set out [open $path(script) w]
+    chan puts $out "catch {load $::tcltestlib Tcltest}"
+    chan puts $out {
+	chan puts [testbytestring \xe2]
+	exit 1
+    }
+    proc readit {pipe} {
+	variable x
+	variable result
+	if {[chan eof $pipe]} {
+	    set x [catch {chan close $pipe} line]
+	    lappend result catch $line
+	} else {
+	    chan gets $pipe line
+	    lappend result gets $line
+	}
+    }
+    chan close $out
+    set pipe [openpipe r $path(script)]
+    chan event $pipe readable [namespace code [list readit $pipe]]
+    variable x ""
+    set result ""
+    vwait [namespace which -variable x]
+    # cut of the remainder of the error stack, especially the filename
+    set result [lreplace $result 3 3 [lindex [split [lindex $result 3] \n] 0]]
+    list $x $result
+
+---- Result was:
+1 {gets {} catch {child process exited abnormally}}
+---- Result should have been (exact matching):
+1 {gets {} catch {error writing "stdout": invalid argument}}
+==== chan-io-60.1 FAILED
+
+
+
+==== chan-io-61.1 Reset eof state after changing the eof char FAILED
+==== Contents of test case:
+
+    set f [open $datafile r]
+    chan configure $f -eofchar =
+    set res {}
+    lappend res [chan read $f; chan tell $f]
+    chan configure $f -eofchar {}
+    lappend res [chan read $f 1]
+    lappend res [chan read $f; chan tell $f]
+    # Any seek zaps the internals into a good state.
+    #chan seek $f 0 start
+    #chan seek $f 0 current
+    #lappend res [chan read $f; chan tell $f]
+
+---- Result was:
+-4019 = 0
+---- Result should have been (exact matching):
+77 = 23431
+==== chan-io-61.1 FAILED
+
 clock.test
 cmdAH.test
+
+
+==== cmdAH-32.2 file tempfile - returns a read/write channel FAILED
+==== Contents of test case:
+
+    set f [file tempfile]
+    puts $f ok
+    seek $f 0
+    gets $f
+
+---- Result was:
+
+---- Result should have been (exact matching):
+ok
+==== cmdAH-32.2 FAILED
+
 cmdIL.test
+
+
+==== cmdIL-5.7 lsort memory exhaustion FAILED
+==== Contents of test case:
+
+    # test it in child process (with limited address space) ca. 80MB extra memory
+    # on x64 system it would be not enough to sort 4M items (the half 2M only),
+    # warn and skip if no error (enough memory) or error by list creation:
+    testWithLimit  -warn-on-code 0 -warn-on-alloc-error 1  -addmem [expr {$tcl_platform(pointerSize)*4000000 + $tcl_platform(pointerSize)*3*2000000}]  {
+	# create list and get length (avoid too long output in interactive shells):
+	llength [set l [lrepeat 4000000 ""]]
+	# test OOM:
+	llength [lsort $l]
+    }
+    # expecting error no memory by sort
+
+---- Result was:
+child process exited abnormally
+---- Result should have been (exact matching):
+no enough memory to proccess sort of 4000000 items
+==== cmdIL-5.7 FAILED
+
 cmdInfo.test
 cmdMZ.test
 compExpr-old.test
@@ -38,7 +1470,44 @@ env.test
 error.test
 eval.test
 event.test
+
+
+==== event-7.5 correct behaviour when there is no bgerror [Bug 219142] FAILED
+==== Contents of test case:
+
+    exec [interpreter] << {
+	after 1000 error hello
+	after 2000 set a 0
+	vwait a
+    }
+
+---- Test completed normally; Return code was: 0
+---- Return code should have been one of: 1
+==== event-7.5 FAILED
+
 exec.test
+
+
+==== exec-9.6 commands returning errors FAILED
+==== Contents of test case:
+
+    exec [interpreter] $path(sh) -c "\"$path(echo)\" error msg 1>&2"
+
+---- Test completed normally; Return code was: 0
+---- Return code should have been one of: 1
+==== exec-9.6 FAILED
+
+
+
+==== exec-9.8 commands returning errors FAILED
+==== Contents of test case:
+
+    exec [interpreter] $path(err)
+
+---- Test completed normally; Return code was: 0
+---- Return code should have been one of: 1
+==== exec-9.8 FAILED
+
 execute.test
 expr-old.test
 expr.test
@@ -53,7 +1522,291 @@ format.test
 get.test
 history.test
 http.test
+
+
+==== http-3.11 http::geturl querychannel with -command FAILED
+==== Contents of test case:
+
+    set fp [open $file]
+    proc asyncCB {token} {
+	global postResult
+	lappend postResult [http::data $token]
+    }
+    set postResult [list ]
+    set t [http::geturl $posturl -querychannel $fp]
+    http::wait $t
+    set testRes [list [http::status $t] [string length $query] [http::data $t]]
+    # Now do async
+    http::cleanup $t
+    close $fp
+    set fp [open $file]
+    set t [http::geturl $posturl -querychannel $fp -command asyncCB]
+    set postResult [list PostStart]
+    http::wait $t
+    close $fp
+    lappend testRes [http::status $t] $postResult
+
+---- Result was:
+ok 122879 {Got 0 bytes} ok {PostStart {Got 0 bytes}}
+---- Result should have been (exact matching):
+ok 122879 {Got 122880 bytes} ok {PostStart {Got 122880 bytes}}
+==== http-3.11 FAILED
+
 http11.test
+
+
+==== http11-2.0 -channel FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok transfer-encoding]
+
+---- Result was:
+ok {HTTP/1.1 200 OK} {crc32 mismatch: e348b7cd ne 0} close chunked
+---- Result should have been (exact matching):
+ok {HTTP/1.1 200 OK} ok close chunked
+==== http11-2.0 FAILED
+
+
+
+==== http11-2.1 -channel, encoding gzip FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan -headers {accept-encoding gzip}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Result was:
+ok {HTTP/1.1 200 OK} {crc32 mismatch: e348b7cd ne 0} close gzip chunked
+---- Result should have been (exact matching):
+ok {HTTP/1.1 200 OK} ok close gzip chunked
+==== http11-2.1 FAILED
+
+
+
+==== http11-2.2 -channel, encoding deflate FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan -headers {accept-encoding deflate}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Result was:
+ok {HTTP/1.1 200 OK} {crc32 mismatch: e348b7cd ne 0} close deflate chunked
+---- Result should have been (exact matching):
+ok {HTTP/1.1 200 OK} ok close deflate chunked
+==== http11-2.2 FAILED
+
+
+
+==== http11-2.3 -channel,encoding compress FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan  -headers {accept-encoding compress}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Result was:
+ok {HTTP/1.1 200 OK} {crc32 mismatch: e348b7cd ne 0} close compress chunked
+---- Result should have been (exact matching):
+ok {HTTP/1.1 200 OK} ok close compress chunked
+==== http11-2.3 FAILED
+
+
+
+==== http11-2.4 -channel,encoding identity FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan  -headers {accept-encoding identity}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Result was:
+ok {HTTP/1.1 200 OK} {crc32 mismatch: e348b7cd ne 0} close {} chunked
+---- Result should have been (exact matching):
+ok {HTTP/1.1 200 OK} ok close {} chunked
+==== http11-2.4 FAILED
+
+
+
+==== http11-2.4.1 -channel,encoding identity with -progress FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan  -headers {accept-encoding identity}  -progress [namespace code [list progress logdata]]]
+
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding]  [expr {[lindex $logdata 0] - [lindex $logdata 1]}]  [expr {[lindex $logdata 0] - [string length $data]}]
+
+---- Result was:
+ok {HTTP/1.1 200 OK} {crc32 mismatch: e348b7cd ne 0} close {} chunked 0 130034
+---- Result should have been (exact matching):
+ok {HTTP/1.1 200 OK} ok close {} chunked 0 0
+==== http11-2.4.1 FAILED
+
+
+
+==== http11-2.5 -channel,encoding unsupported FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan  -headers {accept-encoding unsupported}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Result was:
+ok {HTTP/1.1 200 OK} {crc32 mismatch: e348b7cd ne 0} close {} chunked
+---- Result should have been (exact matching):
+ok {HTTP/1.1 200 OK} ok close {} chunked
+==== http11-2.5 FAILED
+
+
+
+==== http11-2.6 -channel,encoding gzip,non-chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 5000 -channel $chan -headers {accept-encoding gzip}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding] [expr {[file size testdoc.html]-[file size testfile.tmp]}]
+
+---- Result was:
+ok {HTTP/1.1 200 OK} {crc32 mismatch: e348b7cd ne 0} close gzip {} 0
+---- Result should have been (exact matching):
+ok {HTTP/1.1 200 OK} ok close gzip {} 0
+==== http11-2.6 FAILED
+
+
+
+==== http11-2.7 -channel,encoding deflate,non-chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 5000 -channel $chan -headers {accept-encoding deflate}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding] [expr {[file size testdoc.html]-[file size testfile.tmp]}]
+
+---- Result was:
+ok {HTTP/1.1 200 OK} {crc32 mismatch: e348b7cd ne 0} close deflate {} 0
+---- Result should have been (exact matching):
+ok {HTTP/1.1 200 OK} ok close deflate {} 0
+==== http11-2.7 FAILED
+
+
+
+==== http11-2.8 -channel,encoding compress,non-chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 5000 -channel $chan -headers {accept-encoding compress}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding] [expr {[file size testdoc.html]-[file size testfile.tmp]}]
+
+---- Result was:
+ok {HTTP/1.1 200 OK} {crc32 mismatch: e348b7cd ne 0} close compress {} 0
+---- Result should have been (exact matching):
+ok {HTTP/1.1 200 OK} ok close compress {} 0
+==== http11-2.8 FAILED
+
+
+
+==== http11-2.9 -channel,encoding identity,non-chunked FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html?close=1  -timeout 5000 -channel $chan -headers {accept-encoding identity}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding] [expr {[file size testdoc.html]-[file size testfile.tmp]}]
+
+---- Result was:
+ok {HTTP/1.1 200 OK} {crc32 mismatch: e348b7cd ne 0} close {} {} 0
+---- Result should have been (exact matching):
+ok {HTTP/1.1 200 OK} ok close {} {} 0
+==== http11-2.9 FAILED
+
+
+
+==== http11-2.10 -channel,deflate,keepalive FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan -keepalive 1  -headers {accept-encoding deflate}]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding] [expr {[file size testdoc.html]-[file size testfile.tmp]}]
+
+---- Result was:
+ok {HTTP/1.1 200 OK} {crc32 mismatch: e348b7cd ne 0} {} deflate chunked 0
+---- Result should have been (exact matching):
+ok {HTTP/1.1 200 OK} ok {} deflate chunked 0
+==== http11-2.10 FAILED
+
+
+
+==== http11-2.11 -channel,identity,keepalive FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -headers {accept-encoding identity}  -timeout 5000 -channel $chan -keepalive 1]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding]
+
+---- Result was:
+ok {HTTP/1.1 200 OK} {crc32 mismatch: e348b7cd ne 0} {} {} chunked
+---- Result should have been (exact matching):
+ok {HTTP/1.1 200 OK} ok {} {} chunked
+==== http11-2.11 FAILED
+
+
+
+==== http11-2.12 -channel,negotiate,keepalive FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html  -timeout 5000 -channel $chan -keepalive 1]
+    http::wait $tok
+    seek $chan 0
+    set data [read $chan]
+    list [http::status $tok] [http::code $tok] [check_crc $tok $data] [meta $tok connection] [meta $tok content-encoding] [meta $tok transfer-encoding] [meta $tok x-requested-encodings] [expr {[file size testdoc.html]-[file size testfile.tmp]}]
+
+---- Result was:
+ok {HTTP/1.1 200 OK} {crc32 mismatch: e348b7cd ne 0} {} gzip chunked gzip,deflate,compress 0
+---- Result should have been (exact matching):
+ok {HTTP/1.1 200 OK} ok {} gzip chunked gzip,deflate,compress 0
+==== http11-2.12 FAILED
+
+
+
+==== http11-4.3 normal post request, check channel query length FAILED
+==== Contents of test case:
+
+    set tok [http::geturl http://localhost:$httpd_port/testdoc.html -headers [list x-check-query yes] -querychannel $chan -timeout 10000]
+    http::wait $tok
+    list status [http::status $tok] code [http::code $tok] crc [check_crc $tok] connection [meta $tok connection] query-length [meta $tok x-query-length]
+
+---- Result was:
+status ok code {HTTP/1.1 200 OK} crc ok connection close query-length 0
+---- Result should have been (exact matching):
+status ok code {HTTP/1.1 200 OK} crc ok connection close query-length 122880
+==== http11-4.3 FAILED
+
 httpPipeline.test
 httpold.test
 if-old.test
@@ -65,8 +1818,2015 @@ info.test
 init.test
 interp.test
 io.test
+
+
+==== io-6.3 Tcl_GetsObj: how many have we used? FAILED
+==== Contents of test case:
+
+    # if (bufPtr != NULL) {oldRemoved = bufPtr->nextRemoved}
+
+    set f [open $path(test1) w]
+    fconfigure $f -translation crlf
+    puts $f "abc\ndefg"
+    close $f
+    set f [open $path(test1)]
+    set x [list [tell $f] [gets $f line] [tell $f] [gets $f line] $line]
+    close $f
+    set x
+
+---- Result was:
+0 3 -6 4 defg
+---- Result should have been (exact matching):
+0 3 5 4 defg
+==== io-6.3 FAILED
+
+
+
+==== io-6.32 Tcl_GetsObj: crlf mode: buffer exhausted, more data FAILED
+==== Contents of test case:
+
+    # not (FilterInputBytes() != 0)
+
+    set f [open $path(test1) w]
+    fconfigure $f -translation lf
+    puts -nonewline $f "123456789012345\r\n123"
+    close $f
+    set f [open $path(test1)]
+    fconfigure $f -translation crlf -buffersize 16
+    set x [list [gets $f line] $line [tell $f] [testchannel inputbuffered $f]]
+    close $f
+    set x
+
+---- Result was:
+15 123456789012345 -3 3
+---- Result should have been (exact matching):
+15 123456789012345 17 3
+==== io-6.32 FAILED
+
+
+
+==== io-6.34 Tcl_GetsObj: crlf mode: buffer exhausted, not followed by \n FAILED
+==== Contents of test case:
+
+    # not (*eol == '\n')
+
+    set f [open $path(test1) w]
+    fconfigure $f -translation lf
+    puts -nonewline $f "123456789012345\rabcd\r\nefg"
+    close $f
+    set f [open $path(test1)]
+    fconfigure $f -translation crlf -buffersize 16
+    set x [list [gets $f line] $line [tell $f]]
+    close $f
+    set x
+
+---- Result was:
+20 {123456789012345
+abcd} -3
+---- Result should have been (exact matching):
+20 {123456789012345
+abcd} 22
+==== io-6.34 FAILED
+
+
+
+==== io-6.49 Tcl_GetsObj: auto mode: \r followed by \n FAILED
+==== Contents of test case:
+
+    # if (*eol == '\n') {skip++}
+
+    set f [open $path(test1) w]
+    fconfigure $f -translation lf
+    puts -nonewline $f "123456\r\n78901"
+    close $f
+    set f [open $path(test1)]
+    set x [list [gets $f] [testchannel queuedcr $f] [tell $f] [gets $f]]
+    close $f
+    set x
+
+---- Result was:
+123456 0 -5 78901
+---- Result should have been (exact matching):
+123456 0 8 78901
+==== io-6.49 FAILED
+
+
+
+==== io-6.50 Tcl_GetsObj: auto mode: \r not followed by \n FAILED
+==== Contents of test case:
+
+    # not (*eol == '\n')
+
+    set f [open $path(test1) w]
+    fconfigure $f -translation lf
+    puts -nonewline $f "123456\r78901"
+    close $f
+    set f [open $path(test1)]
+    set x [list [gets $f] [testchannel queuedcr $f] [tell $f] [gets $f]]
+    close $f
+    set x
+
+---- Result was:
+123456 0 -5 78901
+---- Result should have been (exact matching):
+123456 0 7 78901
+==== io-6.50 FAILED
+
+
+
+==== io-6.51 Tcl_GetsObj: auto mode: \n FAILED
+==== Contents of test case:
+
+    # else if (*eol == '\n') {goto gotoeol;}
+
+    set f [open $path(test1) w]
+    fconfigure $f -translation lf
+    puts -nonewline $f "123456\n78901"
+    close $f
+    set f [open $path(test1)]
+    set x [list [gets $f] [tell $f] [gets $f]]
+    close $f
+    set x
+
+---- Result was:
+123456 -5 78901
+---- Result should have been (exact matching):
+123456 7 78901
+==== io-6.51 FAILED
+
+
+
+==== io-6.52 Tcl_GetsObj: saw EOF character FAILED
+==== Contents of test case:
+
+    # if (eof != NULL)
+
+    set f [open $path(test1) w]
+    fconfigure $f -translation lf
+    puts -nonewline $f "123456\x1Ak9012345\r"
+    close $f
+    set f [open $path(test1)]
+    fconfigure $f -eofchar \x1A
+    set x [list [gets $f] [testchannel queuedcr $f] [tell $f] [gets $f]]
+    close $f
+    set x
+
+---- Result was:
+123456 0 -10 {}
+---- Result should have been (exact matching):
+123456 0 6 {}
+==== io-6.52 FAILED
+
+
+
+==== io-7.3 FilterInputBytes: split up character at EOF FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) w]
+    fconfigure $f -encoding binary
+    puts -nonewline $f "1234567890123\x82\x4f\x82\x50\x82"
+    close $f
+    set f [open $path(test1)]
+    fconfigure $f -encoding shiftjis
+    set x [list [gets $f line] $line]
+    lappend x [tell $f] [testchannel inputbuffered $f] [eof $f]
+    lappend x [gets $f line] $line
+    close $f
+    set x
+
+---- Result was:
+15 1234567890123０１ 0 0 1 -1 {}
+---- Result should have been (exact matching):
+15 1234567890123０１ 18 0 1 -1 {}
+==== io-7.3 FAILED
+
+
+
+==== io-20.5 Tcl_CreateChannel: install channel in empty slot FAILED
+==== Contents of test case:
+
+    set f [open $path(script) w]
+    puts -nonewline $f {
+	close stdout
+	set f1 [}
+    puts $f [list open $path(stdout) w]]
+    puts $f {
+	fconfigure $f1 -buffersize 777
+	puts stderr [fconfigure stdout -buffersize]
+    }
+    close $f
+    set f [open "|[list [interpreter] $path(script)]"]
+    catch {close $f} msg
+    set msg
+
+---- Result was:
+
+---- Result should have been (exact matching):
+777
+==== io-20.5 FAILED
+
+
+
+==== io-25.1 Tcl_GetChannelHandle, input FAILED
+==== Contents of test case:
+
+    set f [open $path(test1) w]
+    fconfigure $f -translation lf -eofchar {}
+    puts $f "1234567890\n098765432"
+    close $f
+    set f [open $path(test1) r]
+    gets $f
+    set l ""
+    lappend l [testchannel inputbuffered $f]
+    lappend l [tell $f]
+    close $f
+    set l
+
+---- Result was:
+10 -10
+---- Result should have been (exact matching):
+10 11
+==== io-25.1 FAILED
+
+
+
+==== io-25.2 Tcl_GetChannelHandle, output FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    fconfigure $f -translation lf
+    puts $f hello
+    set l ""
+    lappend l [testchannel outputbuffered $f]
+    lappend l [tell $f]
+    flush $f
+    lappend l [testchannel outputbuffered $f]
+    lappend l [tell $f]
+    close $f
+    file delete $path(test1)
+    set l
+
+---- Result was:
+6 6 0 0
+---- Result should have been (exact matching):
+6 6 0 6
+==== io-25.2 FAILED
+
+
+
+==== io-31.1 Tcl_Write lf, Tcl_Gets auto FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    fconfigure $f -translation lf
+    puts $f hello\nthere\nand\nhere
+    close $f
+    set f [open $path(test1) r]
+    set l ""
+    lappend l [gets $f]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    lappend l [gets $f]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    close $f
+    set l
+
+---- Result was:
+hello -15 auto there -9 auto
+---- Result should have been (exact matching):
+hello 6 auto there 12 auto
+==== io-31.1 FAILED
+
+
+
+==== io-31.2 Tcl_Write cr, Tcl_Gets auto FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    fconfigure $f -translation cr
+    puts $f hello\nthere\nand\nhere
+    close $f
+    set f [open $path(test1) r]
+    set l ""
+    lappend l [gets $f]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    lappend l [gets $f]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    close $f
+    set l
+
+---- Result was:
+hello -15 auto there -9 auto
+---- Result should have been (exact matching):
+hello 6 auto there 12 auto
+==== io-31.2 FAILED
+
+
+
+==== io-31.3 Tcl_Write crlf, Tcl_Gets auto FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    fconfigure $f -translation crlf
+    puts $f hello\nthere\nand\nhere
+    close $f
+    set f [open $path(test1) r]
+    set l ""
+    lappend l [gets $f]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    lappend l [gets $f]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    close $f
+    set l
+
+---- Result was:
+hello -18 auto there -11 auto
+---- Result should have been (exact matching):
+hello 7 auto there 14 auto
+==== io-31.3 FAILED
+
+
+
+==== io-31.4 Tcl_Write lf, Tcl_Gets lf FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    fconfigure $f -translation lf
+    puts $f hello\nthere\nand\nhere
+    close $f
+    set f [open $path(test1) r]
+    fconfigure $f -translation lf
+    set l ""
+    lappend l [gets $f]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    lappend l [gets $f]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    close $f
+    set l
+
+---- Result was:
+hello -15 lf there -9 lf
+---- Result should have been (exact matching):
+hello 6 lf there 12 lf
+==== io-31.4 FAILED
+
+
+
+==== io-31.5 Tcl_Write lf, Tcl_Gets cr FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    fconfigure $f -translation lf
+    puts $f hello\nthere\nand\nhere
+    close $f
+    set f [open $path(test1) r]
+    fconfigure $f -translation cr
+    set l ""
+    lappend l [string length [gets $f]]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    lappend l [eof $f]
+    lappend l [gets $f]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    lappend l [eof $f]
+    close $f
+    set l
+
+---- Result was:
+21 0 cr 1 {} 0 cr 1
+---- Result should have been (exact matching):
+21 21 cr 1 {} 21 cr 1
+==== io-31.5 FAILED
+
+
+
+==== io-31.6 Tcl_Write lf, Tcl_Gets crlf FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    fconfigure $f -translation lf
+    puts $f hello\nthere\nand\nhere
+    close $f
+    set f [open $path(test1) r]
+    fconfigure $f -translation crlf
+    set l ""
+    lappend l [string length [gets $f]]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    lappend l [eof $f]
+    lappend l [gets $f]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    lappend l [eof $f]
+    close $f
+    set l
+
+---- Result was:
+21 0 crlf 1 {} 0 crlf 1
+---- Result should have been (exact matching):
+21 21 crlf 1 {} 21 crlf 1
+==== io-31.6 FAILED
+
+
+
+==== io-31.7 Tcl_Write cr, Tcl_Gets cr FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    fconfigure $f -translation cr
+    puts $f hello\nthere\nand\nhere
+    close $f
+    set f [open $path(test1) r]
+    fconfigure $f -translation cr
+    set l ""
+    lappend l [gets $f]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    lappend l [eof $f]
+    lappend l [gets $f]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    lappend l [eof $f]
+    close $f
+    set l
+
+---- Result was:
+hello -15 cr 0 there -9 cr 0
+---- Result should have been (exact matching):
+hello 6 cr 0 there 12 cr 0
+==== io-31.7 FAILED
+
+
+
+==== io-31.8 Tcl_Write cr, Tcl_Gets lf FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    fconfigure $f -translation cr
+    puts $f hello\nthere\nand\nhere
+    close $f
+    set f [open $path(test1) r]
+    fconfigure $f -translation lf
+    set l ""
+    lappend l [string length [gets $f]]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    lappend l [eof $f]
+    lappend l [gets $f]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    lappend l [eof $f]
+    close $f
+    set l
+
+---- Result was:
+21 0 lf 1 {} 0 lf 1
+---- Result should have been (exact matching):
+21 21 lf 1 {} 21 lf 1
+==== io-31.8 FAILED
+
+
+
+==== io-31.9 Tcl_Write cr, Tcl_Gets crlf FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    fconfigure $f -translation cr
+    puts $f hello\nthere\nand\nhere
+    close $f
+    set f [open $path(test1) r]
+    fconfigure $f -translation crlf
+    set l ""
+    lappend l [string length [gets $f]]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    lappend l [eof $f]
+    lappend l [gets $f]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    lappend l [eof $f]
+    close $f
+    set l
+
+---- Result was:
+21 0 crlf 1 {} 0 crlf 1
+---- Result should have been (exact matching):
+21 21 crlf 1 {} 21 crlf 1
+==== io-31.9 FAILED
+
+
+
+==== io-31.10 Tcl_Write crlf, Tcl_Gets crlf FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    fconfigure $f -translation crlf
+    puts $f hello\nthere\nand\nhere
+    close $f
+    set f [open $path(test1) r]
+    fconfigure $f -translation crlf
+    set l ""
+    lappend l [gets $f]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    lappend l [eof $f]
+    lappend l [gets $f]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    lappend l [eof $f]
+    close $f
+    set l
+
+---- Result was:
+hello -18 crlf 0 there -11 crlf 0
+---- Result should have been (exact matching):
+hello 7 crlf 0 there 14 crlf 0
+==== io-31.10 FAILED
+
+
+
+==== io-31.11 Tcl_Write crlf, Tcl_Gets cr FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    fconfigure $f -translation crlf
+    puts $f hello\nthere\nand\nhere
+    close $f
+    set f [open $path(test1) r]
+    fconfigure $f -translation cr
+    set l ""
+    lappend l [gets $f]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    lappend l [eof $f]
+    lappend l [string length [gets $f]]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    lappend l [eof $f]
+    close $f
+    set l
+
+---- Result was:
+hello -19 cr 0 6 -12 cr 0
+---- Result should have been (exact matching):
+hello 6 cr 0 6 13 cr 0
+==== io-31.11 FAILED
+
+
+
+==== io-31.12 Tcl_Write crlf, Tcl_Gets lf FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    fconfigure $f -translation crlf
+    puts $f hello\nthere\nand\nhere
+    close $f
+    set f [open $path(test1) r]
+    fconfigure $f -translation lf
+    set l ""
+    lappend l [string length [gets $f]]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    lappend l [eof $f]
+    lappend l [string length [gets $f]]
+    lappend l [tell $f]
+    lappend l [fconfigure $f -translation]
+    lappend l [eof $f]
+    close $f
+    set l
+
+---- Result was:
+6 -18 lf 0 6 -11 lf 0
+---- Result should have been (exact matching):
+6 7 lf 0 6 14 lf 0
+==== io-31.12 FAILED
+
+
+
+==== io-34.2 Tcl_Seek to offset from start FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f1 [open $path(test1) w]
+    fconfigure $f1 -translation lf -eofchar {}
+    puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    close $f1
+    set f1 [open $path(test1) r]
+    seek $f1 10 start
+    set c [tell $f1]
+    close $f1
+    set c
+
+---- Result was:
+1
+---- Result should have been (exact matching):
+10
+==== io-34.2 FAILED
+
+
+
+==== io-34.3 Tcl_Seek to end of file FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f1 [open $path(test1) w]
+    fconfigure $f1 -translation lf -eofchar {}
+    puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    close $f1
+    set f1 [open $path(test1) r]
+    seek $f1 0 end
+    set c [tell $f1]
+    close $f1
+    set c
+
+---- Result was:
+0
+---- Result should have been (exact matching):
+54
+==== io-34.3 FAILED
+
+
+
+==== io-34.4 Tcl_Seek to offset from end of file FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f1 [open $path(test1) w]
+    fconfigure $f1 -translation lf -eofchar {}
+    puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    close $f1
+    set f1 [open $path(test1) r]
+    seek $f1 -10 end
+    set c [tell $f1]
+    close $f1
+    set c
+
+---- Result was:
+1
+---- Result should have been (exact matching):
+44
+==== io-34.4 FAILED
+
+
+
+==== io-34.5 Tcl_Seek to offset from current position FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f1 [open $path(test1) w]
+    fconfigure $f1 -translation lf -eofchar {}
+    puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    close $f1
+    set f1 [open $path(test1) r]
+    seek $f1 10 current
+    seek $f1 10 current
+    set c [tell $f1]
+    close $f1
+    set c
+
+---- Test generated error; Return code was: 1
+---- Return code should have been one of: 0 2
+---- errorInfo: error during seek on "file8": strerror(0)
+    while executing
+"seek $f1 10 current"
+    ("uplevel" body line 10)
+    invoked from within
+"uplevel 1 $script"
+---- errorCode: POSIX {unknown error} strerror(0)
+==== io-34.5 FAILED
+
+
+
+==== io-34.6 Tcl_Seek to offset from end of file FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f1 [open $path(test1) w]
+    fconfigure $f1 -translation lf -eofchar {}
+    puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    close $f1
+    set f1 [open $path(test1) r]
+    seek $f1 -10 end
+    set c [tell $f1]
+    set r [read $f1]
+    close $f1
+    list $c $r
+
+---- Result was:
+1 {abcdefghijklmnopqrstuvwxyz
+abcdefghijklmnopqrstuvwxyz
+}
+---- Result should have been (exact matching):
+44 {rstuvwxyz
+}
+==== io-34.6 FAILED
+
+
+
+==== io-34.7 Tcl_Seek to offset from end of file, then to current position FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f1 [open $path(test1) w]
+    fconfigure $f1 -translation lf -eofchar {}
+    puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    close $f1
+    set f1 [open $path(test1) r]
+    seek $f1 -10 end
+    set c1 [tell $f1]
+    set r1 [read $f1 5]
+    seek $f1 0 current
+    set c2 [tell $f1]
+    close $f1
+    list $c1 $r1 $c2
+
+---- Result was:
+1 abcde 1
+---- Result should have been (exact matching):
+44 rstuv 49
+==== io-34.7 FAILED
+
+
+
+==== io-34.9 Tcl_Seek, testing buffered input flushing FAILED
+==== Contents of test case:
+
+    file delete $path(test3)
+    set f [open $path(test3) w]
+    fconfigure $f -eofchar {}
+    puts -nonewline $f "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    close $f
+    set f [open $path(test3) RDWR]
+    set x [read $f 1]
+    seek $f 3
+    lappend x [read $f 1]
+    seek $f 0 start
+    lappend x [read $f 1]
+    seek $f 10 current
+    lappend x [read $f 1]
+    seek $f -2 end
+    lappend x [read $f 1]
+    seek $f 50 end
+    lappend x [read $f 1]
+    seek $f 1
+    lappend x [read $f 1]
+    close $f
+    set x
+
+---- Result was:
+a {} {} {} {} {} {}
+---- Result should have been (exact matching):
+a d a l Y {} b
+==== io-34.9 FAILED
+
+
+
+==== io-34.10 Tcl_Seek testing flushing of buffered input FAILED
+==== Contents of test case:
+
+    set f [open $path(test3) w]
+    fconfigure $f -translation lf
+    puts $f xyz\n123
+    close $f
+    set f [open $path(test3) r+]
+    fconfigure $f -translation lf
+    set x [gets $f]
+    seek $f 0 current
+    puts $f 456
+    close $f
+    list $x [viewFile test3]
+
+---- Result was:
+xyz {xyz
+123
+456}
+---- Result should have been (exact matching):
+xyz {xyz
+456}
+==== io-34.10 FAILED
+
+
+
+==== io-34.11 Tcl_Seek testing flushing of buffered output FAILED
+==== Contents of test case:
+
+    set f [open $path(test3) w]
+    puts $f xyz\n123
+    close $f
+    set f [open $path(test3) w+]
+    puts $f xyzzy
+    seek $f 2
+    set x [gets $f]
+    close $f
+    list $x [viewFile test3]
+
+---- Result was:
+{} xyzzy
+---- Result should have been (exact matching):
+zzy xyzzy
+==== io-34.11 FAILED
+
+
+
+==== io-34.12 Tcl_Seek testing combination of write, seek back and read FAILED
+==== Contents of test case:
+
+    set f [open $path(test3) w]
+    fconfigure $f -translation lf -eofchar {}
+    puts $f xyz\n123
+    close $f
+    set f [open $path(test3) a+]
+    fconfigure $f -translation lf -eofchar {}
+    puts $f xyzzy
+    flush $f
+    set x [tell $f]
+    seek $f -4 cur
+    set y [gets $f]
+    close $f
+    list $x [viewFile test3] $y
+
+---- Result was:
+140409646457712 {xyzzy
+3} 3
+---- Result should have been (exact matching):
+14 {xyz
+123
+xyzzy} zzy
+==== io-34.12 FAILED
+
+
+
+==== io-34.13 Tcl_Tell at start of file FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f1 [open $path(test1) w]
+    set p [tell $f1]
+    close $f1
+    set p
+
+---- Result was:
+140409646457712
+---- Result should have been (exact matching):
+0
+==== io-34.13 FAILED
+
+
+
+==== io-34.14 Tcl_Tell after seek to end of file FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f1 [open $path(test1) w]
+    fconfigure $f1 -translation lf -eofchar {}
+    puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    close $f1
+    set f1 [open $path(test1) r]
+    seek $f1 0 end
+    set c1 [tell $f1]
+    close $f1
+    set c1
+
+---- Result was:
+140409646457712
+---- Result should have been (exact matching):
+54
+==== io-34.14 FAILED
+
+
+
+==== io-34.15 Tcl_Tell combined with seeking FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f1 [open $path(test1) w]
+    fconfigure $f1 -translation lf -eofchar {}
+    puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    puts $f1 "abcdefghijklmnopqrstuvwxyz"
+    close $f1
+    set f1 [open $path(test1) r]
+    seek $f1 10 start
+    set c1 [tell $f1]
+    seek $f1 10 current
+    set c2 [tell $f1]
+    close $f1
+    list $c1 $c2
+
+---- Result was:
+1 1
+---- Result should have been (exact matching):
+10 20
+==== io-34.15 FAILED
+
+
+
+==== io-34.18 Tcl_Tell combined with seeking and reading FAILED
+==== Contents of test case:
+
+    file delete $path(test2)
+    set f [open $path(test2) w]
+    fconfigure $f -translation lf -eofchar {}
+    puts -nonewline $f "line1\nline2\nline3\nline4\nline5\n"
+    close $f
+    set f [open $path(test2)]
+    fconfigure $f -translation lf
+    set x [tell $f]
+    read $f 3
+    lappend x [tell $f]
+    seek $f 2
+    lappend x [tell $f]
+    seek $f 10 current
+    lappend x [tell $f]
+    seek $f 0 end
+    lappend x [tell $f]
+    close $f
+    set x
+
+---- Result was:
+140409646457712 140409646457685 1 1 140409646457712
+---- Result should have been (exact matching):
+0 3 2 12 30
+==== io-34.18 FAILED
+
+
+
+==== io-34.19 Tcl_Tell combined with opening in append mode FAILED
+==== Contents of test case:
+
+    set f [open $path(test3) w]
+    fconfigure $f -translation lf -eofchar {}
+    puts $f "abcdefghijklmnopqrstuvwxyz"
+    puts $f "abcdefghijklmnopqrstuvwxyz"
+    close $f
+    set f [open $path(test3) a]
+    set c [tell $f]
+    close $f
+    set c
+
+---- Result was:
+140409646457712
+---- Result should have been (exact matching):
+54
+==== io-34.19 FAILED
+
+
+
+==== io-34.20 Tcl_Tell combined with writing FAILED
+==== Contents of test case:
+
+    set f [open $path(test3) w]
+    set l ""
+    seek $f 29 start
+    lappend l [tell $f]
+    puts -nonewline $f a
+    seek $f 39 start
+    lappend l [tell $f]
+    puts -nonewline $f a
+    lappend l [tell $f]
+    seek $f 407 end
+    lappend l [tell $f]
+    close $f
+    set l
+
+---- Result was:
+1 1 140409646457713 1
+---- Result should have been (exact matching):
+29 39 40 447
+==== io-34.20 FAILED
+
+
+
+==== io-34.21 Tcl_Seek and Tcl_Tell on large files FAILED
+==== Contents of test case:
+
+    file delete $path(test3)
+    set f [open $path(test3) w]
+    fconfigure $f -encoding binary
+    set l ""
+    lappend l [tell $f]
+    puts -nonewline $f abcdef
+    lappend l [tell $f]
+    flush $f
+    lappend l [tell $f]
+    # 4GB offset!
+    seek $f 0x100000000
+    lappend l [tell $f]
+    puts -nonewline $f abcdef
+    lappend l [tell $f]
+    close $f
+    lappend l [file size $path(test3)]
+    # truncate...
+    close [open $path(test3) w]
+    lappend l [file size $path(test3)]
+    set l
+
+---- Result was:
+140409646457712 140409646457718 140409646457712 140409646457712 140409646457718 12 0
+---- Result should have been (exact matching):
+0 6 6 4294967296 4294967302 4294967302 0
+==== io-34.21 FAILED
+
+
+
+==== io-37.1 Tcl_InputBuffered FAILED
+==== Contents of test case:
+
+    set f [open $path(longfile) r]
+    fconfigure $f -buffersize 4096
+    read $f 3
+    set l ""
+    lappend l [testchannel inputbuffered $f]
+    lappend l [tell $f]
+    close $f
+    set l
+
+---- Result was:
+4093 -4093
+---- Result should have been (exact matching):
+4093 3
+==== io-37.1 FAILED
+
+
+
+==== io-37.2 Tcl_InputBuffered, test input flushing on seek FAILED
+==== Contents of test case:
+
+    set f [open $path(longfile) r]
+    fconfigure $f -buffersize 4096
+    read $f 3
+    set l ""
+    lappend l [testchannel inputbuffered $f]
+    lappend l [tell $f]
+    seek $f 0 current
+    lappend l [testchannel inputbuffered $f]
+    lappend l [tell $f]
+    close $f
+    set l
+
+---- Result was:
+4093 -4093 0 1
+---- Result should have been (exact matching):
+4093 3 0 3
+==== io-37.2 FAILED
+
+
+
+==== io-40.5 POSIX open access modes: APPEND FAILED
+==== Contents of test case:
+
+    file delete $path(test3)
+    set f [open $path(test3) w]
+    fconfigure $f -translation lf -eofchar {}
+    puts $f xyzzy
+    close $f
+    set f [open $path(test3) {WRONLY APPEND}]
+    fconfigure $f -translation lf
+    puts $f "new line"
+    seek $f 0
+    puts $f "abc"
+    close $f
+    set f [open $path(test3) r]
+    fconfigure $f -translation lf
+    set x ""
+    seek $f 6 current
+    lappend x [gets $f]
+    lappend x [gets $f]
+    close $f
+    set x
+
+---- Result was:
+xyzzy {new line}
+---- Result should have been (exact matching):
+{new line} abc
+==== io-40.5 FAILED
+
+
+
+==== io-49.1 testing crlf reading, leftover cr disgorgment FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    fconfigure $f -translation lf
+    puts -nonewline $f "a\rb\rc\r\n"
+    close $f
+    set f [open $path(test1) r]
+    set l ""
+    lappend l [file size $path(test1)]
+    fconfigure $f -translation crlf
+    lappend l [read $f 1]
+    lappend l [tell $f]
+    lappend l [read $f 1]
+    lappend l [tell $f]
+    lappend l [read $f 1]
+    lappend l [tell $f]
+    lappend l [read $f 1]
+    lappend l [tell $f]
+    lappend l [read $f 1]
+    lappend l [tell $f]
+    lappend l [read $f 1]
+    lappend l [tell $f]
+    lappend l [eof $f]
+    lappend l [read $f 1]
+    lappend l [eof $f]
+    close $f
+    set l
+
+---- Result was:
+7 a -6 {
+} -5 b -4 {
+} -3 c -2 {
+} 0 0 {} 1
+---- Result should have been (exact matching):
+7 a 1 {
+} 2 b 3 {
+} 4 c 5 {
+} 7 0 {} 1
+==== io-49.1 FAILED
+
+
+
+==== io-49.2 testing crlf reading, leftover cr disgorgment FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    fconfigure $f -translation lf
+    puts -nonewline $f "a\rb\rc\r\n"
+    close $f
+    set f [open $path(test1) r]
+    set l ""
+    lappend l [file size $path(test1)]
+    fconfigure $f -translation crlf
+    lappend l [read $f 2]
+    lappend l [tell $f]
+    lappend l [read $f 2]
+    lappend l [tell $f]
+    lappend l [read $f 2]
+    lappend l [tell $f]
+    lappend l [eof $f]
+    lappend l [read $f 2]
+    lappend l [tell $f]
+    lappend l [eof $f]
+    close $f
+    set l
+
+---- Result was:
+7 {a
+} -5 {b
+} -3 {c
+} 0 0 {} 0 1
+---- Result should have been (exact matching):
+7 {a
+} 2 {b
+} 4 {c
+} 7 0 {} 7 1
+==== io-49.2 FAILED
+
+
+
+==== io-49.3 testing crlf reading, leftover cr disgorgment FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    fconfigure $f -translation lf
+    puts -nonewline $f "a\rb\rc\r\n"
+    close $f
+    set f [open $path(test1) r]
+    set l ""
+    lappend l [file size $path(test1)]
+    fconfigure $f -translation crlf
+    lappend l [read $f 3]
+    lappend l [tell $f]
+    lappend l [read $f 3]
+    lappend l [tell $f]
+    lappend l [eof $f]
+    lappend l [read $f 3]
+    lappend l [tell $f]
+    lappend l [eof $f]
+    close $f
+    set l
+
+---- Result was:
+7 {a
+b} -4 {
+c
+} 0 0 {} 0 1
+---- Result should have been (exact matching):
+7 {a
+b} 3 {
+c
+} 7 0 {} 7 1
+==== io-49.3 FAILED
+
+
+
+==== io-49.4 testing crlf reading, leftover cr disgorgment FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    fconfigure $f -translation lf
+    puts -nonewline $f "a\rb\rc\r\n"
+    close $f
+    set f [open $path(test1) r]
+    set l ""
+    lappend l [file size $path(test1)]
+    fconfigure $f -translation crlf
+    lappend l [read $f 3]
+    lappend l [tell $f]
+    lappend l [gets $f]
+    lappend l [tell $f]
+    lappend l [eof $f]
+    lappend l [gets $f]
+    lappend l [tell $f]
+    lappend l [eof $f]
+    close $f
+    set l
+
+---- Result was:
+7 {a
+b} -4 {
+c} 0 0 {} 0 1
+---- Result should have been (exact matching):
+7 {a
+b} 3 {
+c} 7 0 {} 7 1
+==== io-49.4 FAILED
+
+
+
+==== io-49.5 testing crlf reading, leftover cr disgorgment FAILED
+==== Contents of test case:
+
+    file delete $path(test1)
+    set f [open $path(test1) w]
+    fconfigure $f -translation lf
+    puts -nonewline $f "a\rb\rc\r\n"
+    close $f
+    set f [open $path(test1) r]
+    set l ""
+    lappend l [file size $path(test1)]
+    fconfigure $f -translation crlf
+    lappend l [set x [gets $f]]
+    lappend l [tell $f]
+    lappend l [gets $f]
+    lappend l [tell $f]
+    lappend l [eof $f]
+    close $f
+    set l
+
+---- Result was:
+7 {a
+b
+c} 0 {} 0 1
+---- Result should have been (exact matching):
+7 {a
+b
+c} 7 {} 7 1
+==== io-49.5 FAILED
+
+
+
+==== io-53.8a CopyData: async callback and error handling, Bug 1932639, at eof FAILED
+==== Contents of test case:
+
+    # Initialize and force eof on the input.
+    seek $f 0 end ; read $f 1
+    set ::RES [eof $f]
+    # Run the copy. Should not invoke -command now.
+    fcopy $f $g -size 2 -command ::cmd
+    # Check that -command was not called synchronously
+    lappend ::RES [expr {([llength $::RES] > 1) ? "sync/FAIL" : "sync/OK"}]
+    # Now let the async part happen. Should capture the eof in cmd
+    # If not break the event loop via timer.
+    set token [after 1000 {
+	lappend ::RES {cmd/FAIL timeout}
+	set ::forever has-been-reached
+    }]
+    vwait ::forever
+    catch {after cancel $token}
+    # Report
+    set ::RES
+
+---- Result was:
+0 sync/OK {CMD 2}
+---- Result should have been (exact matching):
+1 sync/OK {CMD 0}
+==== io-53.8a FAILED
+
+
+
+==== io-58.1 Tcl_NotifyChannel and error when closing FAILED
+==== Contents of test case:
+
+    set out [open $path(script) w]
+    puts $out {
+	puts "normal message from pipe"
+	puts stderr "error message from pipe"
+	exit 1
+    }
+    proc readit {pipe} {
+	variable x
+	variable result
+	if {[eof $pipe]} {
+	    set x [catch {close $pipe} line]
+	    lappend result catch $line
+	} else {
+	    gets $pipe line
+	    lappend result gets $line
+	}
+    }
+    close $out
+    set pipe [open "|[list [interpreter] $path(script)]" r]
+    fileevent $pipe readable [namespace code [list readit $pipe]]
+    variable x ""
+    set result ""
+    vwait [namespace which -variable x]
+    list $x $result
+
+---- Result was:
+1 {gets {normal message from pipe} gets {} catch {child process exited abnormally}}
+---- Result should have been (exact matching):
+1 {gets {normal message from pipe} gets {} catch {error message from pipe}}
+==== io-58.1 FAILED
+
+
+
+==== io-60.1 writing illegal utf sequences FAILED
+==== Contents of test case:
+
+    # This test will hang in older revisions of the core.
+
+    set out [open $path(script) w]
+    puts $out "catch {load $::tcltestlib Tcltest}"
+    puts $out {
+	puts [testbytestring \xe2]
+	exit 1
+    }
+    proc readit {pipe} {
+	variable x
+	variable result
+	if {[eof $pipe]} {
+	    set x [catch {close $pipe} line]
+	    lappend result catch $line
+	} else {
+	    gets $pipe line
+	    lappend result gets $line
+	}
+    }
+    close $out
+    set pipe [open "|[list [interpreter] $path(script)]" r]
+    fileevent $pipe readable [namespace code [list readit $pipe]]
+    variable x ""
+    set result ""
+    vwait [namespace which -variable x]
+
+    # cut of the remainder of the error stack, especially the filename
+    set result [lreplace $result 3 3 [lindex [split [lindex $result 3] \n] 0]]
+    list $x $result
+
+---- Result was:
+1 {gets {} catch {child process exited abnormally}}
+---- Result should have been (exact matching):
+1 {gets {} catch {error writing "stdout": invalid argument}}
+==== io-60.1 FAILED
+
+
+
+==== io-61.1 Reset eof state after changing the eof char FAILED
+==== Contents of test case:
+
+    set f [open $datafile r]
+    fconfigure $f -eofchar =
+    set res {}
+    lappend res [read $f; tell $f]
+    fconfigure $f -eofchar {}
+    lappend res [read $f 1]
+    lappend res [read $f; tell $f]
+    # Any seek zaps the internals into a good state.
+    #seek $f 0 start
+    #seek $f 0 current
+    #lappend res [read $f; tell $f]
+    close $f
+    set res
+
+---- Result was:
+-4019 = 0
+---- Result should have been (exact matching):
+77 = 23431
+==== io-61.1 FAILED
+
 ioCmd.test
+
+
+==== ioCmd-13.11 open ... a+ must not use O_APPEND: Bug 1773127 FAILED
+==== Contents of test case:
+
+    set fid [open $f ab+]
+    puts -nonewline $fid 456
+    seek $fid 2
+    set d [read $fid 2]
+    seek $fid 4
+    puts -nonewline $fid x
+    close $fid
+    set fid [open $f rb]
+    append d [read $fid]
+    close $fid
+    return $d
+
+---- Result was:
+456x
+---- Result should have been (exact matching):
+341234x6
+==== ioCmd-13.11 FAILED
+
+
+
+==== iocmd-28.2 chan tell, error return FAILED
+==== Contents of test case:
+
+    set res {}
+    proc foo {args} {oninit seek; onfinal; track; return -code error BOOM!}
+    set c [chan create {r w} foo]
+    note [catch {tell $c} msg]; note $msg
+    close $c
+    rename foo {}
+    set res
+
+---- Result was:
+0 824635236464
+---- Result should have been (glob matching):
+{seek rc* 0 current} 1 BOOM!
+==== iocmd-28.2 FAILED
+
+
+
+==== iocmd-28.3 chan tell, break return is error FAILED
+==== Contents of test case:
+
+    set res {}
+    proc foo {args} {oninit seek; onfinal; track; return -code break BOOM!}
+    set c [chan create {r w} foo]
+    note [catch {tell $c} msg]; note $msg
+    close $c
+    rename foo {}
+    set res
+
+---- Result was:
+0 824635236464
+---- Result should have been (glob matching):
+{seek rc* 0 current} 1 *bad code*
+==== iocmd-28.3 FAILED
+
+
+
+==== iocmd-28.4 chan tell, continue return is error FAILED
+==== Contents of test case:
+
+    set res {}
+    proc foo {args} {oninit seek; onfinal; track; return -code continue BOOM!}
+    set c [chan create {r w} foo]
+    note [catch {tell $c} msg]; note $msg
+    close $c
+    rename foo {}
+    set res
+
+---- Result was:
+0 824635236464
+---- Result should have been (glob matching):
+{seek rc* 0 current} 1 *bad code*
+==== iocmd-28.4 FAILED
+
+
+
+==== iocmd-28.5 chan tell, custom return is error FAILED
+==== Contents of test case:
+
+    set res {}
+    proc foo {args} {oninit seek; onfinal; track; return -code 222 BOOM!}
+    set c [chan create {r w} foo]
+    note [catch {tell $c} msg]; note $msg
+    close $c
+    rename foo {}
+    set res
+
+---- Result was:
+0 824635236464
+---- Result should have been (glob matching):
+{seek rc* 0 current} 1 *bad code*
+==== iocmd-28.5 FAILED
+
+
+
+==== iocmd-28.6 chan tell, level is ignored FAILED
+==== Contents of test case:
+
+    set res {}
+    proc foo {args} {oninit seek; onfinal; track; return -level 11 -code 222 BANG}
+    set c [chan create {r w} foo]
+    note [catch {tell $c} msg opt]; note $msg; noteOpts $opt
+    close $c
+    rename foo {}
+    set res
+
+---- Result was:
+0 824635236464 {-code 0 -level 0 -errorcode !?! -errorline !?! -errorinfo !?!}
+---- Result should have been (glob matching):
+{seek rc* 0 current} 1 *bad code* {-code 1 -level 0 -errorcode NONE -errorline 1 -errorinfo *bad code*subcommand "seek"*}
+==== iocmd-28.6 FAILED
+
+
+
+==== iocmd-28.7 chan tell, regular return FAILED
+==== Contents of test case:
+
+    set res {}
+    proc foo {args} {oninit seek; onfinal; track; return 88}
+    set c [chan create {r w} foo]
+    note [tell $c]
+    close $c
+    rename foo {}
+    set res
+
+---- Result was:
+824635236464
+---- Result should have been (glob matching):
+{seek rc* 0 current} 88
+==== iocmd-28.7 FAILED
+
+
+
+==== iocmd-28.8 chan tell, negative return FAILED
+==== Contents of test case:
+
+    set res {}
+    proc foo {args} {oninit seek; onfinal; track; return -1}
+    set c [chan create {r w} foo]
+    note [catch {tell $c} msg]; note $msg
+    close $c
+    rename foo {}
+    set res
+
+---- Result was:
+0 824635236464
+---- Result should have been (glob matching):
+{seek rc* 0 current} 1 {Tried to seek before origin}
+==== iocmd-28.8 FAILED
+
+
+
+==== iocmd-28.9 chan tell, string return FAILED
+==== Contents of test case:
+
+    set res {}
+    proc foo {args} {oninit seek; onfinal; track; return BOGUS}
+    set c [chan create {r w} foo]
+    note [catch {tell $c} msg]; note $msg
+    close $c
+    rename foo {}
+    set res
+
+---- Result was:
+0 824635236464
+---- Result should have been (glob matching):
+{seek rc* 0 current} 1 {expected integer but got "BOGUS"}
+==== iocmd-28.9 FAILED
+
+
+
+==== iocmd-28.11 chan seek, error return FAILED
+==== Contents of test case:
+
+    set res {}
+    proc foo {args} {oninit seek; onfinal; track; return -code error BOOM!}
+    set c [chan create {r w} foo]
+    note [catch {seek $c 0 start} msg]; note $msg
+    close $c
+    rename foo {}
+    set res
+
+---- Result was:
+0 {}
+---- Result should have been (glob matching):
+{seek rc* 0 start} 1 BOOM!
+==== iocmd-28.11 FAILED
+
+
+
+==== iocmd-28.12 chan seek, break return is error FAILED
+==== Contents of test case:
+
+    set res {}
+    proc foo {args} {oninit seek; onfinal; track; return -code break BOOM!}
+    set c [chan create {r w} foo]
+    note [catch {seek $c 0 start} msg]; note $msg
+    close $c
+    rename foo {}
+    set res
+
+---- Result was:
+0 {}
+---- Result should have been (glob matching):
+{seek rc* 0 start} 1 *bad code*
+==== iocmd-28.12 FAILED
+
+
+
+==== iocmd-28.13 chan seek, continue return is error FAILED
+==== Contents of test case:
+
+    set res {}
+    proc foo {args} {oninit seek; onfinal; track; return -code continue BOOM!}
+    set c [chan create {r w} foo]
+    note [catch {seek $c 0 start} msg]; note $msg
+    close $c
+    rename foo {}
+    set res
+
+---- Result was:
+0 {}
+---- Result should have been (glob matching):
+{seek rc* 0 start} 1 *bad code*
+==== iocmd-28.13 FAILED
+
+
+
+==== iocmd-28.14 chan seek, custom return is error FAILED
+==== Contents of test case:
+
+    set res {}
+    proc foo {args} {oninit seek; onfinal; track; return -code 99 BOOM!}
+    set c [chan create {r w} foo]
+    note [catch {seek $c 0 start} msg]; note $msg
+    close $c
+    rename foo {}
+    set res
+
+---- Result was:
+0 {}
+---- Result should have been (glob matching):
+{seek rc* 0 start} 1 *bad code*
+==== iocmd-28.14 FAILED
+
+
+
+==== iocmd-28.15 chan seek, level is ignored FAILED
+==== Contents of test case:
+
+    set res {}
+    proc foo {args} {oninit seek; onfinal; track; return -level 33 -code 99 BANG}
+    set c [chan create {r w} foo]
+    note [catch {seek $c 0 start} msg opt]; note $msg; noteOpts $opt
+    close $c
+    rename foo {}
+    set res
+
+---- Result was:
+0 {} {-code 0 -level 0 -errorcode !?! -errorline !?! -errorinfo !?!}
+---- Result should have been (glob matching):
+{seek rc* 0 start} 1 *bad code* {-code 1 -level 0 -errorcode NONE -errorline 1 -errorinfo *bad code*subcommand "seek"*}
+==== iocmd-28.15 FAILED
+
+
+
+==== iocmd-28.16 chan seek, bogus return, negative location FAILED
+==== Contents of test case:
+
+    set res {}
+    proc foo {args} {oninit seek; onfinal; track; return -45}
+    set c [chan create {r w} foo]
+    note [catch {seek $c 0 start} msg]; note $msg
+    close $c
+    rename foo {}
+    set res
+
+---- Result was:
+0 {}
+---- Result should have been (glob matching):
+{seek rc* 0 start} 1 {Tried to seek before origin}
+==== iocmd-28.16 FAILED
+
+
+
+==== iocmd-28.17 chan seek, bogus return, string return FAILED
+==== Contents of test case:
+
+    set res {}
+    proc foo {args} {oninit seek; onfinal; track; return BOGUS}
+    set c [chan create {r w} foo]
+    note [catch {seek $c 0 start} msg]; note $msg
+    close $c
+    rename foo {}
+    set res
+
+---- Result was:
+0 {}
+---- Result should have been (glob matching):
+{seek rc* 0 start} 1 {expected integer but got "BOGUS"}
+==== iocmd-28.17 FAILED
+
+
+
+==== iocmd-28.18 chan seek, ok result FAILED
+==== Contents of test case:
+
+    set res {}
+    proc foo {args} {oninit seek; onfinal; track; return 23}
+    set c [chan create {r w} foo]
+    note [seek $c 0 current]
+    close $c
+    rename foo {}
+    set res
+
+---- Result was:
+{}
+---- Result should have been (glob matching):
+{seek rc* 0 current} {}
+==== iocmd-28.18 FAILED
+
+
+
+==== iocmd-28.19.0 chan seek, base conversion, start FAILED
+==== Contents of test case:
+
+	set res {}
+	proc foo {args} {oninit seek; onfinal; track; return 0}
+	set c [chan create {r w} foo]
+	note [seek $c 0 $code]
+	close $c
+	rename foo {}
+	set res
+    
+---- Result was:
+{}
+---- Result should have been (glob matching):
+{seek rc* 0 start} {}
+==== iocmd-28.19.0 FAILED
+
+
+
+==== iocmd-28.19.1 chan seek, base conversion, current FAILED
+==== Contents of test case:
+
+	set res {}
+	proc foo {args} {oninit seek; onfinal; track; return 0}
+	set c [chan create {r w} foo]
+	note [seek $c 0 $code]
+	close $c
+	rename foo {}
+	set res
+    
+---- Result was:
+{}
+---- Result should have been (glob matching):
+{seek rc* 0 current} {}
+==== iocmd-28.19.1 FAILED
+
+
+
+==== iocmd-28.19.2 chan seek, base conversion, end FAILED
+==== Contents of test case:
+
+	set res {}
+	proc foo {args} {oninit seek; onfinal; track; return 0}
+	set c [chan create {r w} foo]
+	note [seek $c 0 $code]
+	close $c
+	rename foo {}
+	set res
+    
+---- Result was:
+{}
+---- Result should have been (glob matching):
+{seek rc* 0 end} {}
+==== iocmd-28.19.2 FAILED
+
+
+
+==== iocmd-32.0 origin interpreter of moved channel gone FAILED
+==== Contents of test case:
+
+
+    set ida [interp create];#puts <<$ida>>
+    set idb [interp create];#puts <<$idb>>
+
+    # Magic to get the test* commands in the children
+    load {} Tcltest $ida
+    load {} Tcltest $idb
+
+    # Set up channel in interpreter
+    interp eval $ida $helperscript
+    set chan [interp eval $ida {
+	proc foo {args} {oninit seek; onfinal; track; return}
+	set chan [chan create {r w} foo]
+	fconfigure $chan -buffering none
+	set chan
+    }]
+
+    # Move channel to 2nd interpreter.
+    interp eval $ida [list testchannel cut    $chan]
+    interp eval $idb [list testchannel splice $chan]
+
+    # Kill origin interpreter, then access channel from 2nd interpreter.
+    interp delete $ida
+
+    set     res {}
+    lappend res [catch {interp eval $idb [list puts  $chan shoo]} msg] $msg
+    lappend res [catch {interp eval $idb [list tell  $chan]}      msg] $msg
+    lappend res [catch {interp eval $idb [list seek  $chan 1]}    msg] $msg
+    lappend res [catch {interp eval $idb [list gets  $chan]}      msg] $msg
+    lappend res [catch {interp eval $idb [list close $chan]}      msg] $msg
+    set res
+
+
+---- Result was:
+1 {Owner lost} 0 824635236464 0 {} 1 {Owner lost} 1 {Owner lost}
+---- Result should have been (glob matching):
+1 {Owner lost} 1 {Owner lost} 1 {Owner lost} 1 {Owner lost} 1 {Owner lost}
+==== iocmd-32.0 FAILED
+
 ioTrans.test
+
+
+==== iortrans-7.2 seek clears read buffers FAILED
+==== Contents of test case:
+
+    proc foo {args} {
+	handle.initialize clear
+	handle.finalize
+	lappend ::res $args
+	return
+    }
+    set c [chan push [tempchan] foo]
+    seek $c 2
+    return $res
+
+---- Result was:
+
+---- Result should have been (glob matching):
+{clear rt*}
+==== iortrans-7.2 FAILED
+
+
+
+==== iortrans-7.3 clear, any result is ignored FAILED
+==== Contents of test case:
+
+    proc foo {args} {
+	handle.initialize clear
+	handle.finalize
+	lappend ::res $args
+	return -code error "X"
+    }
+    set c [chan push [tempchan] foo]
+    seek $c 2
+    return $res
+
+---- Result was:
+
+---- Result should have been (glob matching):
+{clear rt*}
+==== iortrans-7.3 FAILED
+
+
+
+==== iortrans-7.4 chan clear, bug 2921116 FAILED
+==== Contents of test case:
+
+    proc foo {fd args} {
+	handle.initialize clear
+	handle.finalize
+	lappend ::res $args
+	# Kill and recreate transform while it is operating
+	chan pop $fd
+	chan push $fd [list foo $fd]
+    }
+    set c [chan push [set c [tempchan]] [list foo $c]]
+    seek $c 2
+    return $res
+
+---- Result was:
+
+---- Result should have been (glob matching):
+{clear rt*}
+==== iortrans-7.4 FAILED
+
+
+
+==== iortrans-8.1 seek flushes write buffers, ignores data FAILED
+==== Contents of test case:
+
+    proc foo {args} {
+	handle.initialize flush
+	handle.finalize
+	lappend ::res $args
+	return X
+    }
+    set c [chan push [tempchan] foo]
+    # Flush, no writing
+    seek $c 2
+    # The close flushes again, this modifies the file!
+    lappend res |
+    lappend res [close $c] | [tempview]
+
+---- Result was:
+| {flush rt77} {} | {Xest data}
+---- Result should have been (glob matching):
+{flush rt*} | {flush rt*} {} | {teXt data}
+==== iortrans-8.1 FAILED
+
+
+
+==== iortrans-8.3 chan flush, bug 2921116 FAILED
+==== Contents of test case:
+
+    proc foo {fd args} {
+	handle.initialize flush
+	handle.finalize
+	lappend ::res $args
+	# Kill and recreate transform while it is operating
+	chan pop $fd
+	chan push $fd [list foo $fd]
+    }
+    set c [chan push [set c [tempchan]] [list foo $c]]
+    seek $c 2
+    set res
+
+---- Result was:
+
+---- Result should have been (glob matching):
+{flush rt*}
+==== iortrans-8.3 FAILED
+
+
+
+==== iortrans-11.0 origin interpreter of moved transform gone FAILED
+==== Contents of test case:
+
+    # Set up channel and transform in interpreter
+    interp eval $ida $helperscript
+    interp eval $ida [list ::variable tempchan [tempchan]]
+    interp transfer {} $::tempchan $ida
+    set chan [interp eval $ida {
+	variable tempchan
+	proc foo {args} {
+	    handle.initialize clear drain flush limit? read write
+	    handle.finalize
+	    lappend ::res $args
+	    return
+	}
+	set chan [chan push $tempchan foo]
+	fconfigure $chan -buffering none
+	set chan
+    }]
+    # Move channel to 2nd interpreter, transform goes with it.
+    interp eval $ida [list testchannel cut $chan]
+    interp eval $idb [list testchannel splice $chan]
+    # Kill origin interpreter, then access channel from 2nd interpreter.
+    interp delete $ida
+    set res {}
+    lappend res  [catch {interp eval $idb [list puts $chan shoo]} msg] $msg  [catch {interp eval $idb [list tell $chan]} msg] $msg  [catch {interp eval $idb [list seek $chan 1]} msg] $msg  [catch {interp eval $idb [list gets $chan]} msg] $msg  [catch {interp eval $idb [list close $chan]} msg] $msg
+    #lappend res [interp eval $ida {set res}]
+    # actions: clear|write|clear|write|clear|flush|limit?|drain|flush
+    # The 'tell' is ok, as it passed through the transform to the base channel
+    # without invoking the transform handler.
+
+---- Result was:
+1 {Owner lost} 0 0 0 {} 1 {Owner lost} 1 {Owner lost}
+---- Result should have been (glob matching):
+1 {Owner lost} 0 0 1 {Owner lost} 1 {Owner lost} 1 {Owner lost}
+==== iortrans-11.0 FAILED
+
 iogt.test
 join.test
 lindex.test
@@ -114,12 +3874,57 @@ registry.test
 rename.test
 resolver.test
 result.test
+safe-stock.test
 safe.test
 scan.test
 security.test
 set-old.test
 set.test
 socket.test
+
+
+==== socket_inet-2.9 socket conflict FAILED
+==== Contents of test case:
+
+    set s [socket -server accept 0]
+    file delete $path(script)
+    set f [open $path(script) w]
+    puts $f [list set ::tcl::unsupported::socketAF $::tcl::unsupported::socketAF]
+    puts $f "socket -server accept [lindex [fconfigure $s -sockname] 2]"
+    close $f
+    set f [open "|[list [interpreter] $path(script)]" r]
+    gets $f
+    after 100
+    close $f
+
+---- Result was:
+child process exited abnormally
+---- Result should have been (glob matching):
+couldn't open socket: address already in use*
+==== socket_inet-2.9 FAILED
+
+
+
+==== socket_inet6-2.9 socket conflict FAILED
+==== Contents of test case:
+
+    set s [socket -server accept 0]
+    file delete $path(script)
+    set f [open $path(script) w]
+    puts $f [list set ::tcl::unsupported::socketAF $::tcl::unsupported::socketAF]
+    puts $f "socket -server accept [lindex [fconfigure $s -sockname] 2]"
+    close $f
+    set f [open "|[list [interpreter] $path(script)]" r]
+    gets $f
+    after 100
+    close $f
+
+---- Result was:
+child process exited abnormally
+---- Result should have been (glob matching):
+couldn't open socket: address already in use*
+==== socket_inet6-2.9 FAILED
+
 source.test
 split.test
 stack.test
@@ -127,9 +3932,82 @@ string.test
 stringComp.test
 stringObj.test
 subst.test
+
+
+==== subst-5.8 command substitutions FAILED
+==== Contents of test case:
+
+    set script {[subst {[set a 1}]}
+    list [catch {exec [info nameofexecutable] << $script} msg] $msg
+
+---- Result was:
+0 {}
+---- Result should have been (exact matching):
+1 {missing close-bracket}
+==== subst-5.8 FAILED
+
+
+
+==== subst-5.9 command substitutions FAILED
+==== Contents of test case:
+
+    set script {[subst {0[set a 1}]}
+    list [catch {exec [info nameofexecutable] << $script} msg] $msg
+
+---- Result was:
+0 {}
+---- Result should have been (exact matching):
+1 {missing close-bracket}
+==== subst-5.9 FAILED
+
+
+
+==== subst-5.10 command substitutions FAILED
+==== Contents of test case:
+
+    set script {[subst {0[set a 1; set a 2}]}
+    list [catch {exec [info nameofexecutable] << $script} msg] $msg
+
+---- Result was:
+0 {}
+---- Result should have been (exact matching):
+1 {missing close-bracket}
+==== subst-5.10 FAILED
+
 switch.test
 tailcall.test
 tcltest.test
+
+
+==== tcltest-14.1 -singleproc - single process FAILED
+==== Contents of test case:
+child msg $allfile -singleproc 0 -tmpdir [temporaryDirectory]
+	return $msg
+---- Result was:
+Tests running in interp:  /tmp/tcl-test-2089225234/tcltest
+Tests located in:  /tmp/tcl-test-2089225234/singleprocdir
+Tests running in:  /tmp/tcl-test-2089225234
+Temporary files stored in /tmp/tcl-test-2089225234
+Test files run in separate interpreters
+Running tests that match:  *
+Skipping test files that match:  l.*.test
+Only running test files that match:  *.test
+Tests began at Mon Nov 29 18:43:58 CET 2021
+single1.test
+single2.test
+Test file error: child process exited abnormally
+
+Tests ended at Mon Nov 29 18:43:58 CET 2021
+Sourced 2 Test Files.
+
+Test files exiting with errors:  
+
+  single2.test
+
+---- Result should have been (regexp matching):
+Test file error: can't unset .foo.: no such variable
+==== tcltest-14.1 FAILED
+
 thread.test
 timer.test
 tm.test
@@ -144,54 +4022,1302 @@ unload.test
 uplevel.test
 upvar.test
 utf.test
-util.test
-var.test
-while-old.test
-while.test
-winConsole.test
-winDde.test
-winFCmd.test
-winFile.test
-winNotify.test
-winPipe.test
-winTime.test
-zlib.test
 
-Tests ended at Sat Nov 13 09:30:36 CET 2021
-all.tcl:	Total	33499	Passed	30165	Skipped	3334	Failed	0
-Sourced 150 Test Files.
-Number of tests skipped for each constraint:
-	9	!ieeeFloatingPoint
-	3	asyncPipeChan
-	76	bigEndian
-	5	bug-3057639
-	49	dde
-	4	dontCopyLinks
-	64	emptyTest
-	5	fullutf
-	2	hasIsoLocale
-	1	knownBadTest
-	40	knownBug
-	100	localeRegexp
-	52	longIs32bit
-	14	macosxFileAttr
-	82	memory
-	46	nonPortable
-	5	notNetworkFilesystem
-	1	notValgrind
-	9	nt
-	19	pkgaRequired
-	20	pkguaRequired
-	4	readonlyAttr
-	1996	serverNeeded
-	1	testCPUID
-	1	testexprparser && !ieeeFloatingPoint
-	1	testwinclock
-	21	testwordend
-	189	thread
-	3	tip389
-	2	unthreaded
-	2	wideBiggerThanInt
-	487	win
-	4	winVista
-	6	xdev
+
+==== utf-6.1 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    # This takes the pointer one past the terminating NUL.
+    # This is really an invalid call.
+    testutfnext [testbytestring \x00]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.1 FAILED
+
+
+
+==== utf-6.2 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext A
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.2 FAILED
+
+
+
+==== utf-6.3 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext AA
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.3 FAILED
+
+
+
+==== utf-6.4 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring A\xA0]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.4 FAILED
+
+
+
+==== utf-6.5 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext A[testbytestring \xD0]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.5 FAILED
+
+
+
+==== utf-6.6 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext A[testbytestring \xE8]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.6 FAILED
+
+
+
+==== utf-6.7 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext A[testbytestring \xF2]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.7 FAILED
+
+
+
+==== utf-6.8 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext A[testbytestring \xF8]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.8 FAILED
+
+
+
+==== utf-6.9 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xA0\x00]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.9 FAILED
+
+
+
+==== utf-6.10 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xA0]G
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.10 FAILED
+
+
+
+==== utf-6.11.0 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xA0\xA0\x00]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.11.0 FAILED
+
+
+
+==== utf-6.12 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xA0\xD0]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.12 FAILED
+
+
+
+==== utf-6.13 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xA0\xE8]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.13 FAILED
+
+
+
+==== utf-6.14 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xA0\xF2]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.14 FAILED
+
+
+
+==== utf-6.15 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xA0\xF8]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.15 FAILED
+
+
+
+==== utf-6.16 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xD0\x00]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.16 FAILED
+
+
+
+==== utf-6.17 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xD0]G
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.17 FAILED
+
+
+
+==== utf-6.18 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xD0\xA0]
+
+---- Result was:
+82
+---- Result should have been (exact matching):
+2
+==== utf-6.18 FAILED
+
+
+
+==== utf-6.19 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xD0\xD0]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.19 FAILED
+
+
+
+==== utf-6.20 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xD0\xE8]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.20 FAILED
+
+
+
+==== utf-6.21 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xD0\xF2]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.21 FAILED
+
+
+
+==== utf-6.22 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xD0\xF8]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.22 FAILED
+
+
+
+==== utf-6.23 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xE8\x00]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.23 FAILED
+
+
+
+==== utf-6.24 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xE8]G
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.24 FAILED
+
+
+
+==== utf-6.25 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xE8\xA0\x00]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.25 FAILED
+
+
+
+==== utf-6.26 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xE8\xD0]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.26 FAILED
+
+
+
+==== utf-6.27 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xE8\xE8]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.27 FAILED
+
+
+
+==== utf-6.28 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xE8\xF2]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.28 FAILED
+
+
+
+==== utf-6.29 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xE8\xF8]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.29 FAILED
+
+
+
+==== utf-6.30.0 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.30.0 FAILED
+
+
+
+==== utf-6.31 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2]G
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.31 FAILED
+
+
+
+==== utf-6.32.0 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2\xA0]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.32.0 FAILED
+
+
+
+==== utf-6.33 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2\xD0]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.33 FAILED
+
+
+
+==== utf-6.34 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2\xE8]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.34 FAILED
+
+
+
+==== utf-6.35 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2\xF2]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.35 FAILED
+
+
+
+==== utf-6.36 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2\xF8]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.36 FAILED
+
+
+
+==== utf-6.37 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF8]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.37 FAILED
+
+
+
+==== utf-6.38 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF8]G
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.38 FAILED
+
+
+
+==== utf-6.39 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF8\xA0]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.39 FAILED
+
+
+
+==== utf-6.40 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF8\xD0]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.40 FAILED
+
+
+
+==== utf-6.41 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF8\xE8]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.41 FAILED
+
+
+
+==== utf-6.42 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF8\xF2]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.42 FAILED
+
+
+
+==== utf-6.43 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF8\xF8]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.43 FAILED
+
+
+
+==== utf-6.44 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xD0\xA0]G
+
+---- Result was:
+82
+---- Result should have been (exact matching):
+2
+==== utf-6.44 FAILED
+
+
+
+==== utf-6.45 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xD0\xA0\xA0]
+
+---- Result was:
+82
+---- Result should have been (exact matching):
+2
+==== utf-6.45 FAILED
+
+
+
+==== utf-6.46 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xD0\xA0\xD0]
+
+---- Result was:
+82
+---- Result should have been (exact matching):
+2
+==== utf-6.46 FAILED
+
+
+
+==== utf-6.47 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xD0\xA0\xE8]
+
+---- Result was:
+82
+---- Result should have been (exact matching):
+2
+==== utf-6.47 FAILED
+
+
+
+==== utf-6.48 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xD0\xA0\xF2]
+
+---- Result was:
+82
+---- Result should have been (exact matching):
+2
+==== utf-6.48 FAILED
+
+
+
+==== utf-6.49 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xD0\xA0\xF8]
+
+---- Result was:
+82
+---- Result should have been (exact matching):
+2
+==== utf-6.49 FAILED
+
+
+
+==== utf-6.50 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xE8\xA0]G
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.50 FAILED
+
+
+
+==== utf-6.51 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext \u8820
+
+---- Result was:
+83
+---- Result should have been (exact matching):
+3
+==== utf-6.51 FAILED
+
+
+
+==== utf-6.52 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xE8\xA0\xD0]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.52 FAILED
+
+
+
+==== utf-6.53 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xE8\xA0\xE8]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.53 FAILED
+
+
+
+==== utf-6.54 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xE8\xA0\xF2]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.54 FAILED
+
+
+
+==== utf-6.55 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xE8\xA0\xF8]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.55 FAILED
+
+
+
+==== utf-6.56 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2\xA0]G
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.56 FAILED
+
+
+
+==== utf-6.57 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2\xA0\xA0\x00]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.57 FAILED
+
+
+
+==== utf-6.58 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2\xA0\xD0]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.58 FAILED
+
+
+
+==== utf-6.59 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2\xA0\xE8]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.59 FAILED
+
+
+
+==== utf-6.60 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2\xA0\xF2]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.60 FAILED
+
+
+
+==== utf-6.61 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2\xA0\xF8]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.61 FAILED
+
+
+
+==== utf-6.62 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext \u8820G
+
+---- Result was:
+83
+---- Result should have been (exact matching):
+3
+==== utf-6.62 FAILED
+
+
+
+==== utf-6.63 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xE8\xA0\xA0\xA0]
+
+---- Result was:
+83
+---- Result should have been (exact matching):
+3
+==== utf-6.63 FAILED
+
+
+
+==== utf-6.64 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext \u8820[testbytestring \xD0]
+
+---- Result was:
+83
+---- Result should have been (exact matching):
+3
+==== utf-6.64 FAILED
+
+
+
+==== utf-6.65 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext \u8820[testbytestring \xE8]
+
+---- Result was:
+83
+---- Result should have been (exact matching):
+3
+==== utf-6.65 FAILED
+
+
+
+==== utf-6.66 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext \u8820[testbytestring \xF2]
+
+---- Result was:
+83
+---- Result should have been (exact matching):
+3
+==== utf-6.66 FAILED
+
+
+
+==== utf-6.67 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext \u8820[testbytestring \xF8]
+
+---- Result was:
+83
+---- Result should have been (exact matching):
+3
+==== utf-6.67 FAILED
+
+
+
+==== utf-6.68 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2\xA0\xA0]G
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.68 FAILED
+
+
+
+==== utf-6.69.0 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2\xA0\xA0\xA0]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.69.0 FAILED
+
+
+
+==== utf-6.70 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2\xA0\xA0\xD0]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.70 FAILED
+
+
+
+==== utf-6.71 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2\xA0\xA0\xE8]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.71 FAILED
+
+
+
+==== utf-6.72 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2\xA0\xA0\xF2]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.72 FAILED
+
+
+
+==== utf-6.73 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2\xA0\xA0\xF8]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.73 FAILED
+
+
+
+==== utf-6.74.0 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2\xA0\xA0\xA0]G
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.74.0 FAILED
+
+
+
+==== utf-6.75.0 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2\xA0\xA0\xA0\xA0]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.75.0 FAILED
+
+
+
+==== utf-6.76.0 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2\xA0\xA0\xA0\xD0]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.76.0 FAILED
+
+
+
+==== utf-6.77.0 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2\xA0\xA0\xA0\xE8]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.77.0 FAILED
+
+
+
+==== utf-6.78.0 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2\xA0\xA0\xA0\xF2]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.78.0 FAILED
+
+
+
+==== utf-6.79.0 Tcl_UtfNext FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF2\xA0\xA0\xA0G\xF8]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.79.0 FAILED
+
+
+
+==== utf-6.80 Tcl_UtfNext - overlong sequences FAILED
+==== Contents of test case:
+
+    testutfnext \x00
+
+---- Result was:
+82
+---- Result should have been (exact matching):
+2
+==== utf-6.80 FAILED
+
+
+
+==== utf-6.81 Tcl_UtfNext - overlong sequences FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xC0\x81]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.81 FAILED
+
+
+
+==== utf-6.82 Tcl_UtfNext - overlong sequences FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xC1\x80]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.82 FAILED
+
+
+
+==== utf-6.83 Tcl_UtfNext - overlong sequences FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xC2\x80]
+
+---- Result was:
+82
+---- Result should have been (exact matching):
+2
+==== utf-6.83 FAILED
+
+
+
+==== utf-6.84 Tcl_UtfNext - overlong sequences FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xE0\x80\x80]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.84 FAILED
+
+
+
+==== utf-6.85 Tcl_UtfNext - overlong sequences FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xE0\xA0\x80]
+
+---- Result was:
+83
+---- Result should have been (exact matching):
+3
+==== utf-6.85 FAILED
+
+
+
+==== utf-6.86 Tcl_UtfNext - overlong sequences FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF0\x80\x80\x80]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.86 FAILED
+
+
+
+==== utf-6.87.0 Tcl_UtfNext - overlong sequences FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF0\x90\x80\x80]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.87.0 FAILED
+
+
+
+==== utf-6.88.0 Tcl_UtfNext, pointing to 2th byte of 3-byte valid sequence FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xA0\xA0\x00]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.88.0 FAILED
+
+
+
+==== utf-6.89.0 Tcl_UtfNext, pointing to 2th byte of 3-byte invalid sequence FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \x80\x80\x00]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.89.0 FAILED
+
+
+
+==== utf-6.90.0 Tcl_UtfNext, validity check [493dccc2de] FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF4\x8F\xBF\xBF]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.90.0 FAILED
+
+
+
+==== utf-6.91 Tcl_UtfNext, validity check [493dccc2de] FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xF4\x90\x80\x80]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.91 FAILED
+
+
+
+==== utf-6.92.0 Tcl_UtfNext, pointing to 2th byte of 4-byte valid sequence FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xA0\xA0\xA0]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.92.0 FAILED
+
+
+
+==== utf-6.93.0 Tcl_UtfNext, pointing to 2th byte of 4-byte invalid sequence FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \x80\x80\x80]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.93.0 FAILED
+
+
+
+==== utf-6.94.0 Tcl_UtfNext, pointing to 2th byte of 5-byte invalid sequence FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xA0\xA0\xA0\xA0]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.94.0 FAILED
+
+
+
+==== utf-6.95.0 Tcl_UtfNext, pointing to 2th byte of 5-byte invalid sequence FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \x80\x80\x80\x80]
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.95.0 FAILED
+
+
+
+==== utf-6.98 Tcl_UtfNext, read limits FAILED
+==== Contents of test case:
+
+    testutfnext AG 1
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.98 FAILED
+
+
+
+==== utf-6.99 Tcl_UtfNext, read limits FAILED
+==== Contents of test case:
+
+    testutfnext A[testbytestring \xA0] 1
+
+---- Result was:
+81
+---- Result should have been (exact matching):
+1
+==== utf-6.99 FAILED
+
+
+
+==== utf-6.101 Tcl_UtfNext, read limits FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xD0\xA0]G 2
+
+---- Result was:
+82
+---- Result should have been (exact matching):
+2
+==== utf-6.101 FAILED
+
+
+
+==== utf-6.103 Tcl_UtfNext, read limits FAILED
+==== Contents of test case:
+
+    testutfnext [testbytestring \xD0\xA0\xA0] 2
+
+---- Result was:
+82
+---- Result should have been (exact matching):
+2
+==== utf-6.103 FAILED
+
+
+
+==== utf-6.106 Tcl_UtfNext, read limits FAILED
+==== Contents of test case:
+
+    testutfnext \u8820G 3
+
+---- Result was:
+83
+--
