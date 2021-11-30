@@ -5,13 +5,11 @@
 # Sourcing this file into Tcl runs the tests and generates output for errors.
 # No output means no errors were found.
 #
-# Copyright (c) 1998-1999 Scriptics Corporation.
+# Copyright (c) 1998-1999 by Scriptics Corporation.
 # All rights reserved.
 
-if {"::tcltest" ni [namespace children]} {
-    package require tcltest 2.5
-    namespace import -force ::tcltest::*
-}
+package require tcltest 2
+namespace import ::tcltest::*
 
 set fullPkgPath [makeDirectory pkg]
 
@@ -74,11 +72,11 @@ proc pkgtest::parseArgs { args } {
 #  of the command line.
 
 proc pkgtest::parseIndex { filePath } {
-    # create a child interpreter, where we override "package ifneeded"
+    # create a slave interpreter, where we override "package ifneeded"
 
-    set child [interp create]
+    set slave [interp create]
     if {[catch {
-	$child eval {
+	$slave eval {
 	    rename package package_original
 	    proc package { args } {
 		if {[lindex $args 0] eq "ifneeded"} {
@@ -93,17 +91,17 @@ proc pkgtest::parseIndex { filePath } {
 	}
 
 	set dir [file dirname $filePath]
-	$child eval {set curdir [pwd]}
-	$child eval [list cd $dir]
-	$child eval [list set dir $dir]
-	$child eval [list source [file tail $filePath]]
-	$child eval {cd $curdir}
+	$slave eval {set curdir [pwd]}
+	$slave eval [list cd $dir]
+	$slave eval [list set dir $dir]
+	$slave eval [list source [file tail $filePath]]
+	$slave eval {cd $curdir}
 
 	# Create the list in sorted order, so that we don't get spurious
 	# errors because the order has changed.
 
 	array set P {}
-	foreach {k v} [$child eval {array get ::PKGS}] {
+	foreach {k v} [$slave eval {array get ::PKGS}] {
 	    set P($k) $v
 	}
 
@@ -115,12 +113,12 @@ proc pkgtest::parseIndex { filePath } {
 	set ei [dict get $opts -errorinfo]
 	set ec [dict get $opts -errorcode]
 
-	catch {interp delete $child}
+	catch {interp delete $slave}
 
 	error $ei $ec
     }
 
-    interp delete $child
+    interp delete $slave
 
     return $PKGS
 }
@@ -233,7 +231,7 @@ proc pkgtest::runCreatedIndex {rv args} {
 	    set result [list 0 [makePkgList [parseIndex $idxFile]]]
 	} err]} {
 	    set result [list 1 $err]
-	}
+	} 
 	file delete $idxFile
     } else {
 	set result $rv
@@ -315,7 +313,7 @@ namespace eval pkg2 {
     namespace export p2-1
 }
 proc pkg2::p2-1 { num } {
-    return [expr {$num * 2}]
+    return [expr $num * 2]
 }
 } [file join pkg pkg2_a.tcl]
 
@@ -328,7 +326,7 @@ namespace eval pkg2 {
     namespace export p2-2
 }
 proc pkg2::p2-2 { num } {
-    return [expr {$num * 3}]
+    return [expr $num * 3]
 }
 } [file join pkg pkg2_b.tcl]
 
@@ -409,10 +407,10 @@ namespace eval pkg3 {
     namespace export p3-1 p3-2
 }
 proc pkg3::p3-1 { num } {
-    return {[expr {$num * 2}]}
+    return {[expr $num * 2]}
 }
 proc pkg3::p3-2 { num } {
-    return {[expr {$num * 3}]}
+    return {[expr $num * 3]}
 }
 } [file join pkg pkg3.tcl]
 
@@ -520,10 +518,10 @@ namespace eval circ2 {
     namespace export c2-1 c2-2
 }
 proc circ2::c2-1 { num } {
-    return [expr {$num * [circ3::c3-1]}]
+    return [expr $num * [circ3::c3-1]]
 }
 proc circ2::c2-2 { num } {
-    return [expr {$num * [circ3::c3-2]}]
+    return [expr $num * [circ3::c3-2]]
 }
 } [file join pkg circ2.tcl]
 
@@ -559,8 +557,8 @@ testConstraint $dll [file exists $x]
 
 if {[testConstraint $dll]} {
     makeFile {
-#  This package provides pkga, which is also provided by a DLL.
-package provide pkga 1.0
+#  This package provides Pkga, which is also provided by a DLL.
+package provide Pkga 1.0
 proc pkga_neq { x } {
     return [expr {! [pkgq_eq $x]}]
 }
@@ -576,7 +574,7 @@ test pkgMkIndex-10.1 {package in DLL and script} [list exec $dll] {
     set cmd [list pkg_mkIndex -lazy $fullPkgPath [file tail $x] pkga.tcl]
     exec [interpreter] << $cmd
     pkgtest::runCreatedIndex {0 {}} -lazy $fullPkgPath pkga[info sharedlibextension] pkga.tcl
-} "0 {{pkga:1.0 {tclPkgSetup {pkga[info sharedlibextension] load {pkga_eq pkga_quote}} {pkga.tcl source pkga_neq}}}}"
+} "0 {{Pkga:1.0 {tclPkgSetup {pkga[info sharedlibextension] load {pkga_eq pkga_quote}} {pkga.tcl source pkga_neq}}}}"
 test pkgMkIndex-10.2 {package in DLL hidden by -load} [list exec $dll] {
     # Do all [load]ing of shared libraries in another process, so we can
     # delete the file and not get stuck because we're holding a reference to

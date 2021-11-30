@@ -11,7 +11,7 @@
 # All rights reserved.
 
 if {"::tcltest" ni [namespace children]} {
-    package require tcltest 2.5
+    package require tcltest
     namespace import -force ::tcltest::*
 }
 

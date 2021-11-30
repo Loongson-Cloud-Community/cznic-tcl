@@ -6,6 +6,7 @@
 // +build ignore
 
 //TODO enable threads
+//TODO 8.6.11
 
 package main
 
@@ -20,7 +21,7 @@ import (
 )
 
 const (
-	tarDir  = "tcl8.6.12"
+	tarDir  = "tcl8.6.10"
 	tarFile = tarName + ".tar.gz"
 	tarName = tarDir + "-src"
 )
@@ -99,7 +100,7 @@ func main() {
 		"--disable-dll-unload",
 		"--disable-load",
 		"--disable-shared",
-		// "--enable-symbols=mem", // Enables assertions
+		// "--enable-symbols=mem", //TODO-
 	}
 	thr := "--disable-threads"
 	switch fmt.Sprintf("%s/%s", goos, goarch) {
@@ -181,7 +182,7 @@ func main() {
 				ccgo.MustRun(true, "-compiledb", cdb, "make", "binaries", "tcltest")
 			default:
 				// -UHAVE_COPYFILE disables the tcl macOS bits trying to use copyfile/libc.Xcopyfile.
-				// ccgo.MustRun(true, "-compiledb", cdb, "make", "CFLAGS=-UHAVE_CPUID -UHAVE_COPYFILE -UNDEBUG", "binaries", "tcltest")
+				// ccgo.MustRun(true, "-compiledb", cdb, "make", "CFLAGS=-UHAVE_CPUID -UHAVE_COPYFILE -DTCL_MEM_DEBUG -DMEM_VALIDATE", "binaries", "tcltest")
 				ccgo.MustRun(true, "-compiledb", cdb, "make", "CFLAGS=-UHAVE_CPUID -UHAVE_COPYFILE", "binaries", "tcltest")
 			}
 			return nil
