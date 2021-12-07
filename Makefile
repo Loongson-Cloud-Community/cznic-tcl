@@ -110,7 +110,7 @@ linux_386_pull:
 	mkdir tmp/
 	rsync -rp nuc32:src/modernc.org/tcl/tmp/ tmp/
 	GO_GENERATE_TMPDIR=tmp/src GO_GENERATE_LOAD_CONFIG=tmp/config TARGET_GOOS=linux TARGET_GOARCH=386 go generate 2>&1 | tee log-generate
-	go build -v ./... 2>&1 | tee -a log-generate
+	GOOS=linux GOARCH=386 go build -v ./... 2>&1 | tee -a log-generate
 
 devuan4-32_pull:
 	@echo "Can be executed everywhere"
@@ -118,40 +118,51 @@ devuan4-32_pull:
 	mkdir tmp/
 	rsync -rp devuan4-32:src/modernc.org/tcl/tmp/ tmp/
 	GO_GENERATE_TMPDIR=tmp/src GO_GENERATE_LOAD_CONFIG=tmp/config TARGET_GOOS=linux TARGET_GOARCH=386 go generate 2>&1 | tee log-generate
-	go build -v ./... 2>&1 | tee -a log-generate
+	GOOS=linux GOARCH=386 go build -v ./... 2>&1 | tee -a log-generate
 
-linux_arm:
-	QEMU_LD_PREFIX=/usr/arm-linux-gnueabi CCGO_CPP=arm-linux-gnueabi-cpp GO_GENERATE_CC=arm-linux-gnueabi-gcc TARGET_GOOS=linux TARGET_GOARCH=arm go generate 2>&1 | tee log-generate
+linux_arm_config:
+	@echo "Should be executed only on linux/arm."
+	rm -rf tmp/
+	mkdir -p tmp/config tmp/src
+	GO_GENERATE_TMPDIR=tmp/src GO_GENERATE_SAVE_CONFIG=tmp/config go generate 2>&1 | tee log-generate
+
+linux_arm_pull:
+	@echo "Can be executed everywhere"
+	rm -rf tmp/
+	mkdir tmp/
+	rsync -rp pi32:src/modernc.org/tcl/tmp/ tmp/
+	GO_GENERATE_TMPDIR=tmp/src GO_GENERATE_LOAD_CONFIG=tmp/config TARGET_GOOS=linux TARGET_GOARCH=arm go generate 2>&1 | tee log-generate
 	GOOS=linux GOARCH=arm go build -v ./... 2>&1 | tee -a log-generate
 
-linux_arm64:
-	QEMU_LD_PREFIX=/usr/aarch64-linux-gnu CCGO_CPP=aarch64-linux-gnu-cpp GO_GENERATE_CC=aarch64-linux-gnu-gcc TARGET_GOOS=linux TARGET_GOARCH=arm64 go generate 2>&1 | tee log-generate
+linux_arm64_config:
+	@echo "Should be executed only on linux/arm64."
+	rm -rf tmp/
+	mkdir -p tmp/config tmp/src
+	GO_GENERATE_TMPDIR=tmp/src GO_GENERATE_SAVE_CONFIG=tmp/config go generate 2>&1 | tee log-generate
+
+linux_arm64_pull:
+	@echo "Can be executed everywhere"
+	rm -rf tmp/
+	mkdir tmp/
+	rsync -rp pi64:src/modernc.org/tcl/tmp/ tmp/
+	GO_GENERATE_TMPDIR=tmp/src GO_GENERATE_LOAD_CONFIG=tmp/config TARGET_GOOS=linux TARGET_GOARCH=arm64 go generate 2>&1 | tee log-generate
 	GOOS=linux GOARCH=arm64 go build -v ./... 2>&1 | tee -a log-generate
 
-# The part that is run inside the 4GB VM.
-linux_s390x_vm:
-	rm -rf tmp/*
-	mkdir -p tmp || true
-	GO_GENERATE_TMPDIR=tmp/ \
-			   GO_GENERATE_CC=s390x-linux-gnu-gcc \
-			   TARGET_GOOS=linux \
-			   TARGET_GOARCH=s390x \
-			   go generate 2>&1 | tee log-generate
+linux_s390x_config:
+	@echo "Should be executed only on linux/s390x."
+	rm -rf tmp/
+	mkdir -p tmp/config tmp/src
+	GO_GENERATE_TMPDIR=tmp/src GO_GENERATE_SAVE_CONFIG=tmp/config go generate 2>&1 | tee log-generate
 
-# The part that is run first at the linux/amd64 dev machine.
 linux_s390x_pull:
+	@echo "Can be executed everywhere"
 	rm -rf /home/${S390XVM_USER}/*
 	mkdir -p /home/${S390XVM_USER}/src/modernc.org/tcl/tmp/ || true
 	rsync -rp ${S390XVM}:src/modernc.org/tcl/tmp/ /home/${S390XVM_USER}/src/modernc.org/tcl/tmp/
-
-# The part that is run next at the linux/amd64 dev machine.
-linux_s390x_dev:
-	GO_GENERATE_TMPDIR=/home/${S390XVM_USER}/src/modernc.org/tcl/tmp/ \
-			   GO_GENERATE_CC=s390x-linux-gnu-gcc \
-			   CCGO_CPP=s390x-linux-gnu-cpp \
-			   TARGET_GOOS=linux \
-			   TARGET_GOARCH=s390x \
-			   go generate 2>&1 | tee log-generate
+	\
+		GO_GENERATE_TMPDIR=/home/${S390XVM_USER}/src/modernc.org/tcl/tmp/src \
+		GO_GENERATE_LOAD_CONFIG=/home/${S390XVM_USER}/src/modernc.org/tcl/tmp/config \
+		TARGET_GOOS=linux TARGET_GOARCH=s390x go generate 2>&1 | tee log-generate
 	GOOS=linux GOARCH=s390x go build -v ./... 2>&1 | tee -a log-generate
 
 windows_amd64:
@@ -162,11 +173,6 @@ windows_amd64:
 windows_386:
 	GO_GENERATE_CC=i686-w64-mingw32-gcc CCGO_CPP=i686-w64-mingw32-cpp TARGET_GOOS=windows TARGET_GOARCH=386 go generate 2>&1 | tee log-generate
 	GOOS=windows GOARCH=386 go build -v ./... 2>&1 | tee -a log-generate
-
-# darwin can be generated only on darwin
-# windows can be generated only on windows
-all_targets: linux_amd64 linux_386 linux_arm linux_arm64
-	echo done
 
 test:
 	go version | tee $(testlog)

@@ -1,11 +1,11 @@
-Tests running in interp:  /tmp/tcl-test-3055905358/tcltest
-Tests located in:  /tmp/tcl-test-3055905358
-Tests running in:  /tmp/tcl-test-3055905358
-Temporary files stored in /tmp/tcl-test-3055905358
+Tests running in interp:  /tmp/tcl-test-3507943590/tcltest
+Tests located in:  /tmp/tcl-test-3507943590
+Tests running in:  /tmp/tcl-test-3507943590
+Temporary files stored in /tmp/tcl-test-3507943590
 Test files run in separate interpreters
 Running tests that match:  *
 Only running test files that match:  *.test
-Tests began at Mon Nov 01 16:26:33 CET 2021
+Tests began at Tue Dec 07 17:29:21 CET 2021
 aaa_exit.test
 append.test
 appendComp.test
@@ -114,6 +114,7 @@ registry.test
 rename.test
 resolver.test
 result.test
+safe-stock.test
 safe.test
 scan.test
 security.test
@@ -157,9 +158,9 @@ winPipe.test
 winTime.test
 zlib.test
 
-Tests ended at Mon Nov 01 16:34:48 CET 2021
-all.tcl:	Total	33499	Passed	30201	Skipped	3298	Failed	0
-Sourced 150 Test Files.
+Tests ended at Tue Dec 07 17:36:03 CET 2021
+all.tcl:	Total	33971	Passed	30594	Skipped	3377	Failed	0
+Sourced 151 Test Files.
 Number of tests skipped for each constraint:
 	9	!ieeeFloatingPoint
 	3	asyncPipeChan
@@ -168,10 +169,10 @@ Number of tests skipped for each constraint:
 	49	dde
 	4	dontCopyLinks
 	64	emptyTest
-	5	fullutf
+	58	fullutf
 	2	hasIsoLocale
 	1	knownBadTest
-	40	knownBug
+	41	knownBug
 	100	localeRegexp
 	15	longIs64bit
 	14	macosxFileAttr
@@ -179,19 +180,22 @@ Number of tests skipped for each constraint:
 	46	nonPortable
 	5	notNetworkFilesystem
 	1	notValgrind
-	9	nt
+	4	nt
+	1	pairsTo4bytes
 	19	pkgaRequired
 	20	pkguaRequired
+	2	pre388
 	4	readonlyAttr
 	1996	serverNeeded
 	1	testCPUID
 	1	testexprparser && !ieeeFloatingPoint
 	1	testwinclock
-	21	testwordend
-	189	thread
+	197	thread
 	3	threaded
 	2	time64bit
-	3	tip389
-	487	win
+	21	ucs4
+	16	utf16
+	492	win
+	1	winLessThan10
 	4	winVista
 	6	xdev

@@ -1,12 +1,11 @@
-Tests running in interp:  /tmp/tcl-test-611824927/tcltest
-Tests located in:  /tmp/tcl-test-611824927
-Tests running in:  /tmp/tcl-test-611824927
-Temporary files stored in /tmp/tcl-test-611824927
+Tests running in interp:  /tmp/tcl-test-433207704/tcltest
+Tests located in:  /tmp/tcl-test-433207704
+Tests running in:  /tmp/tcl-test-433207704
+Temporary files stored in /tmp/tcl-test-433207704
 Test files run in separate interpreters
 Running tests that match:  *
-Skipping test files that match:  http.test httpold.test
 Only running test files that match:  *.test
-Tests began at Wed Nov 03 14:16:58 UTC 2021
+Tests began at Tue Dec 07 18:06:36 CET 2021
 aaa_exit.test
 append.test
 appendComp.test
@@ -53,8 +52,10 @@ foreach.test
 format.test
 get.test
 history.test
+http.test
 http11.test
 httpPipeline.test
+httpold.test
 if-old.test
 if.test
 incr-old.test
@@ -113,6 +114,7 @@ registry.test
 rename.test
 resolver.test
 result.test
+safe-stock.test
 safe.test
 scan.test
 security.test
@@ -156,9 +158,9 @@ winPipe.test
 winTime.test
 zlib.test
 
-Tests ended at Wed Nov 03 14:19:40 UTC 2021
-all.tcl:	Total	33402	Passed	30059	Skipped	3343	Failed	0
-Sourced 148 Test Files.
+Tests ended at Tue Dec 07 18:09:26 CET 2021
+all.tcl:	Total	33971	Passed	30547	Skipped	3424	Failed	0
+Sourced 151 Test Files.
 Number of tests skipped for each constraint:
 	9	!ieeeFloatingPoint
 	3	asyncPipeChan
@@ -166,32 +168,35 @@ Number of tests skipped for each constraint:
 	49	dde
 	4	dontCopyLinks
 	64	emptyTest
-	5	fullutf
+	58	fullutf
 	2	hasIsoLocale
 	1	knownBadTest
-	39	knownBug
+	41	knownBug
 	77	littleEndian
 	100	localeRegexp
 	9	localhost_v6
 	52	longIs32bit
 	14	macosxFileAttr
 	82	memory
-	45	nonPortable
+	46	nonPortable
 	5	notNetworkFilesystem
 	1	notValgrind
-	9	nt
+	4	nt
+	1	pairsTo4bytes
 	19	pkgaRequired
 	20	pkguaRequired
+	2	pre388
 	4	readonlyAttr
 	1996	serverNeeded
 	1	testCPUID
 	1	testexprparser && !ieeeFloatingPoint
 	1	testwinclock
-	21	testwordend
-	189	thread
+	197	thread
 	3	threaded
-	3	tip389
+	21	ucs4
+	16	utf16
 	2	wideBiggerThanInt
-	487	win
+	492	win
+	1	winLessThan10
 	4	winVista
 	6	xdev

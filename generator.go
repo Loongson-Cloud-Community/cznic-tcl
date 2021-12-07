@@ -21,7 +21,7 @@ import (
 )
 
 const (
-	tarDir  = "tcl8.6.10"
+	tarDir  = "tcl8.6.12"
 	tarFile = tarName + ".tar.gz"
 	tarName = tarDir + "-src"
 )
@@ -164,39 +164,33 @@ func main() {
 	if !haveCDB {
 		ccgo.MustInDir(true, srcDir+platformDir, func() error {
 			ccgo.MustShell(true, "./configure", cfg...)
-			switch goos {
-			case "darwin":
+			switch fmt.Sprintf("%s/%s", goos, goarch) {
+			case "darwin/amd64":
+				ccgo.MustRun(true, "-compiledb", cdb, "make", "CFLAGS='-UHAVE_CPUID -UHAVE_COPYFILE'", "binaries", "tcltest")
+			case "darwin/arm64":
 				// This option currently causes trouble with gcc on darwin/arm64.
 				// Ex: error: invalid variant 'BLEAH'
 				ccgo.MustShell(true, "sed", "-i", "", "s/ -mdynamic-no-pic//", "Makefile")
-			case "linux":
+			case "freebsd/amd64", "netbsd/amd64":
+				ccgo.MustRun(true, "-verbose-compiledb", "-compiledb", cdb, "gmake", "CFLAGS='-DNO_ISNAN -UHAVE_CPUID'", "binaries", "tcltest")
+			case "linux/amd64":
 				switch goarch {
 				case "amd64":
 					ccgo.MustShell(true, "sed", "-i", "s/ -DHAVE_PTHREAD_ATFORK=1//", "Makefile")
 				}
-			}
-			switch goos {
-			case "freebsd", "netbsd":
-				ccgo.MustRun(true, "-compiledb", cdb, "gmake", "CFLAGS=-DNO_ISNAN -UHAVE_CPUID", "binaries", "tcltest")
-			case "windows":
-				ccgo.MustRun(true, "-compiledb", cdb, "make", "binaries", "tcltest")
-			default:
-				// -UHAVE_COPYFILE disables the tcl macOS bits trying to use copyfile/libc.Xcopyfile.
-				// ccgo.MustRun(true, "-compiledb", cdb, "make", "CFLAGS=-UHAVE_CPUID -UHAVE_COPYFILE -DTCL_MEM_DEBUG -DMEM_VALIDATE", "binaries", "tcltest")
 				ccgo.MustRun(true, "-compiledb", cdb, "make", "CFLAGS=-UHAVE_CPUID -UHAVE_COPYFILE", "binaries", "tcltest")
+			case
+				"linux/386",
+				"linux/arm",
+				"linux/arm64",
+				"linux/s390x":
+
+				ccgo.MustRun(true, "-compiledb", cdb, "make", "CFLAGS=-UHAVE_CPUID -UHAVE_COPYFILE", "binaries", "tcltest")
+			case "windows/amd64", "windows/386":
+				ccgo.MustRun(true, "-compiledb", cdb, "make", "binaries", "tcltest")
 			}
 			return nil
 		})
-	}
-
-	//TODO- use -save-config/--load-config instead
-	//
-	// s390x hack. The VM has only 4GB, so we do the above in the VM, but
-	// the bellow on linux/amd64 after pulling the configured sources and
-	// the CDB from the VM.
-	if runtime.GOARCH == "s390x" {
-		fmt.Printf("Finished the s390x VM part\n")
-		return
 	}
 
 	ccgo.MustRun(true, lib...)
@@ -205,6 +199,7 @@ func main() {
 		ccgo.MustRun(true,
 			"-DTCL_BROKEN_MAINARGS",
 			"-export-defines", "",
+			"-ignore-object", "tclsh.res.o",
 			"-lmodernc.org/tcl/lib",
 			"-nocapi",
 			"-o", filepath.Join("internal", "tclsh", fmt.Sprintf("tclsh_%s_%s.go", goos, goarch)),
@@ -220,6 +215,7 @@ func main() {
 		ccgo.MustRun(true,
 			"-DTCL_BROKEN_MAINARGS",
 			"-export-defines", "",
+			"-ignore-object", "tclsh.res.o",
 			"-lmodernc.org/tcl/lib",
 			"-nocapi",
 			"-o", filepath.Join("internal", "tcltest", fmt.Sprintf("tcltest_%s_%s.go", goos, goarch)),

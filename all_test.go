@@ -101,11 +101,164 @@ func TestMain(m *testing.M) {
 func TestTclTest(t *testing.T) {
 	skip := []string{}
 	var notFile []string
-	switch {
-	case runtime.GOOS == "linux" && runtime.GOARCH == "s390x":
+	switch fmt.Sprintf("%s/%s", runtime.GOOS, runtime.GOARCH) {
+	case "darwin/amd64":
 		notFile = []string{ //TODO
+			"aaa_exit.test",
+			"basic.test",
+			"chan.test",
+			"chanio.test",
+			"clock.test",
+			"cmdAH.test",
+			"event.test",
+			"exec.test",
+			"fCmd.test",
+			"fileName.test",
+			"fileSystem.test",
 			"http.test",
+			"http11.test",
 			"httpold.test",
+			"info.test",
+			"io.test",
+			"ioCmd.test",
+			"ioTrans.test",
+			"macOSXFCmd.test",
+			"main.test",
+			"oo.test",
+			"safe.test",
+			"socket.test",
+			"tcltest.test",
+			"unixInit.test",
+			"zlib.test",
+		}
+	case "freebsd/amd64":
+		notFile = []string{ //TODO
+			"chan.test",
+			"chanio.test",
+			"clock.test",
+			"cmdAH.test",
+			"event.test",
+			"exec.test",
+			"fCmd.test",
+			"fileName.test",
+			"fileSystem.test",
+			"http11.test",
+			"info.test",
+			"io.test",
+			"ioCmd.test",
+			"socket.test",
+			"tcltest.test",
+			"unixFCmd.test",
+			"unixInit.test",
+			"zlib.test",
+		}
+	case "linux/amd64":
+		skip = []string{"cmdIL-5.7"}
+	case "netbsd/amd64":
+		notFile = []string{ //TODO
+			"chan.test",
+			"chanio.test",
+			"clock.test",
+			"cmdAH.test",
+			"event.test",
+			"exec.test",
+			"fCmd.test",
+			"fileName.test",
+			"fileSystem.test",
+			"http11.test",
+			"info.test",
+			"io.test",
+			"ioCmd.test",
+			"main.test",
+			"socket.test",
+			"tcltest.test",
+			"unixFCmd.test",
+			"unixInit.test",
+			"zlib.test",
+		}
+	case "windows/amd64":
+		notFile = []string{
+			//TODO
+			"env.test",
+			"exec.test",
+			"http.test",
+			"http11.test",
+			"httpold.test",
+			"io.test",
+			"socket.test",
+		}
+		skip = []string{
+			//TODO
+			"Tcl_Main-4\\.*",
+			"Tcl_Main-5\\.*",
+			"chan-16.9",
+			"chan-io-2*",
+			"chan-io-3*",
+			"chan-io-4*",
+			"chan-io-5*",
+			"clock-38.2",
+			"clock-40.1",
+			"clock-42.1",
+			"clock-49.2",
+			"cmdAH-16*",
+			"cmdAH-17*",
+			"cmdAH-19*",
+			"cmdAH-2.5",
+			"cmdAH-20*",
+			"cmdAH-24*",
+			"cmdAH-25*",
+			"event-11*",
+			"event-12.4",
+			"event-7.5",
+			"fCmd-10\\.*",
+			"fCmd-16.6",
+			"fCmd-27\\.*",
+			"fCmd-29\\.*",
+			"fCmd-3\\.*",
+			"fCmd-4\\.*",
+			"fCmd-5\\.*",
+			"fCmd-6.17",
+			"fCmd-9\\.*",
+			"filename-10.7",
+			"filename-11\\.*",
+			"filename-15\\.*",
+			"filesystem-1\\.*",
+			"filesystem-6\\.*",
+			"filesystem-7\\.*",
+			"filesystem-9\\.*",
+			"info-16\\.*",
+			"interp-34\\.*",
+			"iocmd-31\\.*",
+			"iocmd-32\\.*",
+			"iocmd-8\\.*",
+			"package-15\\.*",
+			"platform-3.1",
+			"regexp-22\\.*",
+			"safe-8.5",
+			"safe-8.6",
+			"safe-8.7",
+			"safe-stock-7.4",
+			"tcltest-5\\.*",
+			"tcltest-8\\.*",
+			"tcltest-9.5",
+			"timer-11\\.*",
+			"timer-3\\.*",
+			"timer-6\\.*",
+			"timer-9\\.*",
+			"winFCmd-1\\.*",
+			"winFCmd-2\\.*",
+			"winFCmd-3\\.*",
+			"winFCmd-6\\.*",
+			"winFCmd-7\\.*",
+			"winFCmd-8\\.*",
+			"winFCmd-9\\.*",
+			"winNotify-3\\.*",
+			"winTime-1.2",
+			"winTime-2.1",
+			"winpipe-4\\.*",
+			"zlib-10\\.*",
+			"zlib-8\\.*",
+			"zlib-9\\.*",
 		}
 	}
 
@@ -190,7 +343,7 @@ func TestTclTest(t *testing.T) {
 		bytes.Contains(b, []byte("Test file error:")) ||
 		bytes.Contains(b, []byte("Test files exiting with errors:")) ||
 		bytes.Contains(b, []byte("panic:")) {
-		t.Error("panic detected")
+		t.Error("failure(s) detected")
 	}
 }
 
