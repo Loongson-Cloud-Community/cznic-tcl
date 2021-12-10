@@ -1,0 +1,179 @@
+Tests running in interp:  /var/folders/4f/mc8mts295pqf7gmnfcwh6g8w0000gn/T/tcl-test-3178373380/tcltest
+Tests located in:  /private/var/folders/4f/mc8mts295pqf7gmnfcwh6g8w0000gn/T/tcl-test-3178373380
+Tests running in:  /private/var/folders/4f/mc8mts295pqf7gmnfcwh6g8w0000gn/T/tcl-test-3178373380
+Temporary files stored in /private/var/folders/4f/mc8mts295pqf7gmnfcwh6g8w0000gn/T/tcl-test-3178373380
+Test files run in separate interpreters
+Skipping tests that match:  safe-16.2 safe-16.7 safe-16.8 tcltest-9.5 unixInit-1.2
+Running tests that match:  *
+Skipping test files that match:  aaa_exit.test basic.test chan.test chanio.test clock.test cmdAH.test event.test exec.test fCmd.test fileName.test fileSystem.test http.test http11.test httpold.test info.test io.test ioCmd.test ioTrans.test main.test oo.test socket.test zlib.test
+Only running test files that match:  *.test
+Tests began at Fri Dec 10 14:48:23 CET 2021
+append.test
+appendComp.test
+apply.test
+assemble.test
+assocd.test
+async.test
+autoMkindex.test
+binary.test
+case.test
+cmdIL.test
+cmdInfo.test
+cmdMZ.test
+compExpr-old.test
+compExpr.test
+compile.test
+concat.test
+config.test
+coroutine.test
+dcall.test
+dict.test
+dstring.test
+encoding.test
+env.test
+error.test
+eval.test
+execute.test
+expr-old.test
+expr.test
+fileSystemEncoding.test
+for-old.test
+for.test
+foreach.test
+format.test
+get.test
+history.test
+httpPipeline.test
+if-old.test
+if.test
+incr-old.test
+incr.test
+indexObj.test
+init.test
+interp.test
+iogt.test
+join.test
+lindex.test
+link.test
+linsert.test
+list.test
+listObj.test
+llength.test
+lmap.test
+load.test
+lrange.test
+lrepeat.test
+lreplace.test
+lsearch.test
+lset.test
+lsetComp.test
+macOSXFCmd.test
+macOSXLoad.test
+mathop.test
+misc.test
+msgcat.test
+namespace-old.test
+namespace.test
+notify.test
+nre.test
+obj.test
+ooNext2.test
+opt.test
+package.test
+parse.test
+parseExpr.test
+parseOld.test
+pid.test
+pkgMkIndex.test
+platform.test
+proc-old.test
+proc.test
+pwd.test
+reg.test
+regexp.test
+regexpComp.test
+registry.test
+rename.test
+resolver.test
+result.test
+safe-stock.test
+safe.test
+scan.test
+security.test
+set-old.test
+set.test
+source.test
+split.test
+stack.test
+string.test
+stringComp.test
+stringObj.test
+subst.test
+switch.test
+tailcall.test
+tcltest.test
+thread.test
+timer.test
+tm.test
+trace.test
+unixFCmd.test
+unixFile.test
+unixForkEvent.test
+unixInit.test
+unixNotfy.test
+unknown.test
+unload.test
+uplevel.test
+upvar.test
+utf.test
+util.test
+var.test
+while-old.test
+while.test
+winConsole.test
+winDde.test
+winFCmd.test
+winFile.test
+winNotify.test
+winPipe.test
+winTime.test
+
+Tests ended at Fri Dec 10 14:49:00 CET 2021
+all.tcl:	Total	21088	Passed	17971	Skipped	3117	Failed	0
+Sourced 129 Test Files.
+Number of tests skipped for each constraint:
+	9	!ieeeFloatingPoint
+	76	bigEndian
+	5	bug-3057639
+	49	dde
+	19	emptyTest
+	58	fullutf
+	2	hasIsoLocale
+	1	knownBadTest
+	35	knownBug
+	100	localeRegexp
+	52	longIs32bit
+	66	memory
+	5	nonPortable
+	55	notRoot
+	1	notValgrind
+	4	nt
+	1	pairsTo4bytes
+	17	pkga.bundleRequired
+	19	pkgaRequired
+	20	pkgua.bundleRequired
+	20	pkguaRequired
+	2	pre388
+	1996	serverNeeded
+	1	testCPUID
+	1	testWithLimit
+	1	testexprparser && !ieeeFloatingPoint
+	1	testwinclock
+	54	thread
+	3	threaded
+	21	ucs4
+	2	unthreaded
+	16	utf16
+	2	wideBiggerThanInt
+	383	win
+	4	winVista

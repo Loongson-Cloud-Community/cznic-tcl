@@ -170,7 +170,8 @@ func main() {
 			case "darwin/arm64":
 				// This option currently causes trouble with gcc on darwin/arm64.
 				// Ex: error: invalid variant 'BLEAH'
-				ccgo.MustShell(true, "sed", "-i", "", "s/ -mdynamic-no-pic//", "Makefile")
+				// ccgo.MustShell(true, "sed", "-i", "", "s/ -mdynamic-no-pic//", "Makefile")
+				ccgo.MustRun(true, "-compiledb", cdb, "gmake", "CFLAGS='-UHAVE_CPUID -UHAVE_COPYFILE'", "binaries", "tcltest")
 			case "freebsd/amd64", "netbsd/amd64":
 				ccgo.MustRun(true, "-verbose-compiledb", "-compiledb", cdb, "gmake", "CFLAGS='-DNO_ISNAN -UHAVE_CPUID'", "binaries", "tcltest")
 			case "linux/amd64":

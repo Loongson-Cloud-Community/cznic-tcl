@@ -42,7 +42,6 @@ all: editor
 # generate on current host
 generate:
 	go generate 2>&1 | tee log-generate
-	gofmt -l -s -w *.go 2>&1 | tee -a log-generate
 	go build -v ./... 
 
 gotclsh:
@@ -80,7 +79,7 @@ darwin_amd64:
 
 darwin_arm64:
 	@echo "Should be executed only on darwin/arm64."
-	go generate 2>&1 | tee log-generate
+	AR=$$(which ar) go generate 2>&1 | tee log-generate
 	go build -v ./... 2>&1 | tee -a log-generate
 
 freebsd_amd64:

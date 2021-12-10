@@ -131,6 +131,39 @@ func TestTclTest(t *testing.T) {
 			"unixInit.test",
 			"zlib.test",
 		}
+	case "darwin/arm64":
+		notFile = []string{ //TODO
+			"aaa_exit.test",
+			"basic.test",
+			"chan.test",
+			"chanio.test",
+			"clock.test",
+			"cmdAH.test",
+			"event.test",
+			"exec.test",
+			"fCmd.test",
+			"fileName.test",
+			"fileSystem.test",
+			"http.test",
+			"http11.test",
+			"httpold.test",
+			"info.test",
+			"io.test",
+			"ioCmd.test",
+			"ioTrans.test",
+			"main.test",
+			"oo.test",
+			"socket.test",
+			"zlib.test",
+		}
+		skip = []string{
+			//TODO
+			"safe-16.2",
+			"safe-16.7",
+			"safe-16.8",
+			"tcltest-9.5",
+			"unixInit-1.2",
+		}
 	case "freebsd/amd64":
 		notFile = []string{ //TODO
 			"chan.test",
