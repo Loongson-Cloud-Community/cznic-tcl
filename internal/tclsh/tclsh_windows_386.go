@@ -14515,9 +14515,9 @@ func setargv(tls *libc.TLS, argcPtr uintptr, argvPtr uintptr) { /* tclAppInit.c:
 
 	size = 2
 	for p = cmdLine; int32(*(*TCHAR)(unsafe.Pointer(p))) != 0; p += 2 {
-		if (int32(*(*TCHAR)(unsafe.Pointer(p))) == ' ') || (int32(*(*TCHAR)(unsafe.Pointer(p))) == '\t') { // INTL: ISO space.
+		if int32(*(*TCHAR)(unsafe.Pointer(p))) == ' ' || int32(*(*TCHAR)(unsafe.Pointer(p))) == '\t' { // INTL: ISO space.
 			size++
-			for (int32(*(*TCHAR)(unsafe.Pointer(p))) == ' ') || (int32(*(*TCHAR)(unsafe.Pointer(p))) == '\t') { // INTL: ISO space.
+			for int32(*(*TCHAR)(unsafe.Pointer(p))) == ' ' || int32(*(*TCHAR)(unsafe.Pointer(p))) == '\t' { // INTL: ISO space.
 				p += 2
 			}
 			if int32(*(*TCHAR)(unsafe.Pointer(p))) == 0 {
@@ -14528,15 +14528,15 @@ func setargv(tls *libc.TLS, argcPtr uintptr, argvPtr uintptr) { /* tclAppInit.c:
 
 	// Make sure we don't call ckalloc through the (not yet initialized) stub table
 
-	argSpace = tcl.XTcl_Alloc(tls, (((uint32(size) * uint32(unsafe.Sizeof(uintptr(0)))) + (libc.Xwcslen(tls, cmdLine) * size_t(unsafe.Sizeof(TCHAR(0))))) + uint32(unsafe.Sizeof(TCHAR(0)))))
+	argSpace = tcl.XTcl_Alloc(tls, uint32(size)*uint32(unsafe.Sizeof(uintptr(0)))+libc.Xwcslen(tls, cmdLine)*size_t(unsafe.Sizeof(TCHAR(0)))+uint32(unsafe.Sizeof(TCHAR(0))))
 	argv = argSpace
-	argSpace += 2 * (uintptr(uint32(size) * (uint32(unsafe.Sizeof(uintptr(0))) / uint32(unsafe.Sizeof(TCHAR(0))))))
+	argSpace += 2 * uintptr(uint32(size)*(uint32(unsafe.Sizeof(uintptr(0)))/uint32(unsafe.Sizeof(TCHAR(0)))))
 	size--
 
 	p = cmdLine
 	for argc = 0; argc < size; argc++ {
 		*(*uintptr)(unsafe.Pointer(argv + uintptr(argc)*4)) = libc.AssignUintptr(&arg, argSpace)
-		for (int32(*(*TCHAR)(unsafe.Pointer(p))) == ' ') || (int32(*(*TCHAR)(unsafe.Pointer(p))) == '\t') { // INTL: ISO space.
+		for int32(*(*TCHAR)(unsafe.Pointer(p))) == ' ' || int32(*(*TCHAR)(unsafe.Pointer(p))) == '\t' { // INTL: ISO space.
 			p += 2
 		}
 		if int32(*(*TCHAR)(unsafe.Pointer(p))) == 0 {
@@ -14552,9 +14552,9 @@ func setargv(tls *libc.TLS, argcPtr uintptr, argvPtr uintptr) { /* tclAppInit.c:
 				p += 2
 			}
 			if int32(*(*TCHAR)(unsafe.Pointer(p))) == '"' {
-				if (slashes & 1) == 0 {
+				if slashes&1 == 0 {
 					copy = 0
-					if (inquote != 0) && (int32(*(*TCHAR)(unsafe.Pointer(p + uintptr(1)*2))) == '"') {
+					if inquote != 0 && int32(*(*TCHAR)(unsafe.Pointer(p + uintptr(1)*2))) == '"' {
 						p += 2
 						copy = 1
 					} else {
@@ -14570,7 +14570,7 @@ func setargv(tls *libc.TLS, argcPtr uintptr, argvPtr uintptr) { /* tclAppInit.c:
 				slashes--
 			}
 
-			if (int32(*(*TCHAR)(unsafe.Pointer(p))) == 0) || (!(inquote != 0) && ((int32(*(*TCHAR)(unsafe.Pointer(p))) == ' ') || (int32(*(*TCHAR)(unsafe.Pointer(p))) == '\t'))) { // INTL: ISO space.
+			if int32(*(*TCHAR)(unsafe.Pointer(p))) == 0 || !(inquote != 0) && (int32(*(*TCHAR)(unsafe.Pointer(p))) == ' ' || int32(*(*TCHAR)(unsafe.Pointer(p))) == '\t') { // INTL: ISO space.
 				break
 			}
 			if copy != 0 {
@@ -14580,7 +14580,7 @@ func setargv(tls *libc.TLS, argcPtr uintptr, argvPtr uintptr) { /* tclAppInit.c:
 			p += 2
 		}
 		*(*TCHAR)(unsafe.Pointer(arg)) = TCHAR(0)
-		argSpace = (arg + uintptr(1)*2)
+		argSpace = arg + uintptr(1)*2
 	}
 	*(*uintptr)(unsafe.Pointer(argv + uintptr(argc)*4)) = uintptr(0)
 

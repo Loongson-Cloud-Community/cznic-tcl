@@ -20064,13 +20064,13 @@ func TclOOInitializeStubs(tls *libc.TLS, interp uintptr, version uintptr) uintpt
 	var packageName uintptr = ts /* "TclOO" */
 	var errMsg uintptr = uintptr(0)
 	*(*uintptr)(unsafe.Pointer(bp + 80 /* stubsPtr */)) = uintptr(0)
-	var actualVersion uintptr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 12 /* &.tcl_PkgRequireEx */))))(tls, interp,
-		packageName, version, exact, bp+80 /* &stubsPtr */)
+	var actualVersion uintptr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 12)))(tls, interp,
+		packageName, version, exact, bp+80)
 
-	if actualVersion == (uintptr(0)) {
+	if actualVersion == uintptr(0) {
 		return uintptr(0)
 	}
-	if *(*uintptr)(unsafe.Pointer(bp + 80 /* stubsPtr */)) == (uintptr(0)) {
+	if *(*uintptr)(unsafe.Pointer(bp + 80 /* stubsPtr */)) == uintptr(0) {
 		errMsg = ts + 6 /* "missing stub tab..." */
 	} else {
 		tclOOStubsPtr = *(*uintptr)(unsafe.Pointer(bp + 80 /* stubsPtr */))
@@ -20081,8 +20081,8 @@ func TclOOInitializeStubs(tls *libc.TLS, interp uintptr, version uintptr) uintpt
 		}
 		return actualVersion
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 876 /* &.tcl_ResetResult */))))(tls, interp)
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+33 /* "Error loading " */, packageName,
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 876)))(tls, interp)
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+33, packageName,
 		ts+48 /* " (requested vers..." */, version, ts+69, /* ", actual version..." */
 		actualVersion, ts+87 /* "): " */, errMsg, uintptr(0)))
 	return uintptr(0)
@@ -20102,7 +20102,7 @@ var tclIntPlatStubsPtr uintptr = uintptr(0) /* tclStubLib.c:24:23 */
 // Use our own isDigit to avoid linking to libc on windows
 
 func isDigit(tls *libc.TLS, c int32) int32 { /* tclStubLib.c:30:12: */
-	return (libc.Bool32((c >= '0') && (c <= '9')))
+	return libc.Bool32(c >= '0' && c <= '9')
 }
 
 //----------------------------------------------------------------------
@@ -20133,14 +20133,14 @@ func Tcl_InitStubs(tls *libc.TLS, interp uintptr, version uintptr, exact int32) 
 	// prevents apps from being able to load/unload Tcl dynamically multiple
 	// times. [Bug 615304]
 
-	if !(stubsPtr != 0) || ((*TclStubs)(unsafe.Pointer(stubsPtr)).magic != (libc.Int32FromUint32(0xFCA3BACF))) {
+	if !(stubsPtr != 0) || (*TclStubs)(unsafe.Pointer(stubsPtr)).magic != libc.Int32FromUint32(0xFCA3BACF) {
 		(*Interp)(unsafe.Pointer(iPtr)).result = ts + 91 /* "interpreter uses..." */
 		(*Interp)(unsafe.Pointer(iPtr)).freeProc = uintptr(0)
 		return uintptr(0)
 	}
 
-	actualVersion = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr) uintptr)(unsafe.Pointer((stubsPtr + 12 /* &.tcl_PkgRequireEx */))))(tls, interp, ts+140 /* "Tcl" */, version, 0, bp /* &pkgData */)
-	if actualVersion == (uintptr(0)) {
+	actualVersion = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr) uintptr)(unsafe.Pointer(stubsPtr + 12)))(tls, interp, ts+140, version, 0, bp)
+	if actualVersion == uintptr(0) {
 		return uintptr(0)
 	}
 	if exact != 0 {
@@ -20148,24 +20148,24 @@ func Tcl_InitStubs(tls *libc.TLS, interp uintptr, version uintptr, exact int32) 
 		var count int32 = 0
 
 		for *(*int8)(unsafe.Pointer(p)) != 0 {
-			count = count + (libc.BoolInt32(!(isDigit(tls, int32(*(*int8)(unsafe.Pointer(libc.PostIncUintptr(&p, 1))))) != 0)))
+			count = count + libc.BoolInt32(!(isDigit(tls, int32(*(*int8)(unsafe.Pointer(libc.PostIncUintptr(&p, 1))))) != 0))
 		}
 		if count == 1 {
 			var q uintptr = actualVersion
 
 			p = version
-			for (*(*int8)(unsafe.Pointer(p)) != 0) && (int32(*(*int8)(unsafe.Pointer(p))) == int32(*(*int8)(unsafe.Pointer(q)))) {
+			for *(*int8)(unsafe.Pointer(p)) != 0 && int32(*(*int8)(unsafe.Pointer(p))) == int32(*(*int8)(unsafe.Pointer(q))) {
 				p++
 				q++
 			}
-			if (*(*int8)(unsafe.Pointer(p)) != 0) || (isDigit(tls, int32(*(*int8)(unsafe.Pointer(q)))) != 0) {
+			if *(*int8)(unsafe.Pointer(p)) != 0 || isDigit(tls, int32(*(*int8)(unsafe.Pointer(q)))) != 0 {
 				// Construct error message
-				(*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr) uintptr)(unsafe.Pointer((stubsPtr + 12 /* &.tcl_PkgRequireEx */))))(tls, interp, ts+140 /* "Tcl" */, version, 1, uintptr(0))
+				(*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr) uintptr)(unsafe.Pointer(stubsPtr + 12)))(tls, interp, ts+140, version, 1, uintptr(0))
 				return uintptr(0)
 			}
 		} else {
-			actualVersion = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr) uintptr)(unsafe.Pointer((stubsPtr + 12 /* &.tcl_PkgRequireEx */))))(tls, interp, ts+140 /* "Tcl" */, version, 1, uintptr(0))
-			if actualVersion == (uintptr(0)) {
+			actualVersion = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr) uintptr)(unsafe.Pointer(stubsPtr + 12)))(tls, interp, ts+140, version, 1, uintptr(0))
+			if actualVersion == uintptr(0) {
 				return uintptr(0)
 			}
 		}
@@ -20216,24 +20216,24 @@ func TclTomMathInitializeStubs(tls *libc.TLS, interp uintptr, version uintptr, e
 	var packageName uintptr = ts + 144 /* "tcl::tommath" */
 	var errMsg uintptr = uintptr(0)
 	*(*uintptr)(unsafe.Pointer(bp + 80 /* stubsPtr */)) = uintptr(0)
-	var actualVersion uintptr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 12 /* &.tcl_PkgRequireEx */))))(tls, interp,
-		packageName, version, exact, bp+80 /* &stubsPtr */)
+	var actualVersion uintptr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 12)))(tls, interp,
+		packageName, version, exact, bp+80)
 
-	if actualVersion == (uintptr(0)) {
+	if actualVersion == uintptr(0) {
 		return uintptr(0)
 	}
-	if *(*uintptr)(unsafe.Pointer(bp + 80 /* stubsPtr */)) == (uintptr(0)) {
+	if *(*uintptr)(unsafe.Pointer(bp + 80 /* stubsPtr */)) == uintptr(0) {
 		errMsg = ts + 6 /* "missing stub tab..." */
-	} else if (*(*func(*libc.TLS) int32)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(bp + 80 /* stubsPtr */)) + 8 /* &.tclBN_epoch */))))(tls) != epoch {
+	} else if (*(*func(*libc.TLS) int32)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(bp + 80)) + 8)))(tls) != epoch {
 		errMsg = ts + 157 /* "epoch number mis..." */
-	} else if (*(*func(*libc.TLS) int32)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(bp + 80 /* stubsPtr */)) + 12 /* &.tclBN_revision */))))(tls) != revision {
+	} else if (*(*func(*libc.TLS) int32)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(bp + 80)) + 12)))(tls) != revision {
 		errMsg = ts + 179 /* "requires a later..." */
 	} else {
 		tclTomMathStubsPtr = *(*uintptr)(unsafe.Pointer(bp + 80 /* stubsPtr */))
 		return actualVersion
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 876 /* &.tcl_ResetResult */))))(tls, interp)
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+33 /* "Error loading " */, packageName,
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 876)))(tls, interp)
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+33, packageName,
 		ts+48 /* " (requested vers..." */, version, ts+69, /* ", actual version..." */
 		actualVersion, ts+87 /* "): " */, errMsg, uintptr(0)))
 	return uintptr(0)
@@ -20873,314 +20873,314 @@ func Tcltest_Init(tls *libc.TLS, interp uintptr) int32 { /* tclTest.c:544:1: */
 
 	// var index int32 at bp+16, 4
 
-	if Tcl_InitStubs(tls, interp, ts+222 /* "8.5" */, 0) == (uintptr(0)) {
+	if Tcl_InitStubs(tls, interp, ts+222 /* "8.5" */, 0) == uintptr(0) {
 		return 1
 	}
-	if (TclTomMathInitializeStubs(tls, interp, ts+222 /* "8.5" */, 0, 0)) == (uintptr(0)) {
+	if TclTomMathInitializeStubs(tls, interp, ts+222, 0, 0) == uintptr(0) {
 		return 1
 	}
-	if TclOOInitializeStubs(tls, interp, ts+226 /* "1.1.0" */) == (uintptr(0)) {
+	if TclOOInitializeStubs(tls, interp, ts+226 /* "1.1.0" */) == uintptr(0) {
 		return 1
 	}
 	// TIP #268: Full patchlevel instead of just major.minor
 
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 8 /* &.tcl_PkgProvideEx */))))(tls, interp, ts+232 /* "Tcltest" */, ts+240 /* "8.6.10" */, uintptr(0)) == 1 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 8)))(tls, interp, ts+232, ts+240, uintptr(0)) == 1 {
 		return 1
 	}
 
 	// Create additional commands and math functions for testing Tcl.
 
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+247 /* "gettimes" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+247, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{GetTimesObjCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+256 /* "noop" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+256, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{NoopCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+256 /* "noop" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+256, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{NoopObjCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+261 /* "testpurebytesobj" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+261, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestpurebytesobjObjCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+278 /* "testbytestring" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+278, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestbytestringObjCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+293 /* "testwrongnumargs" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+293, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestWrongNumArgsObjCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+310 /* "testfilesystem" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+310, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestFilesystemObjCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+325 /* "testsimplefilesy..." */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+325, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestSimpleFilesystemObjCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+346, /* "testgetindexfrom..." */
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+346,
 		*(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 		}{TestGetIndexFromObjStructObjCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+372 /* "testasync" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+372, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestasyncCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+382, /* "testbumpinterpep..." */
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+382,
 		*(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 		}{TestbumpinterpepochObjCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+402 /* "testchannel" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+402, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestChannelCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+414 /* "testchannelevent" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+414, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestChannelEventCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+431 /* "testcmdtoken" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+431, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestcmdtokenCmd})), uintptr(0),
 		uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+444 /* "testcmdinfo" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+444, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestcmdinfoCmd})), uintptr(0),
 		uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+456 /* "testcmdtrace" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+456, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestcmdtraceCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+469 /* "testconcatobj" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+469, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestconcatobjCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+483 /* "testcreatecomman..." */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+483, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestcreatecommandCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+501 /* "testdcall" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+501, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestdcallCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+511 /* "testdel" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+511, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestdelCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+519 /* "testdelassocdata" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+519, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestdelassocdataCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+536 /* "testdoubledigits" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+536, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestdoubledigitsObjCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 496 /* &.tcl_DStringInit */))))(tls, uintptr(unsafe.Pointer(&dstring)))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+553 /* "testdstring" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 496)))(tls, uintptr(unsafe.Pointer(&dstring)))
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+553, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestdstringCmd})), uintptr(0),
 		uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+565 /* "testencoding" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+565, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestencodingObjCmd})), uintptr(0),
 		uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+578 /* "testevalex" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+578, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestevalexObjCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+589 /* "testevalobjv" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+589, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestevalobjvObjCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+602 /* "testevent" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+602, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TesteventObjCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+612 /* "testexithandler" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+612, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestexithandlerCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+628 /* "testexprlong" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+628, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestexprlongCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+641 /* "testexprlongobj" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+641, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestexprlongobjCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+657 /* "testexprdouble" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+657, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestexprdoubleCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+672 /* "testexprdoubleob..." */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+672, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestexprdoubleobjCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+690 /* "testexprparser" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+690, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestexprparserObjCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+705 /* "testexprstring" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+705, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestexprstringCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+720 /* "testfevent" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+720, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestfeventCmd})), uintptr(0),
 		uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+731 /* "testfilelink" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+731, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestfilelinkCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+744 /* "testfile" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+744, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestfileCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+753, /* "testhashsystemha..." */
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+753,
 		*(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 		}{TestHashSystemHashCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+772 /* "testgetassocdata" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+772, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestgetassocdataCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+789 /* "testgetint" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+789, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestgetintCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+800 /* "testgetplatform" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+800, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestgetplatformCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+816, /* "testgetvarfullna..." */
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+816,
 		*(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 		}{TestgetvarfullnameCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+835 /* "testinterpdelete" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+835, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestinterpdeleteCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+852 /* "testlink" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+852, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestlinkCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+861 /* "testlocale" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+861, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestlocaleCmd})), uintptr(0),
 		uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+872 /* "testpanic" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+872, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestpanicCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+882 /* "testparseargs" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+882, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestparseargsCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+896 /* "testparser" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+896, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestparserObjCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+907 /* "testparsevar" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+907, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestparsevarObjCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+920 /* "testparsevarname" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+920, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestparsevarnameObjCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+937 /* "testregexp" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+937, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestregexpObjCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+948 /* "testreturn" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+948, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestreturnObjCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+959 /* "testsaveresult" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+959, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestsaveresultCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+974 /* "testsetassocdata" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+974, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestsetassocdataCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+991 /* "testsetnoerr" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+991, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestsetCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+1004 /* "testseterr" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+1004, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestsetCmd})),
 		uintptr(0x200), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+1015 /* "testset2" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+1015, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{Testset2Cmd})),
 		uintptr(0x200), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+1024 /* "testseterrorcode" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+1024, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestseterrorcodeCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+1041, /* "testsetobjerrorc..." */
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+1041,
 		*(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 		}{TestsetobjerrorcodeCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+1061, /* "testnumutfchars" */
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+1061,
 		*(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 		}{TestNumUtfCharsCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+1077, /* "testfindfirst" */
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+1077,
 		*(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 		}{TestFindFirstCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+1091, /* "testfindlast" */
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+1091,
 		*(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 		}{TestFindLastCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+1104 /* "testsetplatform" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+1104, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestsetplatformCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+1120 /* "teststaticpkg" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+1120, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TeststaticpkgCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+1134, /* "testtranslatefil..." */
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+1134,
 		*(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 		}{TesttranslatefilenameCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+1156 /* "testupvar" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+1156, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestupvarCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, int32, uintptr, uintptr, ClientData))(unsafe.Pointer((tclStubsPtr + 388 /* &.tcl_CreateMathFunc */))))(tls, interp, ts+1166 /* "T1" */, 0, uintptr(0), *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, int32, uintptr, uintptr, ClientData))(unsafe.Pointer(tclStubsPtr + 388)))(tls, interp, ts+1166, 0, uintptr(0), *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, uintptr, uintptr) int32
 	}{TestMathFunc})), uintptr(123))
-	(*(*func(*libc.TLS, uintptr, uintptr, int32, uintptr, uintptr, ClientData))(unsafe.Pointer((tclStubsPtr + 388 /* &.tcl_CreateMathFunc */))))(tls, interp, ts+1169 /* "T2" */, 0, uintptr(0), *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, int32, uintptr, uintptr, ClientData))(unsafe.Pointer(tclStubsPtr + 388)))(tls, interp, ts+1169, 0, uintptr(0), *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, uintptr, uintptr) int32
 	}{TestMathFunc})), uintptr(345))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+1172 /* "testmainthread" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+1172, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestmainthreadCmd})), uintptr(0),
 		uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+1187 /* "testsetmainloop" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+1187, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestsetmainloopCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+1203 /* "testexitmainloop" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+1203, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestexitmainloopCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+1220 /* "testcpuid" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+1220, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestcpuidCmd})),
 		uintptr(0), uintptr(0))
 	*(*Tcl_ValueType)(unsafe.Pointer(bp /* &t3ArgTypes[0] */ + uintptr(0)*4)) = TCL_EITHER
 	*(*Tcl_ValueType)(unsafe.Pointer(bp /* &t3ArgTypes[0] */ + uintptr(1)*4)) = TCL_EITHER
-	(*(*func(*libc.TLS, uintptr, uintptr, int32, uintptr, uintptr, ClientData))(unsafe.Pointer((tclStubsPtr + 388 /* &.tcl_CreateMathFunc */))))(tls, interp, ts+1230 /* "T3" */, 2, bp /* &t3ArgTypes[0] */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, int32, uintptr, uintptr, ClientData))(unsafe.Pointer(tclStubsPtr + 388)))(tls, interp, ts+1230, 2, bp, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, uintptr, uintptr) int32
 	}{TestMathFunc2})),
 		uintptr(0))
 
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+1233 /* "testnreunwind" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+1233, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestNREUnwind})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+1247 /* "testnrelevels" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+1247, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestNRELevels})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+1261 /* "testinterpresolv..." */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+1261, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestInterpResolverCmd})),
 		uintptr(0), uintptr(0))
@@ -21194,33 +21194,33 @@ func Tcltest_Init(tls *libc.TLS, interp uintptr) int32 { /* tclTest.c:544:1: */
 
 	// Check for special options used in ../tests/main.test
 
-	listPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 1232 /* &.tcl_GetVar2Ex */))))(tls, interp, ts+1280 /* "argv" */, uintptr(0), 1)
-	if listPtr != (uintptr(0)) {
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 188 /* &.tcl_ListObjGetElements */))))(tls, interp, listPtr, bp+8 /* &objc */, bp+12 /* &objv */) != 0 {
+	listPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 1232)))(tls, interp, ts+1280, uintptr(0), 1)
+	if listPtr != uintptr(0) {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 188)))(tls, interp, listPtr, bp+8, bp+12) != 0 {
 			return 1
 		}
-		if (*(*int32)(unsafe.Pointer(bp + 8 /* objc */)) != 0) && ((*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1224 /* &.tcl_GetIndexFromObjStruct */))))(tls, uintptr(0), *(*uintptr)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(bp + 12 /* objv */)) + uintptr(0)*4)), uintptr(unsafe.Pointer(&specialOptions)), int32(unsafe.Sizeof(uintptr(0))), uintptr(0), 1, bp+16 /* &index */) == 0) {
+		if *(*int32)(unsafe.Pointer(bp + 8)) != 0 && (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1224)))(tls, uintptr(0), *(*uintptr)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(bp + 12)) + uintptr(0)*4)), uintptr(unsafe.Pointer(&specialOptions)), int32(unsafe.Sizeof(uintptr(0))), uintptr(0), 1, bp+16) == 0 {
 			switch *(*int32)(unsafe.Pointer(bp + 16 /* index */)) {
 			case 0:
 				return 1
 				fallthrough
 			case 1:
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 448 /* &.tcl_DeleteInterp */))))(tls, interp)
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 448)))(tls, interp)
 				return 1
 				fallthrough
 			case 2:
 				{
 					// var mode int32 at bp+20, 4
 
-					(*(*func(*libc.TLS, uintptr, Tcl_Channel) int32)(unsafe.Pointer((tclStubsPtr + 1016 /* &.tcl_UnregisterChannel */))))(tls, interp,
-						(*(*func(*libc.TLS, uintptr, uintptr, uintptr) Tcl_Channel)(unsafe.Pointer((tclStubsPtr + 612 /* &.tcl_GetChannel */))))(tls, interp, ts+1285 /* "stderr" */, bp+20 /* &mode */))
+					(*(*func(*libc.TLS, uintptr, Tcl_Channel) int32)(unsafe.Pointer(tclStubsPtr + 1016)))(tls, interp,
+						(*(*func(*libc.TLS, uintptr, uintptr, uintptr) Tcl_Channel)(unsafe.Pointer(tclStubsPtr + 612)))(tls, interp, ts+1285, bp+20))
 					return 1
 
 				}
 				fallthrough
 			case 3:
-				if (*(*int32)(unsafe.Pointer(bp + 8 /* objc */)) - 1) != 0 {
-					(*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 1276 /* &.tcl_SetVar2Ex */))))(tls, interp, ts+1292 /* "tcl_rcFileName" */, uintptr(0), *(*uintptr)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(bp + 12 /* objv */)) + uintptr(1)*4)),
+				if *(*int32)(unsafe.Pointer(bp + 8))-1 != 0 {
+					(*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 1276)))(tls, interp, ts+1292, uintptr(0), *(*uintptr)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(bp + 12)) + uintptr(1)*4)),
 						1)
 				}
 				return 1
@@ -21256,7 +21256,7 @@ var specialOptions = [5]uintptr{
 //----------------------------------------------------------------------
 
 func Tcltest_SafeInit(tls *libc.TLS, interp uintptr) int32 { /* tclTest.c:793:1: */
-	if Tcl_InitStubs(tls, interp, ts+222 /* "8.5" */, 0) == (uintptr(0)) {
+	if Tcl_InitStubs(tls, interp, ts+222 /* "8.5" */, 0) == uintptr(0) {
 		return 1
 	}
 	return Procbodytest_SafeInit(tls, interp)
@@ -21292,11 +21292,11 @@ func TestasyncCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, a
 		goto __1
 	}
 wrongNumArgs:
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+1396 /* "wrong # args" */, uintptr(0))
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+1396, uintptr(0))
 	return 1
 __1:
 	;
-	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1409 /* "create" */) == 0) {
+	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1409) == 0) {
 		goto __2
 	}
 	if !(argc != 3) {
@@ -21305,23 +21305,23 @@ __1:
 	goto wrongNumArgs
 __4:
 	;
-	asyncPtr = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, uint32(unsafe.Sizeof(TestAsyncHandler{})))
-	(*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).command = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, (libc.Xstrlen(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4))) + size_t(1)))
+	asyncPtr = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, uint32(unsafe.Sizeof(TestAsyncHandler{})))
+	(*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).command = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, libc.Xstrlen(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)))+size_t(1))
 	libc.Xstrcpy(tls, (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).command, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)))
 
 	(*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).id = nextId
 	nextId++
-	(*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).handler = (*(*func(*libc.TLS, uintptr, ClientData) Tcl_AsyncHandler)(unsafe.Pointer((tclStubsPtr + 292 /* &.tcl_AsyncCreate */))))(tls, *(*uintptr)(unsafe.Pointer(&struct {
+	(*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).handler = (*(*func(*libc.TLS, uintptr, ClientData) Tcl_AsyncHandler)(unsafe.Pointer(tclStubsPtr + 292)))(tls, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32) int32
 	}{AsyncHandlerProc})),
 		uintptr((*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).id))
 	(*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).nextPtr = firstHandler
 	firstHandler = asyncPtr
 
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).id))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).id))
 	goto __3
 __2:
-	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1416 /* "delete" */) == 0) {
+	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1416) == 0) {
 		goto __5
 	}
 	if !(argc == 2) {
@@ -21329,14 +21329,14 @@ __2:
 	}
 
 __8:
-	if !(firstHandler != (uintptr(0))) {
+	if !(firstHandler != uintptr(0)) {
 		goto __9
 	}
 	asyncPtr = firstHandler
 	firstHandler = (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).nextPtr
-	(*(*func(*libc.TLS, Tcl_AsyncHandler))(unsafe.Pointer((tclStubsPtr + 296 /* &.tcl_AsyncDelete */))))(tls, (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).handler)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).command)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, asyncPtr)
+	(*(*func(*libc.TLS, Tcl_AsyncHandler))(unsafe.Pointer(tclStubsPtr + 296)))(tls, (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).handler)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).command)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, asyncPtr)
 	goto __8
 __9:
 	;
@@ -21350,7 +21350,7 @@ __7:
 	goto wrongNumArgs
 __10:
 	;
-	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), bp+40 /* &id */) != 0) {
+	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), bp+40) != 0) {
 		goto __11
 	}
 	return 1
@@ -21360,16 +21360,16 @@ __11:
 	prevPtr = uintptr(0)
 	asyncPtr = firstHandler
 __12:
-	if !(asyncPtr != (uintptr(0))) {
+	if !(asyncPtr != uintptr(0)) {
 		goto __14
 	}
-	if !((*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).id != *(*int32)(unsafe.Pointer(bp + 40 /* id */))) {
+	if !((*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).id != *(*int32)(unsafe.Pointer(bp + 40))) {
 		goto __15
 	}
 	goto __13
 __15:
 	;
-	if !(prevPtr == (uintptr(0))) {
+	if !(prevPtr == uintptr(0)) {
 		goto __16
 	}
 	firstHandler = (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).nextPtr
@@ -21378,9 +21378,9 @@ __16:
 	(*TestAsyncHandler)(unsafe.Pointer(prevPtr)).nextPtr = (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).nextPtr
 __17:
 	;
-	(*(*func(*libc.TLS, Tcl_AsyncHandler))(unsafe.Pointer((tclStubsPtr + 296 /* &.tcl_AsyncDelete */))))(tls, (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).handler)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).command)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, asyncPtr)
+	(*(*func(*libc.TLS, Tcl_AsyncHandler))(unsafe.Pointer(tclStubsPtr + 296)))(tls, (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).handler)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).command)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, asyncPtr)
 	goto __14
 	goto __13
 __13:
@@ -21393,7 +21393,7 @@ __14:
 
 	goto __6
 __5:
-	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1423 /* "mark" */) == 0) {
+	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1423) == 0) {
 		goto __18
 	}
 	if !(argc != 5) {
@@ -21402,8 +21402,8 @@ __5:
 	goto wrongNumArgs
 __20:
 	;
-	if !(((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), bp+40 /* &id */) != 0) ||
-		((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)), bp+44 /* &code */) != 0)) {
+	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), bp+40) != 0 ||
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)), bp+44) != 0) {
 		goto __21
 	}
 	return 1
@@ -21412,13 +21412,13 @@ __21:
 
 	asyncPtr = firstHandler
 __22:
-	if !(asyncPtr != (uintptr(0))) {
+	if !(asyncPtr != uintptr(0)) {
 		goto __24
 	}
-	if !((*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).id == *(*int32)(unsafe.Pointer(bp + 40 /* id */))) {
+	if !((*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).id == *(*int32)(unsafe.Pointer(bp + 40))) {
 		goto __25
 	}
-	(*(*func(*libc.TLS, Tcl_AsyncHandler))(unsafe.Pointer((tclStubsPtr + 304 /* &.tcl_AsyncMark */))))(tls, (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).handler)
+	(*(*func(*libc.TLS, Tcl_AsyncHandler))(unsafe.Pointer(tclStubsPtr + 304)))(tls, (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).handler)
 	goto __24
 __25:
 	;
@@ -21429,12 +21429,12 @@ __23:
 	goto __24
 __24:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), -1))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), -1))
 
 	return *(*int32)(unsafe.Pointer(bp + 44 /* code */))
 	goto __19
 __18:
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+1428 /* "bad option \"" */, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)),
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+1428, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)),
 		ts+1441 /* "\": must be creat..." */, uintptr(0)))
 	return 1
 __19:
@@ -21459,7 +21459,7 @@ func AsyncHandlerProc(tls *libc.TLS, clientData ClientData, interp uintptr, code
 	var cmd uintptr
 	// var string [24]int8 at bp, 24
 
-	for asyncPtr = firstHandler; asyncPtr != (uintptr(0)); asyncPtr = (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).nextPtr {
+	for asyncPtr = firstHandler; asyncPtr != uintptr(0); asyncPtr = (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).nextPtr {
 		if (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).id == id {
 			break
 		}
@@ -21470,19 +21470,19 @@ func AsyncHandlerProc(tls *libc.TLS, clientData ClientData, interp uintptr, code
 		return 0
 	}
 
-	(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer((tclIntStubsPtr + 104 /* &.tclFormatInt */))))(tls, bp /* &string[0] */, int32(code))
+	(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(tclIntStubsPtr + 104)))(tls, bp, int32(code))
 	*(*uintptr)(unsafe.Pointer(bp + 24 /* &listArgv[0] */ + uintptr(0)*4)) = (*TestAsyncHandler)(unsafe.Pointer(asyncPtr)).command
-	*(*uintptr)(unsafe.Pointer(bp + 24 /* &listArgv[0] */ + uintptr(1)*4)) = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp))
+	*(*uintptr)(unsafe.Pointer(bp + 24 /* &listArgv[0] */ + uintptr(1)*4)) = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp))
 	*(*uintptr)(unsafe.Pointer(bp + 24 /* &listArgv[0] */ + uintptr(2)*4)) = bp /* &string[0] */
 	*(*uintptr)(unsafe.Pointer(bp + 24 /* &listArgv[0] */ + uintptr(3)*4)) = uintptr(0)
-	cmd = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 776 /* &.tcl_Merge */))))(tls, 3, bp+24 /* &listArgv[0] */)
-	if interp != (uintptr(0)) {
-		code = (*(*func(*libc.TLS, uintptr, uintptr, int32, int32) int32)(unsafe.Pointer((tclStubsPtr + 1172 /* &.tcl_EvalEx */))))(tls, interp, cmd, -1, 0)
+	cmd = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 776)))(tls, 3, bp+24)
+	if interp != uintptr(0) {
+		code = (*(*func(*libc.TLS, uintptr, uintptr, int32, int32) int32)(unsafe.Pointer(tclStubsPtr + 1172)))(tls, interp, cmd, -1, 0)
 	} else {
 		// this should not happen, but by definition of how async handlers are
 		// invoked, it's possible.  Better error checking is needed here.
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, cmd)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, cmd)
 	return code
 }
 
@@ -21503,7 +21503,7 @@ func AsyncHandlerProc(tls *libc.TLS, clientData ClientData, interp uintptr, code
 func TestbumpinterpepochObjCmd(tls *libc.TLS, dummy ClientData, interp uintptr, objc int32, objv uintptr) int32 { /* tclTest.c:1031:1: */
 	var iPtr uintptr = interp
 	if objc != 1 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+1481 /* "" */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+1481)
 		return 1
 	}
 	(*Interp)(unsafe.Pointer(iPtr)).compileEpoch++
@@ -21534,51 +21534,51 @@ func TestcmdinfoCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32,
 	// var info Tcl_CmdInfo at bp+368, 32
 
 	if argc != 3 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+1482 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+1482, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 			ts+1508 /* " option cmdName\"" */, uintptr(0)))
 		return 1
 	}
 	if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1409 /* "create" */) == 0 {
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), *(*uintptr)(unsafe.Pointer(&struct {
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), *(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 		}{CmdProc1})), ts+1525, /* "original" */
 			*(*uintptr)(unsafe.Pointer(&struct{ f func(*libc.TLS, ClientData) }{CmdDelProc1})))
 	} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1416 /* "delete" */) == 0 {
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 496 /* &.tcl_DStringInit */))))(tls, uintptr(unsafe.Pointer(&delString)))
-		(*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 420 /* &.tcl_DeleteCommand */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 500 /* &.tcl_DStringResult */))))(tls, interp, uintptr(unsafe.Pointer(&delString)))
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 496)))(tls, uintptr(unsafe.Pointer(&delString)))
+		(*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 420)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 500)))(tls, interp, uintptr(unsafe.Pointer(&delString)))
 	} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1534 /* "get" */) == 0 {
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 644 /* &.tcl_GetCommandInfo */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), bp+368 /* &info */) == 0 {
-			(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+1538 /* "??" */, uintptr(0))
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 644)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), bp+368) == 0 {
+			(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+1538, uintptr(0))
 			return 0
 		}
 		if (*Tcl_CmdInfo)(unsafe.Pointer(bp+368 /* &info */)).proc == *(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 		}{CmdProc1})) {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+40, ts+1541 /* "CmdProc1" */, ts+1550, /* " " */
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+40, ts+1541, ts+1550,
 				(*Tcl_CmdInfo)(unsafe.Pointer(bp+368 /* &info */)).clientData, uintptr(0)))
 		} else if (*Tcl_CmdInfo)(unsafe.Pointer(bp+368 /* &info */)).proc == *(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 		}{CmdProc2})) {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+80, ts+1552 /* "CmdProc2" */, ts+1550, /* " " */
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+80, ts+1552, ts+1550,
 				(*Tcl_CmdInfo)(unsafe.Pointer(bp+368 /* &info */)).clientData, uintptr(0)))
 		} else {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+120, ts+1561 /* "unknown" */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+120, ts+1561, uintptr(0)))
 		}
 		if (*Tcl_CmdInfo)(unsafe.Pointer(bp+368 /* &info */)).deleteProc == *(*uintptr)(unsafe.Pointer(&struct{ f func(*libc.TLS, ClientData) }{CmdDelProc1})) {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+144, ts+1569 /* " CmdDelProc1" */, ts+1550, /* " " */
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+144, ts+1569, ts+1550,
 				(*Tcl_CmdInfo)(unsafe.Pointer(bp+368 /* &info */)).deleteData, uintptr(0)))
 		} else if (*Tcl_CmdInfo)(unsafe.Pointer(bp+368 /* &info */)).deleteProc == *(*uintptr)(unsafe.Pointer(&struct{ f func(*libc.TLS, ClientData) }{CmdDelProc2})) {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+184, ts+1582 /* " CmdDelProc2" */, ts+1550, /* " " */
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+184, ts+1582, ts+1550,
 				(*Tcl_CmdInfo)(unsafe.Pointer(bp+368 /* &info */)).deleteData, uintptr(0)))
 		} else {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+224, ts+1595 /* " unknown" */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+224, ts+1595, uintptr(0)))
 		}
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+248, ts+1550 /* " " */, (*Tcl_Namespace)(unsafe.Pointer((*Tcl_CmdInfo)(unsafe.Pointer(bp+368 /* &info */)).namespacePtr)).fullName, uintptr(0)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+248, ts+1550, (*Tcl_Namespace)(unsafe.Pointer((*Tcl_CmdInfo)(unsafe.Pointer(bp+368)).namespacePtr)).fullName, uintptr(0)))
 		if (*Tcl_CmdInfo)(unsafe.Pointer(bp+368 /* &info */)).isNativeObjectProc != 0 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+280, ts+1604 /* " nativeObjectPro..." */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+280, ts+1604, uintptr(0)))
 		} else {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+304, ts+1622 /* " stringProc" */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+304, ts+1622, uintptr(0)))
 		}
 	} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1634 /* "modify" */) == 0 {
 		(*Tcl_CmdInfo)(unsafe.Pointer(bp + 368 /* &info */)).proc = *(*uintptr)(unsafe.Pointer(&struct {
@@ -21589,13 +21589,13 @@ func TestcmdinfoCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32,
 		(*Tcl_CmdInfo)(unsafe.Pointer(bp + 368 /* &info */)).objClientData = uintptr(0)
 		(*Tcl_CmdInfo)(unsafe.Pointer(bp + 368 /* &info */)).deleteProc = *(*uintptr)(unsafe.Pointer(&struct{ f func(*libc.TLS, ClientData) }{CmdDelProc2}))
 		(*Tcl_CmdInfo)(unsafe.Pointer(bp + 368 /* &info */)).deleteData = ts + 1658 /* "new_delete_data" */
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 912 /* &.tcl_SetCommandInfo */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), bp+368 /* &info */) == 0 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, 0))
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 912)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), bp+368) == 0 {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, 0))
 		} else {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, 1))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, 1))
 		}
 	} else {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+328, ts+1428 /* "bad option \"" */, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+328, ts+1428, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)),
 			ts+1674 /* "\": must be creat..." */, uintptr(0)))
 		return 1
 	}
@@ -21607,7 +21607,7 @@ func CmdProc1(tls *libc.TLS, clientData ClientData, interp uintptr, argc int32, 
 	bp := tls.Alloc(32)
 	defer tls.Free(32)
 
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+1716 /* "CmdProc1 " */, clientData, uintptr(0)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+1716, clientData, uintptr(0)))
 	return 0
 }
 
@@ -21616,20 +21616,20 @@ func CmdProc2(tls *libc.TLS, clientData ClientData, interp uintptr, argc int32, 
 	bp := tls.Alloc(32)
 	defer tls.Free(32)
 
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+1726 /* "CmdProc2 " */, clientData, uintptr(0)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+1726, clientData, uintptr(0)))
 	return 0
 }
 
 func CmdDelProc1(tls *libc.TLS, clientData ClientData) { /* tclTest.c:1160:1: */
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 496 /* &.tcl_DStringInit */))))(tls, uintptr(unsafe.Pointer(&delString)))
-	(*(*func(*libc.TLS, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 476 /* &.tcl_DStringAppend */))))(tls, uintptr(unsafe.Pointer(&delString)), ts+1736 /* "CmdDelProc1 " */, -1)
-	(*(*func(*libc.TLS, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 476 /* &.tcl_DStringAppend */))))(tls, uintptr(unsafe.Pointer(&delString)), clientData, -1)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 496)))(tls, uintptr(unsafe.Pointer(&delString)))
+	(*(*func(*libc.TLS, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 476)))(tls, uintptr(unsafe.Pointer(&delString)), ts+1736, -1)
+	(*(*func(*libc.TLS, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 476)))(tls, uintptr(unsafe.Pointer(&delString)), clientData, -1)
 }
 
 func CmdDelProc2(tls *libc.TLS, clientData ClientData) { /* tclTest.c:1169:1: */
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 496 /* &.tcl_DStringInit */))))(tls, uintptr(unsafe.Pointer(&delString)))
-	(*(*func(*libc.TLS, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 476 /* &.tcl_DStringAppend */))))(tls, uintptr(unsafe.Pointer(&delString)), ts+1749 /* "CmdDelProc2 " */, -1)
-	(*(*func(*libc.TLS, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 476 /* &.tcl_DStringAppend */))))(tls, uintptr(unsafe.Pointer(&delString)), clientData, -1)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 496)))(tls, uintptr(unsafe.Pointer(&delString)))
+	(*(*func(*libc.TLS, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 476)))(tls, uintptr(unsafe.Pointer(&delString)), ts+1749, -1)
+	(*(*func(*libc.TLS, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 476)))(tls, uintptr(unsafe.Pointer(&delString)), clientData, -1)
 }
 
 //----------------------------------------------------------------------
@@ -21658,40 +21658,40 @@ func TestcmdtokenCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32
 	// var buf [30]int8 at bp+152, 30
 
 	if argc != 3 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+1482 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+1482, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 			ts+1762 /* " option arg\"" */, uintptr(0)))
 		return 1
 	}
 	if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1409 /* "create" */) == 0 {
-		token = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), *(*uintptr)(unsafe.Pointer(&struct {
+		token = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), *(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 		}{CmdProc1})),
 			ts+1525 /* "original" */, uintptr(0))
 		libc.Xsprintf(tls, bp+152 /* &buf[0] */, ts+1775 /* "%p" */, libc.VaList(bp+40, token))
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, bp+152 /* &buf[0] */, uintptr(1))
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, bp+152, uintptr(1))
 	} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1778 /* "name" */) == 0 {
 		var objPtr uintptr
 
 		if libc.Xsscanf(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), ts+1775 /* "%p" */, libc.VaList(bp+56, bp+184 /* &l */)) != 1 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+72, ts+1783 /* "bad command toke..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)),
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+72, ts+1783, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)),
 				ts+1803 /* "\"" */, uintptr(0)))
 			return 1
 		}
 
-		objPtr = (*(*func(*libc.TLS) uintptr)(unsafe.Pointer((tclStubsPtr + 228 /* &.tcl_NewObj */))))(tls)
-		(*(*func(*libc.TLS, uintptr, Tcl_Command, uintptr))(unsafe.Pointer((tclIntStubsPtr + 500 /* &.tcl_GetCommandFullName */))))(tls, interp, *(*uintptr)(unsafe.Pointer(bp + 184 /* l */)), objPtr)
+		objPtr = (*(*func(*libc.TLS) uintptr)(unsafe.Pointer(tclStubsPtr + 228)))(tls)
+		(*(*func(*libc.TLS, uintptr, Tcl_Command, uintptr))(unsafe.Pointer(tclIntStubsPtr + 500)))(tls, interp, *(*uintptr)(unsafe.Pointer(bp + 184)), objPtr)
 
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp,
-			(*(*func(*libc.TLS, uintptr, Tcl_Command) uintptr)(unsafe.Pointer((tclStubsPtr + 648 /* &.tcl_GetCommandName */))))(tls, interp, *(*uintptr)(unsafe.Pointer(bp + 184 /* l */))))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, objPtr))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp,
+			(*(*func(*libc.TLS, uintptr, Tcl_Command) uintptr)(unsafe.Pointer(tclStubsPtr + 648)))(tls, interp, *(*uintptr)(unsafe.Pointer(bp + 184))))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, objPtr))
 		for ok := true; ok; ok = 0 != 0 {
 			var _objPtr uintptr = objPtr
-			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 			}
 		}
 	} else {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+112, ts+1428 /* "bad option \"" */, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+112, ts+1428, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)),
 			ts+1805 /* "\": must be creat..." */, uintptr(0)))
 		return 1
 	}
@@ -21724,59 +21724,59 @@ func TestcmdtraceCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32
 	var result int32
 
 	if argc != 3 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+1482 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+1482, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 			ts+1831 /* " option script\"" */, uintptr(0)))
 		return 1
 	}
 
 	if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1847 /* "tracetest" */) == 0 {
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 496 /* &.tcl_DStringInit */))))(tls, bp+152 /* &buffer */)
-		cmdTrace = (*(*func(*libc.TLS, uintptr, int32, uintptr, ClientData) Tcl_Trace)(unsafe.Pointer((tclStubsPtr + 404 /* &.tcl_CreateTrace */))))(tls, interp, 50000, *(*uintptr)(unsafe.Pointer(&struct {
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 496)))(tls, bp+152)
+		cmdTrace = (*(*func(*libc.TLS, uintptr, int32, uintptr, ClientData) Tcl_Trace)(unsafe.Pointer(tclStubsPtr + 404)))(tls, interp, 50000, *(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, ClientData, uintptr, int32, uintptr, uintptr, ClientData, int32, uintptr)
 		}{CmdTraceProc})), bp+152 /* &buffer */)
-		result = (*(*func(*libc.TLS, uintptr, uintptr, int32, int32) int32)(unsafe.Pointer((tclStubsPtr + 1172 /* &.tcl_EvalEx */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), -1, 0)
+		result = (*(*func(*libc.TLS, uintptr, uintptr, int32, int32) int32)(unsafe.Pointer(tclStubsPtr + 1172)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), -1, 0)
 		if result == 0 {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 876 /* &.tcl_ResetResult */))))(tls, interp)
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+40, (*Tcl_DString)(unsafe.Pointer(bp+152 /* &buffer */)).string, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 876)))(tls, interp)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+40, (*Tcl_DString)(unsafe.Pointer(bp+152)).string, uintptr(0)))
 		}
-		(*(*func(*libc.TLS, uintptr, Tcl_Trace))(unsafe.Pointer((tclStubsPtr + 460 /* &.tcl_DeleteTrace */))))(tls, interp, cmdTrace)
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 488 /* &.tcl_DStringFree */))))(tls, bp+152 /* &buffer */)
+		(*(*func(*libc.TLS, uintptr, Tcl_Trace))(unsafe.Pointer(tclStubsPtr + 460)))(tls, interp, cmdTrace)
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 488)))(tls, bp+152)
 	} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1857 /* "deletetest" */) == 0 {
 		// Create a command trace then eval a script to check whether it is
 		// called. Note that this trace procedure removes itself as a further
 		// check of the robustness of the trace proc calling code in
 		// TclNRExecuteByteCode.
 
-		cmdTrace = (*(*func(*libc.TLS, uintptr, int32, uintptr, ClientData) Tcl_Trace)(unsafe.Pointer((tclStubsPtr + 404 /* &.tcl_CreateTrace */))))(tls, interp, 50000, *(*uintptr)(unsafe.Pointer(&struct {
+		cmdTrace = (*(*func(*libc.TLS, uintptr, int32, uintptr, ClientData) Tcl_Trace)(unsafe.Pointer(tclStubsPtr + 404)))(tls, interp, 50000, *(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, ClientData, uintptr, int32, uintptr, uintptr, ClientData, int32, uintptr)
 		}{CmdTraceDeleteProc})), uintptr(0))
-		(*(*func(*libc.TLS, uintptr, uintptr, int32, int32) int32)(unsafe.Pointer((tclStubsPtr + 1172 /* &.tcl_EvalEx */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), -1, 0)
+		(*(*func(*libc.TLS, uintptr, uintptr, int32, int32) int32)(unsafe.Pointer(tclStubsPtr + 1172)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), -1, 0)
 	} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1868 /* "leveltest" */) == 0 {
 		var iPtr uintptr = interp
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 496 /* &.tcl_DStringInit */))))(tls, bp+152 /* &buffer */)
-		cmdTrace = (*(*func(*libc.TLS, uintptr, int32, uintptr, ClientData) Tcl_Trace)(unsafe.Pointer((tclStubsPtr + 404 /* &.tcl_CreateTrace */))))(tls, interp, ((*Interp)(unsafe.Pointer(iPtr)).numLevels + 4), *(*uintptr)(unsafe.Pointer(&struct {
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 496)))(tls, bp+152)
+		cmdTrace = (*(*func(*libc.TLS, uintptr, int32, uintptr, ClientData) Tcl_Trace)(unsafe.Pointer(tclStubsPtr + 404)))(tls, interp, (*Interp)(unsafe.Pointer(iPtr)).numLevels+4, *(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, ClientData, uintptr, int32, uintptr, uintptr, ClientData, int32, uintptr)
 		}{CmdTraceProc})),
 			bp+152 /* &buffer */)
-		result = (*(*func(*libc.TLS, uintptr, uintptr, int32, int32) int32)(unsafe.Pointer((tclStubsPtr + 1172 /* &.tcl_EvalEx */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), -1, 0)
+		result = (*(*func(*libc.TLS, uintptr, uintptr, int32, int32) int32)(unsafe.Pointer(tclStubsPtr + 1172)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), -1, 0)
 		if result == 0 {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 876 /* &.tcl_ResetResult */))))(tls, interp)
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+64, (*Tcl_DString)(unsafe.Pointer(bp+152 /* &buffer */)).string, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 876)))(tls, interp)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+64, (*Tcl_DString)(unsafe.Pointer(bp+152)).string, uintptr(0)))
 		}
-		(*(*func(*libc.TLS, uintptr, Tcl_Trace))(unsafe.Pointer((tclStubsPtr + 460 /* &.tcl_DeleteTrace */))))(tls, interp, cmdTrace)
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 488 /* &.tcl_DStringFree */))))(tls, bp+152 /* &buffer */)
+		(*(*func(*libc.TLS, uintptr, Tcl_Trace))(unsafe.Pointer(tclStubsPtr + 460)))(tls, interp, cmdTrace)
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 488)))(tls, bp+152)
 	} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1878 /* "resulttest" */) == 0 {
 
 		deleteCalled = 0
-		cmdTrace = (*(*func(*libc.TLS, uintptr, int32, int32, uintptr, ClientData, uintptr) Tcl_Trace)(unsafe.Pointer((tclStubsPtr + 1940 /* &.tcl_CreateObjTrace */))))(tls, interp, 50000,
+		cmdTrace = (*(*func(*libc.TLS, uintptr, int32, int32, uintptr, ClientData, uintptr) Tcl_Trace)(unsafe.Pointer(tclStubsPtr + 1940)))(tls, interp, 50000,
 			0x20000, *(*uintptr)(unsafe.Pointer(&struct {
 				f func(*libc.TLS, ClientData, uintptr, int32, uintptr, Tcl_Command, int32, uintptr) int32
 			}{ObjTraceProc})),
 			uintptr(unsafe.Pointer(&deleteCalled)), *(*uintptr)(unsafe.Pointer(&struct{ f func(*libc.TLS, ClientData) }{ObjTraceDeleteProc})))
-		result = (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 524 /* &.tcl_Eval */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)))
-		(*(*func(*libc.TLS, uintptr, Tcl_Trace))(unsafe.Pointer((tclStubsPtr + 460 /* &.tcl_DeleteTrace */))))(tls, interp, cmdTrace)
+		result = (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 524)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)))
+		(*(*func(*libc.TLS, uintptr, Tcl_Trace))(unsafe.Pointer(tclStubsPtr + 460)))(tls, interp, cmdTrace)
 		if !(deleteCalled != 0) {
-			(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+1889 /* "Delete wasn't ca..." */, uintptr(0))
+			(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+1889, uintptr(0))
 			return 1
 		} else {
 			return result
@@ -21785,23 +21785,23 @@ func TestcmdtraceCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32
 		var t1 Tcl_Trace
 		var t2 Tcl_Trace
 
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 496 /* &.tcl_DStringInit */))))(tls, bp+152 /* &buffer */)
-		t1 = (*(*func(*libc.TLS, uintptr, int32, uintptr, ClientData) Tcl_Trace)(unsafe.Pointer((tclStubsPtr + 404 /* &.tcl_CreateTrace */))))(tls, interp, 1, *(*uintptr)(unsafe.Pointer(&struct {
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 496)))(tls, bp+152)
+		t1 = (*(*func(*libc.TLS, uintptr, int32, uintptr, ClientData) Tcl_Trace)(unsafe.Pointer(tclStubsPtr + 404)))(tls, interp, 1, *(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, ClientData, uintptr, int32, uintptr, uintptr, ClientData, int32, uintptr)
 		}{CmdTraceProc})), bp+152 /* &buffer */)
-		t2 = (*(*func(*libc.TLS, uintptr, int32, uintptr, ClientData) Tcl_Trace)(unsafe.Pointer((tclStubsPtr + 404 /* &.tcl_CreateTrace */))))(tls, interp, 50000, *(*uintptr)(unsafe.Pointer(&struct {
+		t2 = (*(*func(*libc.TLS, uintptr, int32, uintptr, ClientData) Tcl_Trace)(unsafe.Pointer(tclStubsPtr + 404)))(tls, interp, 50000, *(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, ClientData, uintptr, int32, uintptr, uintptr, ClientData, int32, uintptr)
 		}{CmdTraceProc})), bp+152 /* &buffer */)
-		result = (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 524 /* &.tcl_Eval */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)))
+		result = (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 524)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)))
 		if result == 0 {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 876 /* &.tcl_ResetResult */))))(tls, interp)
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+88, (*Tcl_DString)(unsafe.Pointer(bp+152 /* &buffer */)).string, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 876)))(tls, interp)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+88, (*Tcl_DString)(unsafe.Pointer(bp+152)).string, uintptr(0)))
 		}
-		(*(*func(*libc.TLS, uintptr, Tcl_Trace))(unsafe.Pointer((tclStubsPtr + 460 /* &.tcl_DeleteTrace */))))(tls, interp, t2)
-		(*(*func(*libc.TLS, uintptr, Tcl_Trace))(unsafe.Pointer((tclStubsPtr + 460 /* &.tcl_DeleteTrace */))))(tls, interp, t1)
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 488 /* &.tcl_DStringFree */))))(tls, bp+152 /* &buffer */)
+		(*(*func(*libc.TLS, uintptr, Tcl_Trace))(unsafe.Pointer(tclStubsPtr + 460)))(tls, interp, t2)
+		(*(*func(*libc.TLS, uintptr, Tcl_Trace))(unsafe.Pointer(tclStubsPtr + 460)))(tls, interp, t1)
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 488)))(tls, bp+152)
 	} else {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+112, ts+1428 /* "bad option \"" */, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+112, ts+1428, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)),
 			ts+1921 /* "\": must be trace..." */, uintptr(0)))
 		return 1
 	}
@@ -21814,13 +21814,13 @@ func CmdTraceProc(tls *libc.TLS, clientData ClientData, interp uintptr, level in
 	var bufPtr uintptr = clientData
 	var i int32
 
-	(*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 480 /* &.tcl_DStringAppendElement */))))(tls, bufPtr, command)
+	(*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 480)))(tls, bufPtr, command)
 
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 508 /* &.tcl_DStringStartSublist */))))(tls, bufPtr)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 508)))(tls, bufPtr)
 	for i = 0; i < argc; i++ {
-		(*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 480 /* &.tcl_DStringAppendElement */))))(tls, bufPtr, *(*uintptr)(unsafe.Pointer(argv + uintptr(i)*4)))
+		(*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 480)))(tls, bufPtr, *(*uintptr)(unsafe.Pointer(argv + uintptr(i)*4)))
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 484 /* &.tcl_DStringEndSublist */))))(tls, bufPtr)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 484)))(tls, bufPtr)
 }
 
 func CmdTraceDeleteProc(tls *libc.TLS, clientData ClientData, interp uintptr, level int32, command uintptr, cmdProc uintptr, cmdClientData ClientData, argc int32, argv uintptr) { /* tclTest.c:1376:1: */
@@ -21828,22 +21828,22 @@ func CmdTraceDeleteProc(tls *libc.TLS, clientData ClientData, interp uintptr, le
 	// callback causes the for loop in TclNRExecuteByteCode that calls traces to
 	// reference freed memory.
 
-	(*(*func(*libc.TLS, uintptr, Tcl_Trace))(unsafe.Pointer((tclStubsPtr + 460 /* &.tcl_DeleteTrace */))))(tls, interp, cmdTrace)
+	(*(*func(*libc.TLS, uintptr, Tcl_Trace))(unsafe.Pointer(tclStubsPtr + 460)))(tls, interp, cmdTrace)
 }
 
 func ObjTraceProc(tls *libc.TLS, clientData ClientData, interp uintptr, level int32, command uintptr, token Tcl_Command, objc int32, objv uintptr) int32 { /* tclTest.c:1398:1: */
-	var word uintptr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(0)*4)))
+	var word uintptr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(0)*4)))
 
-	if !(libc.Xstrcmp(tls, word, ts+1980 /* "Error" */) != 0) {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, command, -1))
+	if !(libc.Xstrcmp(tls, word, ts+1980) != 0) {
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, command, -1))
 		return 1
-	} else if !(libc.Xstrcmp(tls, word, ts+1986 /* "Break" */) != 0) {
+	} else if !(libc.Xstrcmp(tls, word, ts+1986) != 0) {
 		return 3
-	} else if !(libc.Xstrcmp(tls, word, ts+1992 /* "Continue" */) != 0) {
+	} else if !(libc.Xstrcmp(tls, word, ts+1992) != 0) {
 		return 4
-	} else if !(libc.Xstrcmp(tls, word, ts+2001 /* "Return" */) != 0) {
+	} else if !(libc.Xstrcmp(tls, word, ts+2001) != 0) {
 		return 2
-	} else if !(libc.Xstrcmp(tls, word, ts+2008 /* "OtherStatus" */) != 0) {
+	} else if !(libc.Xstrcmp(tls, word, ts+2008) != 0) {
 		return 6
 	} else {
 		return 0
@@ -21880,26 +21880,26 @@ func TestcreatecommandCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc 
 	defer tls.Free(80)
 
 	if argc != 2 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+1482 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+1482, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 			ts+2020 /* " option\"" */, uintptr(0)))
 		return 1
 	}
 	if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1409 /* "create" */) == 0 {
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+2029, /* "test_ns_basic::c..." */
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+2029,
 			*(*uintptr)(unsafe.Pointer(&struct {
 				f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 			}{CreatedCommandProc})), uintptr(0), uintptr(0))
 	} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1416 /* "delete" */) == 0 {
-		(*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 420 /* &.tcl_DeleteCommand */))))(tls, interp, ts+2029 /* "test_ns_basic::c..." */)
+		(*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 420)))(tls, interp, ts+2029)
 	} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+2059 /* "create2" */) == 0 {
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, interp, ts+2067, /* "value:at:" */
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, interp, ts+2067,
 			*(*uintptr)(unsafe.Pointer(&struct {
 				f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 			}{CreatedCommandProc2})), uintptr(0), uintptr(0))
 	} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+2077 /* "delete2" */) == 0 {
-		(*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 420 /* &.tcl_DeleteCommand */))))(tls, interp, ts+2067 /* "value:at:" */)
+		(*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 420)))(tls, interp, ts+2067)
 	} else {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+40, ts+1428 /* "bad option \"" */, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+40, ts+1428, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)),
 			ts+2085 /* "\": must be creat..." */, uintptr(0)))
 		return 1
 	}
@@ -21914,14 +21914,14 @@ func CreatedCommandProc(tls *libc.TLS, clientData ClientData, interp uintptr, ar
 
 	var found int32
 
-	found = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 644 /* &.tcl_GetCommandInfo */))))(tls, interp, ts+2029, /* "test_ns_basic::c..." */
+	found = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 644)))(tls, interp, ts+2029,
 		bp+56 /* &info */)
 	if !(found != 0) {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+2132, /* "CreatedCommandPr..." */
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+2132,
 			uintptr(0)))
 		return 1
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+24, ts+2212, /* "CreatedCommandPr..." */
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+24, ts+2212,
 		(*Tcl_Namespace)(unsafe.Pointer((*Tcl_CmdInfo)(unsafe.Pointer(bp+56 /* &info */)).namespacePtr)).fullName, uintptr(0)))
 	return 0
 }
@@ -21934,13 +21934,13 @@ func CreatedCommandProc2(tls *libc.TLS, clientData ClientData, interp uintptr, a
 
 	var found int32
 
-	found = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 644 /* &.tcl_GetCommandInfo */))))(tls, interp, ts+2067 /* "value:at:" */, bp+56 /* &info */)
+	found = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 644)))(tls, interp, ts+2067, bp+56)
 	if !(found != 0) {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+2235, /* "CreatedCommandPr..." */
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+2235,
 			uintptr(0)))
 		return 1
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+24, ts+2316, /* "CreatedCommandPr..." */
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+24, ts+2316,
 		(*Tcl_Namespace)(unsafe.Pointer((*Tcl_CmdInfo)(unsafe.Pointer(bp+56 /* &info */)).namespacePtr)).fullName, uintptr(0)))
 	return 0
 }
@@ -21968,26 +21968,26 @@ func TestdcallCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, a
 	var i int32
 	// var id int32 at bp, 4
 
-	delInterp = (*(*func(*libc.TLS) uintptr)(unsafe.Pointer((tclStubsPtr + 384 /* &.tcl_CreateInterp */))))(tls)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 496 /* &.tcl_DStringInit */))))(tls, uintptr(unsafe.Pointer(&delString)))
+	delInterp = (*(*func(*libc.TLS) uintptr)(unsafe.Pointer(tclStubsPtr + 384)))(tls)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 496)))(tls, uintptr(unsafe.Pointer(&delString)))
 	for i = 1; i < argc; i++ {
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(i)*4)), bp /* &id */) != 0 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(i)*4)), bp) != 0 {
 			return 1
 		}
 		if *(*int32)(unsafe.Pointer(bp /* id */)) < 0 {
-			(*(*func(*libc.TLS, uintptr, uintptr, ClientData))(unsafe.Pointer((tclStubsPtr + 464 /* &.tcl_DontCallWhenDeleted */))))(tls, delInterp, *(*uintptr)(unsafe.Pointer(&struct {
+			(*(*func(*libc.TLS, uintptr, uintptr, ClientData))(unsafe.Pointer(tclStubsPtr + 464)))(tls, delInterp, *(*uintptr)(unsafe.Pointer(&struct {
 				f func(*libc.TLS, ClientData, uintptr)
 			}{DelCallbackProc})),
 				uintptr(-*(*int32)(unsafe.Pointer(bp /* id */))))
 		} else {
-			(*(*func(*libc.TLS, uintptr, uintptr, ClientData))(unsafe.Pointer((tclStubsPtr + 324 /* &.tcl_CallWhenDeleted */))))(tls, delInterp, *(*uintptr)(unsafe.Pointer(&struct {
+			(*(*func(*libc.TLS, uintptr, uintptr, ClientData))(unsafe.Pointer(tclStubsPtr + 324)))(tls, delInterp, *(*uintptr)(unsafe.Pointer(&struct {
 				f func(*libc.TLS, ClientData, uintptr)
 			}{DelCallbackProc})),
 				uintptr(*(*int32)(unsafe.Pointer(bp /* id */))))
 		}
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 448 /* &.tcl_DeleteInterp */))))(tls, delInterp)
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 500 /* &.tcl_DStringResult */))))(tls, interp, uintptr(unsafe.Pointer(&delString)))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 448)))(tls, delInterp)
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 500)))(tls, interp, uintptr(unsafe.Pointer(&delString)))
 	return 0
 }
 
@@ -22000,10 +22000,10 @@ func DelCallbackProc(tls *libc.TLS, clientData ClientData, interp uintptr) { /* 
 	var id int32 = int32(clientData)
 	// var buffer [24]int8 at bp, 24
 
-	(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer((tclIntStubsPtr + 104 /* &.tclFormatInt */))))(tls, bp /* &buffer[0] */, int32(id))
-	(*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 480 /* &.tcl_DStringAppendElement */))))(tls, uintptr(unsafe.Pointer(&delString)), bp /* &buffer[0] */)
+	(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(tclIntStubsPtr + 104)))(tls, bp, int32(id))
+	(*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 480)))(tls, uintptr(unsafe.Pointer(&delString)), bp)
 	if interp != delInterp {
-		(*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 480 /* &.tcl_DStringAppendElement */))))(tls, uintptr(unsafe.Pointer(&delString)), ts+2340 /* "bogus interprete..." */)
+		(*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 480)))(tls, uintptr(unsafe.Pointer(&delString)), ts+2340)
 	}
 }
 
@@ -22028,21 +22028,21 @@ func TestdelCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, arg
 	var slave uintptr
 
 	if argc != 4 {
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+1396 /* "wrong # args" */, uintptr(0))
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+1396, uintptr(0))
 		return 1
 	}
 
-	slave = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 696 /* &.tcl_GetSlave */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)))
-	if slave == (uintptr(0)) {
+	slave = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 696)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)))
+	if slave == uintptr(0) {
 		return 1
 	}
 
-	dPtr = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, uint32(unsafe.Sizeof(DelCmd{})))
+	dPtr = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, uint32(unsafe.Sizeof(DelCmd{})))
 	(*DelCmd)(unsafe.Pointer(dPtr)).interp = interp
-	(*DelCmd)(unsafe.Pointer(dPtr)).deleteCmd = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, (libc.Xstrlen(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4))) + size_t(1)))
+	(*DelCmd)(unsafe.Pointer(dPtr)).deleteCmd = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, libc.Xstrlen(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)))+size_t(1))
 	libc.Xstrcpy(tls, (*DelCmd)(unsafe.Pointer(dPtr)).deleteCmd, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)))
 
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 372 /* &.tcl_CreateCommand */))))(tls, slave, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 372)))(tls, slave, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{DelCmdProc})), dPtr,
 		*(*uintptr)(unsafe.Pointer(&struct{ f func(*libc.TLS, ClientData) }{DelDeleteProc})))
@@ -22055,19 +22055,19 @@ func DelCmdProc(tls *libc.TLS, clientData ClientData, interp uintptr, argc int32
 
 	var dPtr uintptr = clientData
 
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, (*DelCmd)(unsafe.Pointer(dPtr)).deleteCmd, uintptr(0)))
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, (*DelCmd)(unsafe.Pointer(dPtr)).deleteCmd)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, dPtr)
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, (*DelCmd)(unsafe.Pointer(dPtr)).deleteCmd, uintptr(0)))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, (*DelCmd)(unsafe.Pointer(dPtr)).deleteCmd)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, dPtr)
 	return 0
 }
 
 func DelDeleteProc(tls *libc.TLS, clientData ClientData) { /* tclTest.c:1656:1: */
 	var dPtr uintptr = clientData
 
-	(*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 524 /* &.tcl_Eval */))))(tls, (*DelCmd)(unsafe.Pointer(dPtr)).interp, (*DelCmd)(unsafe.Pointer(dPtr)).deleteCmd)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 876 /* &.tcl_ResetResult */))))(tls, (*DelCmd)(unsafe.Pointer(dPtr)).interp)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, (*DelCmd)(unsafe.Pointer(dPtr)).deleteCmd)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, dPtr)
+	(*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 524)))(tls, (*DelCmd)(unsafe.Pointer(dPtr)).interp, (*DelCmd)(unsafe.Pointer(dPtr)).deleteCmd)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 876)))(tls, (*DelCmd)(unsafe.Pointer(dPtr)).interp)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, (*DelCmd)(unsafe.Pointer(dPtr)).deleteCmd)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, dPtr)
 }
 
 //----------------------------------------------------------------------
@@ -22091,11 +22091,11 @@ func TestdelassocdataCmd(tls *libc.TLS, clientData ClientData, interp uintptr, a
 	defer tls.Free(40)
 
 	if argc != 2 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+2368 /* "wrong # argument..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+2368, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 			ts+2399 /* " data_key\"" */, uintptr(0)))
 		return 1
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 408 /* &.tcl_DeleteAssocData */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 408)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)))
 	return 0
 }
 
@@ -22141,46 +22141,46 @@ func TestdoubledigitsObjCmd(tls *libc.TLS, unused ClientData, interp uintptr, ob
 
 	var retval uintptr
 
-	if (objc < 4) || (objc > 5) {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+2410 /* "fpval ndigits ty..." */)
+	if objc < 4 || objc > 5 {
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+2410)
 		return 1
 	}
-	status = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 148 /* &.tcl_GetDoubleFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp+16 /* &d */)
+	status = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 148)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp+16)
 	if status != 0 {
-		doubleType = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 168 /* &.tcl_GetObjType */))))(tls, ts+2439 /* "double" */)
-		if ((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)))).typePtr == doubleType) ||
-			(libc.X__isnan(tls, *(*float64)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)) + 16 /* &.internalRep */))) != 0) {
+		doubleType = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 168)))(tls, ts+2439)
+		if (*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)))).typePtr == doubleType ||
+			libc.X__isnan(tls, *(*float64)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)) + 16))) != 0 {
 			status = 0
-			libc.Xmemcpy(tls, bp+16 /* &d */, (*(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)) + 16 /* &.internalRep */ /* &.doubleValue */), uint32(unsafe.Sizeof(float64(0))))
+			libc.Xmemcpy(tls, bp+16 /* &d */, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))+16, uint32(unsafe.Sizeof(float64(0))))
 		}
 	}
-	if ((status != 0) ||
-		((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp+24 /* &ndigits */) != 0)) ||
-		((*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1224 /* &.tcl_GetIndexFromObjStruct */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)), uintptr(unsafe.Pointer(&options)), int32(unsafe.Sizeof(uintptr(0))), ts+2446 /* "conversion type" */, 1, bp+28 /* &type1 */) != 0) {
+	if status != 0 ||
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp+24) != 0 ||
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1224)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)), uintptr(unsafe.Pointer(&options)), int32(unsafe.Sizeof(uintptr(0))), ts+2446, 1, bp+28) != 0 {
 		libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+2462 /* "bad value? %g\n" */, libc.VaList(bp, *(*float64)(unsafe.Pointer(bp + 16 /* d */))))
 		return 1
 	}
 	*(*int32)(unsafe.Pointer(bp + 28 /* type1 */)) = types[*(*int32)(unsafe.Pointer(bp + 28 /* type1 */))]
 	if objc > 4 {
-		if libc.Xstrcmp(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(4)*4))), ts+2477 /* "shorten" */) != 0 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, ts+2485 /* "bad flag" */, -1))
+		if libc.Xstrcmp(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(4)*4))), ts+2477) != 0 {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, ts+2485, -1))
 			return 1
 		}
 		*(*int32)(unsafe.Pointer(bp + 28 /* type1 */)) |= 0x4
 	}
-	str = (*(*func(*libc.TLS, float64, int32, int32, uintptr, uintptr, uintptr) uintptr)(unsafe.Pointer((tclIntStubsPtr + 1004 /* &.tclDoubleDigits */))))(tls, *(*float64)(unsafe.Pointer(bp + 16 /* d */)), *(*int32)(unsafe.Pointer(bp + 24 /* ndigits */)), *(*int32)(unsafe.Pointer(bp + 28 /* type1 */)), bp+32 /* &decpt */, bp+36 /* &signum */, bp+40 /* &endPtr */)
-	*(*uintptr)(unsafe.Pointer(bp + 44 /* strObj */)) = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, str, ((int32(*(*uintptr)(unsafe.Pointer(bp + 40 /* endPtr */))) - int32(str)) / 1))
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, str)
-	retval = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 220 /* &.tcl_NewListObj */))))(tls, 1, bp+44 /* &strObj */)
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 184 /* &.tcl_ListObjAppendElement */))))(tls, uintptr(0), retval, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, *(*int32)(unsafe.Pointer(bp + 32 /* decpt */))))
-	*(*uintptr)(unsafe.Pointer(bp + 44 /* strObj */)) = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, func() uintptr {
+	str = (*(*func(*libc.TLS, float64, int32, int32, uintptr, uintptr, uintptr) uintptr)(unsafe.Pointer(tclIntStubsPtr + 1004)))(tls, *(*float64)(unsafe.Pointer(bp + 16)), *(*int32)(unsafe.Pointer(bp + 24)), *(*int32)(unsafe.Pointer(bp + 28)), bp+32, bp+36, bp+40)
+	*(*uintptr)(unsafe.Pointer(bp + 44 /* strObj */)) = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, str, (int32(*(*uintptr)(unsafe.Pointer(bp + 40)))-int32(str))/1)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, str)
+	retval = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 220)))(tls, 1, bp+44)
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 184)))(tls, uintptr(0), retval, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, *(*int32)(unsafe.Pointer(bp + 32))))
+	*(*uintptr)(unsafe.Pointer(bp + 44 /* strObj */)) = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, func() uintptr {
 		if *(*int32)(unsafe.Pointer(bp + 36 /* signum */)) != 0 {
 			return ts + 2494 /* "-" */
 		}
 		return ts + 2496 /* "+" */
 	}(), 1)
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 184 /* &.tcl_ListObjAppendElement */))))(tls, uintptr(0), retval, *(*uintptr)(unsafe.Pointer(bp + 44 /* strObj */)))
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, retval)
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 184)))(tls, uintptr(0), retval, *(*uintptr)(unsafe.Pointer(bp + 44)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, retval)
 	return 0
 }
 
@@ -22227,11 +22227,11 @@ func TestdstringCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32,
 		goto __1
 	}
 wrongNumArgs:
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+1396 /* "wrong # args" */, uintptr(0))
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+1396, uintptr(0))
 	return 1
 __1:
 	;
-	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+2518 /* "append" */) == 0) {
+	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+2518) == 0) {
 		goto __2
 	}
 	if !(argc != 4) {
@@ -22240,16 +22240,16 @@ __1:
 	goto wrongNumArgs
 __4:
 	;
-	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), bp+80 /* &count */) != 0) {
+	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), bp+80) != 0) {
 		goto __5
 	}
 	return 1
 __5:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 476 /* &.tcl_DStringAppend */))))(tls, uintptr(unsafe.Pointer(&dstring)), *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), *(*int32)(unsafe.Pointer(bp + 80 /* count */)))
+	(*(*func(*libc.TLS, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 476)))(tls, uintptr(unsafe.Pointer(&dstring)), *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), *(*int32)(unsafe.Pointer(bp + 80)))
 	goto __3
 __2:
-	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+2525 /* "element" */) == 0) {
+	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+2525) == 0) {
 		goto __6
 	}
 	if !(argc != 3) {
@@ -22258,10 +22258,10 @@ __2:
 	goto wrongNumArgs
 __8:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 480 /* &.tcl_DStringAppendElement */))))(tls, uintptr(unsafe.Pointer(&dstring)), *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 480)))(tls, uintptr(unsafe.Pointer(&dstring)), *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)))
 	goto __7
 __6:
-	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+2533 /* "end" */) == 0) {
+	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+2533) == 0) {
 		goto __9
 	}
 	if !(argc != 2) {
@@ -22270,10 +22270,10 @@ __6:
 	goto wrongNumArgs
 __11:
 	;
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 484 /* &.tcl_DStringEndSublist */))))(tls, uintptr(unsafe.Pointer(&dstring)))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 484)))(tls, uintptr(unsafe.Pointer(&dstring)))
 	goto __10
 __9:
-	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+2537 /* "free" */) == 0) {
+	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+2537) == 0) {
 		goto __12
 	}
 	if !(argc != 2) {
@@ -22282,10 +22282,10 @@ __9:
 	goto wrongNumArgs
 __14:
 	;
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 488 /* &.tcl_DStringFree */))))(tls, uintptr(unsafe.Pointer(&dstring)))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 488)))(tls, uintptr(unsafe.Pointer(&dstring)))
 	goto __13
 __12:
-	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1534 /* "get" */) == 0) {
+	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1534) == 0) {
 		goto __15
 	}
 	if !(argc != 2) {
@@ -22294,10 +22294,10 @@ __12:
 	goto wrongNumArgs
 __17:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, (*Tcl_DString)(unsafe.Pointer(uintptr(unsafe.Pointer(&dstring)))).string, uintptr(1))
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, (*Tcl_DString)(unsafe.Pointer(uintptr(unsafe.Pointer(&dstring)))).string, uintptr(1))
 	goto __16
 __15:
-	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+2542 /* "gresult" */) == 0) {
+	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+2542) == 0) {
 		goto __18
 	}
 	if !(argc != 3) {
@@ -22306,35 +22306,35 @@ __15:
 	goto wrongNumArgs
 __20:
 	;
-	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), ts+2550 /* "staticsmall" */) == 0) {
+	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), ts+2550) == 0) {
 		goto __21
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+2562 /* "short" */, uintptr(0))
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+2562, uintptr(0))
 	goto __22
 __21:
-	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), ts+2568 /* "staticlarge" */) == 0) {
+	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), ts+2568) == 0) {
 		goto __23
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+2580 /* "first0 first1 fi..." */, uintptr(0))
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+2580, uintptr(0))
 	goto __24
 __23:
-	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), ts+2537 /* "free" */) == 0) {
+	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), ts+2537) == 0) {
 		goto __25
 	}
-	s = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, uint32(100))
+	s = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, uint32(100))
 	libc.Xstrcpy(tls, s, ts+3111 /* "This is a malloc..." */)
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, s, uintptr(3))
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, s, uintptr(3))
 	goto __26
 __25:
-	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), ts+3138 /* "special" */) == 0) {
+	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), ts+3138) == 0) {
 		goto __27
 	}
-	s1 = (((*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, uint32(100))) + uintptr(16))
+	s1 = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, uint32(100)) + uintptr(16)
 	libc.Xstrcpy(tls, s1, ts+3146 /* "This is a specia..." */)
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, s1, *(*uintptr)(unsafe.Pointer(&struct{ f func(*libc.TLS, uintptr) }{SpecialFree})))
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, s1, *(*uintptr)(unsafe.Pointer(&struct{ f func(*libc.TLS, uintptr) }{SpecialFree})))
 	goto __28
 __27:
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+3183 /* "bad gresult opti..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)),
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+3183, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)),
 		ts+3204, /* "\": must be stati..." */
 		uintptr(0)))
 	return 1
@@ -22346,10 +22346,10 @@ __24:
 	;
 __22:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 492 /* &.tcl_DStringGetResult */))))(tls, interp, uintptr(unsafe.Pointer(&dstring)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 492)))(tls, interp, uintptr(unsafe.Pointer(&dstring)))
 	goto __19
 __18:
-	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+3258 /* "length" */) == 0) {
+	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+3258) == 0) {
 		goto __29
 	}
 
@@ -22359,10 +22359,10 @@ __18:
 	goto wrongNumArgs
 __31:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, (*Tcl_DString)(unsafe.Pointer(uintptr(unsafe.Pointer(&dstring)))).length))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, (*Tcl_DString)(unsafe.Pointer(uintptr(unsafe.Pointer(&dstring)))).length))
 	goto __30
 __29:
-	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+3265 /* "result" */) == 0) {
+	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+3265) == 0) {
 		goto __32
 	}
 	if !(argc != 2) {
@@ -22371,10 +22371,10 @@ __29:
 	goto wrongNumArgs
 __34:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 500 /* &.tcl_DStringResult */))))(tls, interp, uintptr(unsafe.Pointer(&dstring)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 500)))(tls, interp, uintptr(unsafe.Pointer(&dstring)))
 	goto __33
 __32:
-	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+3272 /* "trunc" */) == 0) {
+	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+3272) == 0) {
 		goto __35
 	}
 	if !(argc != 3) {
@@ -22383,16 +22383,16 @@ __32:
 	goto wrongNumArgs
 __37:
 	;
-	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), bp+80 /* &count */) != 0) {
+	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), bp+80) != 0) {
 		goto __38
 	}
 	return 1
 __38:
 	;
-	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 504 /* &.tcl_DStringSetLength */))))(tls, uintptr(unsafe.Pointer(&dstring)), *(*int32)(unsafe.Pointer(bp + 80 /* count */)))
+	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 504)))(tls, uintptr(unsafe.Pointer(&dstring)), *(*int32)(unsafe.Pointer(bp + 80)))
 	goto __36
 __35:
-	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+3278 /* "start" */) == 0) {
+	if !(libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+3278) == 0) {
 		goto __39
 	}
 	if !(argc != 2) {
@@ -22401,10 +22401,10 @@ __35:
 	goto wrongNumArgs
 __41:
 	;
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 508 /* &.tcl_DStringStartSublist */))))(tls, uintptr(unsafe.Pointer(&dstring)))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 508)))(tls, uintptr(unsafe.Pointer(&dstring)))
 	goto __40
 __39:
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+40, ts+1428 /* "bad option \"" */, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)),
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+40, ts+1428, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)),
 
 		ts+3284 /* "\": must be appen..." */, uintptr(0)))
 	return 1
@@ -22435,7 +22435,7 @@ __3:
 // Tcl_DStringGetResult handles freeProc's other than free.
 
 func SpecialFree(tls *libc.TLS, blockPtr uintptr) { /* tclTest.c:1918:13: */
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, (blockPtr - uintptr(16)))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, blockPtr-uintptr(16))
 }
 
 //----------------------------------------------------------------------
@@ -22466,7 +22466,7 @@ func TestencodingObjCmd(tls *libc.TLS, dummy ClientData, interp uintptr, objc in
 	var string uintptr
 	var encodingPtr uintptr
 
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1224 /* &.tcl_GetIndexFromObjStruct */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), uintptr(unsafe.Pointer(&optionStrings)), int32(unsafe.Sizeof(uintptr(0))), ts+3360 /* "option" */, 0, bp /* &index */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1224)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), uintptr(unsafe.Pointer(&optionStrings)), int32(unsafe.Sizeof(uintptr(0))), ts+3360, 0, bp) != 0 {
 		return 1
 	}
 
@@ -22478,18 +22478,18 @@ func TestencodingObjCmd(tls *libc.TLS, dummy ClientData, interp uintptr, objc in
 			if objc != 5 {
 				return 1
 			}
-			encodingPtr = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, uint32(unsafe.Sizeof(TclEncoding{})))
+			encodingPtr = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, uint32(unsafe.Sizeof(TclEncoding{})))
 			(*TclEncoding)(unsafe.Pointer(encodingPtr)).interp = interp
 
-			string = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 172 /* &.tcl_GetStringFromObj */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)), bp+4 /* &length */)
-			(*TclEncoding)(unsafe.Pointer(encodingPtr)).toUtfCmd = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, (uint32(*(*int32)(unsafe.Pointer(bp + 4 /* length */)) + 1)))
-			libc.Xmemcpy(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).toUtfCmd, string, (uint32(*(*int32)(unsafe.Pointer(bp + 4 /* length */))) + uint32(1)))
+			string = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 172)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)), bp+4)
+			(*TclEncoding)(unsafe.Pointer(encodingPtr)).toUtfCmd = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, uint32(*(*int32)(unsafe.Pointer(bp + 4))+1))
+			libc.Xmemcpy(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).toUtfCmd, string, uint32(*(*int32)(unsafe.Pointer(bp + 4)))+uint32(1))
 
-			string = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 172 /* &.tcl_GetStringFromObj */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(4)*4)), bp+4 /* &length */)
-			(*TclEncoding)(unsafe.Pointer(encodingPtr)).fromUtfCmd = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, (uint32(*(*int32)(unsafe.Pointer(bp + 4 /* length */)) + 1)))
-			libc.Xmemcpy(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).fromUtfCmd, string, (uint32(*(*int32)(unsafe.Pointer(bp + 4 /* length */)) + 1)))
+			string = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 172)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(4)*4)), bp+4)
+			(*TclEncoding)(unsafe.Pointer(encodingPtr)).fromUtfCmd = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, uint32(*(*int32)(unsafe.Pointer(bp + 4))+1))
+			libc.Xmemcpy(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).fromUtfCmd, string, uint32(*(*int32)(unsafe.Pointer(bp + 4))+1))
 
-			string = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 172 /* &.tcl_GetStringFromObj */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp+4 /* &length */)
+			string = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 172)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp+4)
 
 			(*Tcl_EncodingType)(unsafe.Pointer(bp + 8 /* &type1 */)).encodingName = string
 			(*Tcl_EncodingType)(unsafe.Pointer(bp + 8 /* &type1 */)).toUtfProc = *(*uintptr)(unsafe.Pointer(&struct {
@@ -22502,7 +22502,7 @@ func TestencodingObjCmd(tls *libc.TLS, dummy ClientData, interp uintptr, objc in
 			(*Tcl_EncodingType)(unsafe.Pointer(bp + 8 /* &type1 */)).clientData = encodingPtr
 			(*Tcl_EncodingType)(unsafe.Pointer(bp + 8 /* &type1 */)).nullSize = 1
 
-			(*(*func(*libc.TLS, uintptr) Tcl_Encoding)(unsafe.Pointer((tclStubsPtr + 1156 /* &.tcl_CreateEncoding */))))(tls, bp+8 /* &type1 */)
+			(*(*func(*libc.TLS, uintptr) Tcl_Encoding)(unsafe.Pointer(tclStubsPtr + 1156)))(tls, bp+8)
 			break
 
 		}
@@ -22510,9 +22510,9 @@ func TestencodingObjCmd(tls *libc.TLS, dummy ClientData, interp uintptr, objc in
 		if objc != 3 {
 			return 1
 		}
-		encoding = (*(*func(*libc.TLS, uintptr, uintptr) Tcl_Encoding)(unsafe.Pointer((tclStubsPtr + 1212 /* &.tcl_GetEncoding */))))(tls, uintptr(0), (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4))))
-		(*(*func(*libc.TLS, Tcl_Encoding))(unsafe.Pointer((tclStubsPtr + 1204 /* &.tcl_FreeEncoding */))))(tls, encoding)
-		(*(*func(*libc.TLS, Tcl_Encoding))(unsafe.Pointer((tclStubsPtr + 1204 /* &.tcl_FreeEncoding */))))(tls, encoding)
+		encoding = (*(*func(*libc.TLS, uintptr, uintptr) Tcl_Encoding)(unsafe.Pointer(tclStubsPtr + 1212)))(tls, uintptr(0), (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4))))
+		(*(*func(*libc.TLS, Tcl_Encoding))(unsafe.Pointer(tclStubsPtr + 1204)))(tls, encoding)
+		(*(*func(*libc.TLS, Tcl_Encoding))(unsafe.Pointer(tclStubsPtr + 1204)))(tls, encoding)
 		break
 	}
 	return 0
@@ -22527,14 +22527,14 @@ func EncodingToUtfProc(tls *libc.TLS, clientData ClientData, src uintptr, srcLen
 	var encodingPtr uintptr
 
 	encodingPtr = clientData
-	(*(*func(*libc.TLS, uintptr, uintptr, int32, int32) int32)(unsafe.Pointer((tclStubsPtr + 1172 /* &.tcl_EvalEx */))))(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).interp, (*TclEncoding)(unsafe.Pointer(encodingPtr)).toUtfCmd, -1, 0x020000)
+	(*(*func(*libc.TLS, uintptr, uintptr, int32, int32) int32)(unsafe.Pointer(tclStubsPtr + 1172)))(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).interp, (*TclEncoding)(unsafe.Pointer(encodingPtr)).toUtfCmd, -1, 0x020000)
 
-	len = int32(libc.Xstrlen(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 704 /* &.tcl_GetStringResult */))))(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).interp)))
+	len = int32(libc.Xstrlen(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 704)))(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).interp)))
 	if len > dstLen {
 		len = dstLen
 	}
-	libc.Xmemcpy(tls, dst, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 704 /* &.tcl_GetStringResult */))))(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).interp), uint32(len))
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 876 /* &.tcl_ResetResult */))))(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).interp)
+	libc.Xmemcpy(tls, dst, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 704)))(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).interp), uint32(len))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 876)))(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).interp)
 
 	*(*int32)(unsafe.Pointer(srcReadPtr)) = srcLen
 	*(*int32)(unsafe.Pointer(dstWrotePtr)) = len
@@ -22547,14 +22547,14 @@ func EncodingFromUtfProc(tls *libc.TLS, clientData ClientData, src uintptr, srcL
 	var encodingPtr uintptr
 
 	encodingPtr = clientData
-	(*(*func(*libc.TLS, uintptr, uintptr, int32, int32) int32)(unsafe.Pointer((tclStubsPtr + 1172 /* &.tcl_EvalEx */))))(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).interp, (*TclEncoding)(unsafe.Pointer(encodingPtr)).fromUtfCmd, -1, 0x020000)
+	(*(*func(*libc.TLS, uintptr, uintptr, int32, int32) int32)(unsafe.Pointer(tclStubsPtr + 1172)))(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).interp, (*TclEncoding)(unsafe.Pointer(encodingPtr)).fromUtfCmd, -1, 0x020000)
 
-	len = int32(libc.Xstrlen(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 704 /* &.tcl_GetStringResult */))))(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).interp)))
+	len = int32(libc.Xstrlen(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 704)))(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).interp)))
 	if len > dstLen {
 		len = dstLen
 	}
-	libc.Xmemcpy(tls, dst, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 704 /* &.tcl_GetStringResult */))))(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).interp), uint32(len))
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 876 /* &.tcl_ResetResult */))))(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).interp)
+	libc.Xmemcpy(tls, dst, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 704)))(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).interp), uint32(len))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 876)))(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).interp)
 
 	*(*int32)(unsafe.Pointer(srcReadPtr)) = srcLen
 	*(*int32)(unsafe.Pointer(dstWrotePtr)) = len
@@ -22565,9 +22565,9 @@ func EncodingFromUtfProc(tls *libc.TLS, clientData ClientData, src uintptr, srcL
 func EncodingFreeProc(tls *libc.TLS, clientData ClientData) { /* tclTest.c:2072:1: */
 	var encodingPtr uintptr = clientData
 
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).toUtfCmd)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).fromUtfCmd)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, encodingPtr)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).toUtfCmd)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, (*TclEncoding)(unsafe.Pointer(encodingPtr)).fromUtfCmd)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, encodingPtr)
 }
 
 //----------------------------------------------------------------------
@@ -22596,20 +22596,20 @@ func TestevalexObjCmd(tls *libc.TLS, dummy ClientData, interp uintptr, objc int3
 
 	flags = 0
 	if objc == 3 {
-		var global uintptr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
+		var global uintptr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
 		if libc.Xstrcmp(tls, global, ts+3367 /* "global" */) != 0 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+3374 /* "bad value \"" */, global,
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+3374, global,
 				ts+3386 /* "\": must be globa..." */, uintptr(0)))
 			return 1
 		}
 		flags = 0x020000
 	} else if objc != 2 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+3404 /* "script ?global?" */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+3404)
 		return 1
 	}
 
-	script = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 172 /* &.tcl_GetStringFromObj */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp+40 /* &length */)
-	return (*(*func(*libc.TLS, uintptr, uintptr, int32, int32) int32)(unsafe.Pointer((tclStubsPtr + 1172 /* &.tcl_EvalEx */))))(tls, interp, script, *(*int32)(unsafe.Pointer(bp + 40 /* length */)), flags)
+	script = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 172)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp+40)
+	return (*(*func(*libc.TLS, uintptr, uintptr, int32, int32) int32)(unsafe.Pointer(tclStubsPtr + 1172)))(tls, interp, script, *(*int32)(unsafe.Pointer(bp + 40)), flags)
 }
 
 //----------------------------------------------------------------------
@@ -22634,13 +22634,13 @@ func TestevalobjvObjCmd(tls *libc.TLS, dummy ClientData, interp uintptr, objc in
 	// var evalGlobal int32 at bp, 4
 
 	if objc < 3 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+3420 /* "global word ?wor..." */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+3420)
 		return 1
 	}
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp /* &evalGlobal */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp) != 0 {
 		return 1
 	}
-	return (*(*func(*libc.TLS, uintptr, int32, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 1176 /* &.tcl_EvalObjv */))))(tls, interp, (objc - 2), (objv + uintptr(2)*4),
+	return (*(*func(*libc.TLS, uintptr, int32, uintptr, int32) int32)(unsafe.Pointer(tclStubsPtr + 1176)))(tls, interp, objc-2, objv+uintptr(2)*4,
 		func() int32 {
 			if *(*int32)(unsafe.Pointer(bp /* evalGlobal */)) != 0 {
 				return 0x020000
@@ -22687,22 +22687,22 @@ func TesteventObjCmd(tls *libc.TLS, unused ClientData, interp uintptr, objc int3
 	var ev uintptr // Event to be queued
 
 	if objc < 2 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+3443 /* "subcommand ?arg ..." */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+3443)
 		return 1
 	}
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1224 /* &.tcl_GetIndexFromObjStruct */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), uintptr(unsafe.Pointer(&subcommands)), int32(unsafe.Sizeof(uintptr(0))), ts+3464 /* "subcommand" */, 1, bp /* &subCmdIndex */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1224)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), uintptr(unsafe.Pointer(&subcommands)), int32(unsafe.Sizeof(uintptr(0))), ts+3464, 1, bp) != 0 {
 		return 1
 	}
 	switch *(*int32)(unsafe.Pointer(bp /* subCmdIndex */)) {
 	case 0: // queue
 		if objc != 5 {
-			(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 2, objv, ts+3475 /* "name position sc..." */)
+			(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 2, objv, ts+3475)
 			return 1
 		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1224 /* &.tcl_GetIndexFromObjStruct */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)), uintptr(unsafe.Pointer(&positions)), int32(unsafe.Sizeof(uintptr(0))), ts+3496 /* "position specifi..." */, 1, bp+4 /* &posIndex */) != 0 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1224)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)), uintptr(unsafe.Pointer(&positions)), int32(unsafe.Sizeof(uintptr(0))), ts+3496, 1, bp+4) != 0 {
 			return 1
 		}
-		ev = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, uint32(unsafe.Sizeof(TestEvent{})))
+		ev = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, uint32(unsafe.Sizeof(TestEvent{})))
 		(*TestEvent)(unsafe.Pointer(ev)).header.proc = *(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, uintptr, int32) int32
 		}{TesteventProc}))
@@ -22712,15 +22712,15 @@ func TesteventObjCmd(tls *libc.TLS, unused ClientData, interp uintptr, objc int3
 		(*Tcl_Obj)(unsafe.Pointer((*TestEvent)(unsafe.Pointer(ev)).command)).refCount++
 		(*TestEvent)(unsafe.Pointer(ev)).tag = *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4))
 		(*Tcl_Obj)(unsafe.Pointer((*TestEvent)(unsafe.Pointer(ev)).tag)).refCount++
-		(*(*func(*libc.TLS, uintptr, Tcl_QueuePosition))(unsafe.Pointer((tclStubsPtr + 828 /* &.tcl_QueueEvent */))))(tls, ev, posNum[*(*int32)(unsafe.Pointer(bp + 4 /* posIndex */))])
+		(*(*func(*libc.TLS, uintptr, Tcl_QueuePosition))(unsafe.Pointer(tclStubsPtr + 828)))(tls, ev, posNum[*(*int32)(unsafe.Pointer(bp + 4))])
 		break
 
 	case 1: // delete
 		if objc != 3 {
-			(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 2, objv, ts+1778 /* "name" */)
+			(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 2, objv, ts+1778)
 			return 1
 		}
-		(*(*func(*libc.TLS, uintptr, ClientData))(unsafe.Pointer((tclStubsPtr + 428 /* &.tcl_DeleteEvents */))))(tls, *(*uintptr)(unsafe.Pointer(&struct {
+		(*(*func(*libc.TLS, uintptr, ClientData))(unsafe.Pointer(tclStubsPtr + 428)))(tls, *(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, uintptr, ClientData) int32
 		}{TesteventDeleteProc})), *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
 		break
@@ -22767,34 +22767,34 @@ func TesteventProc(tls *libc.TLS, event uintptr, flags int32) int32 { /* tclTest
 	var ev uintptr = event
 	var interp uintptr = (*TestEvent)(unsafe.Pointer(ev)).interp
 	var command uintptr = (*TestEvent)(unsafe.Pointer(ev)).command
-	var result int32 = (*(*func(*libc.TLS, uintptr, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 1180 /* &.tcl_EvalObjEx */))))(tls, interp, command,
-		(0x020000 | 0x040000))
+	var result int32 = (*(*func(*libc.TLS, uintptr, uintptr, int32) int32)(unsafe.Pointer(tclStubsPtr + 1180)))(tls, interp, command,
+		0x020000|0x040000)
 	// var retval int32 at bp, 4
 
 	if result != 0 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 272 /* &.tcl_AddErrorInfo */))))(tls, interp,
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 272)))(tls, interp,
 			ts+3531 /* "    (command bou..." */)
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 312 /* &.tcl_BackgroundError */))))(tls, interp)
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 312)))(tls, interp)
 		return 1 // Avoid looping on errors
 	}
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 136 /* &.tcl_GetBooleanFromObj */))))(tls, interp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp),
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 136)))(tls, interp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp),
 		bp /* &retval */) != 0 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 272 /* &.tcl_AddErrorInfo */))))(tls, interp,
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 272)))(tls, interp,
 			ts+3575 /* "    (return valu..." */)
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 312 /* &.tcl_BackgroundError */))))(tls, interp)
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 312)))(tls, interp)
 		return 1
 	}
 	if *(*int32)(unsafe.Pointer(bp /* retval */)) != 0 {
 		for ok := true; ok; ok = 0 != 0 {
 			var _objPtr uintptr = (*TestEvent)(unsafe.Pointer(ev)).tag
-			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 			}
 		}
 		for ok1 := true; ok1; ok1 = 0 != 0 {
 			var _objPtr uintptr = (*TestEvent)(unsafe.Pointer(ev)).command
-			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 			}
 		}
 	}
@@ -22830,20 +22830,20 @@ func TesteventDeleteProc(tls *libc.TLS, event uintptr, clientData ClientData) in
 		return 0
 	}
 	targetName = clientData
-	targetNameStr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, targetName)
+	targetNameStr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, targetName)
 	ev = event
-	evNameStr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, (*TestEvent)(unsafe.Pointer(ev)).tag)
+	evNameStr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, (*TestEvent)(unsafe.Pointer(ev)).tag)
 	if libc.Xstrcmp(tls, evNameStr, targetNameStr) == 0 {
 		for ok := true; ok; ok = 0 != 0 {
 			var _objPtr uintptr = (*TestEvent)(unsafe.Pointer(ev)).tag
-			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 			}
 		}
 		for ok1 := true; ok1; ok1 = 0 != 0 {
 			var _objPtr uintptr = (*TestEvent)(unsafe.Pointer(ev)).command
-			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 			}
 		}
 		return 1
@@ -22875,31 +22875,31 @@ func TestexithandlerCmd(tls *libc.TLS, clientData ClientData, interp uintptr, ar
 	// var value int32 at bp+80, 4
 
 	if argc != 3 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+2368 /* "wrong # argument..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+2368, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 			ts+3620 /* " create|delete v..." */, uintptr(0)))
 		return 1
 	}
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), bp+80 /* &value */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), bp+80) != 0 {
 		return 1
 	}
 	if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1409 /* "create" */) == 0 {
-		(*(*func(*libc.TLS, uintptr, ClientData))(unsafe.Pointer((tclStubsPtr + 380 /* &.tcl_CreateExitHandler */))))(tls, func() uintptr {
-			if (*(*int32)(unsafe.Pointer(bp + 80 /* value */)) & 1) != 0 {
+		(*(*func(*libc.TLS, uintptr, ClientData))(unsafe.Pointer(tclStubsPtr + 380)))(tls, func() uintptr {
+			if *(*int32)(unsafe.Pointer(bp + 80))&1 != 0 {
 				return *(*uintptr)(unsafe.Pointer(&struct{ f func(*libc.TLS, ClientData) }{ExitProcOdd}))
 			}
 			return *(*uintptr)(unsafe.Pointer(&struct{ f func(*libc.TLS, ClientData) }{ExitProcEven}))
 		}(),
 			uintptr(*(*int32)(unsafe.Pointer(bp + 80 /* value */))))
 	} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1416 /* "delete" */) == 0 {
-		(*(*func(*libc.TLS, uintptr, ClientData))(unsafe.Pointer((tclStubsPtr + 436 /* &.tcl_DeleteExitHandler */))))(tls, func() uintptr {
-			if (*(*int32)(unsafe.Pointer(bp + 80 /* value */)) & 1) != 0 {
+		(*(*func(*libc.TLS, uintptr, ClientData))(unsafe.Pointer(tclStubsPtr + 436)))(tls, func() uintptr {
+			if *(*int32)(unsafe.Pointer(bp + 80))&1 != 0 {
 				return *(*uintptr)(unsafe.Pointer(&struct{ f func(*libc.TLS, ClientData) }{ExitProcOdd}))
 			}
 			return *(*uintptr)(unsafe.Pointer(&struct{ f func(*libc.TLS, ClientData) }{ExitProcEven}))
 		}(),
 			uintptr(*(*int32)(unsafe.Pointer(bp + 80 /* value */))))
 	} else {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+40, ts+1428 /* "bad option \"" */, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+40, ts+1428, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)),
 			ts+3642 /* "\": must be creat..." */, uintptr(0)))
 		return 1
 	}
@@ -22917,7 +22917,7 @@ func ExitProcOdd(tls *libc.TLS, clientData ClientData) { /* tclTest.c:2404:1: */
 	libc.Xsprintf(tls, bp+16 /* &buf[0] */, ts+3670 /* "odd %d\n" */, libc.VaList(bp, int32(clientData)))
 	len = int32(libc.Xstrlen(tls, bp+16 /* &buf[0] */))
 	if len != libc.Xwrite(tls, 1, bp+16 /* &buf[0] */, uint32(len)) {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 16 /* &.tcl_Panic */))))(tls, ts+3678 /* "ExitProcOdd: una..." */, 0)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 16)))(tls, ts+3678, 0)
 	}
 }
 
@@ -22932,7 +22932,7 @@ func ExitProcEven(tls *libc.TLS, clientData ClientData) { /* tclTest.c:2418:1: *
 	libc.Xsprintf(tls, bp+16 /* &buf[0] */, ts+3717 /* "even %d\n" */, libc.VaList(bp, int32(clientData)))
 	len = int32(libc.Xstrlen(tls, bp+16 /* &buf[0] */))
 	if len != libc.Xwrite(tls, 1, bp+16 /* &buf[0] */, uint32(len)) {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 16 /* &.tcl_Panic */))))(tls, ts+3726 /* "ExitProcEven: un..." */, 0)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 16)))(tls, ts+3726, 0)
 	}
 }
 
@@ -22962,17 +22962,17 @@ func TestexprlongCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc 
 	var result int32
 
 	if argc != 2 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+2368 /* "wrong # argument..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+2368, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 			ts+3766 /* " expression\"" */, uintptr(0)))
 		return 1
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+3779 /* "This is a result" */, uintptr(0))
-	result = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 564 /* &.tcl_ExprLong */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), bp+80 /* &exprResult */)
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+3779, uintptr(0))
+	result = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 564)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), bp+80)
 	if result != 0 {
 		return result
 	}
 	libc.Xsprintf(tls, bp+84 /* &buf[0] */, ts+3796 /* ": %ld" */, libc.VaList(bp+40, *(*int32)(unsafe.Pointer(bp + 80 /* exprResult */))))
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+56, bp+84 /* &buf[0] */, uintptr(0)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+56, bp+84, uintptr(0)))
 	return 0
 }
 
@@ -23002,16 +23002,16 @@ func TestexprlongobjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, ob
 	var result int32
 
 	if objc != 2 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+3802 /* "expression" */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+3802)
 		return 1
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+3779 /* "This is a result" */, uintptr(0))
-	result = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 568 /* &.tcl_ExprLongObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp+40 /* &exprResult */)
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+3779, uintptr(0))
+	result = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 568)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp+40)
 	if result != 0 {
 		return result
 	}
 	libc.Xsprintf(tls, bp+44 /* &buf[0] */, ts+3796 /* ": %ld" */, libc.VaList(bp, *(*int32)(unsafe.Pointer(bp + 40 /* exprResult */))))
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+16, bp+44 /* &buf[0] */, uintptr(0)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+16, bp+44, uintptr(0)))
 	return 0
 }
 
@@ -23041,18 +23041,18 @@ func TestexprdoubleCmd(tls *libc.TLS, clientData ClientData, interp uintptr, arg
 	var result int32
 
 	if argc != 2 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+2368 /* "wrong # argument..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+2368, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 			ts+3766 /* " expression\"" */, uintptr(0)))
 		return 1
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+3779 /* "This is a result" */, uintptr(0))
-	result = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 556 /* &.tcl_ExprDouble */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), bp+64 /* &exprResult */)
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+3779, uintptr(0))
+	result = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 556)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), bp+64)
 	if result != 0 {
 		return result
 	}
 	libc.Xstrcpy(tls, bp+72 /* &buf[0] */, ts+3813 /* ": " */)
-	(*(*func(*libc.TLS, uintptr, float64, uintptr))(unsafe.Pointer((tclStubsPtr + 816 /* &.tcl_PrintDouble */))))(tls, interp, *(*float64)(unsafe.Pointer(bp + 64 /* exprResult */)), (bp + 72 /* &buf[0] */ + uintptr(2)))
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+40, bp+72 /* &buf[0] */, uintptr(0)))
+	(*(*func(*libc.TLS, uintptr, float64, uintptr))(unsafe.Pointer(tclStubsPtr + 816)))(tls, interp, *(*float64)(unsafe.Pointer(bp + 64)), bp+72+uintptr(2))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+40, bp+72, uintptr(0)))
 	return 0
 }
 
@@ -23082,17 +23082,17 @@ func TestexprdoubleobjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, 
 	var result int32
 
 	if objc != 2 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+3802 /* "expression" */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+3802)
 		return 1
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+3779 /* "This is a result" */, uintptr(0))
-	result = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 560 /* &.tcl_ExprDoubleObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp+24 /* &exprResult */)
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+3779, uintptr(0))
+	result = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 560)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp+24)
 	if result != 0 {
 		return result
 	}
 	libc.Xstrcpy(tls, bp+32 /* &buf[0] */, ts+3813 /* ": " */)
-	(*(*func(*libc.TLS, uintptr, float64, uintptr))(unsafe.Pointer((tclStubsPtr + 816 /* &.tcl_PrintDouble */))))(tls, interp, *(*float64)(unsafe.Pointer(bp + 24 /* exprResult */)), (bp + 32 /* &buf[0] */ + uintptr(2)))
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, bp+32 /* &buf[0] */, uintptr(0)))
+	(*(*func(*libc.TLS, uintptr, float64, uintptr))(unsafe.Pointer(tclStubsPtr + 816)))(tls, interp, *(*float64)(unsafe.Pointer(bp + 24)), bp+32+uintptr(2))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, bp+32, uintptr(0)))
 	return 0
 }
 
@@ -23115,11 +23115,11 @@ func TestexprstringCmd(tls *libc.TLS, clientData ClientData, interp uintptr, arg
 	defer tls.Free(40)
 
 	if argc != 2 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+2368 /* "wrong # argument..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+2368, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 			ts+3766 /* " expression\"" */, uintptr(0)))
 		return 1
 	}
-	return (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 576 /* &.tcl_ExprString */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)))
+	return (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 576)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)))
 }
 
 //----------------------------------------------------------------------
@@ -23143,44 +23143,44 @@ func TestfilelinkCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc 
 
 	var contents uintptr
 
-	if (objc < 2) || (objc > 3) {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+3816 /* "source ?target?" */)
+	if objc < 2 || objc > 3 {
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+3816)
 		return 1
 	}
 
-	if (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1844 /* &.tcl_FSConvertToPathType */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1844)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))) != 0 {
 		return 1
 	}
 
 	if objc == 3 {
 		// Create link from source to target
-		contents = (*(*func(*libc.TLS, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 1792 /* &.tcl_FSLink */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)),
-			(0x01 | 0x02))
-		if contents == (uintptr(0)) {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+3832, /* "could not create..." */
-				(*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))), ts+3861, /* "\" to \"" */
-				(*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4))), ts+3868, /* "\": " */
-				(*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 824 /* &.tcl_PosixError */))))(tls, interp), uintptr(0)))
+		contents = (*(*func(*libc.TLS, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 1792)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)),
+			0x01|0x02)
+		if contents == uintptr(0) {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+3832,
+				(*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))), ts+3861,
+				(*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4))), ts+3868,
+				(*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 824)))(tls, interp), uintptr(0)))
 			return 1
 		}
 	} else {
 		// Read link
-		contents = (*(*func(*libc.TLS, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 1792 /* &.tcl_FSLink */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), uintptr(0), 0)
-		if contents == (uintptr(0)) {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+64, ts+3872, /* "could not read l..." */
-				(*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))), ts+3868, /* "\": " */
-				(*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 824 /* &.tcl_PosixError */))))(tls, interp), uintptr(0)))
+		contents = (*(*func(*libc.TLS, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 1792)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), uintptr(0), 0)
+		if contents == uintptr(0) {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+64, ts+3872,
+				(*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))), ts+3868,
+				(*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 824)))(tls, interp), uintptr(0)))
 			return 1
 		}
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, contents)
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, contents)
 	if objc == 2 {
 		// If we are creating a link, this will actually just
 		// be objv[3], and we don't own it
 		for ok := true; ok; ok = 0 != 0 {
 			var _objPtr uintptr = contents
-			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 			}
 		}
 	}
@@ -23209,13 +23209,13 @@ func TestgetassocdataCmd(tls *libc.TLS, clientData ClientData, interp uintptr, a
 	var res uintptr
 
 	if argc != 2 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+2368 /* "wrong # argument..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+2368, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 			ts+2399 /* " data_key\"" */, uintptr(0)))
 		return 1
 	}
-	res = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) ClientData)(unsafe.Pointer((tclStubsPtr + 608 /* &.tcl_GetAssocData */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), uintptr(0))
-	if res != (uintptr(0)) {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+40, res, uintptr(0)))
+	res = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) ClientData)(unsafe.Pointer(tclStubsPtr + 608)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), uintptr(0))
+	if res != uintptr(0) {
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+40, res, uintptr(0)))
 	}
 	return 0
 }
@@ -23241,15 +23241,15 @@ func TestgetplatformCmd(tls *libc.TLS, clientData ClientData, interp uintptr, ar
 
 	var platform uintptr
 
-	platform = (*(*func(*libc.TLS) uintptr)(unsafe.Pointer((tclIntStubsPtr + 904 /* &.tclGetPlatform */))))(tls)
+	platform = (*(*func(*libc.TLS) uintptr)(unsafe.Pointer(tclIntStubsPtr + 904)))(tls)
 
 	if argc != 1 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+2368 /* "wrong # argument..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+2368, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 			uintptr(0)))
 		return 1
 	}
 
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+32, platformStrings[*(*TclPlatformType)(unsafe.Pointer(platform))], uintptr(0)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+32, platformStrings[*(*TclPlatformType)(unsafe.Pointer(platform))], uintptr(0)))
 	return 0
 }
 
@@ -23279,15 +23279,15 @@ func TestinterpdeleteCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc i
 	var slaveToDelete uintptr
 
 	if argc != 2 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+1482 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+1482, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 			ts+3911 /* " path\"" */, uintptr(0)))
 		return 1
 	}
-	slaveToDelete = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 696 /* &.tcl_GetSlave */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)))
-	if slaveToDelete == (uintptr(0)) {
+	slaveToDelete = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 696)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)))
+	if slaveToDelete == uintptr(0) {
 		return 1
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 448 /* &.tcl_DeleteInterp */))))(tls, slaveToDelete)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 448)))(tls, slaveToDelete)
 	return 0
 }
 
@@ -23320,37 +23320,37 @@ func TestlinkCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, ar
 	var tmp uintptr
 
 	if argc < 2 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+1482 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+1482, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 
 			ts+3918 /* " option ?arg arg..." */, uintptr(0)))
 		return 1
 	}
 	if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1409 /* "create" */) == 0 {
 		if argc != 16 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+40, ts+1482, /* "wrong # args: sh..." */
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+40, ts+1482,
 				*(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)), ts+1550 /* " " */, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)),
 
 				ts+3985 /* " intRO realRO bo..." */, uintptr(0)))
 			return 1
 		}
 		if created != 0 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4093 /* "int" */)
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4097 /* "real" */)
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4102 /* "bool" */)
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4107 /* "string" */)
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4114 /* "wide" */)
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4119 /* "char" */)
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4124 /* "uchar" */)
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+2562 /* "short" */)
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4130 /* "ushort" */)
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4137 /* "uint" */)
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4142 /* "long" */)
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4147 /* "ulong" */)
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4153 /* "float" */)
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4159 /* "uwide" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4093)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4097)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4102)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4107)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4114)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4119)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4124)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+2562)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4130)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4137)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4142)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4147)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4153)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4159)
 		}
 		created = 1
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 132 /* &.tcl_GetBoolean */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), bp+248 /* &writable */) != 0 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 132)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), bp+248) != 0 {
 			return 1
 		}
 		if *(*int32)(unsafe.Pointer(bp + 248 /* writable */)) != 0 {
@@ -23358,23 +23358,11 @@ func TestlinkCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, ar
 		} else {
 			flag = 0x80
 		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 756 /* &.tcl_LinkVar */))))(tls, interp, ts+4093 /* "int" */, uintptr(unsafe.Pointer(&intVar)),
-			(1|flag)) != 0 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer(tclStubsPtr + 756)))(tls, interp, ts+4093, uintptr(unsafe.Pointer(&intVar)),
+			1|flag) != 0 {
 			return 1
 		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 132 /* &.tcl_GetBoolean */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), bp+248 /* &writable */) != 0 {
-			return 1
-		}
-		if *(*int32)(unsafe.Pointer(bp + 248 /* writable */)) != 0 {
-			flag = 0
-		} else {
-			flag = 0x80
-		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 756 /* &.tcl_LinkVar */))))(tls, interp, ts+4097 /* "real" */, uintptr(unsafe.Pointer(&realVar)),
-			(2|flag)) != 0 {
-			return 1
-		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 132 /* &.tcl_GetBoolean */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)), bp+248 /* &writable */) != 0 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 132)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), bp+248) != 0 {
 			return 1
 		}
 		if *(*int32)(unsafe.Pointer(bp + 248 /* writable */)) != 0 {
@@ -23382,23 +23370,11 @@ func TestlinkCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, ar
 		} else {
 			flag = 0x80
 		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 756 /* &.tcl_LinkVar */))))(tls, interp, ts+4102 /* "bool" */, uintptr(unsafe.Pointer(&boolVar)),
-			(3|flag)) != 0 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer(tclStubsPtr + 756)))(tls, interp, ts+4097, uintptr(unsafe.Pointer(&realVar)),
+			2|flag) != 0 {
 			return 1
 		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 132 /* &.tcl_GetBoolean */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(5)*4)), bp+248 /* &writable */) != 0 {
-			return 1
-		}
-		if *(*int32)(unsafe.Pointer(bp + 248 /* writable */)) != 0 {
-			flag = 0
-		} else {
-			flag = 0x80
-		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 756 /* &.tcl_LinkVar */))))(tls, interp, ts+4107 /* "string" */, uintptr(unsafe.Pointer(&stringVar)),
-			(4|flag)) != 0 {
-			return 1
-		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 132 /* &.tcl_GetBoolean */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(6)*4)), bp+248 /* &writable */) != 0 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 132)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)), bp+248) != 0 {
 			return 1
 		}
 		if *(*int32)(unsafe.Pointer(bp + 248 /* writable */)) != 0 {
@@ -23406,23 +23382,11 @@ func TestlinkCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, ar
 		} else {
 			flag = 0x80
 		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 756 /* &.tcl_LinkVar */))))(tls, interp, ts+4114 /* "wide" */, uintptr(unsafe.Pointer(&wideVar)),
-			(5|flag)) != 0 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer(tclStubsPtr + 756)))(tls, interp, ts+4102, uintptr(unsafe.Pointer(&boolVar)),
+			3|flag) != 0 {
 			return 1
 		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 132 /* &.tcl_GetBoolean */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(7)*4)), bp+248 /* &writable */) != 0 {
-			return 1
-		}
-		if *(*int32)(unsafe.Pointer(bp + 248 /* writable */)) != 0 {
-			flag = 0
-		} else {
-			flag = 0x80
-		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 756 /* &.tcl_LinkVar */))))(tls, interp, ts+4119 /* "char" */, uintptr(unsafe.Pointer(&charVar)),
-			(6|flag)) != 0 {
-			return 1
-		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 132 /* &.tcl_GetBoolean */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(8)*4)), bp+248 /* &writable */) != 0 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 132)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(5)*4)), bp+248) != 0 {
 			return 1
 		}
 		if *(*int32)(unsafe.Pointer(bp + 248 /* writable */)) != 0 {
@@ -23430,23 +23394,11 @@ func TestlinkCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, ar
 		} else {
 			flag = 0x80
 		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 756 /* &.tcl_LinkVar */))))(tls, interp, ts+4124 /* "uchar" */, uintptr(unsafe.Pointer(&ucharVar)),
-			(7|flag)) != 0 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer(tclStubsPtr + 756)))(tls, interp, ts+4107, uintptr(unsafe.Pointer(&stringVar)),
+			4|flag) != 0 {
 			return 1
 		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 132 /* &.tcl_GetBoolean */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(9)*4)), bp+248 /* &writable */) != 0 {
-			return 1
-		}
-		if *(*int32)(unsafe.Pointer(bp + 248 /* writable */)) != 0 {
-			flag = 0
-		} else {
-			flag = 0x80
-		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 756 /* &.tcl_LinkVar */))))(tls, interp, ts+2562 /* "short" */, uintptr(unsafe.Pointer(&shortVar)),
-			(8|flag)) != 0 {
-			return 1
-		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 132 /* &.tcl_GetBoolean */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(10)*4)), bp+248 /* &writable */) != 0 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 132)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(6)*4)), bp+248) != 0 {
 			return 1
 		}
 		if *(*int32)(unsafe.Pointer(bp + 248 /* writable */)) != 0 {
@@ -23454,23 +23406,11 @@ func TestlinkCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, ar
 		} else {
 			flag = 0x80
 		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 756 /* &.tcl_LinkVar */))))(tls, interp, ts+4130 /* "ushort" */, uintptr(unsafe.Pointer(&ushortVar)),
-			(9|flag)) != 0 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer(tclStubsPtr + 756)))(tls, interp, ts+4114, uintptr(unsafe.Pointer(&wideVar)),
+			5|flag) != 0 {
 			return 1
 		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 132 /* &.tcl_GetBoolean */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(11)*4)), bp+248 /* &writable */) != 0 {
-			return 1
-		}
-		if *(*int32)(unsafe.Pointer(bp + 248 /* writable */)) != 0 {
-			flag = 0
-		} else {
-			flag = 0x80
-		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 756 /* &.tcl_LinkVar */))))(tls, interp, ts+4137 /* "uint" */, uintptr(unsafe.Pointer(&uintVar)),
-			(10|flag)) != 0 {
-			return 1
-		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 132 /* &.tcl_GetBoolean */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(12)*4)), bp+248 /* &writable */) != 0 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 132)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(7)*4)), bp+248) != 0 {
 			return 1
 		}
 		if *(*int32)(unsafe.Pointer(bp + 248 /* writable */)) != 0 {
@@ -23478,23 +23418,11 @@ func TestlinkCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, ar
 		} else {
 			flag = 0x80
 		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 756 /* &.tcl_LinkVar */))))(tls, interp, ts+4142 /* "long" */, uintptr(unsafe.Pointer(&longVar)),
-			(11|flag)) != 0 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer(tclStubsPtr + 756)))(tls, interp, ts+4119, uintptr(unsafe.Pointer(&charVar)),
+			6|flag) != 0 {
 			return 1
 		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 132 /* &.tcl_GetBoolean */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(13)*4)), bp+248 /* &writable */) != 0 {
-			return 1
-		}
-		if *(*int32)(unsafe.Pointer(bp + 248 /* writable */)) != 0 {
-			flag = 0
-		} else {
-			flag = 0x80
-		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 756 /* &.tcl_LinkVar */))))(tls, interp, ts+4147 /* "ulong" */, uintptr(unsafe.Pointer(&ulongVar)),
-			(12|flag)) != 0 {
-			return 1
-		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 132 /* &.tcl_GetBoolean */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(14)*4)), bp+248 /* &writable */) != 0 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 132)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(8)*4)), bp+248) != 0 {
 			return 1
 		}
 		if *(*int32)(unsafe.Pointer(bp + 248 /* writable */)) != 0 {
@@ -23502,11 +23430,11 @@ func TestlinkCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, ar
 		} else {
 			flag = 0x80
 		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 756 /* &.tcl_LinkVar */))))(tls, interp, ts+4153 /* "float" */, uintptr(unsafe.Pointer(&floatVar)),
-			(13|flag)) != 0 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer(tclStubsPtr + 756)))(tls, interp, ts+4124, uintptr(unsafe.Pointer(&ucharVar)),
+			7|flag) != 0 {
 			return 1
 		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 132 /* &.tcl_GetBoolean */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(15)*4)), bp+248 /* &writable */) != 0 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 132)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(9)*4)), bp+248) != 0 {
 			return 1
 		}
 		if *(*int32)(unsafe.Pointer(bp + 248 /* writable */)) != 0 {
@@ -23514,177 +23442,249 @@ func TestlinkCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, ar
 		} else {
 			flag = 0x80
 		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 756 /* &.tcl_LinkVar */))))(tls, interp, ts+4159 /* "uwide" */, uintptr(unsafe.Pointer(&uwideVar)),
-			(14|flag)) != 0 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer(tclStubsPtr + 756)))(tls, interp, ts+2562, uintptr(unsafe.Pointer(&shortVar)),
+			8|flag) != 0 {
+			return 1
+		}
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 132)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(10)*4)), bp+248) != 0 {
+			return 1
+		}
+		if *(*int32)(unsafe.Pointer(bp + 248 /* writable */)) != 0 {
+			flag = 0
+		} else {
+			flag = 0x80
+		}
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer(tclStubsPtr + 756)))(tls, interp, ts+4130, uintptr(unsafe.Pointer(&ushortVar)),
+			9|flag) != 0 {
+			return 1
+		}
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 132)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(11)*4)), bp+248) != 0 {
+			return 1
+		}
+		if *(*int32)(unsafe.Pointer(bp + 248 /* writable */)) != 0 {
+			flag = 0
+		} else {
+			flag = 0x80
+		}
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer(tclStubsPtr + 756)))(tls, interp, ts+4137, uintptr(unsafe.Pointer(&uintVar)),
+			10|flag) != 0 {
+			return 1
+		}
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 132)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(12)*4)), bp+248) != 0 {
+			return 1
+		}
+		if *(*int32)(unsafe.Pointer(bp + 248 /* writable */)) != 0 {
+			flag = 0
+		} else {
+			flag = 0x80
+		}
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer(tclStubsPtr + 756)))(tls, interp, ts+4142, uintptr(unsafe.Pointer(&longVar)),
+			11|flag) != 0 {
+			return 1
+		}
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 132)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(13)*4)), bp+248) != 0 {
+			return 1
+		}
+		if *(*int32)(unsafe.Pointer(bp + 248 /* writable */)) != 0 {
+			flag = 0
+		} else {
+			flag = 0x80
+		}
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer(tclStubsPtr + 756)))(tls, interp, ts+4147, uintptr(unsafe.Pointer(&ulongVar)),
+			12|flag) != 0 {
+			return 1
+		}
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 132)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(14)*4)), bp+248) != 0 {
+			return 1
+		}
+		if *(*int32)(unsafe.Pointer(bp + 248 /* writable */)) != 0 {
+			flag = 0
+		} else {
+			flag = 0x80
+		}
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer(tclStubsPtr + 756)))(tls, interp, ts+4153, uintptr(unsafe.Pointer(&floatVar)),
+			13|flag) != 0 {
+			return 1
+		}
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 132)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(15)*4)), bp+248) != 0 {
+			return 1
+		}
+		if *(*int32)(unsafe.Pointer(bp + 248 /* writable */)) != 0 {
+			flag = 0
+		} else {
+			flag = 0x80
+		}
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer(tclStubsPtr + 756)))(tls, interp, ts+4159, uintptr(unsafe.Pointer(&uwideVar)),
+			14|flag) != 0 {
 			return 1
 		}
 
 	} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1416 /* "delete" */) == 0 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4093 /* "int" */)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4097 /* "real" */)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4102 /* "bool" */)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4107 /* "string" */)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4114 /* "wide" */)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4119 /* "char" */)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4124 /* "uchar" */)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+2562 /* "short" */)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4130 /* "ushort" */)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4137 /* "uint" */)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4142 /* "long" */)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4147 /* "ulong" */)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4153 /* "float" */)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1012 /* &.tcl_UnlinkVar */))))(tls, interp, ts+4159 /* "uwide" */)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4093)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4097)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4102)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4107)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4114)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4119)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4124)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+2562)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4130)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4137)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4142)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4147)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4153)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1012)))(tls, interp, ts+4159)
 		created = 0
 	} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1534 /* "get" */) == 0 {
-		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer((tclIntStubsPtr + 104 /* &.tclFormatInt */))))(tls, bp+252 /* &buffer[0] */, int32(intVar))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, bp+252 /* &buffer[0] */)
-		(*(*func(*libc.TLS, uintptr, float64, uintptr))(unsafe.Pointer((tclStubsPtr + 816 /* &.tcl_PrintDouble */))))(tls, uintptr(0), realVar, bp+252 /* &buffer[0] */)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, bp+252 /* &buffer[0] */)
-		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer((tclIntStubsPtr + 104 /* &.tclFormatInt */))))(tls, bp+252 /* &buffer[0] */, int32(boolVar))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, bp+252 /* &buffer[0] */)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, func() uintptr {
-			if stringVar == (uintptr(0)) {
+		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(tclIntStubsPtr + 104)))(tls, bp+252, int32(intVar))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, bp+252)
+		(*(*func(*libc.TLS, uintptr, float64, uintptr))(unsafe.Pointer(tclStubsPtr + 816)))(tls, uintptr(0), realVar, bp+252)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, bp+252)
+		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(tclIntStubsPtr + 104)))(tls, bp+252, int32(boolVar))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, bp+252)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, func() uintptr {
+			if stringVar == uintptr(0) {
 				return ts + 2494 /* "-" */
 			}
 			return stringVar
 		}())
 		// Wide ints only have an object-based interface.
-		tmp = (*(*func(*libc.TLS, Tcl_WideInt) uintptr)(unsafe.Pointer((tclStubsPtr + 1960 /* &.tcl_NewWideIntObj */))))(tls, wideVar)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, tmp))
+		tmp = (*(*func(*libc.TLS, Tcl_WideInt) uintptr)(unsafe.Pointer(tclStubsPtr + 1960)))(tls, wideVar)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, tmp))
 		for ok := true; ok; ok = 0 != 0 {
 			var _objPtr uintptr = tmp
-			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 			}
 		}
-		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer((tclIntStubsPtr + 104 /* &.tclFormatInt */))))(tls, bp+252 /* &buffer[0] */, int32(int32(charVar)))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, bp+252 /* &buffer[0] */)
-		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer((tclIntStubsPtr + 104 /* &.tclFormatInt */))))(tls, bp+252 /* &buffer[0] */, int32(int32(ucharVar)))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, bp+252 /* &buffer[0] */)
-		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer((tclIntStubsPtr + 104 /* &.tclFormatInt */))))(tls, bp+252 /* &buffer[0] */, int32(int32(shortVar)))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, bp+252 /* &buffer[0] */)
-		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer((tclIntStubsPtr + 104 /* &.tclFormatInt */))))(tls, bp+252 /* &buffer[0] */, int32(int32(ushortVar)))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, bp+252 /* &buffer[0] */)
-		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer((tclIntStubsPtr + 104 /* &.tclFormatInt */))))(tls, bp+252 /* &buffer[0] */, int32(int32(uintVar)))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, bp+252 /* &buffer[0] */)
-		tmp = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_NewLongObj */))))(tls, longVar)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, tmp))
+		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(tclIntStubsPtr + 104)))(tls, bp+252, int32(int32(charVar)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, bp+252)
+		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(tclIntStubsPtr + 104)))(tls, bp+252, int32(int32(ucharVar)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, bp+252)
+		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(tclIntStubsPtr + 104)))(tls, bp+252, int32(int32(shortVar)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, bp+252)
+		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(tclIntStubsPtr + 104)))(tls, bp+252, int32(int32(ushortVar)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, bp+252)
+		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(tclIntStubsPtr + 104)))(tls, bp+252, int32(int32(uintVar)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, bp+252)
+		tmp = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 224)))(tls, longVar)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, tmp))
 		for ok1 := true; ok1; ok1 = 0 != 0 {
 			var _objPtr uintptr = tmp
-			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 			}
 		}
-		tmp = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_NewLongObj */))))(tls, int32(ulongVar))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, tmp))
+		tmp = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 224)))(tls, int32(ulongVar))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, tmp))
 		for ok2 := true; ok2; ok2 = 0 != 0 {
 			var _objPtr uintptr = tmp
-			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 			}
 		}
-		(*(*func(*libc.TLS, uintptr, float64, uintptr))(unsafe.Pointer((tclStubsPtr + 816 /* &.tcl_PrintDouble */))))(tls, uintptr(0), float64(floatVar), bp+252 /* &buffer[0] */)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, bp+252 /* &buffer[0] */)
-		tmp = (*(*func(*libc.TLS, Tcl_WideInt) uintptr)(unsafe.Pointer((tclStubsPtr + 1960 /* &.tcl_NewWideIntObj */))))(tls, Tcl_WideInt(uwideVar))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, tmp))
+		(*(*func(*libc.TLS, uintptr, float64, uintptr))(unsafe.Pointer(tclStubsPtr + 816)))(tls, uintptr(0), float64(floatVar), bp+252)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, bp+252)
+		tmp = (*(*func(*libc.TLS, Tcl_WideInt) uintptr)(unsafe.Pointer(tclStubsPtr + 1960)))(tls, Tcl_WideInt(uwideVar))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, tmp))
 		for ok3 := true; ok3; ok3 = 0 != 0 {
 			var _objPtr uintptr = tmp
-			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 			}
 		}
 	} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+4165 /* "set" */) == 0 {
 		// var v int32 at bp+308, 4
 
 		if argc != 16 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+96, ts+1482, /* "wrong # args: sh..." */
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+96, ts+1482,
 				*(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)), ts+1550 /* " " */, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)),
 
 				ts+4169 /* " intValue realVa..." */, uintptr(0)))
 			return 1
 		}
 		if int32(*(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)) + uintptr(0)))) != 0 {
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), uintptr(unsafe.Pointer(&intVar))) != 0 {
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), uintptr(unsafe.Pointer(&intVar))) != 0 {
 				return 1
 			}
 		}
 		if int32(*(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)) + uintptr(0)))) != 0 {
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 144 /* &.tcl_GetDouble */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), uintptr(unsafe.Pointer(&realVar))) != 0 {
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 144)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), uintptr(unsafe.Pointer(&realVar))) != 0 {
 				return 1
 			}
 		}
 		if int32(*(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)) + uintptr(0)))) != 0 {
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)), uintptr(unsafe.Pointer(&boolVar))) != 0 {
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)), uintptr(unsafe.Pointer(&boolVar))) != 0 {
 				return 1
 			}
 		}
 		if int32(*(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(5)*4)) + uintptr(0)))) != 0 {
-			if stringVar != (uintptr(0)) {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, stringVar)
+			if stringVar != uintptr(0) {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, stringVar)
 			}
 			if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(5)*4)), ts+2494 /* "-" */) == 0 {
 				stringVar = uintptr(0)
 			} else {
-				stringVar = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, (libc.Xstrlen(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(5)*4))) + size_t(1)))
+				stringVar = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, libc.Xstrlen(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(5)*4)))+size_t(1))
 				libc.Xstrcpy(tls, stringVar, *(*uintptr)(unsafe.Pointer(argv + uintptr(5)*4)))
 			}
 		}
 		if int32(*(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(6)*4)) + uintptr(0)))) != 0 {
-			tmp = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(6)*4)), -1)
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1956 /* &.tcl_GetWideIntFromObj */))))(tls, interp, tmp, uintptr(unsafe.Pointer(&wideVar))) != 0 {
+			tmp = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(6)*4)), -1)
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1956)))(tls, interp, tmp, uintptr(unsafe.Pointer(&wideVar))) != 0 {
 				for ok4 := true; ok4; ok4 = 0 != 0 {
 					var _objPtr uintptr = tmp
-					if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-						(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+					if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+						(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 					}
 				}
 				return 1
 			}
 			for ok5 := true; ok5; ok5 = 0 != 0 {
 				var _objPtr uintptr = tmp
-				if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+				if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 				}
 			}
 		}
 		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(7)*4)) + uintptr(0))) != 0 {
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(7)*4)), bp+308 /* &v */) != 0 {
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(7)*4)), bp+308) != 0 {
 				return 1
 			}
 			charVar = int8(*(*int32)(unsafe.Pointer(bp + 308 /* v */)))
 		}
 		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(8)*4)) + uintptr(0))) != 0 {
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(8)*4)), bp+308 /* &v */) != 0 {
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(8)*4)), bp+308) != 0 {
 				return 1
 			}
 			ucharVar = uint8(*(*int32)(unsafe.Pointer(bp + 308 /* v */)))
 		}
 		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(9)*4)) + uintptr(0))) != 0 {
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(9)*4)), bp+308 /* &v */) != 0 {
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(9)*4)), bp+308) != 0 {
 				return 1
 			}
 			shortVar = int16(*(*int32)(unsafe.Pointer(bp + 308 /* v */)))
 		}
 		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(10)*4)) + uintptr(0))) != 0 {
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(10)*4)), bp+308 /* &v */) != 0 {
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(10)*4)), bp+308) != 0 {
 				return 1
 			}
 			ushortVar = uint16(*(*int32)(unsafe.Pointer(bp + 308 /* v */)))
 		}
 		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(11)*4)) + uintptr(0))) != 0 {
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(11)*4)), bp+308 /* &v */) != 0 {
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(11)*4)), bp+308) != 0 {
 				return 1
 			}
 			uintVar = uint32(*(*int32)(unsafe.Pointer(bp + 308 /* v */)))
 		}
 		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(12)*4)) + uintptr(0))) != 0 {
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(12)*4)), bp+308 /* &v */) != 0 {
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(12)*4)), bp+308) != 0 {
 				return 1
 			}
 			longVar = int32(*(*int32)(unsafe.Pointer(bp + 308 /* v */)))
 		}
 		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(13)*4)) + uintptr(0))) != 0 {
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(13)*4)), bp+308 /* &v */) != 0 {
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(13)*4)), bp+308) != 0 {
 				return 1
 			}
 			ulongVar = uint32(*(*int32)(unsafe.Pointer(bp + 308 /* v */)))
@@ -23692,7 +23692,7 @@ func TestlinkCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, ar
 		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(14)*4)) + uintptr(0))) != 0 {
 			// var d float64 at bp+312, 8
 
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 144 /* &.tcl_GetDouble */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(14)*4)), bp+312 /* &d */) != 0 {
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 144)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(14)*4)), bp+312) != 0 {
 				return 1
 			}
 			floatVar = float32(*(*float64)(unsafe.Pointer(bp + 312 /* d */)))
@@ -23700,20 +23700,20 @@ func TestlinkCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, ar
 		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(15)*4)) + uintptr(0))) != 0 {
 			// var w Tcl_WideInt at bp+320, 8
 
-			tmp = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(15)*4)), -1)
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1956 /* &.tcl_GetWideIntFromObj */))))(tls, interp, tmp, bp+320 /* &w */) != 0 {
+			tmp = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(15)*4)), -1)
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1956)))(tls, interp, tmp, bp+320) != 0 {
 				for ok6 := true; ok6; ok6 = 0 != 0 {
 					var _objPtr uintptr = tmp
-					if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-						(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+					if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+						(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 					}
 				}
 				return 1
 			}
 			for ok7 := true; ok7; ok7 = 0 != 0 {
 				var _objPtr uintptr = tmp
-				if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+				if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 				}
 			}
 			uwideVar = Tcl_WideUInt(*(*Tcl_WideInt)(unsafe.Pointer(bp + 320 /* w */)))
@@ -23722,143 +23722,143 @@ func TestlinkCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, ar
 		// var v int32 at bp+328, 4
 
 		if argc != 16 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+152, ts+1482, /* "wrong # args: sh..." */
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+152, ts+1482,
 				*(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)), ts+1550 /* " " */, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)),
 
 				ts+4169 /* " intValue realVa..." */, uintptr(0)))
 			return 1
 		}
 		if int32(*(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)) + uintptr(0)))) != 0 {
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), uintptr(unsafe.Pointer(&intVar))) != 0 {
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), uintptr(unsafe.Pointer(&intVar))) != 0 {
 				return 1
 			}
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1036 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+4093 /* "int" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1036)))(tls, interp, ts+4093)
 		}
 		if int32(*(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)) + uintptr(0)))) != 0 {
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 144 /* &.tcl_GetDouble */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), uintptr(unsafe.Pointer(&realVar))) != 0 {
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 144)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), uintptr(unsafe.Pointer(&realVar))) != 0 {
 				return 1
 			}
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1036 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+4097 /* "real" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1036)))(tls, interp, ts+4097)
 		}
 		if int32(*(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)) + uintptr(0)))) != 0 {
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)), uintptr(unsafe.Pointer(&boolVar))) != 0 {
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)), uintptr(unsafe.Pointer(&boolVar))) != 0 {
 				return 1
 			}
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1036 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+4102 /* "bool" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1036)))(tls, interp, ts+4102)
 		}
 		if int32(*(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(5)*4)) + uintptr(0)))) != 0 {
-			if stringVar != (uintptr(0)) {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, stringVar)
+			if stringVar != uintptr(0) {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, stringVar)
 			}
 			if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(5)*4)), ts+2494 /* "-" */) == 0 {
 				stringVar = uintptr(0)
 			} else {
-				stringVar = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, (libc.Xstrlen(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(5)*4))) + size_t(1)))
+				stringVar = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, libc.Xstrlen(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(5)*4)))+size_t(1))
 				libc.Xstrcpy(tls, stringVar, *(*uintptr)(unsafe.Pointer(argv + uintptr(5)*4)))
 			}
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1036 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+4107 /* "string" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1036)))(tls, interp, ts+4107)
 		}
 		if int32(*(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(6)*4)) + uintptr(0)))) != 0 {
-			tmp = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(6)*4)), -1)
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1956 /* &.tcl_GetWideIntFromObj */))))(tls, interp, tmp, uintptr(unsafe.Pointer(&wideVar))) != 0 {
+			tmp = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(6)*4)), -1)
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1956)))(tls, interp, tmp, uintptr(unsafe.Pointer(&wideVar))) != 0 {
 				for ok8 := true; ok8; ok8 = 0 != 0 {
 					var _objPtr uintptr = tmp
-					if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-						(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+					if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+						(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 					}
 				}
 				return 1
 			}
 			for ok9 := true; ok9; ok9 = 0 != 0 {
 				var _objPtr uintptr = tmp
-				if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+				if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 				}
 			}
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1036 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+4114 /* "wide" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1036)))(tls, interp, ts+4114)
 		}
 		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(7)*4)) + uintptr(0))) != 0 {
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(7)*4)), bp+328 /* &v */) != 0 {
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(7)*4)), bp+328) != 0 {
 				return 1
 			}
 			charVar = int8(*(*int32)(unsafe.Pointer(bp + 328 /* v */)))
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1036 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+4119 /* "char" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1036)))(tls, interp, ts+4119)
 		}
 		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(8)*4)) + uintptr(0))) != 0 {
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(8)*4)), bp+328 /* &v */) != 0 {
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(8)*4)), bp+328) != 0 {
 				return 1
 			}
 			ucharVar = uint8(*(*int32)(unsafe.Pointer(bp + 328 /* v */)))
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1036 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+4124 /* "uchar" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1036)))(tls, interp, ts+4124)
 		}
 		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(9)*4)) + uintptr(0))) != 0 {
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(9)*4)), bp+328 /* &v */) != 0 {
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(9)*4)), bp+328) != 0 {
 				return 1
 			}
 			shortVar = int16(*(*int32)(unsafe.Pointer(bp + 328 /* v */)))
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1036 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+2562 /* "short" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1036)))(tls, interp, ts+2562)
 		}
 		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(10)*4)) + uintptr(0))) != 0 {
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(10)*4)), bp+328 /* &v */) != 0 {
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(10)*4)), bp+328) != 0 {
 				return 1
 			}
 			ushortVar = uint16(*(*int32)(unsafe.Pointer(bp + 328 /* v */)))
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1036 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+4130 /* "ushort" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1036)))(tls, interp, ts+4130)
 		}
 		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(11)*4)) + uintptr(0))) != 0 {
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(11)*4)), bp+328 /* &v */) != 0 {
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(11)*4)), bp+328) != 0 {
 				return 1
 			}
 			uintVar = uint32(*(*int32)(unsafe.Pointer(bp + 328 /* v */)))
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1036 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+4137 /* "uint" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1036)))(tls, interp, ts+4137)
 		}
 		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(12)*4)) + uintptr(0))) != 0 {
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(12)*4)), bp+328 /* &v */) != 0 {
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(12)*4)), bp+328) != 0 {
 				return 1
 			}
 			longVar = int32(*(*int32)(unsafe.Pointer(bp + 328 /* v */)))
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1036 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+4142 /* "long" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1036)))(tls, interp, ts+4142)
 		}
 		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(13)*4)) + uintptr(0))) != 0 {
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(13)*4)), bp+328 /* &v */) != 0 {
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(13)*4)), bp+328) != 0 {
 				return 1
 			}
 			ulongVar = uint32(*(*int32)(unsafe.Pointer(bp + 328 /* v */)))
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1036 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+4147 /* "ulong" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1036)))(tls, interp, ts+4147)
 		}
 		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(14)*4)) + uintptr(0))) != 0 {
 			// var d float64 at bp+336, 8
 
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 144 /* &.tcl_GetDouble */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(14)*4)), bp+336 /* &d */) != 0 {
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 144)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(14)*4)), bp+336) != 0 {
 				return 1
 			}
 			floatVar = float32(*(*float64)(unsafe.Pointer(bp + 336 /* d */)))
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1036 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+4153 /* "float" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1036)))(tls, interp, ts+4153)
 		}
 		if *(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(15)*4)) + uintptr(0))) != 0 {
 			// var w Tcl_WideInt at bp+344, 8
 
-			tmp = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(15)*4)), -1)
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1956 /* &.tcl_GetWideIntFromObj */))))(tls, interp, tmp, bp+344 /* &w */) != 0 {
+			tmp = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(15)*4)), -1)
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1956)))(tls, interp, tmp, bp+344) != 0 {
 				for ok10 := true; ok10; ok10 = 0 != 0 {
 					var _objPtr uintptr = tmp
-					if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-						(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+					if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+						(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 					}
 				}
 				return 1
 			}
 			for ok11 := true; ok11; ok11 = 0 != 0 {
 				var _objPtr uintptr = tmp
-				if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+				if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 				}
 			}
 			uwideVar = Tcl_WideUInt(*(*Tcl_WideInt)(unsafe.Pointer(bp + 344 /* w */)))
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1036 /* &.tcl_UpdateLinkedVar */))))(tls, interp, ts+4159 /* "uwide" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1036)))(tls, interp, ts+4159)
 		}
 	} else {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+208, ts+1428 /* "bad option \"" */, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+208, ts+1428, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)),
 			ts+4326 /* "\": should be cre..." */, uintptr(0)))
 		return 1
 	}
@@ -23906,23 +23906,23 @@ func TestlocaleCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc in
 
 	// LC_CTYPE, etc. correspond to the indices for the strings.
 
-	if (objc < 2) || (objc > 3) {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+4375 /* "category ?locale..." */)
+	if objc < 2 || objc > 3 {
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+4375)
 		return 1
 	}
 
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1224 /* &.tcl_GetIndexFromObjStruct */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), uintptr(unsafe.Pointer(&optionStrings1)), int32(unsafe.Sizeof(uintptr(0))), ts+3360 /* "option" */, 0, bp /* &index */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1224)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), uintptr(unsafe.Pointer(&optionStrings1)), int32(unsafe.Sizeof(uintptr(0))), ts+3360, 0, bp) != 0 {
 		return 1
 	}
 
 	if objc == 3 {
-		locale = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
+		locale = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
 	} else {
 		locale = uintptr(0)
 	}
 	locale = libc.Xsetlocale(tls, lcTypes[*(*int32)(unsafe.Pointer(bp /* index */))], locale)
 	if locale != 0 {
-		(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 268 /* &.tcl_SetStringObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp), locale, -1)
+		(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 268)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp), locale, -1)
 	}
 	return 0
 }
@@ -24015,7 +24015,7 @@ func TestMathFunc2(tls *libc.TLS, clientData ClientData, interp uintptr, args ui
 				return w1
 			}()
 		} else {
-			(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+4433 /* "T3: wrong type f..." */, uintptr(0))
+			(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+4433, uintptr(0))
 			result = 1
 		}
 	} else if (*Tcl_Value)(unsafe.Pointer(args+uintptr(0)*24)).__type == TCL_DOUBLE {
@@ -24052,7 +24052,7 @@ func TestMathFunc2(tls *libc.TLS, clientData ClientData, interp uintptr, args ui
 				return d1
 			}()
 		} else {
-			(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+4433 /* "T3: wrong type f..." */, uintptr(0))
+			(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+4433, uintptr(0))
 			result = 1
 		}
 	} else if (*Tcl_Value)(unsafe.Pointer(args+uintptr(0)*24)).__type == TCL_WIDE_INT {
@@ -24090,11 +24090,11 @@ func TestMathFunc2(tls *libc.TLS, clientData ClientData, interp uintptr, args ui
 				return w1
 			}()
 		} else {
-			(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+4433 /* "T3: wrong type f..." */, uintptr(0))
+			(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+4433, uintptr(0))
 			result = 1
 		}
 	} else {
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+4458 /* "T3: wrong type f..." */, uintptr(0))
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+4458, uintptr(0))
 		result = 1
 	}
 	return result
@@ -24116,7 +24116,7 @@ func TestMathFunc2(tls *libc.TLS, clientData ClientData, interp uintptr, args ui
 //----------------------------------------------------------------------
 // ARGSUSED
 func CleanupTestSetassocdataTests(tls *libc.TLS, clientData ClientData, interp uintptr) { /* tclTest.c:3507:1: */
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, clientData)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, clientData)
 }
 
 //----------------------------------------------------------------------
@@ -24146,20 +24146,20 @@ func TestparserObjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc
 	// var parse Tcl_Parse at bp+8, 376
 
 	if objc != 3 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+4483 /* "script length" */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+4483)
 		return 1
 	}
-	script = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 172 /* &.tcl_GetStringFromObj */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp /* &dummy */)
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp+4 /* &length */) != 0 {
+	script = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 172)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp)
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp+4) != 0 {
 		return 1
 	}
 	if *(*int32)(unsafe.Pointer(bp + 4 /* length */)) == 0 {
 		*(*int32)(unsafe.Pointer(bp + 4 /* length */)) = *(*int32)(unsafe.Pointer(bp /* dummy */))
 	}
-	if (*(*func(*libc.TLS, uintptr, uintptr, int32, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1452 /* &.tcl_ParseCommand */))))(tls, interp, script, *(*int32)(unsafe.Pointer(bp + 4 /* length */)), 0, bp+8 /* &parse */) != 0 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 272 /* &.tcl_AddErrorInfo */))))(tls, interp, ts+4497 /* "\n    (remainder ..." */)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 272 /* &.tcl_AddErrorInfo */))))(tls, interp, (*Tcl_Parse)(unsafe.Pointer(bp+8 /* &parse */)).term)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 272 /* &.tcl_AddErrorInfo */))))(tls, interp, ts+4526 /* "\")" */)
+	if (*(*func(*libc.TLS, uintptr, uintptr, int32, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1452)))(tls, interp, script, *(*int32)(unsafe.Pointer(bp + 4)), 0, bp+8) != 0 {
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 272)))(tls, interp, ts+4497)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 272)))(tls, interp, (*Tcl_Parse)(unsafe.Pointer(bp+8)).term)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 272)))(tls, interp, ts+4526)
 		return 1
 	}
 
@@ -24167,7 +24167,7 @@ func TestparserObjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc
 	// of the parse structure into the interpreter's result.
 
 	PrintParse(tls, interp, bp+8 /* &parse */)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1440 /* &.tcl_FreeParse */))))(tls, bp+8 /* &parse */)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1440)))(tls, bp+8)
 	return 0
 }
 
@@ -24198,11 +24198,11 @@ func TestexprparserObjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, 
 	// var parse Tcl_Parse at bp+8, 376
 
 	if objc != 3 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+4529 /* "expr length" */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+4529)
 		return 1
 	}
-	script = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 172 /* &.tcl_GetStringFromObj */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp /* &dummy */)
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp+4 /* &length */) != 0 {
+	script = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 172)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp)
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp+4) != 0 {
 		return 1
 	}
 	if *(*int32)(unsafe.Pointer(bp + 4 /* length */)) == 0 {
@@ -24212,10 +24212,10 @@ func TestexprparserObjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, 
 	(*Tcl_Parse)(unsafe.Pointer(bp + 8 /* &parse */)).commentSize = 0
 	(*Tcl_Parse)(unsafe.Pointer(bp + 8 /* &parse */)).commandStart = uintptr(0)
 	(*Tcl_Parse)(unsafe.Pointer(bp + 8 /* &parse */)).commandSize = 0
-	if (*(*func(*libc.TLS, uintptr, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1456 /* &.tcl_ParseExpr */))))(tls, interp, script, *(*int32)(unsafe.Pointer(bp + 4 /* length */)), bp+8 /* &parse */) != 0 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 272 /* &.tcl_AddErrorInfo */))))(tls, interp, ts+4541 /* "\n    (remainder ..." */)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 272 /* &.tcl_AddErrorInfo */))))(tls, interp, (*Tcl_Parse)(unsafe.Pointer(bp+8 /* &parse */)).term)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 272 /* &.tcl_AddErrorInfo */))))(tls, interp, ts+4526 /* "\")" */)
+	if (*(*func(*libc.TLS, uintptr, uintptr, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1456)))(tls, interp, script, *(*int32)(unsafe.Pointer(bp + 4)), bp+8) != 0 {
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 272)))(tls, interp, ts+4541)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 272)))(tls, interp, (*Tcl_Parse)(unsafe.Pointer(bp+8)).term)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 272)))(tls, interp, ts+4526)
 		return 1
 	}
 
@@ -24223,7 +24223,7 @@ func TestexprparserObjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, 
 	// of the parse structure into the interpreter's result.
 
 	PrintParse(tls, interp, bp+8 /* &parse */)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1440 /* &.tcl_FreeParse */))))(tls, bp+8 /* &parse */)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1440)))(tls, bp+8)
 	return 0
 }
 
@@ -24249,20 +24249,20 @@ func PrintParse(tls *libc.TLS, interp uintptr, parsePtr uintptr) { /* tclTest.c:
 	var tokenPtr uintptr
 	var i int32
 
-	objPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp)
+	objPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp)
 	if (*Tcl_Parse)(unsafe.Pointer(parsePtr)).commentSize > 0 {
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 184 /* &.tcl_ListObjAppendElement */))))(tls, uintptr(0), objPtr,
-			(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, (*Tcl_Parse)(unsafe.Pointer(parsePtr)).commentStart,
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 184)))(tls, uintptr(0), objPtr,
+			(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, (*Tcl_Parse)(unsafe.Pointer(parsePtr)).commentStart,
 				(*Tcl_Parse)(unsafe.Pointer(parsePtr)).commentSize))
 	} else {
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 184 /* &.tcl_ListObjAppendElement */))))(tls, uintptr(0), objPtr, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, ts+2494 /* "-" */, 1))
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 184)))(tls, uintptr(0), objPtr, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, ts+2494, 1))
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 184 /* &.tcl_ListObjAppendElement */))))(tls, uintptr(0), objPtr,
-		(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, (*Tcl_Parse)(unsafe.Pointer(parsePtr)).commandStart, (*Tcl_Parse)(unsafe.Pointer(parsePtr)).commandSize))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 184 /* &.tcl_ListObjAppendElement */))))(tls, uintptr(0), objPtr,
-		(*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, (*Tcl_Parse)(unsafe.Pointer(parsePtr)).numWords))
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 184)))(tls, uintptr(0), objPtr,
+		(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, (*Tcl_Parse)(unsafe.Pointer(parsePtr)).commandStart, (*Tcl_Parse)(unsafe.Pointer(parsePtr)).commandSize))
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 184)))(tls, uintptr(0), objPtr,
+		(*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, (*Tcl_Parse)(unsafe.Pointer(parsePtr)).numWords))
 	for i = 0; i < (*Tcl_Parse)(unsafe.Pointer(parsePtr)).numTokens; i++ {
-		tokenPtr = ((*Tcl_Parse)(unsafe.Pointer(parsePtr)).tokenPtr + uintptr(i)*16)
+		tokenPtr = (*Tcl_Parse)(unsafe.Pointer(parsePtr)).tokenPtr + uintptr(i)*16
 		switch (*Tcl_Token)(unsafe.Pointer(tokenPtr)).__type {
 		case 256:
 			typeString = ts + 4568 /* "expand" */
@@ -24295,15 +24295,15 @@ func PrintParse(tls *libc.TLS, interp uintptr, parsePtr uintptr) { /* tclTest.c:
 			typeString = ts + 1538 /* "??" */
 			break
 		}
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 184 /* &.tcl_ListObjAppendElement */))))(tls, uintptr(0), objPtr,
-			(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, typeString, -1))
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 184 /* &.tcl_ListObjAppendElement */))))(tls, uintptr(0), objPtr,
-			(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, (*Tcl_Token)(unsafe.Pointer(tokenPtr)).start, (*Tcl_Token)(unsafe.Pointer(tokenPtr)).size))
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 184 /* &.tcl_ListObjAppendElement */))))(tls, uintptr(0), objPtr,
-			(*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, (*Tcl_Token)(unsafe.Pointer(tokenPtr)).numComponents))
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 184)))(tls, uintptr(0), objPtr,
+			(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, typeString, -1))
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 184)))(tls, uintptr(0), objPtr,
+			(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, (*Tcl_Token)(unsafe.Pointer(tokenPtr)).start, (*Tcl_Token)(unsafe.Pointer(tokenPtr)).size))
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 184)))(tls, uintptr(0), objPtr,
+			(*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, (*Tcl_Token)(unsafe.Pointer(tokenPtr)).numComponents))
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 184 /* &.tcl_ListObjAppendElement */))))(tls, uintptr(0), objPtr,
-		(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, ((*Tcl_Parse)(unsafe.Pointer(parsePtr)).commandStart+uintptr((*Tcl_Parse)(unsafe.Pointer(parsePtr)).commandSize)),
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 184)))(tls, uintptr(0), objPtr,
+		(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, (*Tcl_Parse)(unsafe.Pointer(parsePtr)).commandStart+uintptr((*Tcl_Parse)(unsafe.Pointer(parsePtr)).commandSize),
 			-1))
 }
 
@@ -24331,17 +24331,17 @@ func TestparsevarObjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, ob
 	// var termPtr uintptr at bp, 4
 
 	if objc != 2 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+4629 /* "varName" */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+4629)
 		return 1
 	}
-	name = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)))
-	value = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1088 /* &.tcl_ParseVar */))))(tls, interp, name, bp /* &termPtr */)
-	if value == (uintptr(0)) {
+	name = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)))
+	value = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1088)))(tls, interp, name, bp)
+	if value == uintptr(0) {
 		return 1
 	}
 
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, value)
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, *(*uintptr)(unsafe.Pointer(bp /* termPtr */)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, value)
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, *(*uintptr)(unsafe.Pointer(bp)))
 	return 0
 }
 
@@ -24374,23 +24374,23 @@ func TestparsevarnameObjCmd(tls *libc.TLS, clientData ClientData, interp uintptr
 	// var parse Tcl_Parse at bp+12, 376
 
 	if objc != 4 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+4637 /* "script length ap..." */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+4637)
 		return 1
 	}
-	script = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 172 /* &.tcl_GetStringFromObj */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp /* &dummy */)
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp+4 /* &length */) != 0 {
+	script = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 172)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp)
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp+4) != 0 {
 		return 1
 	}
 	if *(*int32)(unsafe.Pointer(bp + 4 /* length */)) == 0 {
 		*(*int32)(unsafe.Pointer(bp + 4 /* length */)) = *(*int32)(unsafe.Pointer(bp /* dummy */))
 	}
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)), bp+8 /* &append */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)), bp+8) != 0 {
 		return 1
 	}
-	if (*(*func(*libc.TLS, uintptr, uintptr, int32, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 1464 /* &.tcl_ParseVarName */))))(tls, interp, script, *(*int32)(unsafe.Pointer(bp + 4 /* length */)), bp+12 /* &parse */, *(*int32)(unsafe.Pointer(bp + 8 /* append */))) != 0 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 272 /* &.tcl_AddErrorInfo */))))(tls, interp, ts+4497 /* "\n    (remainder ..." */)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 272 /* &.tcl_AddErrorInfo */))))(tls, interp, (*Tcl_Parse)(unsafe.Pointer(bp+12 /* &parse */)).term)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 272 /* &.tcl_AddErrorInfo */))))(tls, interp, ts+4526 /* "\")" */)
+	if (*(*func(*libc.TLS, uintptr, uintptr, int32, uintptr, int32) int32)(unsafe.Pointer(tclStubsPtr + 1464)))(tls, interp, script, *(*int32)(unsafe.Pointer(bp + 4)), bp+12, *(*int32)(unsafe.Pointer(bp + 8))) != 0 {
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 272)))(tls, interp, ts+4497)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 272)))(tls, interp, (*Tcl_Parse)(unsafe.Pointer(bp+12)).term)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 272)))(tls, interp, ts+4526)
 		return 1
 	}
 
@@ -24398,10 +24398,10 @@ func TestparsevarnameObjCmd(tls *libc.TLS, clientData ClientData, interp uintptr
 	// of the parse structure into the interpreter's result.
 
 	(*Tcl_Parse)(unsafe.Pointer(bp + 12 /* &parse */)).commentSize = 0
-	(*Tcl_Parse)(unsafe.Pointer(bp + 12 /* &parse */)).commandStart = (script + uintptr((*Tcl_Token)(unsafe.Pointer((*Tcl_Parse)(unsafe.Pointer(bp+12 /* &parse */)).tokenPtr)).size))
+	(*Tcl_Parse)(unsafe.Pointer(bp + 12 /* &parse */)).commandStart = script + uintptr((*Tcl_Token)(unsafe.Pointer((*Tcl_Parse)(unsafe.Pointer(bp+12)).tokenPtr)).size)
 	(*Tcl_Parse)(unsafe.Pointer(bp + 12 /* &parse */)).commandSize = 0
 	PrintParse(tls, interp, bp+12 /* &parse */)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1440 /* &.tcl_FreeParse */))))(tls, bp+12 /* &parse */)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1440)))(tls, bp+12)
 	return 0
 }
 
@@ -24481,14 +24481,14 @@ __1:
 		goto __3
 	}
 
-	name = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(i)*4)))
+	name = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(i)*4)))
 	if !(int32(*(*int8)(unsafe.Pointer(name + uintptr(0)))) != '-') {
 		goto __4
 	}
 	goto __3
 __4:
 	;
-	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1224 /* &.tcl_GetIndexFromObjStruct */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(i)*4)), uintptr(unsafe.Pointer(&options1)), int32(unsafe.Sizeof(uintptr(0))), ts+4658 /* "switch" */, 1, bp+120 /* &index */) != 0) {
+	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1224)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(i)*4)), uintptr(unsafe.Pointer(&options1)), int32(unsafe.Sizeof(uintptr(0))), ts+4658, 1, bp+120) != 0) {
 		goto __5
 	}
 	return 1
@@ -24553,29 +24553,29 @@ __3:
 	;
 
 endOfForLoop:
-	if !((objc - i) < ((hasxflags + 2) - about)) {
+	if !(objc-i < hasxflags+2-about) {
 		goto __16
 	}
-	(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv,
+	(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv,
 		ts+4665 /* "?-switch ...? ex..." */)
 	return 1
 __16:
 	;
-	objc = objc - (i)
+	objc = objc - i
 	objv += 4 * uintptr(i)
 
 	if !(hasxflags != 0) {
 		goto __17
 	}
-	string = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 172 /* &.tcl_GetStringFromObj */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(0)*4)), bp+124 /* &stringLength */)
+	string = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 172)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(0)*4)), bp+124)
 	TestregexpXflags(tls, string, *(*int32)(unsafe.Pointer(bp + 124 /* stringLength */)), bp+128 /* &cflags */, bp+132 /* &eflags */)
 	objc--
 	objv += 4
 __17:
 	;
 
-	regExpr = (*(*func(*libc.TLS, uintptr, uintptr, int32) Tcl_RegExp)(unsafe.Pointer((tclStubsPtr + 1432 /* &.tcl_GetRegExpFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(0)*4)), *(*int32)(unsafe.Pointer(bp + 128 /* cflags */)))
-	if !(regExpr == (uintptr(0))) {
+	regExpr = (*(*func(*libc.TLS, uintptr, uintptr, int32) Tcl_RegExp)(unsafe.Pointer(tclStubsPtr + 1432)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(0)*4)), *(*int32)(unsafe.Pointer(bp + 128)))
+	if !(regExpr == uintptr(0)) {
 		goto __18
 	}
 	return 1
@@ -24585,7 +24585,7 @@ __18:
 	if !(about != 0) {
 		goto __19
 	}
-	if !((*(*func(*libc.TLS, uintptr, Tcl_RegExp) int32)(unsafe.Pointer((tclIntStubsPtr + 608 /* &.tclRegAbout */))))(tls, interp, regExpr) < 0) {
+	if !((*(*func(*libc.TLS, uintptr, Tcl_RegExp) int32)(unsafe.Pointer(tclIntStubsPtr + 608)))(tls, interp, regExpr) < 0) {
 		goto __20
 	}
 	return 1
@@ -24596,8 +24596,8 @@ __19:
 	;
 
 	objPtr = *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))
-	match = (*(*func(*libc.TLS, uintptr, Tcl_RegExp, uintptr, int32, int32, int32) int32)(unsafe.Pointer((tclStubsPtr + 1512 /* &.tcl_RegExpExecObj */))))(tls, interp, regExpr, objPtr, 0,
-		(objc - 2), *(*int32)(unsafe.Pointer(bp + 132 /* eflags */)))
+	match = (*(*func(*libc.TLS, uintptr, Tcl_RegExp, uintptr, int32, int32, int32) int32)(unsafe.Pointer(tclStubsPtr + 1512)))(tls, interp, regExpr, objPtr, 0,
+		objc-2, *(*int32)(unsafe.Pointer(bp + 132)))
 
 	if !(match < 0) {
 		goto __21
@@ -24611,37 +24611,37 @@ __21:
 	// Set the interpreter's object result to an integer object w/
 	// value 0.
 
-	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 252 /* &.tcl_SetIntObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp), 0)
-	if !(((objc > 2) && ((*(*int32)(unsafe.Pointer(bp + 128 /* cflags */)) & 001000) != 0)) && (indices != 0)) {
+	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 252)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp), 0)
+	if !(objc > 2 && *(*int32)(unsafe.Pointer(bp + 128))&001000 != 0 && indices != 0) {
 		goto __23
 	}
 
-	varName = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
-	(*(*func(*libc.TLS, Tcl_RegExp, int32, uintptr, uintptr))(unsafe.Pointer((tclIntStubsPtr + 612 /* &.tclRegExpRangeUniChar */))))(tls, regExpr, -1, bp+136 /* &start */, bp+140 /* &end */)
-	libc.Xsprintf(tls, bp+144 /* &resinfo[0] */, ts+4719 /* "%d %d" */, libc.VaList(bp, *(*int32)(unsafe.Pointer(bp + 136 /* start */)), (*(*int32)(unsafe.Pointer(bp + 140 /* end */))-1)))
-	value = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 960 /* &.tcl_SetVar2 */))))(tls, interp, varName, uintptr(0), bp+144 /* &resinfo[0] */, 0)
-	if !(value == (uintptr(0))) {
+	varName = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
+	(*(*func(*libc.TLS, Tcl_RegExp, int32, uintptr, uintptr))(unsafe.Pointer(tclIntStubsPtr + 612)))(tls, regExpr, -1, bp+136, bp+140)
+	libc.Xsprintf(tls, bp+144 /* &resinfo[0] */, ts+4719 /* "%d %d" */, libc.VaList(bp, *(*int32)(unsafe.Pointer(bp + 136 /* start */)), *(*int32)(unsafe.Pointer(bp + 140))-1))
+	value = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 960)))(tls, interp, varName, uintptr(0), bp+144, 0)
+	if !(value == uintptr(0)) {
 		goto __25
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+24, ts+4725, /* "couldn't set var..." */
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+24, ts+4725,
 		varName, ts+1803 /* "\"" */, uintptr(0)))
 	return 1
 __25:
 	;
 	goto __24
 __23:
-	if !((*(*int32)(unsafe.Pointer(bp + 128 /* cflags */)) & 001000) != 0) {
+	if !(*(*int32)(unsafe.Pointer(bp + 128))&001000 != 0) {
 		goto __26
 	}
 
-	(*(*func(*libc.TLS, Tcl_RegExp, uintptr))(unsafe.Pointer((tclStubsPtr + 1516 /* &.tcl_RegExpGetInfo */))))(tls, regExpr, bp+192 /* &info */)
-	varName1 = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
+	(*(*func(*libc.TLS, Tcl_RegExp, uintptr))(unsafe.Pointer(tclStubsPtr + 1516)))(tls, regExpr, bp+192)
+	varName1 = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
 	libc.Xsprintf(tls, bp+208 /* &resinfo1[0] */, ts+4749 /* "%ld" */, libc.VaList(bp+64, (*Tcl_RegExpInfo)(unsafe.Pointer(bp+192 /* &info */)).extendStart))
-	value1 = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 960 /* &.tcl_SetVar2 */))))(tls, interp, varName1, uintptr(0), bp+208 /* &resinfo1[0] */, 0)
-	if !(value1 == (uintptr(0))) {
+	value1 = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 960)))(tls, interp, varName1, uintptr(0), bp+208, 0)
+	if !(value1 == uintptr(0)) {
 		goto __27
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+80, ts+4725, /* "couldn't set var..." */
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+80, ts+4725,
 		varName1, ts+1803 /* "\"" */, uintptr(0)))
 	return 1
 __27:
@@ -24657,10 +24657,10 @@ __22:
 	// If additional variable names have been specified, return
 	// index information in those variables.
 
-	objc = objc - (2)
+	objc = objc - 2
 	objv += 4 * uintptr(2)
 
-	(*(*func(*libc.TLS, Tcl_RegExp, uintptr))(unsafe.Pointer((tclStubsPtr + 1516 /* &.tcl_RegExpGetInfo */))))(tls, regExpr, bp+192 /* &info */)
+	(*(*func(*libc.TLS, Tcl_RegExp, uintptr))(unsafe.Pointer(tclStubsPtr + 1516)))(tls, regExpr, bp+192)
 	i = 0
 __28:
 	if !(i < objc) {
@@ -24668,7 +24668,7 @@ __28:
 	}
 
 	varPtr = *(*uintptr)(unsafe.Pointer(objv + uintptr(i)*4))
-	if ((*(*int32)(unsafe.Pointer(bp + 128 /* cflags */)) & 001000) != 0) && (i == (objc - 1)) {
+	if *(*int32)(unsafe.Pointer(bp + 128))&001000 != 0 && i == objc-1 {
 		ii = -1
 	} else {
 		ii = i
@@ -24680,10 +24680,10 @@ __28:
 	if !(ii == -1) {
 		goto __33
 	}
-	(*(*func(*libc.TLS, Tcl_RegExp, int32, uintptr, uintptr))(unsafe.Pointer((tclIntStubsPtr + 612 /* &.tclRegExpRangeUniChar */))))(tls, regExpr, ii, bp+256 /* &start1 */, bp+260 /* &end1 */)
+	(*(*func(*libc.TLS, Tcl_RegExp, int32, uintptr, uintptr))(unsafe.Pointer(tclIntStubsPtr + 612)))(tls, regExpr, ii, bp+256, bp+260)
 	goto __34
 __33:
-	if !(ii > (*Tcl_RegExpInfo)(unsafe.Pointer(bp+192 /* &info */)).nsubs) {
+	if !(ii > (*Tcl_RegExpInfo)(unsafe.Pointer(bp+192)).nsubs) {
 		goto __35
 	}
 	*(*int32)(unsafe.Pointer(bp + 256 /* start1 */)) = -1
@@ -24700,42 +24700,42 @@ __34:
 	// Adjust index so it refers to the last character in the match
 	// instead of the first character after the match.
 
-	if !(*(*int32)(unsafe.Pointer(bp + 260 /* end1 */)) >= 0) {
+	if !(*(*int32)(unsafe.Pointer(bp + 260)) >= 0) {
 		goto __37
 	}
 	*(*int32)(unsafe.Pointer(bp + 260 /* end1 */))--
 __37:
 	;
 
-	*(*uintptr)(unsafe.Pointer(bp + 264 /* &objs[0] */ + uintptr(0)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_NewLongObj */))))(tls, int32(*(*int32)(unsafe.Pointer(bp + 256 /* start1 */))))
-	*(*uintptr)(unsafe.Pointer(bp + 264 /* &objs[0] */ + uintptr(1)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_NewLongObj */))))(tls, int32(*(*int32)(unsafe.Pointer(bp + 260 /* end1 */))))
+	*(*uintptr)(unsafe.Pointer(bp + 264 /* &objs[0] */ + uintptr(0)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 224)))(tls, int32(*(*int32)(unsafe.Pointer(bp + 256))))
+	*(*uintptr)(unsafe.Pointer(bp + 264 /* &objs[0] */ + uintptr(1)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 224)))(tls, int32(*(*int32)(unsafe.Pointer(bp + 260))))
 
-	newPtr = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 220 /* &.tcl_NewListObj */))))(tls, 2, bp+264 /* &objs[0] */)
+	newPtr = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 220)))(tls, 2, bp+264)
 	goto __32
 __31:
 	if !(ii == -1) {
 		goto __38
 	}
-	(*(*func(*libc.TLS, Tcl_RegExp, int32, uintptr, uintptr))(unsafe.Pointer((tclIntStubsPtr + 612 /* &.tclRegExpRangeUniChar */))))(tls, regExpr, ii, bp+256 /* &start1 */, bp+260 /* &end1 */)
-	newPtr = (*(*func(*libc.TLS, uintptr, int32, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 1540 /* &.tcl_GetRange */))))(tls, objPtr, *(*int32)(unsafe.Pointer(bp + 256 /* start1 */)), *(*int32)(unsafe.Pointer(bp + 260 /* end1 */)))
+	(*(*func(*libc.TLS, Tcl_RegExp, int32, uintptr, uintptr))(unsafe.Pointer(tclIntStubsPtr + 612)))(tls, regExpr, ii, bp+256, bp+260)
+	newPtr = (*(*func(*libc.TLS, uintptr, int32, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 1540)))(tls, objPtr, *(*int32)(unsafe.Pointer(bp + 256)), *(*int32)(unsafe.Pointer(bp + 260)))
 	goto __39
 __38:
-	if !(ii > (*Tcl_RegExpInfo)(unsafe.Pointer(bp+192 /* &info */)).nsubs) {
+	if !(ii > (*Tcl_RegExpInfo)(unsafe.Pointer(bp+192)).nsubs) {
 		goto __40
 	}
-	newPtr = (*(*func(*libc.TLS) uintptr)(unsafe.Pointer((tclStubsPtr + 228 /* &.tcl_NewObj */))))(tls)
+	newPtr = (*(*func(*libc.TLS) uintptr)(unsafe.Pointer(tclStubsPtr + 228)))(tls)
 	goto __41
 __40:
-	newPtr = (*(*func(*libc.TLS, uintptr, int32, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 1540 /* &.tcl_GetRange */))))(tls, objPtr, int32((*Tcl_RegExpIndices)(unsafe.Pointer((*Tcl_RegExpInfo)(unsafe.Pointer(bp+192 /* &info */)).matches+uintptr(ii)*8)).start),
-		(int32((*Tcl_RegExpIndices)(unsafe.Pointer((*Tcl_RegExpInfo)(unsafe.Pointer(bp+192 /* &info */)).matches+uintptr(ii)*8)).end - 1)))
+	newPtr = (*(*func(*libc.TLS, uintptr, int32, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 1540)))(tls, objPtr, int32((*Tcl_RegExpIndices)(unsafe.Pointer((*Tcl_RegExpInfo)(unsafe.Pointer(bp+192)).matches+uintptr(ii)*8)).start),
+		int32((*Tcl_RegExpIndices)(unsafe.Pointer((*Tcl_RegExpInfo)(unsafe.Pointer(bp+192)).matches+uintptr(ii)*8)).end-1))
 __41:
 	;
 __39:
 	;
 __32:
 	;
-	valuePtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 792 /* &.tcl_ObjSetVar2 */))))(tls, interp, varPtr, uintptr(0), newPtr, 0x200)
-	if !(valuePtr == (uintptr(0))) {
+	valuePtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 792)))(tls, interp, varPtr, uintptr(0), newPtr, 0x200)
+	if !(valuePtr == uintptr(0)) {
 		goto __42
 	}
 	return 1
@@ -24751,7 +24751,7 @@ __30:
 
 	// Set the interpreter's object result to an integer object w/ value 1.
 
-	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 252 /* &.tcl_SetIntObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp), 1)
+	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 252)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp), 1)
 	return 0
 }
 
@@ -24787,54 +24787,54 @@ func TestregexpXflags(tls *libc.TLS, string uintptr, length int32, cflagsPtr uin
 	for i = 0; i < length; i++ {
 		switch int32(*(*int8)(unsafe.Pointer(string + uintptr(i)))) {
 		case 'a':
-			cflags = cflags | (000002)
+			cflags = cflags | 000002
 			break
 		case 'b':
-			cflags = cflags & (^libc.Int32(000003))
+			cflags = cflags & ^libc.Int32(000003)
 			break
 		case 'c':
-			cflags = cflags | (001000)
+			cflags = cflags | 001000
 			break
 		case 'e':
-			cflags = cflags & (^libc.Int32(000003))
-			cflags = cflags | (000001)
+			cflags = cflags & ^libc.Int32(000003)
+			cflags = cflags | 000001
 			break
 		case 'q':
-			cflags = cflags & (^libc.Int32(000003))
-			cflags = cflags | (000004)
+			cflags = cflags & ^libc.Int32(000003)
+			cflags = cflags | 000004
 			break
 		case 'o': // o for opaque
-			cflags = cflags | (000020)
+			cflags = cflags | 000020
 			break
 		case 's': // s for start
-			cflags = cflags | (002000)
+			cflags = cflags | 002000
 			break
 		case '+':
-			cflags = cflags | (010000)
+			cflags = cflags | 010000
 			break
 		case ',':
-			cflags = cflags | (020000)
+			cflags = cflags | 020000
 			break
 		case '.':
-			cflags = cflags | (004000)
+			cflags = cflags | 004000
 			break
 		case ':':
-			eflags = eflags | (0020)
+			eflags = eflags | 0020
 			break
 		case ';':
-			eflags = eflags | (0010)
+			eflags = eflags | 0010
 			break
 		case '^':
-			eflags = eflags | (0001)
+			eflags = eflags | 0001
 			break
 		case '$':
-			eflags = eflags | (0002)
+			eflags = eflags | 0002
 			break
 		case 't':
-			cflags = cflags | (001000)
+			cflags = cflags | 001000
 			break
 		case '%':
-			eflags = eflags | (0040)
+			eflags = eflags | 0040
 			break
 		}
 	}
@@ -24891,25 +24891,25 @@ func TestsetassocdataCmd(tls *libc.TLS, clientData ClientData, interp uintptr, a
 	// var procPtr uintptr at bp+40, 4
 
 	if argc != 3 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+2368 /* "wrong # argument..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+2368, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 			ts+4826 /* " data_key data_i..." */, uintptr(0)))
 		return 1
 	}
 
-	buf = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, (libc.Xstrlen(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4))) + size_t(1)))
+	buf = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, libc.Xstrlen(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)))+size_t(1))
 	libc.Xstrcpy(tls, buf, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)))
 
 	// If we previously associated a malloced value with the variable,
 	// free it before associating a new value.
 
-	oldData = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) ClientData)(unsafe.Pointer((tclStubsPtr + 608 /* &.tcl_GetAssocData */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), bp+40 /* &procPtr */)
-	if (oldData != (uintptr(0))) && (*(*uintptr)(unsafe.Pointer(bp + 40 /* procPtr */)) == *(*uintptr)(unsafe.Pointer(&struct {
+	oldData = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) ClientData)(unsafe.Pointer(tclStubsPtr + 608)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), bp+40)
+	if oldData != uintptr(0) && *(*uintptr)(unsafe.Pointer(bp + 40)) == *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr)
-	}{CleanupTestSetassocdataTests}))) {
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, oldData)
+	}{CleanupTestSetassocdataTests})) {
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, oldData)
 	}
 
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData))(unsafe.Pointer((tclStubsPtr + 900 /* &.tcl_SetAssocData */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData))(unsafe.Pointer(tclStubsPtr + 900)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr)
 	}{CleanupTestSetassocdataTests})),
 		buf)
@@ -24939,10 +24939,10 @@ func TestsetplatformCmd(tls *libc.TLS, clientData ClientData, interp uintptr, ar
 	var length size_t
 	var platform uintptr
 
-	platform = (*(*func(*libc.TLS) uintptr)(unsafe.Pointer((tclIntStubsPtr + 904 /* &.tclGetPlatform */))))(tls)
+	platform = (*(*func(*libc.TLS) uintptr)(unsafe.Pointer(tclIntStubsPtr + 904)))(tls)
 
 	if argc != 2 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+2368 /* "wrong # argument..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+2368, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 			ts+4847 /* " platform\"" */, uintptr(0)))
 		return 1
 	}
@@ -24953,7 +24953,7 @@ func TestsetplatformCmd(tls *libc.TLS, clientData ClientData, interp uintptr, ar
 	} else if libc.Xstrncmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+3903 /* "windows" */, length) == 0 {
 		*(*TclPlatformType)(unsafe.Pointer(platform)) = TCL_PLATFORM_WINDOWS
 	} else {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp,
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp,
 			libc.VaList(bp+40, ts+4858 /* "unsupported plat..." */, uintptr(0)))
 		return 1
 	}
@@ -24985,17 +24985,17 @@ func TeststaticpkgCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int3
 	// var loaded int32 at bp+44, 4
 
 	if argc != 4 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+2368, /* "wrong # argument..." */
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+2368,
 			*(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)), ts+4914 /* " pkgName safe lo..." */, uintptr(0)))
 		return 1
 	}
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), bp+40 /* &safe */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), bp+40) != 0 {
 		return 1
 	}
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), bp+44 /* &loaded */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), bp+44) != 0 {
 		return 1
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 984 /* &.tcl_StaticPackage */))))(tls, func() uintptr {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 984)))(tls, func() uintptr {
 		if *(*int32)(unsafe.Pointer(bp + 44 /* loaded */)) != 0 {
 			return interp
 		}
@@ -25015,7 +25015,7 @@ func TeststaticpkgCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int3
 }
 
 func StaticInitProc(tls *libc.TLS, interp uintptr) int32 { /* tclTest.c:4319:1: */
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 960 /* &.tcl_SetVar2 */))))(tls, interp, ts+4936 /* "x" */, uintptr(0), ts+4938 /* "loaded" */, 1)
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 960)))(tls, interp, ts+4936, uintptr(0), ts+4938, 1)
 	return 0
 }
 
@@ -25043,16 +25043,16 @@ func TesttranslatefilenameCmd(tls *libc.TLS, dummy ClientData, interp uintptr, a
 	var result uintptr
 
 	if argc != 2 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+2368, /* "wrong # argument..." */
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+2368,
 			*(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)), ts+3911 /* " path\"" */, uintptr(0)))
 		return 1
 	}
-	result = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1004 /* &.tcl_TranslateFileName */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), bp+64 /* &buffer */)
-	if result == (uintptr(0)) {
+	result = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1004)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), bp+64)
+	if result == uintptr(0) {
 		return 1
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+40, result, uintptr(0)))
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 488 /* &.tcl_DStringFree */))))(tls, bp+64 /* &buffer */)
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+40, result, uintptr(0)))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 488)))(tls, bp+64)
 	return 0
 }
 
@@ -25078,8 +25078,8 @@ func TestupvarCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, a
 
 	var flags int32 = 0
 
-	if (argc != 5) && (argc != 6) {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+2368, /* "wrong # argument..." */
+	if argc != 5 && argc != 6 {
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+2368,
 			*(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)), ts+4945 /* " level name ?nam..." */, uintptr(0)))
 		return 1
 	}
@@ -25090,14 +25090,14 @@ func TestupvarCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, a
 		} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)), ts+4978 /* "namespace" */) == 0 {
 			flags = 2
 		}
-		return (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 1044 /* &.tcl_UpVar2 */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), uintptr(0), *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), flags)
+		return (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer(tclStubsPtr + 1044)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), uintptr(0), *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), flags)
 	} else {
 		if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(5)*4)), ts+3367 /* "global" */) == 0 {
 			flags = 1
 		} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(5)*4)), ts+4978 /* "namespace" */) == 0 {
 			flags = 2
 		}
-		return (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 1044 /* &.tcl_UpVar2 */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)),
+		return (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer(tclStubsPtr + 1044)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)),
 			func() uintptr {
 				if int32(*(*int8)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)) + uintptr(0)))) == 0 {
 					return uintptr(0)
@@ -25131,27 +25131,27 @@ func TestseterrorcodeCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc i
 	defer tls.Free(224)
 
 	if argc > 6 {
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+4988 /* "too many args" */, uintptr(0))
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+4988, uintptr(0))
 		return 1
 	}
 	switch argc {
 	case 1:
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 920 /* &.tcl_SetErrorCode */))))(tls, interp, libc.VaList(bp, ts+5002 /* "NONE" */, uintptr(0)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 920)))(tls, interp, libc.VaList(bp, ts+5002, uintptr(0)))
 		break
 	case 2:
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 920 /* &.tcl_SetErrorCode */))))(tls, interp, libc.VaList(bp+24, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), uintptr(0)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 920)))(tls, interp, libc.VaList(bp+24, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), uintptr(0)))
 		break
 	case 3:
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 920 /* &.tcl_SetErrorCode */))))(tls, interp, libc.VaList(bp+48, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), uintptr(0)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 920)))(tls, interp, libc.VaList(bp+48, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), uintptr(0)))
 		break
 	case 4:
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 920 /* &.tcl_SetErrorCode */))))(tls, interp, libc.VaList(bp+80, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), uintptr(0)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 920)))(tls, interp, libc.VaList(bp+80, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), uintptr(0)))
 		break
 	case 5:
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 920 /* &.tcl_SetErrorCode */))))(tls, interp, libc.VaList(bp+120, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)), uintptr(0)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 920)))(tls, interp, libc.VaList(bp+120, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)), uintptr(0)))
 		break
 	case 6:
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 920 /* &.tcl_SetErrorCode */))))(tls, interp, libc.VaList(bp+168, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 920)))(tls, interp, libc.VaList(bp+168, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)),
 			*(*uintptr)(unsafe.Pointer(argv + uintptr(5)*4)), uintptr(0)))
 	}
 	return 1
@@ -25175,7 +25175,7 @@ func TestseterrorcodeCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc i
 
 // ARGSUSED
 func TestsetobjerrorcodeCmd(tls *libc.TLS, dummy ClientData, interp uintptr, objc int32, objv uintptr) int32 { /* tclTest.c:4493:1: */
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 944 /* &.tcl_SetObjErrorCode */))))(tls, interp, (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 76 /* &.tcl_ConcatObj */))))(tls, (objc-1), (objv+uintptr(1)*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 944)))(tls, interp, (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 76)))(tls, objc-1, objv+uintptr(1)*4))
 	return 1
 }
 
@@ -25203,44 +25203,44 @@ func TestfeventCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc in
 	var chan1 Tcl_Channel
 
 	if argc < 2 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+1482 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+1482, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 			ts+5007 /* " option ?arg ......" */, uintptr(0)))
 		return 1
 	}
 	if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+5025 /* "cmd" */) == 0 {
 		if argc != 3 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+40, ts+1482 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+40, ts+1482, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 				ts+5029 /* " cmd script" */, uintptr(0)))
 			return 1
 		}
-		if interp2 != (uintptr(0)) {
-			code = (*(*func(*libc.TLS, uintptr, uintptr, int32, int32) int32)(unsafe.Pointer((tclStubsPtr + 1172 /* &.tcl_EvalEx */))))(tls, interp2, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), -1, 0x020000)
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp2))
+		if interp2 != uintptr(0) {
+			code = (*(*func(*libc.TLS, uintptr, uintptr, int32, int32) int32)(unsafe.Pointer(tclStubsPtr + 1172)))(tls, interp2, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), -1, 0x020000)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp2))
 			return code
 		} else {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp,
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp,
 				libc.VaList(bp+80, ts+5041, /* "called \"testfeve..." */
 					uintptr(0)))
 			return 1
 		}
 	} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1409 /* "create" */) == 0 {
-		if interp2 != (uintptr(0)) {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 448 /* &.tcl_DeleteInterp */))))(tls, interp2)
+		if interp2 != uintptr(0) {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 448)))(tls, interp2)
 		}
-		interp2 = (*(*func(*libc.TLS) uintptr)(unsafe.Pointer((tclStubsPtr + 384 /* &.tcl_CreateInterp */))))(tls)
-		return (*(*func(*libc.TLS, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 728 /* &.tcl_Init */))))(tls, interp2)
+		interp2 = (*(*func(*libc.TLS) uintptr)(unsafe.Pointer(tclStubsPtr + 384)))(tls)
+		return (*(*func(*libc.TLS, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 728)))(tls, interp2)
 	} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+1416 /* "delete" */) == 0 {
-		if interp2 != (uintptr(0)) {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 448 /* &.tcl_DeleteInterp */))))(tls, interp2)
+		if interp2 != uintptr(0) {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 448)))(tls, interp2)
 		}
 		interp2 = uintptr(0)
 	} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), ts+5093 /* "share" */) == 0 {
-		if interp2 != (uintptr(0)) {
-			chan1 = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) Tcl_Channel)(unsafe.Pointer((tclStubsPtr + 612 /* &.tcl_GetChannel */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), uintptr(0))
-			if chan1 == (uintptr(0)) {
+		if interp2 != uintptr(0) {
+			chan1 = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) Tcl_Channel)(unsafe.Pointer(tclStubsPtr + 612)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), uintptr(0))
+			if chan1 == uintptr(0) {
 				return 1
 			}
-			(*(*func(*libc.TLS, uintptr, Tcl_Channel))(unsafe.Pointer((tclStubsPtr + 848 /* &.tcl_RegisterChannel */))))(tls, interp2, chan1)
+			(*(*func(*libc.TLS, uintptr, Tcl_Channel))(unsafe.Pointer(tclStubsPtr + 848)))(tls, interp2, chan1)
 		}
 	}
 
@@ -25272,9 +25272,9 @@ func TestpanicCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, a
 	//  Put the arguments into a var args structure
 	//  Append all of the arguments together separated by spaces
 
-	argString = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 776 /* &.tcl_Merge */))))(tls, (argc - 1), (argv + uintptr(1)*4))
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 16 /* &.tcl_Panic */))))(tls, ts+5099 /* "%s" */, libc.VaList(bp, argString))
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, argString)
+	argString = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 776)))(tls, argc-1, argv+uintptr(1)*4)
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 16)))(tls, ts+5099, libc.VaList(bp, argString))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, argString)
 
 	return 0
 }
@@ -25302,7 +25302,7 @@ __1:
 
 	force = 0
 	i = 2
-	if !(libc.Xstrcmp(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4))), ts+5102 /* "-force" */) == 0) {
+	if !(libc.Xstrcmp(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4))), ts+5102) == 0) {
 		goto __2
 	}
 	force = 1
@@ -25310,7 +25310,7 @@ __1:
 __2:
 	;
 
-	if !((argc - i) > 2) {
+	if !(argc-i > 2) {
 		goto __3
 	}
 	return 1
@@ -25322,7 +25322,7 @@ __4:
 	if !(j < argc) {
 		goto __6
 	}
-	if !((*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1860 /* &.tcl_FSGetNormalizedPath */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(j)*4))) == (uintptr(0))) {
+	if !((*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1860)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(j)*4))) == uintptr(0)) {
 		goto __7
 	}
 	return 1
@@ -25336,42 +25336,42 @@ __5:
 __6:
 	;
 
-	subcmd = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)))
+	subcmd = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)))
 
-	if !(libc.Xstrcmp(tls, subcmd, ts+5109 /* "mv" */) == 0) {
+	if !(libc.Xstrcmp(tls, subcmd, ts+5109) == 0) {
 		goto __8
 	}
-	result = (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer((tclIntStubsPtr + 828 /* &.tclpObjRenameFile */))))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(i)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr((i+1))*4)))
+	result = (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(tclIntStubsPtr + 828)))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(i)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(i+1)*4)))
 	goto __9
 __8:
-	if !(libc.Xstrcmp(tls, subcmd, ts+5112 /* "cp" */) == 0) {
+	if !(libc.Xstrcmp(tls, subcmd, ts+5112) == 0) {
 		goto __10
 	}
-	result = (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer((tclIntStubsPtr + 824 /* &.tclpObjCopyFile */))))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(i)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr((i+1))*4)))
+	result = (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(tclIntStubsPtr + 824)))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(i)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(i+1)*4)))
 	goto __11
 __10:
-	if !(libc.Xstrcmp(tls, subcmd, ts+5115 /* "rm" */) == 0) {
+	if !(libc.Xstrcmp(tls, subcmd, ts+5115) == 0) {
 		goto __12
 	}
-	result = (*(*func(*libc.TLS, uintptr) int32)(unsafe.Pointer((tclIntStubsPtr + 820 /* &.tclpObjDeleteFile */))))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(i)*4)))
+	result = (*(*func(*libc.TLS, uintptr) int32)(unsafe.Pointer(tclIntStubsPtr + 820)))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(i)*4)))
 	goto __13
 __12:
-	if !(libc.Xstrcmp(tls, subcmd, ts+5118 /* "mkdir" */) == 0) {
+	if !(libc.Xstrcmp(tls, subcmd, ts+5118) == 0) {
 		goto __14
 	}
-	result = (*(*func(*libc.TLS, uintptr) int32)(unsafe.Pointer((tclIntStubsPtr + 816 /* &.tclpObjCreateDirectory */))))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(i)*4)))
+	result = (*(*func(*libc.TLS, uintptr) int32)(unsafe.Pointer(tclIntStubsPtr + 816)))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(i)*4)))
 	goto __15
 __14:
-	if !(libc.Xstrcmp(tls, subcmd, ts+5124 /* "cpdir" */) == 0) {
+	if !(libc.Xstrcmp(tls, subcmd, ts+5124) == 0) {
 		goto __16
 	}
-	result = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclIntStubsPtr + 812 /* &.tclpObjCopyDirectory */))))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(i)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr((i+1))*4)), bp+56 /* &error */)
+	result = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclIntStubsPtr + 812)))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(i)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(i+1)*4)), bp+56)
 	goto __17
 __16:
-	if !(libc.Xstrcmp(tls, subcmd, ts+5130 /* "rmdir" */) == 0) {
+	if !(libc.Xstrcmp(tls, subcmd, ts+5130) == 0) {
 		goto __18
 	}
-	result = (*(*func(*libc.TLS, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclIntStubsPtr + 808 /* &.tclpObjRemoveDirectory */))))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(i)*4)), force, bp+56 /* &error */)
+	result = (*(*func(*libc.TLS, uintptr, int32, uintptr) int32)(unsafe.Pointer(tclIntStubsPtr + 808)))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(i)*4)), force, bp+56)
 	goto __19
 __18:
 	result = 1
@@ -25392,21 +25392,21 @@ __9:
 	if !(result != 0) {
 		goto __20
 	}
-	if !(*(*uintptr)(unsafe.Pointer(bp + 56 /* error */)) != (uintptr(0))) {
+	if !(*(*uintptr)(unsafe.Pointer(bp + 56)) != uintptr(0)) {
 		goto __21
 	}
-	if !(int32(*(*int8)(unsafe.Pointer((*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(bp + 56 /* error */))) + uintptr(0)))) != 0) {
+	if !(int32(*(*int8)(unsafe.Pointer((*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(bp + 56))) + uintptr(0)))) != 0) {
 		goto __22
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(bp + 56 /* error */))), ts+1550 /* " " */, uintptr(0)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(bp + 56))), ts+1550, uintptr(0)))
 __22:
 	;
 __23:
 	_objPtr = *(*uintptr)(unsafe.Pointer(bp + 56 /* error */))
-	if !(libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1) {
+	if !(libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1) {
 		goto __26
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 __26:
 	;
 	goto __24
@@ -25419,7 +25419,7 @@ __25:
 	;
 __21:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+32, (*(*func(*libc.TLS) uintptr)(unsafe.Pointer((tclStubsPtr + 516 /* &.tcl_ErrnoId */))))(tls), uintptr(0)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+32, (*(*func(*libc.TLS) uintptr)(unsafe.Pointer(tclStubsPtr + 516)))(tls), uintptr(0)))
 __20:
 	;
 
@@ -25455,13 +25455,13 @@ func TestgetvarfullnameCmd(tls *libc.TLS, dummy ClientData, interp uintptr, objc
 	var variable Tcl_Var
 
 	if objc != 3 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+5136 /* "name scope" */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+5136)
 		return 1
 	}
 
-	name = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)))
+	name = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)))
 
-	arg = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
+	arg = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
 	if libc.Xstrcmp(tls, arg, ts+3367 /* "global" */) == 0 {
 		flags = 1
 	} else if libc.Xstrcmp(tls, arg, ts+4978 /* "namespace" */) == 0 {
@@ -25473,25 +25473,25 @@ func TestgetvarfullnameCmd(tls *libc.TLS, dummy ClientData, interp uintptr, objc
 	// run in a particular namespace, it must activate that namespace itself.
 
 	if flags == 2 {
-		namespacePtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclIntStubsPtr + 476 /* &.tcl_FindNamespace */))))(tls, interp, ts+5147 /* "::test_ns_var" */, uintptr(0),
+		namespacePtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(tclIntStubsPtr + 476)))(tls, interp, ts+5147, uintptr(0),
 			0x200)
-		if namespacePtr == (uintptr(0)) {
+		if namespacePtr == uintptr(0) {
 			return 1
 		}
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer((tclIntStubsPtr + 876 /* &.tclPushStackFrame */))))(tls, interp, bp /* &framePtr */, namespacePtr,
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) int32)(unsafe.Pointer(tclIntStubsPtr + 876)))(tls, interp, bp, namespacePtr,
 			/*isProcCallFrame*/ 0)
 	}
 
-	variable = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) Tcl_Var)(unsafe.Pointer((tclIntStubsPtr + 488 /* &.tcl_FindNamespaceVar */))))(tls, interp, name, uintptr(0),
-		(flags | 0x200))
+	variable = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) Tcl_Var)(unsafe.Pointer(tclIntStubsPtr + 488)))(tls, interp, name, uintptr(0),
+		flags|0x200)
 
 	if flags == 2 {
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclIntStubsPtr + 880 /* &.tclPopStackFrame */))))(tls, interp)
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclIntStubsPtr + 880)))(tls, interp)
 	}
-	if variable == (uintptr(0)) {
+	if variable == uintptr(0) {
 		return 1
 	}
-	(*(*func(*libc.TLS, uintptr, Tcl_Var, uintptr))(unsafe.Pointer((tclIntStubsPtr + 512 /* &.tcl_GetVariableFullName */))))(tls, interp, variable, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp))
+	(*(*func(*libc.TLS, uintptr, Tcl_Var, uintptr))(unsafe.Pointer(tclIntStubsPtr + 512)))(tls, interp, variable, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp))
 	return 0
 }
 
@@ -25531,160 +25531,160 @@ func GetTimesObjCmd(tls *libc.TLS, unused ClientData, interp uintptr, notused1 i
 
 	// alloc & free 100000 times
 	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5161 /* "alloc & free 100..." */, 0)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+208 /* &start */)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+208)
 	for i = 0; i < 100000; i++ {
-		objPtr = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, uint32(unsafe.Sizeof(Tcl_Obj{})))
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, objPtr)
+		objPtr = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, uint32(unsafe.Sizeof(Tcl_Obj{})))
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, objPtr)
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+216 /* &stop */)
-	timePer = (float64((((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).sec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).sec) * 1000000) + ((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).usec)))
-	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5195 /* "   %.3f usec per..." */, libc.VaList(bp, (timePer/float64(100000))))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+216)
+	timePer = float64(((*Tcl_Time)(unsafe.Pointer(bp+216)).sec-(*Tcl_Time)(unsafe.Pointer(bp+208)).sec)*1000000 + ((*Tcl_Time)(unsafe.Pointer(bp+216)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208)).usec))
+	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5195 /* "   %.3f usec per..." */, libc.VaList(bp, timePer/float64(100000)))
 
 	// alloc 5000 times
 	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5224 /* "alloc 5000 6 wor..." */, 0)
-	objv = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, (uint32(5000) * uint32(unsafe.Sizeof(uintptr(0)))))
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+208 /* &start */)
+	objv = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, uint32(5000)*uint32(unsafe.Sizeof(uintptr(0))))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+208)
 	for i = 0; i < 5000; i++ {
-		*(*uintptr)(unsafe.Pointer(objv + uintptr(i)*4)) = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, uint32(unsafe.Sizeof(Tcl_Obj{})))
+		*(*uintptr)(unsafe.Pointer(objv + uintptr(i)*4)) = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, uint32(unsafe.Sizeof(Tcl_Obj{})))
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+216 /* &stop */)
-	timePer = (float64((((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).sec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).sec) * 1000000) + ((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).usec)))
-	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5249 /* "   %.3f usec per..." */, libc.VaList(bp+16, (timePer/float64(5000))))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+216)
+	timePer = float64(((*Tcl_Time)(unsafe.Pointer(bp+216)).sec-(*Tcl_Time)(unsafe.Pointer(bp+208)).sec)*1000000 + ((*Tcl_Time)(unsafe.Pointer(bp+216)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208)).usec))
+	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5249 /* "   %.3f usec per..." */, libc.VaList(bp+16, timePer/float64(5000)))
 
 	// free 5000 times
 	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5273 /* "free 5000 6 word..." */, 0)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+208 /* &start */)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+208)
 	for i = 0; i < 5000; i++ {
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(i)*4)))
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(i)*4)))
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+216 /* &stop */)
-	timePer = (float64((((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).sec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).sec) * 1000000) + ((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).usec)))
-	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5297 /* "   %.3f usec per..." */, libc.VaList(bp+32, (timePer/float64(5000))))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+216)
+	timePer = float64(((*Tcl_Time)(unsafe.Pointer(bp+216)).sec-(*Tcl_Time)(unsafe.Pointer(bp+208)).sec)*1000000 + ((*Tcl_Time)(unsafe.Pointer(bp+216)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208)).usec))
+	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5297 /* "   %.3f usec per..." */, libc.VaList(bp+32, timePer/float64(5000)))
 
 	// Tcl_NewObj 5000 times
 	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5320 /* "Tcl_NewObj 5000 ..." */, 0)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+208 /* &start */)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+208)
 	for i = 0; i < 5000; i++ {
-		*(*uintptr)(unsafe.Pointer(objv + uintptr(i)*4)) = (*(*func(*libc.TLS) uintptr)(unsafe.Pointer((tclStubsPtr + 228 /* &.tcl_NewObj */))))(tls)
+		*(*uintptr)(unsafe.Pointer(objv + uintptr(i)*4)) = (*(*func(*libc.TLS) uintptr)(unsafe.Pointer(tclStubsPtr + 228)))(tls)
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+216 /* &stop */)
-	timePer = (float64((((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).sec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).sec) * 1000000) + ((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).usec)))
-	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5343 /* "   %.3f usec per..." */, libc.VaList(bp+48, (timePer/float64(5000))))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+216)
+	timePer = float64(((*Tcl_Time)(unsafe.Pointer(bp+216)).sec-(*Tcl_Time)(unsafe.Pointer(bp+208)).sec)*1000000 + ((*Tcl_Time)(unsafe.Pointer(bp+216)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208)).usec))
+	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5343 /* "   %.3f usec per..." */, libc.VaList(bp+48, timePer/float64(5000)))
 
 	// Tcl_DecrRefCount 5000 times
 	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5372 /* "Tcl_DecrRefCount..." */, 0)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+208 /* &start */)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+208)
 	for i = 0; i < 5000; i++ {
 		objPtr = *(*uintptr)(unsafe.Pointer(objv + uintptr(i)*4))
 		for ok := true; ok; ok = 0 != 0 {
 			var _objPtr uintptr = objPtr
-			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 			}
 		}
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+216 /* &stop */)
-	timePer = (float64((((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).sec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).sec) * 1000000) + ((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).usec)))
-	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5401 /* "   %.3f usec per..." */, libc.VaList(bp+64, (timePer/float64(5000))))
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, objv)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+216)
+	timePer = float64(((*Tcl_Time)(unsafe.Pointer(bp+216)).sec-(*Tcl_Time)(unsafe.Pointer(bp+208)).sec)*1000000 + ((*Tcl_Time)(unsafe.Pointer(bp+216)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208)).usec))
+	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5401 /* "   %.3f usec per..." */, libc.VaList(bp+64, timePer/float64(5000)))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, objv)
 
 	// TclGetString 100000 times
 	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5436 /* "TclGetStringFrom..." */, 0)
-	objPtr = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, ts+5481 /* "12345" */, -1)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+208 /* &start */)
+	objPtr = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, ts+5481, -1)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+208)
 	for i = 0; i < 100000; i++ {
 		if !((*Tcl_Obj)(unsafe.Pointer(objPtr)).bytes != 0) {
-			(*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, objPtr)
+			(*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, objPtr)
 		}
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+216 /* &stop */)
-	timePer = (float64((((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).sec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).sec) * 1000000) + ((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).usec)))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+216)
+	timePer = float64(((*Tcl_Time)(unsafe.Pointer(bp+216)).sec-(*Tcl_Time)(unsafe.Pointer(bp+208)).sec)*1000000 + ((*Tcl_Time)(unsafe.Pointer(bp+216)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208)).usec))
 	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5487, /* "   %.3f usec per..." */
-		libc.VaList(bp+80, (timePer/float64(100000))))
+		libc.VaList(bp+80, timePer/float64(100000)))
 
 	// Tcl_GetIntFromObj 100000 times
 	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5536 /* "Tcl_GetIntFromOb..." */, 0)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+208 /* &start */)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+208)
 	for i = 0; i < 100000; i++ {
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, objPtr, bp+224 /* &n */) != 0 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, objPtr, bp+224) != 0 {
 			return 1
 		}
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+216 /* &stop */)
-	timePer = (float64((((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).sec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).sec) * 1000000) + ((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).usec)))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+216)
+	timePer = float64(((*Tcl_Time)(unsafe.Pointer(bp+216)).sec-(*Tcl_Time)(unsafe.Pointer(bp+208)).sec)*1000000 + ((*Tcl_Time)(unsafe.Pointer(bp+216)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208)).usec))
 	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5579, /* "   %.3f usec per..." */
-		libc.VaList(bp+96, (timePer/float64(100000))))
+		libc.VaList(bp+96, timePer/float64(100000)))
 	for ok1 := true; ok1; ok1 = 0 != 0 {
 		var _objPtr uintptr = objPtr
-		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 		}
 	}
 
 	// Tcl_GetInt 100000 times
 	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5626 /* "Tcl_GetInt of \"1..." */, 0)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+208 /* &start */)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+208)
 	for i = 0; i < 100000; i++ {
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, ts+5481 /* "12345" */, bp+224 /* &n */) != 0 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, ts+5481, bp+224) != 0 {
 			return 1
 		}
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+216 /* &stop */)
-	timePer = (float64((((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).sec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).sec) * 1000000) + ((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).usec)))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+216)
+	timePer = float64(((*Tcl_Time)(unsafe.Pointer(bp+216)).sec-(*Tcl_Time)(unsafe.Pointer(bp+208)).sec)*1000000 + ((*Tcl_Time)(unsafe.Pointer(bp+216)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208)).usec))
 	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5662, /* "   %.3f usec per..." */
-		libc.VaList(bp+112, (timePer/float64(100000))))
+		libc.VaList(bp+112, timePer/float64(100000)))
 
 	// sprintf 100000 times
 	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5702 /* "sprintf of 12345..." */, 0)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+208 /* &start */)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+208)
 	for i = 0; i < 100000; i++ {
 		libc.Xsprintf(tls, bp+228 /* &newString[0] */, ts+5733 /* "%d" */, libc.VaList(bp+128, 12345))
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+216 /* &stop */)
-	timePer = (float64((((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).sec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).sec) * 1000000) + ((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).usec)))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+216)
+	timePer = float64(((*Tcl_Time)(unsafe.Pointer(bp+216)).sec-(*Tcl_Time)(unsafe.Pointer(bp+208)).sec)*1000000 + ((*Tcl_Time)(unsafe.Pointer(bp+216)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208)).usec))
 	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5736, /* "   %.3f usec per..." */
-		libc.VaList(bp+144, (timePer/float64(100000))))
+		libc.VaList(bp+144, timePer/float64(100000)))
 
 	// hashtable lookup 100000 times
 	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5771 /* "hashtable lookup..." */, 0)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+208 /* &start */)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+208)
 	for i = 0; i < 100000; i++ {
-		(*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((((*Interp)(unsafe.Pointer(iPtr)).globalNsPtr + 96 /* &.cmdTable */) + 44 /* &.findProc */))))(tls, ((*Interp)(unsafe.Pointer(iPtr)).globalNsPtr + 96 /* &.cmdTable */), ts+247 /* "gettimes" */)
+		(*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((*Interp)(unsafe.Pointer(iPtr)).globalNsPtr + 96 + 44)))(tls, (*Interp)(unsafe.Pointer(iPtr)).globalNsPtr+96, ts+247)
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+216 /* &stop */)
-	timePer = (float64((((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).sec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).sec) * 1000000) + ((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).usec)))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+216)
+	timePer = float64(((*Tcl_Time)(unsafe.Pointer(bp+216)).sec-(*Tcl_Time)(unsafe.Pointer(bp+208)).sec)*1000000 + ((*Tcl_Time)(unsafe.Pointer(bp+216)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208)).usec))
 	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5816, /* "   %.3f usec per..." */
-		libc.VaList(bp+160, (timePer/float64(100000))))
+		libc.VaList(bp+160, timePer/float64(100000)))
 
 	// Tcl_SetVar 100000 times
 	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5865 /* "Tcl_SetVar of \"1..." */, 0)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+208 /* &start */)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+208)
 	for i = 0; i < 100000; i++ {
-		s = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 960 /* &.tcl_SetVar2 */))))(tls, interp, ts+5901 /* "a" */, uintptr(0), ts+5481 /* "12345" */, 0x200)
-		if s == (uintptr(0)) {
+		s = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 960)))(tls, interp, ts+5901, uintptr(0), ts+5481, 0x200)
+		if s == uintptr(0) {
 			return 1
 		}
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+216 /* &stop */)
-	timePer = (float64((((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).sec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).sec) * 1000000) + ((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).usec)))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+216)
+	timePer = float64(((*Tcl_Time)(unsafe.Pointer(bp+216)).sec-(*Tcl_Time)(unsafe.Pointer(bp+208)).sec)*1000000 + ((*Tcl_Time)(unsafe.Pointer(bp+216)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208)).usec))
 	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5903, /* "   %.3f usec per..." */
-		libc.VaList(bp+176, (timePer/float64(100000))))
+		libc.VaList(bp+176, timePer/float64(100000)))
 
 	// Tcl_GetVar 100000 times
 	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5948 /* "Tcl_GetVar of a=..." */, 0)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+208 /* &start */)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+208)
 	for i = 0; i < 100000; i++ {
-		s = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 712 /* &.tcl_GetVar2 */))))(tls, interp, ts+5901 /* "a" */, uintptr(0), 0x200)
-		if s == (uintptr(0)) {
+		s = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 712)))(tls, interp, ts+5901, uintptr(0), 0x200)
+		if s == uintptr(0) {
 			return 1
 		}
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+216 /* &stop */)
-	timePer = (float64((((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).sec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).sec) * 1000000) + ((*Tcl_Time)(unsafe.Pointer(bp+216 /* &stop */)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208 /* &start */)).usec)))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+216)
+	timePer = float64(((*Tcl_Time)(unsafe.Pointer(bp+216)).sec-(*Tcl_Time)(unsafe.Pointer(bp+208)).sec)*1000000 + ((*Tcl_Time)(unsafe.Pointer(bp+216)).usec - (*Tcl_Time)(unsafe.Pointer(bp+208)).usec))
 	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(2)), ts+5987, /* "   %.3f usec per..." */
-		libc.VaList(bp+192, (timePer/float64(100000))))
+		libc.VaList(bp+192, timePer/float64(100000)))
 
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 876 /* &.tcl_ResetResult */))))(tls, interp)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 876)))(tls, interp)
 	return 0
 }
 
@@ -25749,27 +25749,27 @@ func TestpurebytesobjObjCmd(tls *libc.TLS, unused ClientData, interp uintptr, ob
 	var objPtr uintptr
 
 	if objc > 2 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+6030 /* "?string?" */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+6030)
 		return 1
 	}
-	objPtr = (*(*func(*libc.TLS) uintptr)(unsafe.Pointer((tclStubsPtr + 228 /* &.tcl_NewObj */))))(tls)
+	objPtr = (*(*func(*libc.TLS) uintptr)(unsafe.Pointer(tclStubsPtr + 228)))(tls)
 	//
 	//     objPtr->internalRep.twoPtrValue.ptr1 = NULL;
 	//     objPtr->internalRep.twoPtrValue.ptr2 = NULL;
 	//
-	libc.Xmemset(tls, (objPtr + 16 /* &.internalRep */), 0, uint32(unsafe.Sizeof(struct {
+	libc.Xmemset(tls, objPtr+16, 0, uint32(unsafe.Sizeof(struct {
 		_         [0]uint64
 		longValue int32
 		_         [4]byte
 	}{})))
 	if objc == 2 {
-		var s uintptr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)))
+		var s uintptr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)))
 		(*Tcl_Obj)(unsafe.Pointer(objPtr)).length = (*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)))).length
-		(*Tcl_Obj)(unsafe.Pointer(objPtr)).bytes = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, (uint32((*Tcl_Obj)(unsafe.Pointer(objPtr)).length + 1)))
+		(*Tcl_Obj)(unsafe.Pointer(objPtr)).bytes = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, uint32((*Tcl_Obj)(unsafe.Pointer(objPtr)).length+1))
 		libc.Xmemcpy(tls, (*Tcl_Obj)(unsafe.Pointer(objPtr)).bytes, s, uint32((*Tcl_Obj)(unsafe.Pointer(objPtr)).length))
 		*(*int8)(unsafe.Pointer((*Tcl_Obj)(unsafe.Pointer(objPtr)).bytes + uintptr((*Tcl_Obj)(unsafe.Pointer(objPtr)).length))) = int8(0)
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, objPtr)
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, objPtr)
 	return 0
 }
 
@@ -25797,11 +25797,11 @@ func TestbytestringObjCmd(tls *libc.TLS, unused ClientData, interp uintptr, objc
 	var p uintptr
 
 	if objc != 2 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+6039 /* "bytearray" */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+6039)
 		return 1
 	}
-	p = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 140 /* &.tcl_GetByteArrayFromObj */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp /* &n */)
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, p, *(*int32)(unsafe.Pointer(bp /* n */))))
+	p = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 140)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp)
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, p, *(*int32)(unsafe.Pointer(bp))))
 	return 0
 }
 
@@ -25829,23 +25829,23 @@ func TestsetCmd(tls *libc.TLS, data ClientData, interp uintptr, argc int32, argv
 	var value uintptr
 
 	if argc == 2 {
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+6049 /* "before get" */, uintptr(0))
-		value = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 712 /* &.tcl_GetVar2 */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), uintptr(0), flags)
-		if value == (uintptr(0)) {
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+6049, uintptr(0))
+		value = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 712)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), uintptr(0), flags)
+		if value == uintptr(0) {
 			return 1
 		}
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, value)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, value)
 		return 0
 	} else if argc == 3 {
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+6060 /* "before set" */, uintptr(0))
-		value = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 960 /* &.tcl_SetVar2 */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), uintptr(0), *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), flags)
-		if value == (uintptr(0)) {
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+6060, uintptr(0))
+		value = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 960)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), uintptr(0), *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), flags)
+		if value == uintptr(0) {
 			return 1
 		}
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, value)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, value)
 		return 0
 	} else {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+1482, /* "wrong # args: sh..." */
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+1482,
 			*(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)), ts+6071 /* " varName ?newVal..." */, uintptr(0)))
 		return 1
 	}
@@ -25860,23 +25860,23 @@ func Testset2Cmd(tls *libc.TLS, data ClientData, interp uintptr, argc int32, arg
 	var value uintptr
 
 	if argc == 3 {
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+6049 /* "before get" */, uintptr(0))
-		value = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 712 /* &.tcl_GetVar2 */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), flags)
-		if value == (uintptr(0)) {
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+6049, uintptr(0))
+		value = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 712)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), flags)
+		if value == uintptr(0) {
 			return 1
 		}
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, value)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, value)
 		return 0
 	} else if argc == 4 {
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+6060 /* "before set" */, uintptr(0))
-		value = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 960 /* &.tcl_SetVar2 */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), flags)
-		if value == (uintptr(0)) {
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+6060, uintptr(0))
+		value = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 960)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), flags)
+		if value == uintptr(0) {
 			return 1
 		}
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, value)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, value)
 		return 0
 	} else {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+1482, /* "wrong # args: sh..." */
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+1482,
 			*(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)), ts+6092 /* " varName elemNam..." */, uintptr(0)))
 		return 1
 	}
@@ -25916,71 +25916,71 @@ func TestsaveresultCmd(tls *libc.TLS, dummy ClientData, interp uintptr, objc int
 	// Parse arguments
 
 	if objc != 4 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+6122 /* "type script disc..." */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+6122)
 		return 1
 	}
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1224 /* &.tcl_GetIndexFromObjStruct */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), uintptr(unsafe.Pointer(&optionStrings2)), int32(unsafe.Sizeof(uintptr(0))), ts+3360 /* "option" */, 0, bp+24 /* &index */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1224)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), uintptr(unsafe.Pointer(&optionStrings2)), int32(unsafe.Sizeof(uintptr(0))), ts+3360, 0, bp+24) != 0 {
 		return 1
 	}
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 136 /* &.tcl_GetBooleanFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)), bp+28 /* &discard */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 136)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)), bp+28) != 0 {
 		return 1
 	}
 
 	objPtr = uintptr(0) // Lint.
 	switch uint32(*(*int32)(unsafe.Pointer(bp + 24 /* index */))) {
 	case uint32(4) /* RESULT_SMALL */ :
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+6142 /* "small result" */, uintptr(1))
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+6142, uintptr(1))
 		break
 	case uint32(0) /* RESULT_APPEND */ :
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+6155 /* "append result" */, uintptr(0)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+6155, uintptr(0)))
 		break
 	case uint32(2) /* RESULT_FREE */ :
 		{
-			var buf uintptr = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, uint32(200))
+			var buf uintptr = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, uint32(200))
 
 			libc.Xstrcpy(tls, buf, ts+6169 /* "free result" */)
-			(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, buf, uintptr(3))
+			(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, buf, uintptr(3))
 			break
 
 		}
 	case uint32(1) /* RESULT_DYNAMIC */ :
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+6181 /* "dynamic result" */, *(*uintptr)(unsafe.Pointer(&struct{ f func(*libc.TLS, uintptr) }{TestsaveresultFree})))
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+6181, *(*uintptr)(unsafe.Pointer(&struct{ f func(*libc.TLS, uintptr) }{TestsaveresultFree})))
 		break
 	case uint32(3) /* RESULT_OBJECT */ :
-		objPtr = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, ts+6196 /* "object result" */, -1)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, objPtr)
+		objPtr = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, ts+6196, -1)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, objPtr)
 		break
 	}
 
 	freeCount = 0
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1268 /* &.tcl_SaveResult */))))(tls, interp, bp+32 /* &state */)
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1268)))(tls, interp, bp+32)
 
-	if (int32(uint32(*(*int32)(unsafe.Pointer(bp + 24 /* index */))))) == 3 /* RESULT_OBJECT */ {
-		result = (*(*func(*libc.TLS, uintptr, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 1180 /* &.tcl_EvalObjEx */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), 0)
+	if int32(uint32(*(*int32)(unsafe.Pointer(bp + 24)))) == 3 /* RESULT_OBJECT */ {
+		result = (*(*func(*libc.TLS, uintptr, uintptr, int32) int32)(unsafe.Pointer(tclStubsPtr + 1180)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), 0)
 	} else {
-		result = (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 524 /* &.tcl_Eval */))))(tls, interp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4))))
+		result = (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 524)))(tls, interp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4))))
 	}
 
 	if *(*int32)(unsafe.Pointer(bp + 28 /* discard */)) != 0 {
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1168 /* &.tcl_DiscardResult */))))(tls, bp+32 /* &state */)
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1168)))(tls, bp+32)
 	} else {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1264 /* &.tcl_RestoreResult */))))(tls, interp, bp+32 /* &state */)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1264)))(tls, interp, bp+32)
 		result = 0
 	}
 
 	switch uint32(*(*int32)(unsafe.Pointer(bp + 24 /* index */))) {
 	case uint32(1) /* RESULT_DYNAMIC */ :
 		{
-			var present int32 = (libc.Bool32((*Interp)(unsafe.Pointer(iPtr)).freeProc == *(*uintptr)(unsafe.Pointer(&struct{ f func(*libc.TLS, uintptr) }{TestsaveresultFree}))))
+			var present int32 = libc.Bool32((*Interp)(unsafe.Pointer(iPtr)).freeProc == *(*uintptr)(unsafe.Pointer(&struct{ f func(*libc.TLS, uintptr) }{TestsaveresultFree})))
 			var called int32 = freeCount
 
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, func() uintptr {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, func() uintptr {
 				if called != 0 {
 					return ts + 6210 /* "called" */
 				}
 				return ts + 6217 /* "notCalled" */
 			}())
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, func() uintptr {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, func() uintptr {
 				if present != 0 {
 					return ts + 6227 /* "present" */
 				}
@@ -25990,8 +25990,8 @@ func TestsaveresultCmd(tls *libc.TLS, dummy ClientData, interp uintptr, objc int
 
 		}
 	case uint32(3) /* RESULT_OBJECT */ :
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, func() uintptr {
-			if (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp) == objPtr {
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, func() uintptr {
+			if (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp) == objPtr {
 				return ts + 6243 /* "same" */
 			}
 			return ts + 6248 /* "different" */
@@ -26042,12 +26042,12 @@ func TestsaveresultFree(tls *libc.TLS, blockPtr uintptr) { /* tclTest.c:5284:1: 
 
 func TestmainthreadCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, argv uintptr) int32 { /* tclTest.c:5308:1: */
 	if argc == 1 {
-		var idObj uintptr = (*(*func(*libc.TLS, Tcl_WideInt) uintptr)(unsafe.Pointer((tclStubsPtr + 1960 /* &.tcl_NewWideIntObj */))))(tls, Tcl_WideInt((*(*func(*libc.TLS) Tcl_ThreadId)(unsafe.Pointer((tclStubsPtr + 1208 /* &.tcl_GetCurrentThread */))))(tls)))
+		var idObj uintptr = (*(*func(*libc.TLS, Tcl_WideInt) uintptr)(unsafe.Pointer(tclStubsPtr + 1960)))(tls, Tcl_WideInt((*(*func(*libc.TLS) Tcl_ThreadId)(unsafe.Pointer(tclStubsPtr + 1208)))(tls)))
 
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, idObj)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, idObj)
 		return 0
 	} else {
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+1396 /* "wrong # args" */, uintptr(0))
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+1396, uintptr(0))
 		return 1
 	}
 	return int32(0)
@@ -26069,7 +26069,7 @@ func TestmainthreadCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int
 
 func MainLoop(tls *libc.TLS) { /* tclTest.c:5342:1: */
 	for !(exitMainLoop != 0) {
-		(*(*func(*libc.TLS, int32) int32)(unsafe.Pointer((tclStubsPtr + 468 /* &.tcl_DoOneEvent */))))(tls, 0)
+		(*(*func(*libc.TLS, int32) int32)(unsafe.Pointer(tclStubsPtr + 468)))(tls, 0)
 	}
 	libc.Xfprintf(tls, libc.X__acrt_iob_func(tls, uint32(1)), ts+6279 /* "Exit MainLoop\n" */, 0)
 	libc.Xfflush(tls, libc.X__acrt_iob_func(tls, uint32(1)))
@@ -26092,7 +26092,7 @@ func MainLoop(tls *libc.TLS) { /* tclTest.c:5342:1: */
 
 func TestsetmainloopCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, argv uintptr) int32 { /* tclTest.c:5369:1: */
 	exitMainLoop = 0
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1144 /* &.tcl_SetMainLoop */))))(tls, *(*uintptr)(unsafe.Pointer(&struct{ f func(*libc.TLS) }{MainLoop})))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1144)))(tls, *(*uintptr)(unsafe.Pointer(&struct{ f func(*libc.TLS) }{MainLoop})))
 	return 0
 }
 
@@ -26152,7 +26152,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 	// rw mode of the channel
 
 	if argc < 2 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+1482 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+1482, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 			ts+6294 /* " subcommand ?add..." */, uintptr(0)))
 		return 1
 	}
@@ -26162,7 +26162,7 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 	chanPtr = uintptr(0)
 
 	if argc > 2 {
-		if (int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 's') && (libc.Xstrncmp(tls, cmdName, ts+6327 /* "splice" */, len) == 0) {
+		if int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 's' && libc.Xstrncmp(tls, cmdName, ts+6327, len) == 0 {
 			// For splice access the pool of detached channels.
 			// Locate channel, remove from the list.
 
@@ -26173,31 +26173,31 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 			nextPtrPtr = uintptr(unsafe.Pointer(&firstDetached))
 			curPtr = firstDetached
 		__1:
-			if !(curPtr != (uintptr(0))) {
+			if !(curPtr != uintptr(0)) {
 				goto __3
 			}
 			{
 
-				if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), (*(*func(*libc.TLS, Tcl_Channel) uintptr)(unsafe.Pointer((tclStubsPtr + 632 /* &.tcl_GetChannelName */))))(tls, (*TestChannel)(unsafe.Pointer(curPtr)).__chan)) == 0 {
+				if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), (*(*func(*libc.TLS, Tcl_Channel) uintptr)(unsafe.Pointer(tclStubsPtr + 632)))(tls, (*TestChannel)(unsafe.Pointer(curPtr)).__chan)) == 0 {
 					*(*uintptr)(unsafe.Pointer(nextPtrPtr)) = (*TestChannel)(unsafe.Pointer(curPtr)).nextPtr
 					(*TestChannel)(unsafe.Pointer(curPtr)).nextPtr = uintptr(0)
 					chan1 = (*TestChannel)(unsafe.Pointer(curPtr)).__chan
-					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, curPtr)
+					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, curPtr)
 					goto __3
 				}
 
 			}
 			goto __2
 		__2:
-			nextPtrPtr = (curPtr + 4 /* &.nextPtr */)
+			nextPtrPtr = curPtr + 4
 			curPtr = (*TestChannel)(unsafe.Pointer(curPtr)).nextPtr
 			goto __1
 			goto __3
 		__3:
 		} else {
-			chan1 = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) Tcl_Channel)(unsafe.Pointer((tclStubsPtr + 612 /* &.tcl_GetChannel */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), bp+776 /* &mode */)
+			chan1 = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) Tcl_Channel)(unsafe.Pointer(tclStubsPtr + 612)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)), bp+776)
 		}
-		if chan1 == (uintptr(0)) {
+		if chan1 == uintptr(0) {
 			return 1
 		}
 		chanPtr = chan1
@@ -26210,48 +26210,48 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		chan1 = uintptr(0)
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 's') && (libc.Xstrncmp(tls, cmdName, ts+6334 /* "setchannelerror" */, len) == 0) {
+	if int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 's' && libc.Xstrncmp(tls, cmdName, ts+6334, len) == 0 {
 
-		*(*uintptr)(unsafe.Pointer(bp + 780 /* msg */)) = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), -1)
+		*(*uintptr)(unsafe.Pointer(bp + 780 /* msg */)) = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), -1)
 
 		(*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(bp + 780 /* msg */)))).refCount++
-		(*(*func(*libc.TLS, Tcl_Channel, uintptr))(unsafe.Pointer((tclStubsPtr + 2264 /* &.tcl_SetChannelError */))))(tls, chan1, *(*uintptr)(unsafe.Pointer(bp + 780 /* msg */)))
+		(*(*func(*libc.TLS, Tcl_Channel, uintptr))(unsafe.Pointer(tclStubsPtr + 2264)))(tls, chan1, *(*uintptr)(unsafe.Pointer(bp + 780)))
 		for ok := true; ok; ok = 0 != 0 {
 			var _objPtr uintptr = *(*uintptr)(unsafe.Pointer(bp + 780 /* msg */))
-			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 			}
 		}
 
-		(*(*func(*libc.TLS, Tcl_Channel, uintptr))(unsafe.Pointer((tclStubsPtr + 2268 /* &.tcl_GetChannelError */))))(tls, chan1, bp+780 /* &msg */)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(bp + 780 /* msg */)))
+		(*(*func(*libc.TLS, Tcl_Channel, uintptr))(unsafe.Pointer(tclStubsPtr + 2268)))(tls, chan1, bp+780)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(bp + 780)))
 		for ok1 := true; ok1; ok1 = 0 != 0 {
 			var _objPtr uintptr = *(*uintptr)(unsafe.Pointer(bp + 780 /* msg */))
-			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 			}
 		}
 		return 0
 	}
-	if (int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 's') && (libc.Xstrncmp(tls, cmdName, ts+6350 /* "setchannelerrori..." */, len) == 0) {
+	if int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 's' && libc.Xstrncmp(tls, cmdName, ts+6350, len) == 0 {
 
-		*(*uintptr)(unsafe.Pointer(bp + 784 /* msg */)) = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), -1)
+		*(*uintptr)(unsafe.Pointer(bp + 784 /* msg */)) = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), -1)
 
 		(*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(bp + 784 /* msg */)))).refCount++
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 2256 /* &.tcl_SetChannelErrorInterp */))))(tls, interp, *(*uintptr)(unsafe.Pointer(bp + 784 /* msg */)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 2256)))(tls, interp, *(*uintptr)(unsafe.Pointer(bp + 784)))
 		for ok2 := true; ok2; ok2 = 0 != 0 {
 			var _objPtr uintptr = *(*uintptr)(unsafe.Pointer(bp + 784 /* msg */))
-			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 			}
 		}
 
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 2260 /* &.tcl_GetChannelErrorInterp */))))(tls, interp, bp+784 /* &msg */)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(bp + 784 /* msg */)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 2260)))(tls, interp, bp+784)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(bp + 784)))
 		for ok3 := true; ok3; ok3 = 0 != 0 {
 			var _objPtr uintptr = *(*uintptr)(unsafe.Pointer(bp + 784 /* msg */))
-			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 			}
 		}
 		return 0
@@ -26262,23 +26262,23 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 	// checking that the command is truly cut'able, no mutexes for
 	// thread-safety). Its complementary command is "splice", see below.
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'c') && (libc.Xstrncmp(tls, cmdName, ts+6372 /* "cut" */, len) == 0) {
+	if int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'c' && libc.Xstrncmp(tls, cmdName, ts+6372, len) == 0 {
 		var det uintptr
 
 		if argc != 3 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+40, ts+1482 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+40, ts+1482, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 				ts+6376 /* " cut channelName..." */, uintptr(0)))
 			return 1
 		}
 
-		(*(*func(*libc.TLS, uintptr, Tcl_Channel))(unsafe.Pointer((tclStubsPtr + 848 /* &.tcl_RegisterChannel */))))(tls, uintptr(0), chan1) // prevent closing
-		(*(*func(*libc.TLS, uintptr, Tcl_Channel) int32)(unsafe.Pointer((tclStubsPtr + 1016 /* &.tcl_UnregisterChannel */))))(tls, interp, chan1)
+		(*(*func(*libc.TLS, uintptr, Tcl_Channel))(unsafe.Pointer(tclStubsPtr + 848)))(tls, uintptr(0), chan1) // prevent closing
+		(*(*func(*libc.TLS, uintptr, Tcl_Channel) int32)(unsafe.Pointer(tclStubsPtr + 1016)))(tls, interp, chan1)
 
-		(*(*func(*libc.TLS, Tcl_Channel))(unsafe.Pointer((tclStubsPtr + 1668 /* &.tcl_CutChannel */))))(tls, chan1)
+		(*(*func(*libc.TLS, Tcl_Channel))(unsafe.Pointer(tclStubsPtr + 1668)))(tls, chan1)
 
 		// Remember the channel in the pool of detached channels
 
-		det = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, uint32(unsafe.Sizeof(TestChannel{})))
+		det = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, uint32(unsafe.Sizeof(TestChannel{})))
 		(*TestChannel)(unsafe.Pointer(det)).__chan = chan1
 		(*TestChannel)(unsafe.Pointer(det)).nextPtr = firstDetached
 		firstDetached = det
@@ -26286,188 +26286,188 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		return 0
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'c') && (libc.Xstrncmp(tls, cmdName, ts+6394 /* "clearchannelhand..." */, len) == 0) {
+	if int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'c' && libc.Xstrncmp(tls, cmdName, ts+6394, len) == 0 {
 		if argc != 3 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+80, ts+1482 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+80, ts+1482, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 				ts+6415 /* " clearchannelhan..." */, uintptr(0)))
 			return 1
 		}
-		(*(*func(*libc.TLS, Tcl_Channel))(unsafe.Pointer((tclStubsPtr + 1676 /* &.tcl_ClearChannelHandlers */))))(tls, chan1)
+		(*(*func(*libc.TLS, Tcl_Channel))(unsafe.Pointer(tclStubsPtr + 1676)))(tls, chan1)
 		return 0
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'i') && (libc.Xstrncmp(tls, cmdName, ts+6450 /* "info" */, len) == 0) {
+	if int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'i' && libc.Xstrncmp(tls, cmdName, ts+6450, len) == 0 {
 		if argc != 3 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+120, ts+1482 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+120, ts+1482, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 				ts+6455 /* " info channelNam..." */, uintptr(0)))
 			return 1
 		}
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1600 /* &.tcl_ChannelName */))))(tls, (*Channel)(unsafe.Pointer(chanPtr)).typePtr))
-		if ((*ChannelState)(unsafe.Pointer(statePtr)).flags & (int32(1) << 1)) != 0 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+6474 /* "read" */)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1600)))(tls, (*Channel)(unsafe.Pointer(chanPtr)).typePtr))
+		if (*ChannelState)(unsafe.Pointer(statePtr)).flags&(int32(1)<<1) != 0 {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+6474)
 		} else {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+1481 /* "" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+1481)
 		}
-		if ((*ChannelState)(unsafe.Pointer(statePtr)).flags & (int32(1) << 2)) != 0 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+6479 /* "write" */)
+		if (*ChannelState)(unsafe.Pointer(statePtr)).flags&(int32(1)<<2) != 0 {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+6479)
 		} else {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+1481 /* "" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+1481)
 		}
-		if ((*ChannelState)(unsafe.Pointer(statePtr)).flags & (int32(1) << 3)) != 0 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+6485 /* "nonblocking" */)
+		if (*ChannelState)(unsafe.Pointer(statePtr)).flags&(int32(1)<<3) != 0 {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+6485)
 		} else {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+6497 /* "blocking" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+6497)
 		}
-		if ((*ChannelState)(unsafe.Pointer(statePtr)).flags & (int32(1) << 4)) != 0 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+6506 /* "line" */)
-		} else if ((*ChannelState)(unsafe.Pointer(statePtr)).flags & (int32(1) << 5)) != 0 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+6511 /* "none" */)
+		if (*ChannelState)(unsafe.Pointer(statePtr)).flags&(int32(1)<<4) != 0 {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+6506)
+		} else if (*ChannelState)(unsafe.Pointer(statePtr)).flags&(int32(1)<<5) != 0 {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+6511)
 		} else {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+6516 /* "full" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+6516)
 		}
-		if ((*ChannelState)(unsafe.Pointer(statePtr)).flags & (int32(1) << 7)) != 0 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+6521 /* "async_flush" */)
+		if (*ChannelState)(unsafe.Pointer(statePtr)).flags&(int32(1)<<7) != 0 {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+6521)
 		} else {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+1481 /* "" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+1481)
 		}
-		if ((*ChannelState)(unsafe.Pointer(statePtr)).flags & (int32(1) << 9)) != 0 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+6533 /* "eof" */)
+		if (*ChannelState)(unsafe.Pointer(statePtr)).flags&(int32(1)<<9) != 0 {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+6533)
 		} else {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+1481 /* "" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+1481)
 		}
-		if ((*ChannelState)(unsafe.Pointer(statePtr)).flags & (int32(1) << 11)) != 0 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+6537 /* "blocked" */)
+		if (*ChannelState)(unsafe.Pointer(statePtr)).flags&(int32(1)<<11) != 0 {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+6537)
 		} else {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+6545 /* "unblocked" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+6545)
 		}
 		if (*ChannelState)(unsafe.Pointer(statePtr)).inputTranslation == TCL_TRANSLATE_AUTO {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+6555 /* "auto" */)
-			if ((*ChannelState)(unsafe.Pointer(statePtr)).flags & (int32(1) << 12)) != 0 {
-				(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+6560 /* "saw_cr" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+6555)
+			if (*ChannelState)(unsafe.Pointer(statePtr)).flags&(int32(1)<<12) != 0 {
+				(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+6560)
 			} else {
-				(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+1481 /* "" */)
+				(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+1481)
 			}
 		} else if (*ChannelState)(unsafe.Pointer(statePtr)).inputTranslation == TCL_TRANSLATE_LF {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+6567 /* "lf" */)
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+1481 /* "" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+6567)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+1481)
 		} else if (*ChannelState)(unsafe.Pointer(statePtr)).inputTranslation == TCL_TRANSLATE_CR {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+6570 /* "cr" */)
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+1481 /* "" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+6570)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+1481)
 		} else if (*ChannelState)(unsafe.Pointer(statePtr)).inputTranslation == TCL_TRANSLATE_CRLF {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+6573 /* "crlf" */)
-			if ((*ChannelState)(unsafe.Pointer(statePtr)).flags & (int32(1) << 12)) != 0 {
-				(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+6578 /* "queued_cr" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+6573)
+			if (*ChannelState)(unsafe.Pointer(statePtr)).flags&(int32(1)<<12) != 0 {
+				(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+6578)
 			} else {
-				(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+1481 /* "" */)
+				(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+1481)
 			}
 		}
 		if (*ChannelState)(unsafe.Pointer(statePtr)).outputTranslation == TCL_TRANSLATE_AUTO {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+6555 /* "auto" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+6555)
 		} else if (*ChannelState)(unsafe.Pointer(statePtr)).outputTranslation == TCL_TRANSLATE_LF {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+6567 /* "lf" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+6567)
 		} else if (*ChannelState)(unsafe.Pointer(statePtr)).outputTranslation == TCL_TRANSLATE_CR {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+6570 /* "cr" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+6570)
 		} else if (*ChannelState)(unsafe.Pointer(statePtr)).outputTranslation == TCL_TRANSLATE_CRLF {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+6573 /* "crlf" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+6573)
 		}
-		IOQueued = (*(*func(*libc.TLS, Tcl_Channel) int32)(unsafe.Pointer((tclStubsPtr + 740 /* &.tcl_InputBuffered */))))(tls, chan1)
-		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer((tclIntStubsPtr + 104 /* &.tclFormatInt */))))(tls, bp+788 /* &buf[0] */, int32(IOQueued))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, bp+788 /* &buf[0] */)
+		IOQueued = (*(*func(*libc.TLS, Tcl_Channel) int32)(unsafe.Pointer(tclStubsPtr + 740)))(tls, chan1)
+		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(tclIntStubsPtr + 104)))(tls, bp+788, int32(IOQueued))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, bp+788)
 
-		IOQueued = (*(*func(*libc.TLS, Tcl_Channel) int32)(unsafe.Pointer((tclStubsPtr + 1924 /* &.tcl_OutputBuffered */))))(tls, chan1)
-		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer((tclIntStubsPtr + 104 /* &.tclFormatInt */))))(tls, bp+788 /* &buf[0] */, int32(IOQueued))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, bp+788 /* &buf[0] */)
+		IOQueued = (*(*func(*libc.TLS, Tcl_Channel) int32)(unsafe.Pointer(tclStubsPtr + 1924)))(tls, chan1)
+		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(tclIntStubsPtr + 104)))(tls, bp+788, int32(IOQueued))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, bp+788)
 
-		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer((tclIntStubsPtr + 104 /* &.tclFormatInt */))))(tls, bp+788 /* &buf[0] */, int32(int32((*(*func(*libc.TLS, Tcl_Channel) Tcl_WideInt)(unsafe.Pointer((tclStubsPtr + 1976 /* &.tcl_Tell */))))(tls, chan1))))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, bp+788 /* &buf[0] */)
+		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(tclIntStubsPtr + 104)))(tls, bp+788, int32(int32((*(*func(*libc.TLS, Tcl_Channel) Tcl_WideInt)(unsafe.Pointer(tclStubsPtr + 1976)))(tls, chan1))))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, bp+788)
 
-		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer((tclIntStubsPtr + 104 /* &.tclFormatInt */))))(tls, bp+788 /* &buf[0] */, int32((*ChannelState)(unsafe.Pointer(statePtr)).refCount))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, bp+788 /* &buf[0] */)
+		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(tclIntStubsPtr + 104)))(tls, bp+788, int32((*ChannelState)(unsafe.Pointer(statePtr)).refCount))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, bp+788)
 
 		return 0
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'i') && (libc.Xstrncmp(tls, cmdName, ts+6588 /* "inputbuffered" */, len) == 0) {
+	if int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'i' && libc.Xstrncmp(tls, cmdName, ts+6588, len) == 0 {
 		if argc != 3 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+160, ts+6602 /* "channel name req..." */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+160, ts+6602, uintptr(0)))
 			return 1
 		}
-		IOQueued = (*(*func(*libc.TLS, Tcl_Channel) int32)(unsafe.Pointer((tclStubsPtr + 740 /* &.tcl_InputBuffered */))))(tls, chan1)
-		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer((tclIntStubsPtr + 104 /* &.tclFormatInt */))))(tls, bp+788 /* &buf[0] */, int32(IOQueued))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+184, bp+788 /* &buf[0] */, uintptr(0)))
+		IOQueued = (*(*func(*libc.TLS, Tcl_Channel) int32)(unsafe.Pointer(tclStubsPtr + 740)))(tls, chan1)
+		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(tclIntStubsPtr + 104)))(tls, bp+788, int32(IOQueued))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+184, bp+788, uintptr(0)))
 		return 0
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'i') && (libc.Xstrncmp(tls, cmdName, ts+6624 /* "isshared" */, len) == 0) {
+	if int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'i' && libc.Xstrncmp(tls, cmdName, ts+6624, len) == 0 {
 		if argc != 3 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+208, ts+6602 /* "channel name req..." */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+208, ts+6602, uintptr(0)))
 			return 1
 		}
 
-		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer((tclIntStubsPtr + 104 /* &.tclFormatInt */))))(tls, bp+788 /* &buf[0] */, int32((*(*func(*libc.TLS, Tcl_Channel) int32)(unsafe.Pointer((tclStubsPtr + 1660 /* &.tcl_IsChannelShared */))))(tls, chan1)))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+232, bp+788 /* &buf[0] */, uintptr(0)))
+		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(tclIntStubsPtr + 104)))(tls, bp+788, int32((*(*func(*libc.TLS, Tcl_Channel) int32)(unsafe.Pointer(tclStubsPtr + 1660)))(tls, chan1)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+232, bp+788, uintptr(0)))
 		return 0
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'i') && (libc.Xstrncmp(tls, cmdName, ts+6633 /* "isstandard" */, len) == 0) {
+	if int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'i' && libc.Xstrncmp(tls, cmdName, ts+6633, len) == 0 {
 		if argc != 3 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+256, ts+6602 /* "channel name req..." */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+256, ts+6602, uintptr(0)))
 			return 1
 		}
 
-		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer((tclIntStubsPtr + 104 /* &.tclFormatInt */))))(tls, bp+788 /* &buf[0] */, int32((*(*func(*libc.TLS, Tcl_Channel) int32)(unsafe.Pointer((tclStubsPtr + 1764 /* &.tcl_IsStandardChannel */))))(tls, chan1)))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+280, bp+788 /* &buf[0] */, uintptr(0)))
+		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(tclIntStubsPtr + 104)))(tls, bp+788, int32((*(*func(*libc.TLS, Tcl_Channel) int32)(unsafe.Pointer(tclStubsPtr + 1764)))(tls, chan1)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+280, bp+788, uintptr(0)))
 		return 0
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'm') && (libc.Xstrncmp(tls, cmdName, ts+6644 /* "mode" */, len) == 0) {
+	if int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'm' && libc.Xstrncmp(tls, cmdName, ts+6644, len) == 0 {
 		if argc != 3 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+304, ts+6602 /* "channel name req..." */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+304, ts+6602, uintptr(0)))
 			return 1
 		}
 
-		if ((*ChannelState)(unsafe.Pointer(statePtr)).flags & (int32(1) << 1)) != 0 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+6474 /* "read" */)
+		if (*ChannelState)(unsafe.Pointer(statePtr)).flags&(int32(1)<<1) != 0 {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+6474)
 		} else {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+1481 /* "" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+1481)
 		}
-		if ((*ChannelState)(unsafe.Pointer(statePtr)).flags & (int32(1) << 2)) != 0 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+6479 /* "write" */)
+		if (*ChannelState)(unsafe.Pointer(statePtr)).flags&(int32(1)<<2) != 0 {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+6479)
 		} else {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, ts+1481 /* "" */)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, ts+1481)
 		}
 		return 0
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'm') && (libc.Xstrncmp(tls, cmdName, ts+6649 /* "mthread" */, len) == 0) {
+	if int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'm' && libc.Xstrncmp(tls, cmdName, ts+6649, len) == 0 {
 		if argc != 3 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+328, ts+6602 /* "channel name req..." */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+328, ts+6602, uintptr(0)))
 			return 1
 		}
 
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, Tcl_WideInt) uintptr)(unsafe.Pointer((tclStubsPtr + 1960 /* &.tcl_NewWideIntObj */))))(tls,
-			Tcl_WideInt((*(*func(*libc.TLS, Tcl_Channel) Tcl_ThreadId)(unsafe.Pointer((tclStubsPtr + 1740 /* &.tcl_GetChannelThread */))))(tls, chan1))))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, Tcl_WideInt) uintptr)(unsafe.Pointer(tclStubsPtr + 1960)))(tls,
+			Tcl_WideInt((*(*func(*libc.TLS, Tcl_Channel) Tcl_ThreadId)(unsafe.Pointer(tclStubsPtr + 1740)))(tls, chan1))))
 		return 0
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'n') && (libc.Xstrncmp(tls, cmdName, ts+1778 /* "name" */, len) == 0) {
+	if int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'n' && libc.Xstrncmp(tls, cmdName, ts+1778, len) == 0 {
 		if argc != 3 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+352, ts+6602 /* "channel name req..." */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+352, ts+6602, uintptr(0)))
 			return 1
 		}
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+376, (*ChannelState)(unsafe.Pointer(statePtr)).channelName, uintptr(0)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+376, (*ChannelState)(unsafe.Pointer(statePtr)).channelName, uintptr(0)))
 		return 0
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'o') && (libc.Xstrncmp(tls, cmdName, ts+6657 /* "open" */, len) == 0) {
-		hTblPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) ClientData)(unsafe.Pointer((tclStubsPtr + 608 /* &.tcl_GetAssocData */))))(tls, interp, ts+6662 /* "tclIO" */, uintptr(0))
-		if hTblPtr == (uintptr(0)) {
+	if int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'o' && libc.Xstrncmp(tls, cmdName, ts+6657, len) == 0 {
+		hTblPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) ClientData)(unsafe.Pointer(tclStubsPtr + 608)))(tls, interp, ts+6662, uintptr(0))
+		if hTblPtr == uintptr(0) {
 			return 0
 		}
-		for hPtr = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 588 /* &.tcl_FirstHashEntry */))))(tls, hTblPtr, bp+812 /* &hSearch */); hPtr != (uintptr(0)); hPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 780 /* &.tcl_NextHashEntry */))))(tls, bp+812 /* &hSearch */) {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, func() uintptr {
-				if ((*Tcl_HashTable)(unsafe.Pointer((hTblPtr))).keyType == (1)) || ((*Tcl_HashTable)(unsafe.Pointer((hTblPtr))).keyType == (-1)) {
+		for hPtr = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 588)))(tls, hTblPtr, bp+812); hPtr != uintptr(0); hPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 780)))(tls, bp+812) {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, func() uintptr {
+				if (*Tcl_HashTable)(unsafe.Pointer(hTblPtr)).keyType == 1 || (*Tcl_HashTable)(unsafe.Pointer(hTblPtr)).keyType == -1 {
 					return *(*uintptr)(unsafe.Pointer(hPtr + 16 /* &.key */))
 				}
 				return hPtr + 16 /* &.key */
@@ -26476,27 +26476,27 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		return 0
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'o') && (libc.Xstrncmp(tls, cmdName, ts+6668 /* "outputbuffered" */, len) == 0) {
+	if int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'o' && libc.Xstrncmp(tls, cmdName, ts+6668, len) == 0 {
 		if argc != 3 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+400, ts+6602 /* "channel name req..." */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+400, ts+6602, uintptr(0)))
 			return 1
 		}
 
-		IOQueued = (*(*func(*libc.TLS, Tcl_Channel) int32)(unsafe.Pointer((tclStubsPtr + 1924 /* &.tcl_OutputBuffered */))))(tls, chan1)
-		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer((tclIntStubsPtr + 104 /* &.tclFormatInt */))))(tls, bp+788 /* &buf[0] */, int32(IOQueued))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+424, bp+788 /* &buf[0] */, uintptr(0)))
+		IOQueued = (*(*func(*libc.TLS, Tcl_Channel) int32)(unsafe.Pointer(tclStubsPtr + 1924)))(tls, chan1)
+		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(tclIntStubsPtr + 104)))(tls, bp+788, int32(IOQueued))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+424, bp+788, uintptr(0)))
 		return 0
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'q') && (libc.Xstrncmp(tls, cmdName, ts+6683 /* "queuedcr" */, len) == 0) {
+	if int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'q' && libc.Xstrncmp(tls, cmdName, ts+6683, len) == 0 {
 		if argc != 3 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+448, ts+6602 /* "channel name req..." */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+448, ts+6602, uintptr(0)))
 			return 1
 		}
 
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp,
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp,
 			libc.VaList(bp+472, func() uintptr {
-				if ((*ChannelState)(unsafe.Pointer(statePtr)).flags & (int32(1) << 12)) != 0 {
+				if (*ChannelState)(unsafe.Pointer(statePtr)).flags&(int32(1)<<12) != 0 {
 					return ts + 6692 /* "1" */
 				}
 				return ts + 6694 /* "0" */
@@ -26504,17 +26504,17 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		return 0
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'r') && (libc.Xstrncmp(tls, cmdName, ts+6696 /* "readable" */, len) == 0) {
-		hTblPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) ClientData)(unsafe.Pointer((tclStubsPtr + 608 /* &.tcl_GetAssocData */))))(tls, interp, ts+6662 /* "tclIO" */, uintptr(0))
-		if hTblPtr == (uintptr(0)) {
+	if int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'r' && libc.Xstrncmp(tls, cmdName, ts+6696, len) == 0 {
+		hTblPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) ClientData)(unsafe.Pointer(tclStubsPtr + 608)))(tls, interp, ts+6662, uintptr(0))
+		if hTblPtr == uintptr(0) {
 			return 0
 		}
-		for hPtr = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 588 /* &.tcl_FirstHashEntry */))))(tls, hTblPtr, bp+812 /* &hSearch */); hPtr != (uintptr(0)); hPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 780 /* &.tcl_NextHashEntry */))))(tls, bp+812 /* &hSearch */) {
+		for hPtr = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 588)))(tls, hTblPtr, bp+812); hPtr != uintptr(0); hPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 780)))(tls, bp+812) {
 			chanPtr = (*Tcl_HashEntry)(unsafe.Pointer(hPtr)).clientData
 			statePtr = (*Channel)(unsafe.Pointer(chanPtr)).state
-			if ((*ChannelState)(unsafe.Pointer(statePtr)).flags & (int32(1) << 1)) != 0 {
-				(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, func() uintptr {
-					if ((*Tcl_HashTable)(unsafe.Pointer((hTblPtr))).keyType == (1)) || ((*Tcl_HashTable)(unsafe.Pointer((hTblPtr))).keyType == (-1)) {
+			if (*ChannelState)(unsafe.Pointer(statePtr)).flags&(int32(1)<<1) != 0 {
+				(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, func() uintptr {
+					if (*Tcl_HashTable)(unsafe.Pointer(hTblPtr)).keyType == 1 || (*Tcl_HashTable)(unsafe.Pointer(hTblPtr)).keyType == -1 {
 						return *(*uintptr)(unsafe.Pointer(hPtr + 16 /* &.key */))
 					}
 					return hPtr + 16 /* &.key */
@@ -26524,14 +26524,14 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		return 0
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'r') && (libc.Xstrncmp(tls, cmdName, ts+6705 /* "refcount" */, len) == 0) {
+	if int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'r' && libc.Xstrncmp(tls, cmdName, ts+6705, len) == 0 {
 		if argc != 3 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+496, ts+6602 /* "channel name req..." */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+496, ts+6602, uintptr(0)))
 			return 1
 		}
 
-		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer((tclIntStubsPtr + 104 /* &.tclFormatInt */))))(tls, bp+788 /* &buf[0] */, int32((*ChannelState)(unsafe.Pointer(statePtr)).refCount))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+520, bp+788 /* &buf[0] */, uintptr(0)))
+		(*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(tclIntStubsPtr + 104)))(tls, bp+788, int32((*ChannelState)(unsafe.Pointer(statePtr)).refCount))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+520, bp+788, uintptr(0)))
 		return 0
 	}
 
@@ -26540,40 +26540,40 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 	// checking that the command is truly cut'able, no mutexes for
 	// thread-safety). Its complementary command is "cut", see above.
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 's') && (libc.Xstrncmp(tls, cmdName, ts+6327 /* "splice" */, len) == 0) {
+	if int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 's' && libc.Xstrncmp(tls, cmdName, ts+6327, len) == 0 {
 		if argc != 3 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+544, ts+6602 /* "channel name req..." */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+544, ts+6602, uintptr(0)))
 			return 1
 		}
 
-		(*(*func(*libc.TLS, Tcl_Channel))(unsafe.Pointer((tclStubsPtr + 1672 /* &.tcl_SpliceChannel */))))(tls, chan1)
+		(*(*func(*libc.TLS, Tcl_Channel))(unsafe.Pointer(tclStubsPtr + 1672)))(tls, chan1)
 
-		(*(*func(*libc.TLS, uintptr, Tcl_Channel))(unsafe.Pointer((tclStubsPtr + 848 /* &.tcl_RegisterChannel */))))(tls, interp, chan1)
-		(*(*func(*libc.TLS, uintptr, Tcl_Channel) int32)(unsafe.Pointer((tclStubsPtr + 1016 /* &.tcl_UnregisterChannel */))))(tls, uintptr(0), chan1)
+		(*(*func(*libc.TLS, uintptr, Tcl_Channel))(unsafe.Pointer(tclStubsPtr + 848)))(tls, interp, chan1)
+		(*(*func(*libc.TLS, uintptr, Tcl_Channel) int32)(unsafe.Pointer(tclStubsPtr + 1016)))(tls, uintptr(0), chan1)
 
 		return 0
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 't') && (libc.Xstrncmp(tls, cmdName, ts+6714 /* "type" */, len) == 0) {
+	if int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 't' && libc.Xstrncmp(tls, cmdName, ts+6714, len) == 0 {
 		if argc != 3 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+568, ts+6602 /* "channel name req..." */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+568, ts+6602, uintptr(0)))
 			return 1
 		}
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+592, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1600 /* &.tcl_ChannelName */))))(tls, (*Channel)(unsafe.Pointer(chanPtr)).typePtr), uintptr(0)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+592, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1600)))(tls, (*Channel)(unsafe.Pointer(chanPtr)).typePtr), uintptr(0)))
 		return 0
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'w') && (libc.Xstrncmp(tls, cmdName, ts+6719 /* "writable" */, len) == 0) {
-		hTblPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) ClientData)(unsafe.Pointer((tclStubsPtr + 608 /* &.tcl_GetAssocData */))))(tls, interp, ts+6662 /* "tclIO" */, uintptr(0))
-		if hTblPtr == (uintptr(0)) {
+	if int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'w' && libc.Xstrncmp(tls, cmdName, ts+6719, len) == 0 {
+		hTblPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) ClientData)(unsafe.Pointer(tclStubsPtr + 608)))(tls, interp, ts+6662, uintptr(0))
+		if hTblPtr == uintptr(0) {
 			return 0
 		}
-		for hPtr = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 588 /* &.tcl_FirstHashEntry */))))(tls, hTblPtr, bp+812 /* &hSearch */); hPtr != (uintptr(0)); hPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 780 /* &.tcl_NextHashEntry */))))(tls, bp+812 /* &hSearch */) {
+		for hPtr = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 588)))(tls, hTblPtr, bp+812); hPtr != uintptr(0); hPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 780)))(tls, bp+812) {
 			chanPtr = (*Tcl_HashEntry)(unsafe.Pointer(hPtr)).clientData
 			statePtr = (*Channel)(unsafe.Pointer(chanPtr)).state
-			if ((*ChannelState)(unsafe.Pointer(statePtr)).flags & (int32(1) << 2)) != 0 {
-				(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 284 /* &.tcl_AppendElement */))))(tls, interp, func() uintptr {
-					if ((*Tcl_HashTable)(unsafe.Pointer((hTblPtr))).keyType == (1)) || ((*Tcl_HashTable)(unsafe.Pointer((hTblPtr))).keyType == (-1)) {
+			if (*ChannelState)(unsafe.Pointer(statePtr)).flags&(int32(1)<<2) != 0 {
+				(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 284)))(tls, interp, func() uintptr {
+					if (*Tcl_HashTable)(unsafe.Pointer(hTblPtr)).keyType == 1 || (*Tcl_HashTable)(unsafe.Pointer(hTblPtr)).keyType == -1 {
 						return *(*uintptr)(unsafe.Pointer(hPtr + 16 /* &.key */))
 					}
 					return hPtr + 16 /* &.key */
@@ -26583,36 +26583,36 @@ func TestChannelCmd(tls *libc.TLS, clientData ClientData, interp uintptr, argc i
 		return 0
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 't') && (libc.Xstrncmp(tls, cmdName, ts+6728 /* "transform" */, len) == 0) {
+	if int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 't' && libc.Xstrncmp(tls, cmdName, ts+6728, len) == 0 {
 		// Syntax: transform channel -command command
 
 		if argc != 5 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+616, ts+1482 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+616, ts+1482, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 				ts+6738 /* " transform chann..." */, uintptr(0)))
 			return 1
 		}
 		if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), ts+6773 /* "-command" */) != 0 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+656, ts+6782 /* "bad argument \"" */, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)),
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+656, ts+6782, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)),
 				ts+6797 /* "\": should be \"-c..." */, uintptr(0)))
 			return 1
 		}
 
-		return (*(*func(*libc.TLS, uintptr, Tcl_Channel, uintptr) int32)(unsafe.Pointer((tclIntStubsPtr + 652 /* &.tclChannelTransform */))))(tls, interp, chan1,
-			(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)), -1))
+		return (*(*func(*libc.TLS, uintptr, Tcl_Channel, uintptr) int32)(unsafe.Pointer(tclIntStubsPtr + 652)))(tls, interp, chan1,
+			(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)), -1))
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'u') && (libc.Xstrncmp(tls, cmdName, ts+6821 /* "unstack" */, len) == 0) {
+	if int32(*(*int8)(unsafe.Pointer(cmdName + uintptr(0)))) == 'u' && libc.Xstrncmp(tls, cmdName, ts+6821, len) == 0 {
 		// Syntax: unstack channel
 
 		if argc != 3 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+696, ts+1482 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+696, ts+1482, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 				ts+6829 /* " unstack channel..." */, uintptr(0)))
 			return 1
 		}
-		return (*(*func(*libc.TLS, uintptr, Tcl_Channel) int32)(unsafe.Pointer((tclStubsPtr + 1136 /* &.tcl_UnstackChannel */))))(tls, interp, chan1)
+		return (*(*func(*libc.TLS, uintptr, Tcl_Channel) int32)(unsafe.Pointer(tclStubsPtr + 1136)))(tls, interp, chan1)
 	}
 
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+736, ts+1428 /* "bad option \"" */, cmdName,
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+736, ts+1428, cmdName,
 
 		ts+6847 /* "\": should be cut..." */, uintptr(0)))
 	return 1
@@ -26651,71 +26651,71 @@ func TestChannelEventCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc i
 	var mask int32
 	var len int32
 
-	if (argc < 3) || (argc > 5) {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+1482 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+	if argc < 3 || argc > 5 {
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+1482, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 			ts+6962 /* " channelName cmd..." */, uintptr(0)))
 		return 1
 	}
-	chanPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) Tcl_Channel)(unsafe.Pointer((tclStubsPtr + 612 /* &.tcl_GetChannel */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), uintptr(0))
-	if chanPtr == (uintptr(0)) {
+	chanPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) Tcl_Channel)(unsafe.Pointer(tclStubsPtr + 612)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(1)*4)), uintptr(0))
+	if chanPtr == uintptr(0) {
 		return 1
 	}
 	statePtr = (*Channel)(unsafe.Pointer(chanPtr)).state
 
 	cmd = *(*uintptr)(unsafe.Pointer(argv + uintptr(2)*4))
 	len = int32(libc.Xstrlen(tls, cmd))
-	if (int32(*(*int8)(unsafe.Pointer(cmd + uintptr(0)))) == 'a') && (libc.Xstrncmp(tls, cmd, ts+6994 /* "add" */, uint32(len)) == 0) {
+	if int32(*(*int8)(unsafe.Pointer(cmd + uintptr(0)))) == 'a' && libc.Xstrncmp(tls, cmd, ts+6994, uint32(len)) == 0 {
 		if argc != 5 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+40, ts+1482 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+40, ts+1482, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 				ts+6998 /* " channelName add..." */, uintptr(0)))
 			return 1
 		}
 		if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), ts+6696 /* "readable" */) == 0 {
-			mask = (int32(1) << 1)
+			mask = int32(1) << 1
 		} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), ts+6719 /* "writable" */) == 0 {
-			mask = (int32(1) << 2)
+			mask = int32(1) << 2
 		} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), ts+6511 /* "none" */) == 0 {
 			mask = 0
 		} else {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+80, ts+7033 /* "bad event name \"" */, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)),
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+80, ts+7033, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)),
 				ts+7050 /* "\": must be reada..." */, uintptr(0)))
 			return 1
 		}
 
-		esPtr = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, uint32(unsafe.Sizeof(EventScriptRecord{})))
+		esPtr = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, uint32(unsafe.Sizeof(EventScriptRecord{})))
 		(*EventScriptRecord)(unsafe.Pointer(esPtr)).nextPtr = (*ChannelState)(unsafe.Pointer(statePtr)).scriptRecordPtr
 		(*ChannelState)(unsafe.Pointer(statePtr)).scriptRecordPtr = esPtr
 
 		(*EventScriptRecord)(unsafe.Pointer(esPtr)).chanPtr = chanPtr
 		(*EventScriptRecord)(unsafe.Pointer(esPtr)).interp = interp
 		(*EventScriptRecord)(unsafe.Pointer(esPtr)).mask = mask
-		(*EventScriptRecord)(unsafe.Pointer(esPtr)).scriptPtr = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)), -1)
+		(*EventScriptRecord)(unsafe.Pointer(esPtr)).scriptPtr = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)), -1)
 		(*Tcl_Obj)(unsafe.Pointer((*EventScriptRecord)(unsafe.Pointer(esPtr)).scriptPtr)).refCount++
 
-		(*(*func(*libc.TLS, Tcl_Channel, int32, uintptr, ClientData))(unsafe.Pointer((tclStubsPtr + 364 /* &.tcl_CreateChannelHandler */))))(tls, chanPtr, mask,
+		(*(*func(*libc.TLS, Tcl_Channel, int32, uintptr, ClientData))(unsafe.Pointer(tclStubsPtr + 364)))(tls, chanPtr, mask,
 			(*TclIntStubs)(unsafe.Pointer(tclIntStubsPtr)).tclChannelEventScriptInvoker, esPtr)
 
 		return 0
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmd + uintptr(0)))) == 'd') && (libc.Xstrncmp(tls, cmd, ts+1416 /* "delete" */, uint32(len)) == 0) {
+	if int32(*(*int8)(unsafe.Pointer(cmd + uintptr(0)))) == 'd' && libc.Xstrncmp(tls, cmd, ts+1416, uint32(len)) == 0 {
 		if argc != 4 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+120, ts+1482 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+120, ts+1482, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 				ts+7089 /* " channelName del..." */, uintptr(0)))
 			return 1
 		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), bp+520 /* &index */) == 1 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), bp+520) == 1 {
 			return 1
 		}
 		if *(*int32)(unsafe.Pointer(bp + 520 /* index */)) < 0 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+160, ts+7116 /* "bad event index:..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)),
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+160, ts+7116, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)),
 				ts+7134 /* ": must be nonneg..." */, uintptr(0)))
 			return 1
 		}
 		i = 0
 		esPtr = (*ChannelState)(unsafe.Pointer(statePtr)).scriptRecordPtr
 	__1:
-		if !((i < *(*int32)(unsafe.Pointer(bp + 520 /* index */))) && (esPtr != (uintptr(0)))) {
+		if !(i < *(*int32)(unsafe.Pointer(bp + 520)) && esPtr != uintptr(0)) {
 			goto __3
 		}
 		{
@@ -26730,101 +26730,101 @@ func TestChannelEventCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc i
 		goto __3
 	__3:
 		;
-		if esPtr == (uintptr(0)) {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+200, ts+7156 /* "bad event index " */, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)),
+		if esPtr == uintptr(0) {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+200, ts+7156, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)),
 				ts+7173 /* ": out of range" */, uintptr(0)))
 			return 1
 		}
 		if esPtr == (*ChannelState)(unsafe.Pointer(statePtr)).scriptRecordPtr {
 			(*ChannelState)(unsafe.Pointer(statePtr)).scriptRecordPtr = (*EventScriptRecord)(unsafe.Pointer(esPtr)).nextPtr
 		} else {
-			for prevEsPtr = (*ChannelState)(unsafe.Pointer(statePtr)).scriptRecordPtr; (prevEsPtr != (uintptr(0))) && ((*EventScriptRecord)(unsafe.Pointer(prevEsPtr)).nextPtr != esPtr); prevEsPtr = (*EventScriptRecord)(unsafe.Pointer(prevEsPtr)).nextPtr {
+			for prevEsPtr = (*ChannelState)(unsafe.Pointer(statePtr)).scriptRecordPtr; prevEsPtr != uintptr(0) && (*EventScriptRecord)(unsafe.Pointer(prevEsPtr)).nextPtr != esPtr; prevEsPtr = (*EventScriptRecord)(unsafe.Pointer(prevEsPtr)).nextPtr {
 				// Empty loop body.
 			}
-			if prevEsPtr == (uintptr(0)) {
-				(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 16 /* &.tcl_Panic */))))(tls, ts+7188 /* "TestChannelEvent..." */, 0)
+			if prevEsPtr == uintptr(0) {
+				(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 16)))(tls, ts+7188, 0)
 			}
 			(*EventScriptRecord)(unsafe.Pointer(prevEsPtr)).nextPtr = (*EventScriptRecord)(unsafe.Pointer(esPtr)).nextPtr
 		}
-		(*(*func(*libc.TLS, Tcl_Channel, uintptr, ClientData))(unsafe.Pointer((tclStubsPtr + 412 /* &.tcl_DeleteChannelHandler */))))(tls, chanPtr,
+		(*(*func(*libc.TLS, Tcl_Channel, uintptr, ClientData))(unsafe.Pointer(tclStubsPtr + 412)))(tls, chanPtr,
 			(*TclIntStubs)(unsafe.Pointer(tclIntStubsPtr)).tclChannelEventScriptInvoker, esPtr)
 		for ok := true; ok; ok = 0 != 0 {
 			var _objPtr uintptr = (*EventScriptRecord)(unsafe.Pointer(esPtr)).scriptPtr
-			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 			}
 		}
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, esPtr)
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, esPtr)
 
 		return 0
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmd + uintptr(0)))) == 'l') && (libc.Xstrncmp(tls, cmd, ts+7235 /* "list" */, uint32(len)) == 0) {
+	if int32(*(*int8)(unsafe.Pointer(cmd + uintptr(0)))) == 'l' && libc.Xstrncmp(tls, cmd, ts+7235, uint32(len)) == 0 {
 		if argc != 3 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+240, ts+1482 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+240, ts+1482, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 				ts+7240 /* " channelName lis..." */, uintptr(0)))
 			return 1
 		}
-		resultListPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp)
-		for esPtr = (*ChannelState)(unsafe.Pointer(statePtr)).scriptRecordPtr; esPtr != (uintptr(0)); esPtr = (*EventScriptRecord)(unsafe.Pointer(esPtr)).nextPtr {
+		resultListPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp)
+		for esPtr = (*ChannelState)(unsafe.Pointer(statePtr)).scriptRecordPtr; esPtr != uintptr(0); esPtr = (*EventScriptRecord)(unsafe.Pointer(esPtr)).nextPtr {
 			if (*EventScriptRecord)(unsafe.Pointer(esPtr)).mask != 0 {
-				(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 184 /* &.tcl_ListObjAppendElement */))))(tls, interp, resultListPtr, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls,
+				(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 184)))(tls, interp, resultListPtr, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls,
 					func() uintptr {
-						if (*EventScriptRecord)(unsafe.Pointer(esPtr)).mask == (int32(1) << 1) {
+						if (*EventScriptRecord)(unsafe.Pointer(esPtr)).mask == int32(1)<<1 {
 							return ts + 6696 /* "readable" */
 						}
 						return ts + 6719 /* "writable" */
 					}(), -1))
 			} else {
-				(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 184 /* &.tcl_ListObjAppendElement */))))(tls, interp, resultListPtr,
-					(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, ts+6511 /* "none" */, -1))
+				(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 184)))(tls, interp, resultListPtr,
+					(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, ts+6511, -1))
 			}
-			(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 184 /* &.tcl_ListObjAppendElement */))))(tls, interp, resultListPtr, (*EventScriptRecord)(unsafe.Pointer(esPtr)).scriptPtr)
+			(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 184)))(tls, interp, resultListPtr, (*EventScriptRecord)(unsafe.Pointer(esPtr)).scriptPtr)
 		}
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, resultListPtr)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, resultListPtr)
 		return 0
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmd + uintptr(0)))) == 'r') && (libc.Xstrncmp(tls, cmd, ts+7259 /* "removeall" */, uint32(len)) == 0) {
+	if int32(*(*int8)(unsafe.Pointer(cmd + uintptr(0)))) == 'r' && libc.Xstrncmp(tls, cmd, ts+7259, uint32(len)) == 0 {
 		if argc != 3 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+280, ts+1482 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+280, ts+1482, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 				ts+7269 /* " channelName rem..." */, uintptr(0)))
 			return 1
 		}
-		for esPtr = (*ChannelState)(unsafe.Pointer(statePtr)).scriptRecordPtr; esPtr != (uintptr(0)); esPtr = nextEsPtr {
+		for esPtr = (*ChannelState)(unsafe.Pointer(statePtr)).scriptRecordPtr; esPtr != uintptr(0); esPtr = nextEsPtr {
 			nextEsPtr = (*EventScriptRecord)(unsafe.Pointer(esPtr)).nextPtr
-			(*(*func(*libc.TLS, Tcl_Channel, uintptr, ClientData))(unsafe.Pointer((tclStubsPtr + 412 /* &.tcl_DeleteChannelHandler */))))(tls, chanPtr,
+			(*(*func(*libc.TLS, Tcl_Channel, uintptr, ClientData))(unsafe.Pointer(tclStubsPtr + 412)))(tls, chanPtr,
 				(*TclIntStubs)(unsafe.Pointer(tclIntStubsPtr)).tclChannelEventScriptInvoker, esPtr)
 			for ok1 := true; ok1; ok1 = 0 != 0 {
 				var _objPtr uintptr = (*EventScriptRecord)(unsafe.Pointer(esPtr)).scriptPtr
-				if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+				if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 				}
 			}
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, esPtr)
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, esPtr)
 		}
 		(*ChannelState)(unsafe.Pointer(statePtr)).scriptRecordPtr = uintptr(0)
 		return 0
 	}
 
-	if (int32(*(*int8)(unsafe.Pointer(cmd + uintptr(0)))) == 's') && (libc.Xstrncmp(tls, cmd, ts+4165 /* "set" */, uint32(len)) == 0) {
+	if int32(*(*int8)(unsafe.Pointer(cmd + uintptr(0)))) == 's' && libc.Xstrncmp(tls, cmd, ts+4165, uint32(len)) == 0 {
 		if argc != 5 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+320, ts+1482 /* "wrong # args: sh..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+320, ts+1482, *(*uintptr)(unsafe.Pointer(argv + uintptr(0)*4)),
 				ts+7293 /* " channelName del..." */, uintptr(0)))
 			return 1
 		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), bp+520 /* &index */) == 1 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)), bp+520) == 1 {
 			return 1
 		}
 		if *(*int32)(unsafe.Pointer(bp + 520 /* index */)) < 0 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+360, ts+7116 /* "bad event index:..." */, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)),
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+360, ts+7116, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)),
 				ts+7134 /* ": must be nonneg..." */, uintptr(0)))
 			return 1
 		}
 		i = 0
 		esPtr = (*ChannelState)(unsafe.Pointer(statePtr)).scriptRecordPtr
 	__4:
-		if !((i < *(*int32)(unsafe.Pointer(bp + 520 /* index */))) && (esPtr != (uintptr(0)))) {
+		if !(i < *(*int32)(unsafe.Pointer(bp + 520)) && esPtr != uintptr(0)) {
 			goto __6
 		}
 		{
@@ -26839,29 +26839,29 @@ func TestChannelEventCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc i
 		goto __6
 	__6:
 		;
-		if esPtr == (uintptr(0)) {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+400, ts+7156 /* "bad event index " */, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)),
+		if esPtr == uintptr(0) {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+400, ts+7156, *(*uintptr)(unsafe.Pointer(argv + uintptr(3)*4)),
 				ts+7173 /* ": out of range" */, uintptr(0)))
 			return 1
 		}
 
 		if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)), ts+6696 /* "readable" */) == 0 {
-			mask = (int32(1) << 1)
+			mask = int32(1) << 1
 		} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)), ts+6719 /* "writable" */) == 0 {
-			mask = (int32(1) << 2)
+			mask = int32(1) << 2
 		} else if libc.Xstrcmp(tls, *(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)), ts+6511 /* "none" */) == 0 {
 			mask = 0
 		} else {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+440, ts+7033 /* "bad event name \"" */, *(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)),
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+440, ts+7033, *(*uintptr)(unsafe.Pointer(argv + uintptr(4)*4)),
 				ts+7050 /* "\": must be reada..." */, uintptr(0)))
 			return 1
 		}
 		(*EventScriptRecord)(unsafe.Pointer(esPtr)).mask = mask
-		(*(*func(*libc.TLS, Tcl_Channel, int32, uintptr, ClientData))(unsafe.Pointer((tclStubsPtr + 364 /* &.tcl_CreateChannelHandler */))))(tls, chanPtr, mask,
+		(*(*func(*libc.TLS, Tcl_Channel, int32, uintptr, ClientData))(unsafe.Pointer(tclStubsPtr + 364)))(tls, chanPtr, mask,
 			(*TclIntStubs)(unsafe.Pointer(tclIntStubsPtr)).tclChannelEventScriptInvoker, esPtr)
 		return 0
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+480, ts+7326 /* "bad command " */, cmd,
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+480, ts+7326, cmd,
 		ts+7339 /* ", must be one of..." */, uintptr(0)))
 	return 1
 }
@@ -26893,26 +26893,26 @@ func TestWrongNumArgsObjCmd(tls *libc.TLS, dummy ClientData, interp uintptr, obj
 	if objc < 3 {
 		// Don't use Tcl_WrongNumArgs here, as that is the function
 		// we want to test!
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+7393 /* "insufficient arg..." */, uintptr(0))
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+7393, uintptr(0))
 		return 1
 	}
 
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp /* &i */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp) != 0 {
 		return 1
 	}
 
-	msg = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 172 /* &.tcl_GetStringFromObj */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp+4 /* &length */)
+	msg = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 172)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp+4)
 	if *(*int32)(unsafe.Pointer(bp + 4 /* length */)) == 0 {
 		msg = uintptr(0)
 	}
 
-	if *(*int32)(unsafe.Pointer(bp /* i */)) > (objc - 3) {
+	if *(*int32)(unsafe.Pointer(bp /* i */)) > objc-3 {
 		// Asked for more arguments than were given.
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+7393 /* "insufficient arg..." */, uintptr(0))
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+7393, uintptr(0))
 		return 1
 	}
 
-	(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, *(*int32)(unsafe.Pointer(bp /* i */)), (objv + uintptr(3)*4), msg)
+	(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, *(*int32)(unsafe.Pointer(bp)), objv+uintptr(3)*4, msg)
 	return 0
 }
 
@@ -26942,27 +26942,27 @@ func TestGetIndexFromObjStructObjCmd(tls *libc.TLS, dummy ClientData, interp uin
 	// var target int32 at bp+140, 4
 
 	if objc != 3 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+7422 /* "argument targetv..." */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+7422)
 		return 1
 	}
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1224 /* &.tcl_GetIndexFromObjStruct */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp+104 /* &ary[0] */, (int32(uint32(2)*uint32(unsafe.Sizeof(uintptr(0))))),
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1224)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp+104, int32(uint32(2)*uint32(unsafe.Sizeof(uintptr(0)))),
 		ts+7443 /* "dummy" */, 0, bp+136 /* &idx */) != 0 {
 		return 1
 	}
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp+140 /* &target */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp+140) != 0 {
 		return 1
 	}
 	if *(*int32)(unsafe.Pointer(bp + 136 /* idx */)) != *(*int32)(unsafe.Pointer(bp + 140 /* target */)) {
 		// var buffer [64]int8 at bp+144, 64
 
 		libc.Xsprintf(tls, bp+144 /* &buffer[0] */, ts+5733 /* "%d" */, libc.VaList(bp, *(*int32)(unsafe.Pointer(bp + 136 /* idx */))))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+16, ts+7449, /* "index value comp..." */
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+16, ts+7449,
 			bp+144 /* &buffer[0] */, uintptr(0)))
 		libc.Xsprintf(tls, bp+144 /* &buffer[0] */, ts+5733 /* "%d" */, libc.VaList(bp+48, *(*int32)(unsafe.Pointer(bp + 140 /* target */))))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+64, ts+7485 /* " when " */, bp+144 /* &buffer[0] */, ts+7492 /* " expected" */, uintptr(0)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+64, ts+7485, bp+144, ts+7492, uintptr(0)))
 		return 1
 	}
-	(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 3, objv, uintptr(0))
+	(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 3, objv, uintptr(0))
 	return 0
 }
 
@@ -26992,28 +26992,28 @@ func TestFilesystemObjCmd(tls *libc.TLS, dummy ClientData, interp uintptr, objc 
 	var msg uintptr
 
 	if objc != 2 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+7502 /* "boolean" */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+7502)
 		return 1
 	}
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 136 /* &.tcl_GetBooleanFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp /* &boolVal */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 136)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp) != 0 {
 		return 1
 	}
 	if *(*int32)(unsafe.Pointer(bp /* boolVal */)) != 0 {
-		res = (*(*func(*libc.TLS, ClientData, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1900 /* &.tcl_FSRegister */))))(tls, interp, uintptr(unsafe.Pointer(&testReportingFilesystem)))
+		res = (*(*func(*libc.TLS, ClientData, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1900)))(tls, interp, uintptr(unsafe.Pointer(&testReportingFilesystem)))
 		if res == 0 {
 			msg = ts + 7510 /* "registered" */
 		} else {
 			msg = ts + 7521 /* "failed" */
 		}
 	} else {
-		res = (*(*func(*libc.TLS, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1904 /* &.tcl_FSUnregister */))))(tls, uintptr(unsafe.Pointer(&testReportingFilesystem)))
+		res = (*(*func(*libc.TLS, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1904)))(tls, uintptr(unsafe.Pointer(&testReportingFilesystem)))
 		if res == 0 {
 			msg = ts + 7528 /* "unregistered" */
 		} else {
 			msg = ts + 7521 /* "failed" */
 		}
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, msg, -1))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, msg, -1))
 	return res
 }
 
@@ -27027,15 +27027,15 @@ func TestReportInFilesystem(tls *libc.TLS, pathPtr uintptr, clientDataPtr uintpt
 
 	// Try to claim all files first time around
 
-	newPathPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 124 /* &.tcl_DuplicateObj */))))(tls, pathPtr)
+	newPathPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 124)))(tls, pathPtr)
 	lastPathPtr = newPathPtr
 	(*Tcl_Obj)(unsafe.Pointer(newPathPtr)).refCount++
-	if (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1916 /* &.tcl_FSGetFileSystemForPath */))))(tls, newPathPtr) == (uintptr(0)) {
+	if (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1916)))(tls, newPathPtr) == uintptr(0) {
 		// Nothing claimed it. Therefore we don't either
 		for ok := true; ok; ok = 0 != 0 {
 			var _objPtr uintptr = newPathPtr
-			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 			}
 		}
 		lastPathPtr = uintptr(0)
@@ -27052,18 +27052,18 @@ var lastPathPtr uintptr = uintptr(0) /* tclTest.c:6249:20 */
 // object, or NULL if no such representation exists.
 
 func TestReportGetNativePath(tls *libc.TLS, pathPtr uintptr) uintptr { /* tclTest.c:6278:16: */
-	return (*(*func(*libc.TLS, uintptr, uintptr) ClientData)(unsafe.Pointer((tclStubsPtr + 1868 /* &.tcl_FSGetInternalRep */))))(tls, pathPtr, uintptr(unsafe.Pointer(&testReportingFilesystem)))
+	return (*(*func(*libc.TLS, uintptr, uintptr) ClientData)(unsafe.Pointer(tclStubsPtr + 1868)))(tls, pathPtr, uintptr(unsafe.Pointer(&testReportingFilesystem)))
 }
 
 func TestReportFreeInternalRep(tls *libc.TLS, clientData ClientData) { /* tclTest.c:6286:1: */
 	var nativeRep uintptr = clientData
 
-	if nativeRep != (uintptr(0)) {
+	if nativeRep != uintptr(0) {
 		// Free the path
 		for ok := true; ok; ok = 0 != 0 {
 			var _objPtr uintptr = nativeRep
-			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 			}
 		}
 	}
@@ -27080,9 +27080,9 @@ func TestReport(tls *libc.TLS, cmd uintptr, path uintptr, arg2 uintptr) { /* tcl
 	bp := tls.Alloc(212)
 	defer tls.Free(212)
 
-	var interp uintptr = (*(*func(*libc.TLS, uintptr) ClientData)(unsafe.Pointer((tclStubsPtr + 1908 /* &.tcl_FSData */))))(tls, uintptr(unsafe.Pointer(&testReportingFilesystem)))
+	var interp uintptr = (*(*func(*libc.TLS, uintptr) ClientData)(unsafe.Pointer(tclStubsPtr + 1908)))(tls, uintptr(unsafe.Pointer(&testReportingFilesystem)))
 
-	if interp == (uintptr(0)) {
+	if interp == uintptr(0) {
 		// This is bad, but not much we can do about it
 	} else {
 		// No idea why I decided to program this up using the old string-based
@@ -27091,28 +27091,28 @@ func TestReport(tls *libc.TLS, cmd uintptr, path uintptr, arg2 uintptr) { /* tcl
 		var savedResult uintptr
 		// var ds Tcl_DString at bp, 212
 
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 496 /* &.tcl_DStringInit */))))(tls, bp /* &ds */)
-		(*(*func(*libc.TLS, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 476 /* &.tcl_DStringAppend */))))(tls, bp /* &ds */, ts+7541 /* "lappend filesyst..." */, -1)
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 508 /* &.tcl_DStringStartSublist */))))(tls, bp /* &ds */)
-		(*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 480 /* &.tcl_DStringAppendElement */))))(tls, bp /* &ds */, cmd)
-		if path != (uintptr(0)) {
-			(*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 480 /* &.tcl_DStringAppendElement */))))(tls, bp /* &ds */, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, path))
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 496)))(tls, bp)
+		(*(*func(*libc.TLS, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 476)))(tls, bp, ts+7541, -1)
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 508)))(tls, bp)
+		(*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 480)))(tls, bp, cmd)
+		if path != uintptr(0) {
+			(*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 480)))(tls, bp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, path))
 		}
-		if arg2 != (uintptr(0)) {
-			(*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 480 /* &.tcl_DStringAppendElement */))))(tls, bp /* &ds */, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, arg2))
+		if arg2 != uintptr(0) {
+			(*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 480)))(tls, bp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, arg2))
 		}
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 484 /* &.tcl_DStringEndSublist */))))(tls, bp /* &ds */)
-		savedResult = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp)
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 484)))(tls, bp)
+		savedResult = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp)
 		(*Tcl_Obj)(unsafe.Pointer(savedResult)).refCount++
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS) uintptr)(unsafe.Pointer((tclStubsPtr + 228 /* &.tcl_NewObj */))))(tls))
-		(*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 524 /* &.tcl_Eval */))))(tls, interp, (*Tcl_DString)(unsafe.Pointer(bp /* &ds */)).string)
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 488 /* &.tcl_DStringFree */))))(tls, bp /* &ds */)
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 876 /* &.tcl_ResetResult */))))(tls, interp)
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, savedResult)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS) uintptr)(unsafe.Pointer(tclStubsPtr + 228)))(tls))
+		(*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 524)))(tls, interp, (*Tcl_DString)(unsafe.Pointer(bp)).string)
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 488)))(tls, bp)
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 876)))(tls, interp)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, savedResult)
 		for ok := true; ok; ok = 0 != 0 {
 			var _objPtr uintptr = savedResult
-			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 			}
 		}
 	}
@@ -27120,32 +27120,32 @@ func TestReport(tls *libc.TLS, cmd uintptr, path uintptr, arg2 uintptr) { /* tcl
 
 func TestReportStat(tls *libc.TLS, path uintptr, buf uintptr) int32 { /* tclTest.c:6349:1: */
 	TestReport(tls, ts+7567 /* "stat" */, path, uintptr(0))
-	return (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1824 /* &.tcl_FSStat */))))(tls, TestReportGetNativePath(tls, path), buf)
+	return (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1824)))(tls, TestReportGetNativePath(tls, path), buf)
 }
 
 func TestReportLstat(tls *libc.TLS, path uintptr, buf uintptr) int32 { /* tclTest.c:6358:1: */
 	TestReport(tls, ts+7572 /* "lstat" */, path, uintptr(0))
-	return (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1804 /* &.tcl_FSLstat */))))(tls, TestReportGetNativePath(tls, path), buf)
+	return (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1804)))(tls, TestReportGetNativePath(tls, path), buf)
 }
 
 func TestReportAccess(tls *libc.TLS, path uintptr, mode int32) int32 { /* tclTest.c:6367:1: */
 	TestReport(tls, ts+7578 /* "access" */, path, uintptr(0))
-	return (*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 1828 /* &.tcl_FSAccess */))))(tls, TestReportGetNativePath(tls, path), mode)
+	return (*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(tclStubsPtr + 1828)))(tls, TestReportGetNativePath(tls, path), mode)
 }
 
 func TestReportOpenFileChannel(tls *libc.TLS, interp uintptr, fileName uintptr, mode int32, permissions int32) Tcl_Channel { /* tclTest.c:6376:1: */
 	TestReport(tls, ts+6657 /* "open" */, fileName, uintptr(0))
-	return (*(*func(*libc.TLS, uintptr, uintptr, int32, int32) Tcl_Channel)(unsafe.Pointer((tclIntStubsPtr + 840 /* &.tclpOpenFileChannel */))))(tls, interp, TestReportGetNativePath(tls, fileName),
+	return (*(*func(*libc.TLS, uintptr, uintptr, int32, int32) Tcl_Channel)(unsafe.Pointer(tclIntStubsPtr + 840)))(tls, interp, TestReportGetNativePath(tls, fileName),
 		mode, permissions)
 }
 
 func TestReportMatchInDirectory(tls *libc.TLS, interp uintptr, resultPtr uintptr, dirPtr uintptr, pattern uintptr, types uintptr) int32 { /* tclTest.c:6390:1: */
-	if (types != (uintptr(0))) && (((*Tcl_GlobTypeData)(unsafe.Pointer(types)).__type & (int32(1) << 7)) != 0) {
+	if types != uintptr(0) && (*Tcl_GlobTypeData)(unsafe.Pointer(types)).__type&(int32(1)<<7) != 0 {
 		TestReport(tls, ts+7585 /* "matchmounts" */, dirPtr, uintptr(0))
 		return 0
 	} else {
 		TestReport(tls, ts+7597 /* "matchindirectory" */, dirPtr, uintptr(0))
-		return (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1788 /* &.tcl_FSMatchInDirectory */))))(tls, interp, resultPtr,
+		return (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1788)))(tls, interp, resultPtr,
 			TestReportGetNativePath(tls, dirPtr), pattern, types)
 	}
 	return int32(0)
@@ -27153,74 +27153,74 @@ func TestReportMatchInDirectory(tls *libc.TLS, interp uintptr, resultPtr uintptr
 
 func TestReportChdir(tls *libc.TLS, dirName uintptr) int32 { /* tclTest.c:6409:1: */
 	TestReport(tls, ts+7614 /* "chdir" */, dirName, uintptr(0))
-	return (*(*func(*libc.TLS, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1840 /* &.tcl_FSChdir */))))(tls, TestReportGetNativePath(tls, dirName))
+	return (*(*func(*libc.TLS, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1840)))(tls, TestReportGetNativePath(tls, dirName))
 }
 
 func TestReportLoadFile(tls *libc.TLS, interp uintptr, fileName uintptr, handlePtr uintptr, unloadProcPtr uintptr) int32 { /* tclTest.c:6417:1: */
 	TestReport(tls, ts+7620 /* "loadfile" */, fileName, uintptr(0))
-	return (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, uintptr, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1784 /* &.tcl_FSLoadFile */))))(tls, interp, TestReportGetNativePath(tls, fileName), uintptr(0),
+	return (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, uintptr, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1784)))(tls, interp, TestReportGetNativePath(tls, fileName), uintptr(0),
 		uintptr(0), uintptr(0), uintptr(0), handlePtr, unloadProcPtr)
 }
 
 func TestReportLink(tls *libc.TLS, path uintptr, to uintptr, linkType int32) uintptr { /* tclTest.c:6434:16: */
 	TestReport(tls, ts+7629 /* "link" */, path, to)
-	return (*(*func(*libc.TLS, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 1792 /* &.tcl_FSLink */))))(tls, TestReportGetNativePath(tls, path), to, linkType)
+	return (*(*func(*libc.TLS, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 1792)))(tls, TestReportGetNativePath(tls, path), to, linkType)
 }
 
 func TestReportRenameFile(tls *libc.TLS, src uintptr, dst uintptr) int32 { /* tclTest.c:6445:1: */
 	TestReport(tls, ts+7634 /* "renamefile" */, src, dst)
-	return (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1800 /* &.tcl_FSRenameFile */))))(tls, TestReportGetNativePath(tls, src),
+	return (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1800)))(tls, TestReportGetNativePath(tls, src),
 		TestReportGetNativePath(tls, dst))
 }
 
 func TestReportCopyFile(tls *libc.TLS, src uintptr, dst uintptr) int32 { /* tclTest.c:6457:1: */
 	TestReport(tls, ts+7645 /* "copyfile" */, src, dst)
-	return (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1768 /* &.tcl_FSCopyFile */))))(tls, TestReportGetNativePath(tls, src),
+	return (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1768)))(tls, TestReportGetNativePath(tls, src),
 		TestReportGetNativePath(tls, dst))
 }
 
 func TestReportDeleteFile(tls *libc.TLS, path uintptr) int32 { /* tclTest.c:6467:1: */
 	TestReport(tls, ts+7654 /* "deletefile" */, path, uintptr(0))
-	return (*(*func(*libc.TLS, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1780 /* &.tcl_FSDeleteFile */))))(tls, TestReportGetNativePath(tls, path))
+	return (*(*func(*libc.TLS, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1780)))(tls, TestReportGetNativePath(tls, path))
 }
 
 func TestReportCreateDirectory(tls *libc.TLS, path uintptr) int32 { /* tclTest.c:6475:1: */
 	TestReport(tls, ts+7665 /* "createdirectory" */, path, uintptr(0))
-	return (*(*func(*libc.TLS, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1776 /* &.tcl_FSCreateDirectory */))))(tls, TestReportGetNativePath(tls, path))
+	return (*(*func(*libc.TLS, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1776)))(tls, TestReportGetNativePath(tls, path))
 }
 
 func TestReportCopyDirectory(tls *libc.TLS, src uintptr, dst uintptr, errorPtr uintptr) int32 { /* tclTest.c:6483:1: */
 	TestReport(tls, ts+7681 /* "copydirectory" */, src, dst)
-	return (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1772 /* &.tcl_FSCopyDirectory */))))(tls, TestReportGetNativePath(tls, src),
+	return (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1772)))(tls, TestReportGetNativePath(tls, src),
 		TestReportGetNativePath(tls, dst), errorPtr)
 }
 
 func TestReportRemoveDirectory(tls *libc.TLS, path uintptr, recursive int32, errorPtr uintptr) int32 { /* tclTest.c:6496:1: */
 	TestReport(tls, ts+7695 /* "removedirectory" */, path, uintptr(0))
-	return (*(*func(*libc.TLS, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1796 /* &.tcl_FSRemoveDirectory */))))(tls, TestReportGetNativePath(tls, path), recursive,
+	return (*(*func(*libc.TLS, uintptr, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1796)))(tls, TestReportGetNativePath(tls, path), recursive,
 		errorPtr)
 }
 
 func TestReportFileAttrStrings(tls *libc.TLS, fileName uintptr, objPtrRef uintptr) uintptr { /* tclTest.c:6510:19: */
 	TestReport(tls, ts+7711 /* "fileattributestr..." */, fileName, uintptr(0))
-	return (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1820 /* &.tcl_FSFileAttrStrings */))))(tls, TestReportGetNativePath(tls, fileName), objPtrRef)
+	return (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1820)))(tls, TestReportGetNativePath(tls, fileName), objPtrRef)
 }
 
 func TestReportFileAttrsGet(tls *libc.TLS, interp uintptr, index int32, fileName uintptr, objPtrRef uintptr) int32 { /* tclTest.c:6520:1: */
 	TestReport(tls, ts+7732 /* "fileattributesge..." */, fileName, uintptr(0))
-	return (*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1812 /* &.tcl_FSFileAttrsGet */))))(tls, interp, index,
+	return (*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1812)))(tls, interp, index,
 		TestReportGetNativePath(tls, fileName), objPtrRef)
 }
 
 func TestReportFileAttrsSet(tls *libc.TLS, interp uintptr, index int32, fileName uintptr, objPtr uintptr) int32 { /* tclTest.c:6532:1: */
 	TestReport(tls, ts+7750 /* "fileattributesse..." */, fileName, objPtr)
-	return (*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1816 /* &.tcl_FSFileAttrsSet */))))(tls, interp, index,
+	return (*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1816)))(tls, interp, index,
 		TestReportGetNativePath(tls, fileName), objPtr)
 }
 
 func TestReportUtime(tls *libc.TLS, fileName uintptr, tval uintptr) int32 { /* tclTest.c:6544:1: */
 	TestReport(tls, ts+7768 /* "utime" */, fileName, uintptr(0))
-	return (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1808 /* &.tcl_FSUtime */))))(tls, TestReportGetNativePath(tls, fileName), tval)
+	return (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1808)))(tls, TestReportGetNativePath(tls, fileName), tval)
 }
 
 func TestReportNormalizePath(tls *libc.TLS, interp uintptr, pathPtr uintptr, nextCheckpoint int32) int32 { /* tclTest.c:6553:1: */
@@ -27229,7 +27229,7 @@ func TestReportNormalizePath(tls *libc.TLS, interp uintptr, pathPtr uintptr, nex
 }
 
 func SimplePathInFilesystem(tls *libc.TLS, pathPtr uintptr, clientDataPtr uintptr) int32 { /* tclTest.c:6563:1: */
-	var str uintptr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, pathPtr)
+	var str uintptr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, pathPtr)
 
 	if libc.Xstrncmp(tls, str, ts+7788 /* "simplefs:/" */, uint32(10)) != 0 {
 		return -1
@@ -27262,28 +27262,28 @@ func TestSimpleFilesystemObjCmd(tls *libc.TLS, dummy ClientData, interp uintptr,
 	var msg uintptr
 
 	if objc != 2 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+7502 /* "boolean" */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+7502)
 		return 1
 	}
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 136 /* &.tcl_GetBooleanFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp /* &boolVal */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 136)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp) != 0 {
 		return 1
 	}
 	if *(*int32)(unsafe.Pointer(bp /* boolVal */)) != 0 {
-		res = (*(*func(*libc.TLS, ClientData, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1900 /* &.tcl_FSRegister */))))(tls, interp, uintptr(unsafe.Pointer(&simpleFilesystem)))
+		res = (*(*func(*libc.TLS, ClientData, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1900)))(tls, interp, uintptr(unsafe.Pointer(&simpleFilesystem)))
 		if res == 0 {
 			msg = ts + 7510 /* "registered" */
 		} else {
 			msg = ts + 7521 /* "failed" */
 		}
 	} else {
-		res = (*(*func(*libc.TLS, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1904 /* &.tcl_FSUnregister */))))(tls, uintptr(unsafe.Pointer(&simpleFilesystem)))
+		res = (*(*func(*libc.TLS, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1904)))(tls, uintptr(unsafe.Pointer(&simpleFilesystem)))
 		if res == 0 {
 			msg = ts + 7528 /* "unregistered" */
 		} else {
 			msg = ts + 7521 /* "failed" */
 		}
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, msg, -1))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, msg, -1))
 	return res
 }
 
@@ -27301,13 +27301,13 @@ func SimpleRedirect(tls *libc.TLS, pathPtr uintptr) uintptr { /* tclTest.c:6625:
 
 	// We assume the same name in the current directory is ok.
 
-	str = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 172 /* &.tcl_GetStringFromObj */))))(tls, pathPtr, bp /* &len */)
-	if (*(*int32)(unsafe.Pointer(bp /* len */)) < 10) || (libc.Xstrncmp(tls, str, ts+7788 /* "simplefs:/" */, uint32(10)) != 0) {
+	str = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 172)))(tls, pathPtr, bp)
+	if *(*int32)(unsafe.Pointer(bp)) < 10 || libc.Xstrncmp(tls, str, ts+7788, uint32(10)) != 0 {
 		// Probably shouldn't ever reach here
 		(*Tcl_Obj)(unsafe.Pointer(pathPtr)).refCount++
 		return pathPtr
 	}
-	origPtr = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, (str + uintptr(10)), -1)
+	origPtr = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, str+uintptr(10), -1)
 	(*Tcl_Obj)(unsafe.Pointer(origPtr)).refCount++
 	return origPtr
 }
@@ -27321,40 +27321,40 @@ func SimpleMatchInDirectory(tls *libc.TLS, interp uintptr, resultPtr uintptr, di
 	var resPtr uintptr
 
 	// We only provide a new volume, therefore no mounts at all
-	if (types != (uintptr(0))) && (((*Tcl_GlobTypeData)(unsafe.Pointer(types)).__type & (int32(1) << 7)) != 0) {
+	if types != uintptr(0) && (*Tcl_GlobTypeData)(unsafe.Pointer(types)).__type&(int32(1)<<7) != 0 {
 		return 0
 	}
 
 	// We assume the same name in the current directory is ok.
-	resPtr = (*(*func(*libc.TLS) uintptr)(unsafe.Pointer((tclStubsPtr + 228 /* &.tcl_NewObj */))))(tls)
+	resPtr = (*(*func(*libc.TLS) uintptr)(unsafe.Pointer(tclStubsPtr + 228)))(tls)
 	(*Tcl_Obj)(unsafe.Pointer(resPtr)).refCount++
 	origPtr = SimpleRedirect(tls, dirPtr)
-	res = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1788 /* &.tcl_FSMatchInDirectory */))))(tls, interp, resPtr, origPtr, pattern, types)
+	res = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1788)))(tls, interp, resPtr, origPtr, pattern, types)
 	if res == 0 {
 		// var gLength int32 at bp, 4
 
 		var j int32
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 196 /* &.tcl_ListObjLength */))))(tls, uintptr(0), resPtr, bp /* &gLength */)
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 196)))(tls, uintptr(0), resPtr, bp)
 		for j = 0; j < *(*int32)(unsafe.Pointer(bp /* gLength */)); j++ {
 			// var gElt uintptr at bp+4, 4
 
 			var nElt uintptr
-			(*(*func(*libc.TLS, uintptr, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 192 /* &.tcl_ListObjIndex */))))(tls, uintptr(0), resPtr, j, bp+4 /* &gElt */)
-			nElt = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, ts+7788 /* "simplefs:/" */, 10)
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1152 /* &.tcl_AppendObjToObj */))))(tls, nElt, *(*uintptr)(unsafe.Pointer(bp + 4 /* gElt */)))
-			(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 184 /* &.tcl_ListObjAppendElement */))))(tls, uintptr(0), resultPtr, nElt)
+			(*(*func(*libc.TLS, uintptr, uintptr, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 192)))(tls, uintptr(0), resPtr, j, bp+4)
+			nElt = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, ts+7788, 10)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1152)))(tls, nElt, *(*uintptr)(unsafe.Pointer(bp + 4)))
+			(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 184)))(tls, uintptr(0), resultPtr, nElt)
 		}
 	}
 	for ok := true; ok; ok = 0 != 0 {
 		var _objPtr uintptr = origPtr
-		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 		}
 	}
 	for ok1 := true; ok1; ok1 = 0 != 0 {
 		var _objPtr uintptr = resPtr
-		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 		}
 	}
 	return res
@@ -27367,17 +27367,17 @@ func SimpleOpenFileChannel(tls *libc.TLS, interp uintptr, pathPtr uintptr, mode 
 	var tempPtr uintptr
 	var chan1 Tcl_Channel
 
-	if (mode != 0) && !((mode & 0x0000) != 0) {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+7799 /* "read-only" */, uintptr(0)))
+	if mode != 0 && !(mode&0x0000 != 0) {
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+7799, uintptr(0)))
 		return uintptr(0)
 	}
 
 	tempPtr = SimpleRedirect(tls, pathPtr)
-	chan1 = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) Tcl_Channel)(unsafe.Pointer((tclStubsPtr + 1832 /* &.tcl_FSOpenFileChannel */))))(tls, interp, tempPtr, ts+7809 /* "r" */, permissions)
+	chan1 = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) Tcl_Channel)(unsafe.Pointer(tclStubsPtr + 1832)))(tls, interp, tempPtr, ts+7809, permissions)
 	for ok := true; ok; ok = 0 != 0 {
 		var _objPtr uintptr = tempPtr
-		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 		}
 	}
 	return chan1
@@ -27385,12 +27385,12 @@ func SimpleOpenFileChannel(tls *libc.TLS, interp uintptr, pathPtr uintptr, mode 
 
 func SimpleAccess(tls *libc.TLS, pathPtr uintptr, mode int32) int32 { /* tclTest.c:6714:1: */
 	var tempPtr uintptr = SimpleRedirect(tls, pathPtr)
-	var res int32 = (*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 1828 /* &.tcl_FSAccess */))))(tls, tempPtr, mode)
+	var res int32 = (*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(tclStubsPtr + 1828)))(tls, tempPtr, mode)
 
 	for ok := true; ok; ok = 0 != 0 {
 		var _objPtr uintptr = tempPtr
-		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 		}
 	}
 	return res
@@ -27398,12 +27398,12 @@ func SimpleAccess(tls *libc.TLS, pathPtr uintptr, mode int32) int32 { /* tclTest
 
 func SimpleStat(tls *libc.TLS, pathPtr uintptr, bufPtr uintptr) int32 { /* tclTest.c:6726:1: */
 	var tempPtr uintptr = SimpleRedirect(tls, pathPtr)
-	var res int32 = (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1824 /* &.tcl_FSStat */))))(tls, tempPtr, bufPtr)
+	var res int32 = (*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1824)))(tls, tempPtr, bufPtr)
 
 	for ok := true; ok; ok = 0 != 0 {
 		var _objPtr uintptr = tempPtr
-		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 		}
 	}
 	return res
@@ -27413,7 +27413,7 @@ func SimpleListVolumes(tls *libc.TLS) uintptr { /* tclTest.c:6737:16: */
 	// Add one new volume
 	var retVal uintptr
 
-	retVal = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, ts+7788 /* "simplefs:/" */, -1)
+	retVal = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, ts+7788, -1)
 	(*Tcl_Obj)(unsafe.Pointer(retVal)).refCount++
 	return retVal
 }
@@ -27428,10 +27428,10 @@ func TestNumUtfCharsCmd(tls *libc.TLS, clientData ClientData, interp uintptr, ob
 		*(*int32)(unsafe.Pointer(bp /* len */)) = -1
 
 		if objc > 2 {
-			(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp /* &len */)
+			(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp)
 		}
-		*(*int32)(unsafe.Pointer(bp /* len */)) = (*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer((tclStubsPtr + 1256 /* &.tcl_NumUtfChars */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))), *(*int32)(unsafe.Pointer(bp /* len */)))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, *(*int32)(unsafe.Pointer(bp /* len */))))
+		*(*int32)(unsafe.Pointer(bp /* len */)) = (*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(tclStubsPtr + 1256)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))), *(*int32)(unsafe.Pointer(bp)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, *(*int32)(unsafe.Pointer(bp))))
 	}
 	return 0
 }
@@ -27446,9 +27446,9 @@ func TestFindFirstCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc
 		*(*int32)(unsafe.Pointer(bp /* len */)) = -1
 
 		if objc > 2 {
-			(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp /* &len */)
+			(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp)
 		}
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 1320 /* &.tcl_UtfFindFirst */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))), *(*int32)(unsafe.Pointer(bp /* len */))), -1))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 1320)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))), *(*int32)(unsafe.Pointer(bp))), -1))
 	}
 	return 0
 }
@@ -27463,9 +27463,9 @@ func TestFindLastCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc 
 		*(*int32)(unsafe.Pointer(bp /* len */)) = -1
 
 		if objc > 2 {
-			(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp /* &len */)
+			(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp)
 		}
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 1324 /* &.tcl_UtfFindLast */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))), *(*int32)(unsafe.Pointer(bp /* len */))), -1))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 1324)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))), *(*int32)(unsafe.Pointer(bp))), -1))
 	}
 	return 0
 }
@@ -27504,22 +27504,22 @@ func TestcpuidCmd(tls *libc.TLS, dummy ClientData, interp uintptr, objc int32, o
 	// var regsObjs [4]uintptr at bp+20, 16
 
 	if objc != 2 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+7811 /* "eax" */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+7811)
 		return 1
 	}
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp /* &index */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp) != 0 {
 		return 1
 	}
-	status = (*(*func(*libc.TLS, uint32, uintptr) int32)(unsafe.Pointer((tclIntPlatStubsPtr + 124 /* &.tclWinCPUID */))))(tls, uint32(*(*int32)(unsafe.Pointer(bp /* index */))), bp+4 /* &regs[0] */)
+	status = (*(*func(*libc.TLS, uint32, uintptr) int32)(unsafe.Pointer(tclIntPlatStubsPtr + 124)))(tls, uint32(*(*int32)(unsafe.Pointer(bp))), bp+4)
 	if status != 0 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp,
-			(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, ts+7815 /* "operation not av..." */, -1))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp,
+			(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, ts+7815, -1))
 		return status
 	}
 	for i = 0; i < 4; i++ {
-		*(*uintptr)(unsafe.Pointer(bp + 20 /* &regsObjs[0] */ + uintptr(i)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, int32(*(*uint32)(unsafe.Pointer(bp + 4 /* &regs[0] */ + uintptr(i)*4))))
+		*(*uintptr)(unsafe.Pointer(bp + 20 /* &regsObjs[0] */ + uintptr(i)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, int32(*(*uint32)(unsafe.Pointer(bp + 4 + uintptr(i)*4))))
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 220 /* &.tcl_NewListObj */))))(tls, 4, bp+20 /* &regsObjs[0] */))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 220)))(tls, 4, bp+20))
 	return 0
 }
 
@@ -27537,60 +27537,60 @@ func TestHashSystemHashCmd(tls *libc.TLS, clientData ClientData, interp uintptr,
 
 	*(*int32)(unsafe.Pointer(bp + 96 /* limit */)) = 100
 
-	if (objc > 1) && ((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp+96 /* &limit */) != 0) {
+	if objc > 1 && (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp+96) != 0 {
 		return 1
 	}
 
-	(*(*func(*libc.TLS, uintptr, int32, uintptr))(unsafe.Pointer((tclStubsPtr + 1700 /* &.tcl_InitCustomHashTable */))))(tls, bp+100 /* &hash */, -2, uintptr(unsafe.Pointer(&hkType)))
+	(*(*func(*libc.TLS, uintptr, int32, uintptr))(unsafe.Pointer(tclStubsPtr + 1700)))(tls, bp+100, -2, uintptr(unsafe.Pointer(&hkType)))
 
 	if (*Tcl_HashTable)(unsafe.Pointer(bp+100 /* &hash */)).numEntries != 0 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+7839 /* "non-zero initial..." */, uintptr(0)))
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 444 /* &.tcl_DeleteHashTable */))))(tls, bp+100 /* &hash */)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+7839, uintptr(0)))
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 444)))(tls, bp+100)
 		return 1
 	}
 
 	for i = 0; i < *(*int32)(unsafe.Pointer(bp + 96 /* limit */)); i++ {
-		hPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) uintptr)(unsafe.Pointer((bp + 100 /* &hash */ + 48 /* &.createProc */))))(tls, bp+100 /* &hash */, uintptr(i), bp+156 /* &isNew */)
-		if !(*(*int32)(unsafe.Pointer(bp + 156 /* isNew */)) != 0) {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, i))
-			(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 72 /* &.tcl_AppendToObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp), ts+7861 /* " creation proble..." */, -1)
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 444 /* &.tcl_DeleteHashTable */))))(tls, bp+100 /* &hash */)
+		hPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) uintptr)(unsafe.Pointer(bp + 100 + 48)))(tls, bp+100, uintptr(i), bp+156)
+		if !(*(*int32)(unsafe.Pointer(bp + 156)) != 0) {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, i))
+			(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 72)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp), ts+7861, -1)
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 444)))(tls, bp+100)
 			return 1
 		}
-		(*Tcl_HashEntry)(unsafe.Pointer(hPtr)).clientData = uintptr((i + 42))
+		(*Tcl_HashEntry)(unsafe.Pointer(hPtr)).clientData = uintptr(i + 42)
 	}
 
 	if (*Tcl_HashTable)(unsafe.Pointer(bp+100 /* &hash */)).numEntries != *(*int32)(unsafe.Pointer(bp + 96 /* limit */)) {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+24, ts+7879 /* "unexpected maxim..." */, uintptr(0)))
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 444 /* &.tcl_DeleteHashTable */))))(tls, bp+100 /* &hash */)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+24, ts+7879, uintptr(0)))
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 444)))(tls, bp+100)
 		return 1
 	}
 
 	for i = 0; i < *(*int32)(unsafe.Pointer(bp + 96 /* limit */)); i++ {
-		hPtr = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((bp + 100 /* &hash */ + 44 /* &.findProc */))))(tls, bp+100 /* &hash */, uintptr(i))
-		if hPtr == (uintptr(0)) {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, i))
-			(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 72 /* &.tcl_AppendToObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp), ts+7903 /* " lookup problem" */, -1)
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 444 /* &.tcl_DeleteHashTable */))))(tls, bp+100 /* &hash */)
+		hPtr = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(bp + 100 + 44)))(tls, bp+100, uintptr(i))
+		if hPtr == uintptr(0) {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, i))
+			(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 72)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp), ts+7903, -1)
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 444)))(tls, bp+100)
 			return 1
 		}
-		if (int32((*Tcl_HashEntry)(unsafe.Pointer(hPtr)).clientData)) != (i + 42) {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, i))
-			(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 72 /* &.tcl_AppendToObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp), ts+7919 /* " value problem" */, -1)
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 444 /* &.tcl_DeleteHashTable */))))(tls, bp+100 /* &hash */)
+		if int32((*Tcl_HashEntry)(unsafe.Pointer(hPtr)).clientData) != i+42 {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, i))
+			(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 72)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp), ts+7919, -1)
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 444)))(tls, bp+100)
 			return 1
 		}
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 440 /* &.tcl_DeleteHashEntry */))))(tls, hPtr)
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 440)))(tls, hPtr)
 	}
 
 	if (*Tcl_HashTable)(unsafe.Pointer(bp+100 /* &hash */)).numEntries != 0 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+48, ts+7934 /* "non-zero final s..." */, uintptr(0)))
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 444 /* &.tcl_DeleteHashTable */))))(tls, bp+100 /* &hash */)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+48, ts+7934, uintptr(0)))
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 444)))(tls, bp+100)
 		return 1
 	}
 
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 444 /* &.tcl_DeleteHashTable */))))(tls, bp+100 /* &hash */)
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+72, ts+7954 /* "OK" */, uintptr(0)))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 444)))(tls, bp+100)
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+72, ts+7954, uintptr(0)))
 	return 0
 }
 
@@ -27610,7 +27610,7 @@ func TestgetintCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, 
 	defer tls.Free(4)
 
 	if argc < 2 {
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 936 /* &.tcl_SetResult */))))(tls, interp, ts+1396 /* "wrong # args" */, uintptr(0))
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 936)))(tls, interp, ts+1396, uintptr(0))
 		return 1
 	} else {
 		// var val int32 at bp, 4
@@ -27619,12 +27619,12 @@ func TestgetintCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int32, 
 		var total int32 = 0
 
 		for i = 1; i < argc; i++ {
-			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(i)*4)), bp /* &val */) != 0 {
+			if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, *(*uintptr)(unsafe.Pointer(argv + uintptr(i)*4)), bp) != 0 {
 				return 1
 			}
-			total = total + (*(*int32)(unsafe.Pointer(bp /* val */)))
+			total = total + *(*int32)(unsafe.Pointer(bp))
 		}
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, total))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, total))
 		return 0
 	}
 	return int32(0)
@@ -27636,28 +27636,28 @@ func NREUnwind_callback(tls *libc.TLS, data uintptr, interp uintptr, result int3
 
 	// var none int32 at bp, 4
 
-	if *(*ClientData)(unsafe.Pointer(data + uintptr(0)*4)) == (libc.UintptrFromInt32(-1)) {
-		(*(*func(*libc.TLS, uintptr, uintptr, ClientData, ClientData, ClientData, ClientData))(unsafe.Pointer((tclStubsPtr + 2356 /* &.tcl_NRAddCallback */))))(tls, interp, *(*uintptr)(unsafe.Pointer(&struct {
+	if *(*ClientData)(unsafe.Pointer(data + uintptr(0)*4)) == libc.UintptrFromInt32(-1) {
+		(*(*func(*libc.TLS, uintptr, uintptr, ClientData, ClientData, ClientData, ClientData))(unsafe.Pointer(tclStubsPtr + 2356)))(tls, interp, *(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, uintptr, uintptr, int32) int32
 		}{NREUnwind_callback})), bp /* &none */, libc.UintptrFromInt32(-1),
 			libc.UintptrFromInt32(-1), uintptr(0))
-	} else if *(*ClientData)(unsafe.Pointer(data + uintptr(1)*4)) == (libc.UintptrFromInt32(-1)) {
-		(*(*func(*libc.TLS, uintptr, uintptr, ClientData, ClientData, ClientData, ClientData))(unsafe.Pointer((tclStubsPtr + 2356 /* &.tcl_NRAddCallback */))))(tls, interp, *(*uintptr)(unsafe.Pointer(&struct {
+	} else if *(*ClientData)(unsafe.Pointer(data + uintptr(1)*4)) == libc.UintptrFromInt32(-1) {
+		(*(*func(*libc.TLS, uintptr, uintptr, ClientData, ClientData, ClientData, ClientData))(unsafe.Pointer(tclStubsPtr + 2356)))(tls, interp, *(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, uintptr, uintptr, int32) int32
 		}{NREUnwind_callback})), *(*ClientData)(unsafe.Pointer(data + uintptr(0)*4)), bp, /* &none */
 			libc.UintptrFromInt32(-1), uintptr(0))
-	} else if *(*ClientData)(unsafe.Pointer(data + uintptr(2)*4)) == (libc.UintptrFromInt32(-1)) {
-		(*(*func(*libc.TLS, uintptr, uintptr, ClientData, ClientData, ClientData, ClientData))(unsafe.Pointer((tclStubsPtr + 2356 /* &.tcl_NRAddCallback */))))(tls, interp, *(*uintptr)(unsafe.Pointer(&struct {
+	} else if *(*ClientData)(unsafe.Pointer(data + uintptr(2)*4)) == libc.UintptrFromInt32(-1) {
+		(*(*func(*libc.TLS, uintptr, uintptr, ClientData, ClientData, ClientData, ClientData))(unsafe.Pointer(tclStubsPtr + 2356)))(tls, interp, *(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, uintptr, uintptr, int32) int32
 		}{NREUnwind_callback})), *(*ClientData)(unsafe.Pointer(data + uintptr(0)*4)), *(*ClientData)(unsafe.Pointer(data + uintptr(1)*4)),
 			bp /* &none */, uintptr(0))
 	} else {
 		// var idata [3]uintptr at bp+4, 12
 
-		*(*uintptr)(unsafe.Pointer(bp + 4 /* &idata[0] */ + uintptr(0)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, ((int32(*(*ClientData)(unsafe.Pointer(data + uintptr(1)*4))) - int32(*(*ClientData)(unsafe.Pointer(data + uintptr(0)*4)))) / 1))
-		*(*uintptr)(unsafe.Pointer(bp + 4 /* &idata[0] */ + uintptr(1)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, ((int32(*(*ClientData)(unsafe.Pointer(data + uintptr(2)*4))) - int32(*(*ClientData)(unsafe.Pointer(data + uintptr(0)*4)))) / 1))
-		*(*uintptr)(unsafe.Pointer(bp + 4 /* &idata[0] */ + uintptr(2)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, ((int32(bp /* &none */) - int32(*(*ClientData)(unsafe.Pointer(data + uintptr(0)*4)))) / 1))
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 220 /* &.tcl_NewListObj */))))(tls, 3, bp+4 /* &idata[0] */))
+		*(*uintptr)(unsafe.Pointer(bp + 4 /* &idata[0] */ + uintptr(0)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, (int32(*(*ClientData)(unsafe.Pointer(data + uintptr(1)*4)))-int32(*(*ClientData)(unsafe.Pointer(data + uintptr(0)*4))))/1)
+		*(*uintptr)(unsafe.Pointer(bp + 4 /* &idata[0] */ + uintptr(1)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, (int32(*(*ClientData)(unsafe.Pointer(data + uintptr(2)*4)))-int32(*(*ClientData)(unsafe.Pointer(data + uintptr(0)*4))))/1)
+		*(*uintptr)(unsafe.Pointer(bp + 4 /* &idata[0] */ + uintptr(2)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, (int32(bp)-int32(*(*ClientData)(unsafe.Pointer(data + uintptr(0)*4))))/1)
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 220)))(tls, 3, bp+4))
 	}
 	return 0
 }
@@ -27666,7 +27666,7 @@ func TestNREUnwind(tls *libc.TLS, clientData ClientData, interp uintptr, objc in
 	// Insure that callbacks effectively run at the proper level during the
 	// unwinding of the NRE stack.
 
-	(*(*func(*libc.TLS, uintptr, uintptr, ClientData, ClientData, ClientData, ClientData))(unsafe.Pointer((tclStubsPtr + 2356 /* &.tcl_NRAddCallback */))))(tls, interp, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, ClientData, ClientData, ClientData, ClientData))(unsafe.Pointer(tclStubsPtr + 2356)))(tls, interp, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, uintptr, uintptr, int32) int32
 	}{NREUnwind_callback})), libc.UintptrFromInt32(-1), libc.UintptrFromInt32(-1),
 		libc.UintptrFromInt32(-1), uintptr(0))
@@ -27685,26 +27685,26 @@ func TestNRELevels(tls *libc.TLS, clientData ClientData, interp uintptr, objc in
 	var i int32 = 0
 	var cbPtr uintptr = (*ExecEnv1)(unsafe.Pointer((*Interp)(unsafe.Pointer(iPtr)).execEnvPtr)).callbackPtr
 
-	if refDepth == (uintptr(0)) {
+	if refDepth == uintptr(0) {
 		refDepth = bp /* &depth */
 	}
 
-	*(*ptrdiff_t)(unsafe.Pointer(bp /* depth */)) = ((int32(refDepth) - int32(bp /* &depth */)) / 4)
+	*(*ptrdiff_t)(unsafe.Pointer(bp /* depth */)) = (int32(refDepth) - int32(bp)) / 4
 
-	*(*uintptr)(unsafe.Pointer(bp + 4 /* &levels[0] */ + uintptr(0)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, *(*ptrdiff_t)(unsafe.Pointer(bp /* depth */)))
-	*(*uintptr)(unsafe.Pointer(bp + 4 /* &levels[0] */ + uintptr(1)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, (*Interp)(unsafe.Pointer(iPtr)).numLevels)
-	*(*uintptr)(unsafe.Pointer(bp + 4 /* &levels[0] */ + uintptr(2)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, (*CmdFrame)(unsafe.Pointer((*Interp)(unsafe.Pointer(iPtr)).cmdFramePtr)).level)
-	*(*uintptr)(unsafe.Pointer(bp + 4 /* &levels[0] */ + uintptr(3)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, (*CallFrame)(unsafe.Pointer((*Interp)(unsafe.Pointer(iPtr)).varFramePtr)).level)
-	*(*uintptr)(unsafe.Pointer(bp + 4 /* &levels[0] */ + uintptr(4)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, (int32(((*ExecStack)(unsafe.Pointer((*ExecEnv1)(unsafe.Pointer((*Interp)(unsafe.Pointer(iPtr)).execEnvPtr)).execStackPtr)).tosPtr -
-		((*ExecEnv1)(unsafe.Pointer((*Interp)(unsafe.Pointer(iPtr)).execEnvPtr)).execStackPtr + 20 /* &.stackWords */)) / 4)))
+	*(*uintptr)(unsafe.Pointer(bp + 4 /* &levels[0] */ + uintptr(0)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, *(*ptrdiff_t)(unsafe.Pointer(bp)))
+	*(*uintptr)(unsafe.Pointer(bp + 4 /* &levels[0] */ + uintptr(1)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, (*Interp)(unsafe.Pointer(iPtr)).numLevels)
+	*(*uintptr)(unsafe.Pointer(bp + 4 /* &levels[0] */ + uintptr(2)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, (*CmdFrame)(unsafe.Pointer((*Interp)(unsafe.Pointer(iPtr)).cmdFramePtr)).level)
+	*(*uintptr)(unsafe.Pointer(bp + 4 /* &levels[0] */ + uintptr(3)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, (*CallFrame)(unsafe.Pointer((*Interp)(unsafe.Pointer(iPtr)).varFramePtr)).level)
+	*(*uintptr)(unsafe.Pointer(bp + 4 /* &levels[0] */ + uintptr(4)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, int32(((*ExecStack)(unsafe.Pointer((*ExecEnv1)(unsafe.Pointer((*Interp)(unsafe.Pointer(iPtr)).execEnvPtr)).execStackPtr)).tosPtr-
+		((*ExecEnv1)(unsafe.Pointer((*Interp)(unsafe.Pointer(iPtr)).execEnvPtr)).execStackPtr+20))/4))
 
 	for cbPtr != 0 {
 		i++
 		cbPtr = (*NRE_callback)(unsafe.Pointer(cbPtr)).nextPtr
 	}
-	*(*uintptr)(unsafe.Pointer(bp + 4 /* &levels[0] */ + uintptr(5)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, i)
+	*(*uintptr)(unsafe.Pointer(bp + 4 /* &levels[0] */ + uintptr(5)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, i)
 
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 220 /* &.tcl_NewListObj */))))(tls, 6, bp+4 /* &levels[0] */))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 220)))(tls, 6, bp+4))
 	return 0
 }
 
@@ -27744,188 +27744,188 @@ func TestconcatobjCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int3
 	// Set the start of the error message as obj result; it will be cleared at
 	// the end if no errors were found.
 
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp,
-		(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, ts+7957 /* "Tcl_ConcatObj is..." */, -1))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp,
+		(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, ts+7957, -1))
 
-	emptyPtr = (*(*func(*libc.TLS) uintptr)(unsafe.Pointer((tclStubsPtr + 228 /* &.tcl_NewObj */))))(tls)
+	emptyPtr = (*(*func(*libc.TLS) uintptr)(unsafe.Pointer(tclStubsPtr + 228)))(tls)
 
-	list1Ptr = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, ts+7982 /* "foo bar sum" */, -1)
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 196 /* &.tcl_ListObjLength */))))(tls, uintptr(0), list1Ptr, bp+816 /* &len */)
-	if (*Tcl_Obj)(unsafe.Pointer(list1Ptr)).bytes != (uintptr(0)) {
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, (*Tcl_Obj)(unsafe.Pointer(list1Ptr)).bytes)
+	list1Ptr = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, ts+7982, -1)
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 196)))(tls, uintptr(0), list1Ptr, bp+816)
+	if (*Tcl_Obj)(unsafe.Pointer(list1Ptr)).bytes != uintptr(0) {
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, (*Tcl_Obj)(unsafe.Pointer(list1Ptr)).bytes)
 		(*Tcl_Obj)(unsafe.Pointer(list1Ptr)).bytes = uintptr(0)
 	}
 
-	list2Ptr = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, ts+7994 /* "eeny meeny" */, -1)
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 196 /* &.tcl_ListObjLength */))))(tls, uintptr(0), list2Ptr, bp+816 /* &len */)
-	if (*Tcl_Obj)(unsafe.Pointer(list2Ptr)).bytes != (uintptr(0)) {
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, (*Tcl_Obj)(unsafe.Pointer(list2Ptr)).bytes)
+	list2Ptr = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, ts+7994, -1)
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 196)))(tls, uintptr(0), list2Ptr, bp+816)
+	if (*Tcl_Obj)(unsafe.Pointer(list2Ptr)).bytes != uintptr(0) {
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, (*Tcl_Obj)(unsafe.Pointer(list2Ptr)).bytes)
 		(*Tcl_Obj)(unsafe.Pointer(list2Ptr)).bytes = uintptr(0)
 	}
 
 	// Verify that concat'ing a list obj with one or more empty strings does
 	// return a fresh Tcl_Obj (see also [Bug 2055782]).
 
-	tmpPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 124 /* &.tcl_DuplicateObj */))))(tls, list1Ptr)
+	tmpPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 124)))(tls, list1Ptr)
 
 	*(*uintptr)(unsafe.Pointer(bp + 820 /* &objv[0] */ + uintptr(0)*4)) = tmpPtr
 	*(*uintptr)(unsafe.Pointer(bp + 820 /* &objv[0] */ + uintptr(1)*4)) = emptyPtr
-	concatPtr = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 76 /* &.tcl_ConcatObj */))))(tls, 2, bp+820 /* &objv[0] */)
+	concatPtr = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 76)))(tls, 2, bp+820)
 	if (*Tcl_Obj)(unsafe.Pointer(concatPtr)).refCount != 0 {
 		result = 1
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp,
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp,
 			libc.VaList(bp, ts+8005 /* "\n\t* (a) concatOb..." */, uintptr(0)))
 	}
 	if concatPtr == tmpPtr {
 		result = 1
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+24, ts+8048, /* "\n\t* (a) concatOb..." */
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+24, ts+8048,
 			uintptr(0)))
 		switch (*Tcl_Obj)(unsafe.Pointer(tmpPtr)).refCount {
 		case 0:
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+48, ts+8084 /* "(no new refCount..." */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+48, ts+8084, uintptr(0)))
 			break
 			fallthrough
 		case 1:
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+72, ts+8102 /* "(refCount added)" */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+72, ts+8102, uintptr(0)))
 			break
 			fallthrough
 		default:
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+96, ts+8119 /* "(more than one r..." */, uintptr(0)))
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 16 /* &.tcl_Panic */))))(tls, ts+8151 /* "extremely unsafe..." */, 0)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+96, ts+8119, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 16)))(tls, ts+8151, 0)
 		}
-		tmpPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 124 /* &.tcl_DuplicateObj */))))(tls, list1Ptr)
+		tmpPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 124)))(tls, list1Ptr)
 		*(*uintptr)(unsafe.Pointer(bp + 820 /* &objv[0] */ + uintptr(0)*4)) = tmpPtr
 	}
 	for ok := true; ok; ok = 0 != 0 {
 		var _objPtr uintptr = concatPtr
-		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 		}
 	}
 
 	(*Tcl_Obj)(unsafe.Pointer(tmpPtr)).refCount++
-	concatPtr = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 76 /* &.tcl_ConcatObj */))))(tls, 2, bp+820 /* &objv[0] */)
+	concatPtr = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 76)))(tls, 2, bp+820)
 	if (*Tcl_Obj)(unsafe.Pointer(concatPtr)).refCount != 0 {
 		result = 1
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp,
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp,
 			libc.VaList(bp+120, ts+8197 /* "\n\t* (b) concatOb..." */, uintptr(0)))
 	}
 	if concatPtr == tmpPtr {
 		result = 1
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+144, ts+8240, /* "\n\t* (b) concatOb..." */
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+144, ts+8240,
 			uintptr(0)))
 		switch (*Tcl_Obj)(unsafe.Pointer(tmpPtr)).refCount {
 		case 0:
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+168, ts+8276 /* "(refCount remove..." */, uintptr(0)))
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 16 /* &.tcl_Panic */))))(tls, ts+8151 /* "extremely unsafe..." */, 0)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+168, ts+8276, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 16)))(tls, ts+8151, 0)
 			break
 			fallthrough
 		case 1:
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+192, ts+8084 /* "(no new refCount..." */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+192, ts+8084, uintptr(0)))
 			break
 			fallthrough
 		case 2:
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+216, ts+8102 /* "(refCount added)" */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+216, ts+8102, uintptr(0)))
 			for ok1 := true; ok1; ok1 = 0 != 0 {
 				var _objPtr uintptr = tmpPtr
-				if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+				if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 				}
 			}
 			break
 			fallthrough
 		default:
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+240, ts+8119 /* "(more than one r..." */, uintptr(0)))
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 16 /* &.tcl_Panic */))))(tls, ts+8151 /* "extremely unsafe..." */, 0)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+240, ts+8119, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 16)))(tls, ts+8151, 0)
 		}
-		tmpPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 124 /* &.tcl_DuplicateObj */))))(tls, list1Ptr)
+		tmpPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 124)))(tls, list1Ptr)
 		*(*uintptr)(unsafe.Pointer(bp + 820 /* &objv[0] */ + uintptr(0)*4)) = tmpPtr
 	}
 	for ok2 := true; ok2; ok2 = 0 != 0 {
 		var _objPtr uintptr = concatPtr
-		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 		}
 	}
 
 	*(*uintptr)(unsafe.Pointer(bp + 820 /* &objv[0] */ + uintptr(0)*4)) = emptyPtr
 	*(*uintptr)(unsafe.Pointer(bp + 820 /* &objv[0] */ + uintptr(1)*4)) = tmpPtr
 	*(*uintptr)(unsafe.Pointer(bp + 820 /* &objv[0] */ + uintptr(2)*4)) = emptyPtr
-	concatPtr = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 76 /* &.tcl_ConcatObj */))))(tls, 3, bp+820 /* &objv[0] */)
+	concatPtr = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 76)))(tls, 3, bp+820)
 	if (*Tcl_Obj)(unsafe.Pointer(concatPtr)).refCount != 0 {
 		result = 1
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp,
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp,
 			libc.VaList(bp+264, ts+8296 /* "\n\t* (c) concatOb..." */, uintptr(0)))
 	}
 	if concatPtr == tmpPtr {
 		result = 1
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+288, ts+8339, /* "\n\t* (c) concatOb..." */
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+288, ts+8339,
 			uintptr(0)))
 		switch (*Tcl_Obj)(unsafe.Pointer(tmpPtr)).refCount {
 		case 0:
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+312, ts+8084 /* "(no new refCount..." */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+312, ts+8084, uintptr(0)))
 			break
 			fallthrough
 		case 1:
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+336, ts+8102 /* "(refCount added)" */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+336, ts+8102, uintptr(0)))
 			break
 			fallthrough
 		default:
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+360, ts+8119 /* "(more than one r..." */, uintptr(0)))
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 16 /* &.tcl_Panic */))))(tls, ts+8151 /* "extremely unsafe..." */, 0)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+360, ts+8119, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 16)))(tls, ts+8151, 0)
 		}
-		tmpPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 124 /* &.tcl_DuplicateObj */))))(tls, list1Ptr)
+		tmpPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 124)))(tls, list1Ptr)
 		*(*uintptr)(unsafe.Pointer(bp + 820 /* &objv[0] */ + uintptr(1)*4)) = tmpPtr
 	}
 	for ok3 := true; ok3; ok3 = 0 != 0 {
 		var _objPtr uintptr = concatPtr
-		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 		}
 	}
 
 	(*Tcl_Obj)(unsafe.Pointer(tmpPtr)).refCount++
-	concatPtr = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 76 /* &.tcl_ConcatObj */))))(tls, 3, bp+820 /* &objv[0] */)
+	concatPtr = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 76)))(tls, 3, bp+820)
 	if (*Tcl_Obj)(unsafe.Pointer(concatPtr)).refCount != 0 {
 		result = 1
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp,
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp,
 			libc.VaList(bp+384, ts+8375 /* "\n\t* (d) concatOb..." */, uintptr(0)))
 	}
 	if concatPtr == tmpPtr {
 		result = 1
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+408, ts+8418, /* "\n\t* (d) concatOb..." */
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+408, ts+8418,
 			uintptr(0)))
 		switch (*Tcl_Obj)(unsafe.Pointer(tmpPtr)).refCount {
 		case 0:
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+432, ts+8276 /* "(refCount remove..." */, uintptr(0)))
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 16 /* &.tcl_Panic */))))(tls, ts+8151 /* "extremely unsafe..." */, 0)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+432, ts+8276, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 16)))(tls, ts+8151, 0)
 			break
 			fallthrough
 		case 1:
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+456, ts+8084 /* "(no new refCount..." */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+456, ts+8084, uintptr(0)))
 			break
 			fallthrough
 		case 2:
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+480, ts+8102 /* "(refCount added)" */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+480, ts+8102, uintptr(0)))
 			for ok4 := true; ok4; ok4 = 0 != 0 {
 				var _objPtr uintptr = tmpPtr
-				if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+				if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 				}
 			}
 			break
 			fallthrough
 		default:
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+504, ts+8119 /* "(more than one r..." */, uintptr(0)))
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 16 /* &.tcl_Panic */))))(tls, ts+8151 /* "extremely unsafe..." */, 0)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+504, ts+8119, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 16)))(tls, ts+8151, 0)
 		}
-		tmpPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 124 /* &.tcl_DuplicateObj */))))(tls, list1Ptr)
+		tmpPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 124)))(tls, list1Ptr)
 		*(*uintptr)(unsafe.Pointer(bp + 820 /* &objv[0] */ + uintptr(1)*4)) = tmpPtr
 	}
 	for ok5 := true; ok5; ok5 = 0 != 0 {
 		var _objPtr uintptr = concatPtr
-		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 		}
 	}
 
@@ -27934,86 +27934,86 @@ func TestconcatobjCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int3
 
 	*(*uintptr)(unsafe.Pointer(bp + 820 /* &objv[0] */ + uintptr(0)*4)) = tmpPtr
 	*(*uintptr)(unsafe.Pointer(bp + 820 /* &objv[0] */ + uintptr(1)*4)) = list2Ptr
-	concatPtr = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 76 /* &.tcl_ConcatObj */))))(tls, 2, bp+820 /* &objv[0] */)
+	concatPtr = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 76)))(tls, 2, bp+820)
 	if (*Tcl_Obj)(unsafe.Pointer(concatPtr)).refCount != 0 {
 		result = 1
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp,
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp,
 			libc.VaList(bp+528, ts+8454 /* "\n\t* (e) concatOb..." */, uintptr(0)))
 	}
 	if concatPtr == tmpPtr {
 		// var len int32 at bp+832, 4
 
 		result = 1
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+552, ts+8497, /* "\n\t* (e) concatOb..." */
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+552, ts+8497,
 			uintptr(0)))
 
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 196 /* &.tcl_ListObjLength */))))(tls, uintptr(0), concatPtr, bp+832 /* &len */)
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 196)))(tls, uintptr(0), concatPtr, bp+832)
 		switch (*Tcl_Obj)(unsafe.Pointer(tmpPtr)).refCount {
 		case 3:
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+576, ts+8533 /* "(failed to conca..." */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+576, ts+8533, uintptr(0)))
 			break
 			fallthrough
 		default:
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+600, ts+8552 /* "(corrupted input..." */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+600, ts+8552, uintptr(0)))
 		}
-		if (*Tcl_Obj)(unsafe.Pointer((tmpPtr))).refCount > 1 {
+		if (*Tcl_Obj)(unsafe.Pointer(tmpPtr)).refCount > 1 {
 			for ok6 := true; ok6; ok6 = 0 != 0 {
 				var _objPtr uintptr = tmpPtr
-				if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+				if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 				}
 			}
 		}
-		tmpPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 124 /* &.tcl_DuplicateObj */))))(tls, list1Ptr)
+		tmpPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 124)))(tls, list1Ptr)
 		*(*uintptr)(unsafe.Pointer(bp + 820 /* &objv[0] */ + uintptr(0)*4)) = tmpPtr
 	}
 	for ok7 := true; ok7; ok7 = 0 != 0 {
 		var _objPtr uintptr = concatPtr
-		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 		}
 	}
 
 	*(*uintptr)(unsafe.Pointer(bp + 820 /* &objv[0] */ + uintptr(0)*4)) = tmpPtr
 	*(*uintptr)(unsafe.Pointer(bp + 820 /* &objv[0] */ + uintptr(1)*4)) = list2Ptr
 	(*Tcl_Obj)(unsafe.Pointer(tmpPtr)).refCount++
-	concatPtr = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 76 /* &.tcl_ConcatObj */))))(tls, 2, bp+820 /* &objv[0] */)
+	concatPtr = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 76)))(tls, 2, bp+820)
 	if (*Tcl_Obj)(unsafe.Pointer(concatPtr)).refCount != 0 {
 		result = 1
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp,
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp,
 			libc.VaList(bp+624, ts+8571 /* "\n\t* (f) concatOb..." */, uintptr(0)))
 	}
 	if concatPtr == tmpPtr {
 		// var len int32 at bp+836, 4
 
 		result = 1
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+648, ts+8614, /* "\n\t* (f) concatOb..." */
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+648, ts+8614,
 			uintptr(0)))
 
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 196 /* &.tcl_ListObjLength */))))(tls, uintptr(0), concatPtr, bp+836 /* &len */)
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 196)))(tls, uintptr(0), concatPtr, bp+836)
 		switch (*Tcl_Obj)(unsafe.Pointer(tmpPtr)).refCount {
 		case 3:
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+672, ts+8533 /* "(failed to conca..." */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+672, ts+8533, uintptr(0)))
 			break
 			fallthrough
 		default:
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+696, ts+8552 /* "(corrupted input..." */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+696, ts+8552, uintptr(0)))
 		}
-		if (*Tcl_Obj)(unsafe.Pointer((tmpPtr))).refCount > 1 {
+		if (*Tcl_Obj)(unsafe.Pointer(tmpPtr)).refCount > 1 {
 			for ok8 := true; ok8; ok8 = 0 != 0 {
 				var _objPtr uintptr = tmpPtr
-				if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+				if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 				}
 			}
 		}
-		tmpPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 124 /* &.tcl_DuplicateObj */))))(tls, list1Ptr)
+		tmpPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 124)))(tls, list1Ptr)
 		*(*uintptr)(unsafe.Pointer(bp + 820 /* &objv[0] */ + uintptr(0)*4)) = tmpPtr
 	}
 	for ok9 := true; ok9; ok9 = 0 != 0 {
 		var _objPtr uintptr = concatPtr
-		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 		}
 	}
 
@@ -28021,49 +28021,49 @@ func TestconcatobjCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int3
 	*(*uintptr)(unsafe.Pointer(bp + 820 /* &objv[0] */ + uintptr(1)*4)) = list2Ptr
 	(*Tcl_Obj)(unsafe.Pointer(tmpPtr)).refCount++
 	(*Tcl_Obj)(unsafe.Pointer(tmpPtr)).refCount++
-	concatPtr = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 76 /* &.tcl_ConcatObj */))))(tls, 2, bp+820 /* &objv[0] */)
+	concatPtr = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 76)))(tls, 2, bp+820)
 	if (*Tcl_Obj)(unsafe.Pointer(concatPtr)).refCount != 0 {
 		result = 1
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp,
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp,
 			libc.VaList(bp+720, ts+8650 /* "\n\t* (g) concatOb..." */, uintptr(0)))
 	}
 	if concatPtr == tmpPtr {
 		// var len int32 at bp+840, 4
 
 		result = 1
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+744, ts+8693, /* "\n\t* (g) concatOb..." */
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+744, ts+8693,
 			uintptr(0)))
 
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 196 /* &.tcl_ListObjLength */))))(tls, uintptr(0), concatPtr, bp+840 /* &len */)
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 196)))(tls, uintptr(0), concatPtr, bp+840)
 		switch (*Tcl_Obj)(unsafe.Pointer(tmpPtr)).refCount {
 		case 3:
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+768, ts+8533 /* "(failed to conca..." */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+768, ts+8533, uintptr(0)))
 			break
 			fallthrough
 		default:
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+792, ts+8552 /* "(corrupted input..." */, uintptr(0)))
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+792, ts+8552, uintptr(0)))
 		}
 		for ok10 := true; ok10; ok10 = 0 != 0 {
 			var _objPtr uintptr = tmpPtr
-			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 			}
 		}
-		if (*Tcl_Obj)(unsafe.Pointer((tmpPtr))).refCount > 1 {
+		if (*Tcl_Obj)(unsafe.Pointer(tmpPtr)).refCount > 1 {
 			for ok11 := true; ok11; ok11 = 0 != 0 {
 				var _objPtr uintptr = tmpPtr
-				if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+				if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 				}
 			}
 		}
-		tmpPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 124 /* &.tcl_DuplicateObj */))))(tls, list1Ptr)
+		tmpPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 124)))(tls, list1Ptr)
 		*(*uintptr)(unsafe.Pointer(bp + 820 /* &objv[0] */ + uintptr(0)*4)) = tmpPtr
 	}
 	for ok12 := true; ok12; ok12 = 0 != 0 {
 		var _objPtr uintptr = concatPtr
-		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 		}
 	}
 
@@ -28073,39 +28073,39 @@ func TestconcatobjCmd(tls *libc.TLS, dummy ClientData, interp uintptr, argc int3
 
 	for ok13 := true; ok13; ok13 = 0 != 0 {
 		var _objPtr uintptr = list1Ptr
-		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 		}
 	}
 	for ok14 := true; ok14; ok14 = 0 != 0 {
 		var _objPtr uintptr = list2Ptr
-		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 		}
 	}
 	for ok15 := true; ok15; ok15 = 0 != 0 {
 		var _objPtr uintptr = emptyPtr
-		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 		}
 	}
 	for (*Tcl_Obj)(unsafe.Pointer(tmpPtr)).refCount > 1 {
 		for ok16 := true; ok16; ok16 = 0 != 0 {
 			var _objPtr uintptr = tmpPtr
-			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 			}
 		}
 	}
 	for ok17 := true; ok17; ok17 = 0 != 0 {
 		var _objPtr uintptr = tmpPtr
-		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 		}
 	}
 
 	if result == 0 {
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 876 /* &.tcl_ResetResult */))))(tls, interp)
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 876)))(tls, interp)
 	}
 	return result
 }
@@ -28165,14 +28165,14 @@ func TestparseargsCmd(tls *libc.TLS, dummy ClientData, interp uintptr, objc int3
 	}
 
 	foo = 0
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 2424 /* &.tcl_ParseArgsObjv */))))(tls, interp, bp /* &argTable[0] */, bp+96 /* &count */, objv, bp+100 /* &remObjv */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 2424)))(tls, interp, bp, bp+96, objv, bp+100) != 0 {
 		return 1
 	}
-	*(*uintptr)(unsafe.Pointer(bp + 104 /* &result[0] */ + uintptr(0)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, foo)
-	*(*uintptr)(unsafe.Pointer(bp + 104 /* &result[0] */ + uintptr(1)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, *(*int32)(unsafe.Pointer(bp + 96 /* count */)))
-	*(*uintptr)(unsafe.Pointer(bp + 104 /* &result[0] */ + uintptr(2)*4)) = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 220 /* &.tcl_NewListObj */))))(tls, *(*int32)(unsafe.Pointer(bp + 96 /* count */)), *(*uintptr)(unsafe.Pointer(bp + 100 /* remObjv */)))
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 220 /* &.tcl_NewListObj */))))(tls, 3, bp+104 /* &result[0] */))
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, *(*uintptr)(unsafe.Pointer(bp + 100 /* remObjv */)))
+	*(*uintptr)(unsafe.Pointer(bp + 104 /* &result[0] */ + uintptr(0)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, foo)
+	*(*uintptr)(unsafe.Pointer(bp + 104 /* &result[0] */ + uintptr(1)*4)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, *(*int32)(unsafe.Pointer(bp + 96)))
+	*(*uintptr)(unsafe.Pointer(bp + 104 /* &result[0] */ + uintptr(2)*4)) = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 220)))(tls, *(*int32)(unsafe.Pointer(bp + 96)), *(*uintptr)(unsafe.Pointer(bp + 100)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 220)))(tls, 3, bp+104))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, *(*uintptr)(unsafe.Pointer(bp + 100)))
 	return 0
 }
 
@@ -28185,7 +28185,7 @@ func InterpCmdResolver(tls *libc.TLS, interp uintptr, name uintptr, context uint
 	var iPtr uintptr = interp
 	var varFramePtr uintptr = (*Interp)(unsafe.Pointer(iPtr)).varFramePtr
 	var procPtr uintptr
-	if ((*CallFrame)(unsafe.Pointer(varFramePtr)).isProcCallFrame & 0x1) != 0 {
+	if (*CallFrame)(unsafe.Pointer(varFramePtr)).isProcCallFrame&0x1 != 0 {
 		procPtr = (*CallFrame)(unsafe.Pointer(varFramePtr)).procPtr
 	} else {
 		procPtr = uintptr(0)
@@ -28196,12 +28196,12 @@ func InterpCmdResolver(tls *libc.TLS, interp uintptr, name uintptr, context uint
 	// Just do something special on a cmd literal "z" in two cases:
 	//  A)  when the caller is a proc "x", and the proc is either in "::" or in "::ns2".
 	//  B) the caller's namespace is "ctx1" or "ctx2"
-	if (int32(*(*int8)(unsafe.Pointer(name + uintptr(0)))) == 'z') && (int32(*(*int8)(unsafe.Pointer(name + uintptr(1)))) == 0) {
-		var ns2NsPtr uintptr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer((tclIntStubsPtr + 476 /* &.tcl_FindNamespace */))))(tls, interp, ts+8827 /* "::ns2" */, uintptr(0), 0)
+	if int32(*(*int8)(unsafe.Pointer(name + uintptr(0)))) == 'z' && int32(*(*int8)(unsafe.Pointer(name + uintptr(1)))) == 0 {
+		var ns2NsPtr uintptr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(tclIntStubsPtr + 476)))(tls, interp, ts+8827, uintptr(0), 0)
 
-		if (procPtr != (uintptr(0))) &&
-			(((*Command1)(unsafe.Pointer((*Proc)(unsafe.Pointer(procPtr)).cmdPtr)).nsPtr == (*Interp)(unsafe.Pointer(iPtr)).globalNsPtr) ||
-				((ns2NsPtr != (uintptr(0))) && ((*Command1)(unsafe.Pointer((*Proc)(unsafe.Pointer(procPtr)).cmdPtr)).nsPtr == ns2NsPtr))) {
+		if procPtr != uintptr(0) &&
+			((*Command1)(unsafe.Pointer((*Proc)(unsafe.Pointer(procPtr)).cmdPtr)).nsPtr == (*Interp)(unsafe.Pointer(iPtr)).globalNsPtr ||
+				ns2NsPtr != uintptr(0) && (*Command1)(unsafe.Pointer((*Proc)(unsafe.Pointer(procPtr)).cmdPtr)).nsPtr == ns2NsPtr) {
 			// Case A)
 			//
 			//    - The context, in which this resolver becomes active, is
@@ -28218,12 +28218,12 @@ func InterpCmdResolver(tls *libc.TLS, interp uintptr, name uintptr, context uint
 			//   passed-in cmd literal into a cmd "y", which is taken from the
 			//   the global namespace (for simplicity).
 
-			var callingCmdName uintptr = (*(*func(*libc.TLS, uintptr, Tcl_Command) uintptr)(unsafe.Pointer((tclStubsPtr + 648 /* &.tcl_GetCommandName */))))(tls, interp, (*Proc)(unsafe.Pointer(procPtr)).cmdPtr)
+			var callingCmdName uintptr = (*(*func(*libc.TLS, uintptr, Tcl_Command) uintptr)(unsafe.Pointer(tclStubsPtr + 648)))(tls, interp, (*Proc)(unsafe.Pointer(procPtr)).cmdPtr)
 
-			if (int32(*(*int8)(unsafe.Pointer(callingCmdName + uintptr(0)))) == 'x') && (int32(*(*int8)(unsafe.Pointer(callingCmdName + uintptr(1)))) == 0) {
-				resolvedCmdPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) Tcl_Command)(unsafe.Pointer((tclIntStubsPtr + 472 /* &.tcl_FindCommand */))))(tls, interp, ts+8833 /* "y" */, uintptr(0), 1)
+			if int32(*(*int8)(unsafe.Pointer(callingCmdName + uintptr(0)))) == 'x' && int32(*(*int8)(unsafe.Pointer(callingCmdName + uintptr(1)))) == 0 {
+				resolvedCmdPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) Tcl_Command)(unsafe.Pointer(tclIntStubsPtr + 472)))(tls, interp, ts+8833, uintptr(0), 1)
 			}
-		} else if callerNsPtr != (uintptr(0)) {
+		} else if callerNsPtr != uintptr(0) {
 			// Case B)
 			//
 			//    - The context, in which this resolver becomes active, is
@@ -28243,23 +28243,23 @@ func InterpCmdResolver(tls *libc.TLS, interp uintptr, name uintptr, context uint
 
 			var parentFramePtr uintptr = (*CallFrame)(unsafe.Pointer(varFramePtr)).callerPtr
 			var context uintptr
-			if parentFramePtr != (uintptr(0)) {
+			if parentFramePtr != uintptr(0) {
 				context = (*Namespace)(unsafe.Pointer((*CallFrame)(unsafe.Pointer(parentFramePtr)).nsPtr)).name
 			} else {
 				context = ts + 8835 /* "(NULL)" */
 			}
 
-			if ((libc.Xstrcmp(tls, context, ts+8842 /* "ctx1" */) == 0) && (int32(*(*int8)(unsafe.Pointer(name + uintptr(0)))) == 'z')) && (int32(*(*int8)(unsafe.Pointer(name + uintptr(1)))) == 0) {
-				resolvedCmdPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) Tcl_Command)(unsafe.Pointer((tclIntStubsPtr + 472 /* &.tcl_FindCommand */))))(tls, interp, ts+8833 /* "y" */, uintptr(0), 1)
+			if libc.Xstrcmp(tls, context, ts+8842) == 0 && int32(*(*int8)(unsafe.Pointer(name + uintptr(0)))) == 'z' && int32(*(*int8)(unsafe.Pointer(name + uintptr(1)))) == 0 {
+				resolvedCmdPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) Tcl_Command)(unsafe.Pointer(tclIntStubsPtr + 472)))(tls, interp, ts+8833, uintptr(0), 1)
 				// fprintf(stderr, "... y ==> %p\n", resolvedCmdPtr);
 
-			} else if ((libc.Xstrcmp(tls, context, ts+8847 /* "ctx2" */) == 0) && (int32(*(*int8)(unsafe.Pointer(name + uintptr(0)))) == 'z')) && (int32(*(*int8)(unsafe.Pointer(name + uintptr(1)))) == 0) {
-				resolvedCmdPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) Tcl_Command)(unsafe.Pointer((tclIntStubsPtr + 472 /* &.tcl_FindCommand */))))(tls, interp, ts+8852 /* "Y" */, uintptr(0), 1)
+			} else if libc.Xstrcmp(tls, context, ts+8847) == 0 && int32(*(*int8)(unsafe.Pointer(name + uintptr(0)))) == 'z' && int32(*(*int8)(unsafe.Pointer(name + uintptr(1)))) == 0 {
+				resolvedCmdPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) Tcl_Command)(unsafe.Pointer(tclIntStubsPtr + 472)))(tls, interp, ts+8852, uintptr(0), 1)
 				//fprintf(stderr, "... Y ==> %p\n", resolvedCmdPtr);
 			}
 		}
 
-		if resolvedCmdPtr != (uintptr(0)) {
+		if resolvedCmdPtr != uintptr(0) {
 			*(*Tcl_Command)(unsafe.Pointer(rPtr)) = resolvedCmdPtr
 			return 0
 		}
@@ -28282,8 +28282,8 @@ type MyResolvedVarInfo1 = struct {
 type MyResolvedVarInfo = MyResolvedVarInfo1 /* tclTest.c:7522:3 */
 
 func HashVarFree(tls *libc.TLS, var1 Tcl_Var) { /* tclTest.c:7525:1: */
-	if (*VarInHash)(unsafe.Pointer((var1))).refCount < 2 {
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, var1)
+	if (*VarInHash)(unsafe.Pointer(var1)).refCount < 2 {
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, var1)
 	} else {
 		(*VarInHash)(unsafe.Pointer(var1)).refCount--
 	}
@@ -28294,14 +28294,14 @@ func MyCompiledVarFree(tls *libc.TLS, vInfoPtr uintptr) { /* tclTest.c:7536:1: *
 
 	for ok := true; ok; ok = 0 != 0 {
 		var _objPtr uintptr = (*MyResolvedVarInfo)(unsafe.Pointer(resVarInfo)).nameObj
-		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 		}
 	}
 	if (*MyResolvedVarInfo)(unsafe.Pointer(resVarInfo)).__var != 0 {
 		HashVarFree(tls, (*MyResolvedVarInfo)(unsafe.Pointer(resVarInfo)).__var)
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, vInfoPtr)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, vInfoPtr)
 }
 
 func MyCompiledVarFetch(tls *libc.TLS, interp uintptr, vinfoPtr uintptr) Tcl_Var { /* tclTest.c:7552:1: */
@@ -28315,8 +28315,8 @@ func MyCompiledVarFetch(tls *libc.TLS, interp uintptr, vinfoPtr uintptr) Tcl_Var
 	var iPtr uintptr = interp
 	var hPtr uintptr
 
-	if var1 != (uintptr(0)) {
-		if !(((*Var)(unsafe.Pointer((var1))).flags & 0x8) != 0) {
+	if var1 != uintptr(0) {
+		if !((*Var)(unsafe.Pointer(var1)).flags&0x8 != 0) {
 			// The cached variable is valid, return it.
 
 			return var1
@@ -28327,9 +28327,9 @@ func MyCompiledVarFetch(tls *libc.TLS, interp uintptr, vinfoPtr uintptr) Tcl_Var
 		HashVarFree(tls, var1)
 	}
 
-	hPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) uintptr)(unsafe.Pointer((((*Interp)(unsafe.Pointer(iPtr)).globalNsPtr + 152 /* &.varTable */) + 48 /* &.createProc */))))(tls, ((*Interp)(unsafe.Pointer(iPtr)).globalNsPtr + 152 /* &.varTable */), (*MyResolvedVarInfo)(unsafe.Pointer(resVarInfo)).nameObj, bp /* &isNewVar */)
+	hPtr = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) uintptr)(unsafe.Pointer((*Interp)(unsafe.Pointer(iPtr)).globalNsPtr + 152 + 48)))(tls, (*Interp)(unsafe.Pointer(iPtr)).globalNsPtr+152, (*MyResolvedVarInfo)(unsafe.Pointer(resVarInfo)).nameObj, bp)
 	if hPtr != 0 {
-		var1 = (hPtr - uintptr((int32((uintptr(0) + 12 /* &.entry */)))))
+		var1 = hPtr - uintptr(int32(uintptr(0)+12))
 	} else {
 		var1 = uintptr(0)
 	}
@@ -28344,16 +28344,16 @@ func MyCompiledVarFetch(tls *libc.TLS, interp uintptr, vinfoPtr uintptr) Tcl_Var
 
 func InterpCompiledVarResolver(tls *libc.TLS, interp uintptr, name uintptr, length int32, context uintptr, rPtr uintptr) int32 { /* tclTest.c:7597:1: */
 	if int32(*(*int8)(unsafe.Pointer(name))) == 'T' {
-		var resVarInfo uintptr = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, uint32(unsafe.Sizeof(MyResolvedVarInfo{})))
+		var resVarInfo uintptr = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, uint32(unsafe.Sizeof(MyResolvedVarInfo{})))
 
 		(*MyResolvedVarInfo)(unsafe.Pointer(resVarInfo)).vInfo.fetchProc = *(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, uintptr, uintptr) Tcl_Var
 		}{MyCompiledVarFetch}))
 		(*MyResolvedVarInfo)(unsafe.Pointer(resVarInfo)).vInfo.deleteProc = *(*uintptr)(unsafe.Pointer(&struct{ f func(*libc.TLS, uintptr) }{MyCompiledVarFree}))
 		(*MyResolvedVarInfo)(unsafe.Pointer(resVarInfo)).__var = uintptr(0)
-		(*MyResolvedVarInfo)(unsafe.Pointer(resVarInfo)).nameObj = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, name, -1)
+		(*MyResolvedVarInfo)(unsafe.Pointer(resVarInfo)).nameObj = (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, name, -1)
 		(*Tcl_Obj)(unsafe.Pointer((*MyResolvedVarInfo)(unsafe.Pointer(resVarInfo)).nameObj)).refCount++
-		*(*uintptr)(unsafe.Pointer(rPtr)) = (resVarInfo /* &.vInfo */)
+		*(*uintptr)(unsafe.Pointer(rPtr)) = resVarInfo
 		return 0
 	}
 	return 4
@@ -28365,23 +28365,23 @@ func TestInterpResolverCmd(tls *libc.TLS, clientData ClientData, interp uintptr,
 
 	// var idx int32 at bp+48, 4
 
-	if (objc < 2) || (objc > 3) {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+8854 /* "up|down ?interp?" */)
+	if objc < 2 || objc > 3 {
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+8854)
 		return 1
 	}
 	if objc == 3 {
-		interp = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 696 /* &.tcl_GetSlave */))))(tls, interp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4))))
-		if interp == (uintptr(0)) {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+8871 /* "provided interpr..." */, uintptr(0)))
+		interp = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 696)))(tls, interp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4))))
+		if interp == uintptr(0) {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+8871, uintptr(0)))
 			return 1
 		}
 	}
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1224 /* &.tcl_GetIndexFromObjStruct */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), uintptr(unsafe.Pointer(&table)), int32(unsafe.Sizeof(uintptr(0))), ts+8902 /* "operation" */, 1, bp+48 /* &idx */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1224)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), uintptr(unsafe.Pointer(&table)), int32(unsafe.Sizeof(uintptr(0))), ts+8902, 1, bp+48) != 0 {
 		return 1
 	}
 	switch *(*int32)(unsafe.Pointer(bp + 48 /* idx */)) {
 	case 1: // up
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, uintptr))(unsafe.Pointer((tclIntStubsPtr + 452 /* &.tcl_AddInterpResolvers */))))(tls, interp, ts+8912 /* "testInterpResolv..." */, *(*uintptr)(unsafe.Pointer(&struct {
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, uintptr))(unsafe.Pointer(tclIntStubsPtr + 452)))(tls, interp, ts+8912, *(*uintptr)(unsafe.Pointer(&struct {
 			f func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr) int32
 		}{InterpCmdResolver})),
 			*(*uintptr)(unsafe.Pointer(&struct {
@@ -28391,8 +28391,8 @@ func TestInterpResolverCmd(tls *libc.TLS, clientData ClientData, interp uintptr,
 			}{InterpCompiledVarResolver})))
 		break
 	case 0: //down
-		if !((*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer((tclIntStubsPtr + 528 /* &.tcl_RemoveInterpResolvers */))))(tls, interp, ts+8912 /* "testInterpResolv..." */) != 0) {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+24, ts+8931, /* "could not remove..." */
+		if !((*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(tclIntStubsPtr + 528)))(tls, interp, ts+8912) != 0) {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+24, ts+8931,
 				uintptr(0)))
 			return 1
 		}
@@ -28724,14 +28724,14 @@ func VarPtrDeleteProc(tls *libc.TLS, clientData ClientData, interp uintptr) { /*
 		if *(*uintptr)(unsafe.Pointer(varPtr + uintptr(i)*4)) != 0 {
 			for ok := true; ok; ok = 0 != 0 {
 				var _objPtr uintptr = *(*uintptr)(unsafe.Pointer(varPtr + uintptr(i)*4))
-				if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+				if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 				}
 			}
 		}
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 408 /* &.tcl_DeleteAssocData */))))(tls, interp, ts+8976 /* "TCLOBJTEST_VARPT..." */)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, varPtr)
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 408)))(tls, interp, ts+8976)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, varPtr)
 }
 
 func GetVarPtr(tls *libc.TLS, interp uintptr) uintptr { /* tclTestObj.c:65:16: */
@@ -28740,7 +28740,7 @@ func GetVarPtr(tls *libc.TLS, interp uintptr) uintptr { /* tclTestObj.c:65:16: *
 
 	// var proc uintptr at bp, 4
 
-	return (*(*func(*libc.TLS, uintptr, uintptr, uintptr) ClientData)(unsafe.Pointer((tclStubsPtr + 608 /* &.tcl_GetAssocData */))))(tls, interp, ts+8976 /* "TCLOBJTEST_VARPT..." */, bp /* &proc */)
+	return (*(*func(*libc.TLS, uintptr, uintptr, uintptr) ClientData)(unsafe.Pointer(tclStubsPtr + 608)))(tls, interp, ts+8976, bp)
 }
 
 //----------------------------------------------------------------------
@@ -28766,45 +28766,45 @@ func TclObjTest_Init(tls *libc.TLS, interp uintptr) int32 { /* tclTestObj.c:91:1
 	// Tcl_Obj *.
 	var varPtr uintptr
 
-	varPtr = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, (uint32(20) * uint32(unsafe.Sizeof(uintptr(0)))))
+	varPtr = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, uint32(20)*uint32(unsafe.Sizeof(uintptr(0))))
 	if !(varPtr != 0) {
 		return 1
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData))(unsafe.Pointer((tclStubsPtr + 900 /* &.tcl_SetAssocData */))))(tls, interp, ts+8976 /* "TCLOBJTEST_VARPT..." */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData))(unsafe.Pointer(tclStubsPtr + 900)))(tls, interp, ts+8976, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr)
 	}{VarPtrDeleteProc})), varPtr)
 	for i = 0; i < 20; i++ {
 		*(*uintptr)(unsafe.Pointer(varPtr + uintptr(i)*4)) = uintptr(0)
 	}
 
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+8994 /* "testbignumobj" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+8994, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestbignumobjCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+9008 /* "testbooleanobj" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+9008, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestbooleanobjCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+9023 /* "testdoubleobj" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+9023, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestdoubleobjCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+9037 /* "testintobj" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+9037, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestintobjCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+9048 /* "testindexobj" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+9048, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestindexobjCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+9061 /* "testlistobj" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+9061, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestlistobjCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+9073 /* "testobj" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+9073, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestobjCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+9081 /* "teststringobj" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+9081, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TeststringobjCmd})),
 		uintptr(0), uintptr(0))
@@ -28846,13 +28846,13 @@ func TestbignumobjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc
 	var varPtr uintptr
 
 	if objc < 3 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+9125 /* "option ?arg ...?" */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+9125)
 		return 1
 	}
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1224 /* &.tcl_GetIndexFromObjStruct */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp /* &subcmds[0] */, int32(unsafe.Sizeof(uintptr(0))), ts+3360 /* "option" */, 0, bp+28 /* &index */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1224)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp, int32(unsafe.Sizeof(uintptr(0))), ts+3360, 0, bp+28) != 0 {
 		return 1
 	}
-	string = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
+	string = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
 	if GetVariableIndex(tls, interp, string, bp+32 /* &varIndex */) != 0 {
 		return 1
 	}
@@ -28861,19 +28861,19 @@ func TestbignumobjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc
 	switch *(*int32)(unsafe.Pointer(bp + 28 /* index */)) {
 	case 0 /* BIGNUM_SET */ :
 		if objc != 4 {
-			(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 2, objv, ts+9142 /* "var value" */)
+			(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 2, objv, ts+9142)
 			return 1
 		}
-		string = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))
-		if (*(*func(*libc.TLS, uintptr) mp_err)(unsafe.Pointer((tclTomMathStubsPtr + 92 /* &.tclBN_mp_init */))))(tls, bp+36 /* &bignumValue */) != 0 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp,
-				(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, ts+9152 /* "error in mp_init" */, -1))
+		string = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))
+		if (*(*func(*libc.TLS, uintptr) mp_err)(unsafe.Pointer(tclTomMathStubsPtr + 92)))(tls, bp+36) != 0 {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp,
+				(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, ts+9152, -1))
 			return 1
 		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, int32) mp_err)(unsafe.Pointer((tclTomMathStubsPtr + 152 /* &.tclBN_mp_read_radix */))))(tls, bp+36 /* &bignumValue */, string, 10) != 0 {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclTomMathStubsPtr + 32 /* &.tclBN_mp_clear */))))(tls, bp+36 /* &bignumValue */)
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp,
-				(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, ts+9169 /* "error in mp_read..." */, -1))
+		if (*(*func(*libc.TLS, uintptr, uintptr, int32) mp_err)(unsafe.Pointer(tclTomMathStubsPtr + 152)))(tls, bp+36, string, 10) != 0 {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclTomMathStubsPtr + 32)))(tls, bp+36)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp,
+				(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, ts+9169, -1))
 			return 1
 		}
 
@@ -28883,16 +28883,16 @@ func TestbignumobjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc
 		// we must create a new object to modify/set and decrement the old
 		// formerly-shared object's ref count. This is "copy on write".
 
-		if (*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)))*4)) != (uintptr(0))) && !((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)))*4))))).refCount > 1) {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 2236 /* &.tcl_SetBignumObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)))*4)), bp+36 /* &bignumValue */)
+		if *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32)))*4)) != uintptr(0) && !((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32)))*4)))).refCount > 1) {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 2236)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32)))*4)), bp+36)
 		} else {
-			SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)), (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 2228 /* &.tcl_NewBignumObj */))))(tls, bp+36 /* &bignumValue */))
+			SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)), (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 2228)))(tls, bp+36))
 		}
 		break
 
 	case 1 /* BIGNUM_GET */ :
 		if objc != 3 {
-			(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 2, objv, ts+9192 /* "varIndex" */)
+			(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 2, objv, ts+9192)
 			return 1
 		}
 		if CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 32 /* varIndex */))) != 0 {
@@ -28902,115 +28902,115 @@ func TestbignumobjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc
 
 	case 2 /* BIGNUM_MULT10 */ :
 		if objc != 3 {
-			(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 2, objv, ts+9192 /* "varIndex" */)
+			(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 2, objv, ts+9192)
 			return 1
 		}
 		if CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 32 /* varIndex */))) != 0 {
 			return 1
 		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 2240 /* &.tcl_GetBignumFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)))*4)),
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 2240)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32)))*4)),
 			bp+36 /* &bignumValue */) != 0 {
 			return 1
 		}
-		if ((*(*func(*libc.TLS, uintptr) mp_err)(unsafe.Pointer((tclTomMathStubsPtr + 92 /* &.tclBN_mp_init */))))(tls, bp+52 /* &newValue */) != 0) ||
-			((*(*func(*libc.TLS, uintptr, mp_digit, uintptr) mp_err)(unsafe.Pointer((tclTomMathStubsPtr + 128 /* &.tclBN_mp_mul_d */))))(tls, bp+36 /* &bignumValue */, uint32(10), bp+52 /* &newValue */) != 0) {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclTomMathStubsPtr + 32 /* &.tclBN_mp_clear */))))(tls, bp+36 /* &bignumValue */)
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclTomMathStubsPtr + 32 /* &.tclBN_mp_clear */))))(tls, bp+52 /* &newValue */)
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp,
-				(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, ts+9201 /* "error in mp_mul_..." */, -1))
+		if (*(*func(*libc.TLS, uintptr) mp_err)(unsafe.Pointer(tclTomMathStubsPtr + 92)))(tls, bp+52) != 0 ||
+			(*(*func(*libc.TLS, uintptr, mp_digit, uintptr) mp_err)(unsafe.Pointer(tclTomMathStubsPtr + 128)))(tls, bp+36, uint32(10), bp+52) != 0 {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclTomMathStubsPtr + 32)))(tls, bp+36)
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclTomMathStubsPtr + 32)))(tls, bp+52)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp,
+				(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, ts+9201, -1))
 			return 1
 		}
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclTomMathStubsPtr + 32 /* &.tclBN_mp_clear */))))(tls, bp+36 /* &bignumValue */)
-		if !((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)))*4))))).refCount > 1) {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 2236 /* &.tcl_SetBignumObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)))*4)), bp+52 /* &newValue */)
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclTomMathStubsPtr + 32)))(tls, bp+36)
+		if !((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32)))*4)))).refCount > 1) {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 2236)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32)))*4)), bp+52)
 		} else {
-			SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)), (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 2228 /* &.tcl_NewBignumObj */))))(tls, bp+52 /* &newValue */))
+			SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)), (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 2228)))(tls, bp+52))
 		}
 		break
 
 	case 3 /* BIGNUM_DIV10 */ :
 		if objc != 3 {
-			(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 2, objv, ts+9192 /* "varIndex" */)
+			(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 2, objv, ts+9192)
 			return 1
 		}
 		if CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 32 /* varIndex */))) != 0 {
 			return 1
 		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 2240 /* &.tcl_GetBignumFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)))*4)),
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 2240)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32)))*4)),
 			bp+36 /* &bignumValue */) != 0 {
 			return 1
 		}
-		if ((*(*func(*libc.TLS, uintptr) mp_err)(unsafe.Pointer((tclTomMathStubsPtr + 92 /* &.tclBN_mp_init */))))(tls, bp+52 /* &newValue */) != 0) ||
-			((*(*func(*libc.TLS, uintptr, mp_digit, uintptr, uintptr) mp_err)(unsafe.Pointer((tclTomMathStubsPtr + 64 /* &.tclBN_mp_div_d */))))(tls, bp+36 /* &bignumValue */, uint32(10), bp+52 /* &newValue */, uintptr(0)) != 0) {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclTomMathStubsPtr + 32 /* &.tclBN_mp_clear */))))(tls, bp+36 /* &bignumValue */)
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclTomMathStubsPtr + 32 /* &.tclBN_mp_clear */))))(tls, bp+52 /* &newValue */)
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp,
-				(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, ts+9219 /* "error in mp_div_..." */, -1))
+		if (*(*func(*libc.TLS, uintptr) mp_err)(unsafe.Pointer(tclTomMathStubsPtr + 92)))(tls, bp+52) != 0 ||
+			(*(*func(*libc.TLS, uintptr, mp_digit, uintptr, uintptr) mp_err)(unsafe.Pointer(tclTomMathStubsPtr + 64)))(tls, bp+36, uint32(10), bp+52, uintptr(0)) != 0 {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclTomMathStubsPtr + 32)))(tls, bp+36)
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclTomMathStubsPtr + 32)))(tls, bp+52)
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp,
+				(*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, ts+9219, -1))
 			return 1
 		}
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclTomMathStubsPtr + 32 /* &.tclBN_mp_clear */))))(tls, bp+36 /* &bignumValue */)
-		if !((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)))*4))))).refCount > 1) {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 2236 /* &.tcl_SetBignumObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)))*4)), bp+52 /* &newValue */)
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclTomMathStubsPtr + 32)))(tls, bp+36)
+		if !((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32)))*4)))).refCount > 1) {
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 2236)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32)))*4)), bp+52)
 		} else {
-			SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)), (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 2228 /* &.tcl_NewBignumObj */))))(tls, bp+52 /* &newValue */))
+			SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)), (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 2228)))(tls, bp+52))
 		}
 		break
 
 	case 4 /* BIGNUM_ISEVEN */ :
 		if objc != 3 {
-			(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 2, objv, ts+9192 /* "varIndex" */)
+			(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 2, objv, ts+9192)
 			return 1
 		}
 		if CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 32 /* varIndex */))) != 0 {
 			return 1
 		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 2240 /* &.tcl_GetBignumFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)))*4)),
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 2240)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32)))*4)),
 			bp+36 /* &bignumValue */) != 0 {
 			return 1
 		}
-		if !((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)))*4))))).refCount > 1) {
-			(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 252 /* &.tcl_SetIntObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)))*4)), libc.BoolInt32(!(func() int32 {
-				if ((*mp_int)(unsafe.Pointer((bp + 36 /* &bignumValue */))).used != 0) && ((*(*mp_digit)(unsafe.Pointer((*mp_int)(unsafe.Pointer((bp + 36 /* &bignumValue */))).dp + uintptr(0)*4)) & mp_digit(1)) == mp_digit(1)) {
+		if !((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32)))*4)))).refCount > 1) {
+			(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 252)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32)))*4)), libc.BoolInt32(!(func() int32 {
+				if (*mp_int)(unsafe.Pointer(bp+36)).used != 0 && *(*mp_digit)(unsafe.Pointer((*mp_int)(unsafe.Pointer(bp+36)).dp + uintptr(0)*4))&mp_digit(1) == mp_digit(1) {
 					return 1
 				}
 				return 0
 			}() != 0)))
 		} else {
-			SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)), (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, libc.BoolInt32(!(func() int32 {
-				if ((*mp_int)(unsafe.Pointer((bp + 36 /* &bignumValue */))).used != 0) && ((*(*mp_digit)(unsafe.Pointer((*mp_int)(unsafe.Pointer((bp + 36 /* &bignumValue */))).dp + uintptr(0)*4)) & mp_digit(1)) == mp_digit(1)) {
+			SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)), (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, libc.BoolInt32(!(func() int32 {
+				if (*mp_int)(unsafe.Pointer(bp+36)).used != 0 && *(*mp_digit)(unsafe.Pointer((*mp_int)(unsafe.Pointer(bp+36)).dp + uintptr(0)*4))&mp_digit(1) == mp_digit(1) {
 					return 1
 				}
 				return 0
 			}() != 0))))
 		}
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclTomMathStubsPtr + 32 /* &.tclBN_mp_clear */))))(tls, bp+36 /* &bignumValue */)
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclTomMathStubsPtr + 32)))(tls, bp+36)
 		break
 
 	case 5 /* BIGNUM_RADIXSIZE */ :
 		if objc != 3 {
-			(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 2, objv, ts+9192 /* "varIndex" */)
+			(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 2, objv, ts+9192)
 			return 1
 		}
 		if CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 32 /* varIndex */))) != 0 {
 			return 1
 		}
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 2240 /* &.tcl_GetBignumFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)))*4)),
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 2240)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32)))*4)),
 			bp+36 /* &bignumValue */) != 0 {
 			return 1
 		}
-		if (*(*func(*libc.TLS, uintptr, int32, uintptr) mp_err)(unsafe.Pointer((tclTomMathStubsPtr + 148 /* &.tclBN_mp_radix_size */))))(tls, bp+36 /* &bignumValue */, 10, bp+28 /* &index */) != 0 {
+		if (*(*func(*libc.TLS, uintptr, int32, uintptr) mp_err)(unsafe.Pointer(tclTomMathStubsPtr + 148)))(tls, bp+36, 10, bp+28) != 0 {
 			return 1
 		}
-		if !((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)))*4))))).refCount > 1) {
-			(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 252 /* &.tcl_SetIntObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)))*4)), *(*int32)(unsafe.Pointer(bp + 28 /* index */)))
+		if !((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32)))*4)))).refCount > 1) {
+			(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 252)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32)))*4)), *(*int32)(unsafe.Pointer(bp + 28)))
 		} else {
-			SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)), (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, *(*int32)(unsafe.Pointer(bp + 28 /* index */))))
+			SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)), (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, *(*int32)(unsafe.Pointer(bp + 28))))
 		}
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclTomMathStubsPtr + 32 /* &.tclBN_mp_clear */))))(tls, bp+36 /* &bignumValue */)
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclTomMathStubsPtr + 32)))(tls, bp+36)
 		break
 	}
 
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32 /* varIndex */)))*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 32)))*4)))
 	return 0
 }
 
@@ -29046,13 +29046,13 @@ func TestbooleanobjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, obj
 		goto __1
 	}
 wrongNumArgs:
-	(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+9237 /* "option arg ?arg ..." */)
+	(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+9237)
 	return 1
 __1:
 	;
 
-	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
-	if !(GetVariableIndex(tls, interp, index, bp+40 /* &varIndex */) != 0) {
+	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
+	if !(GetVariableIndex(tls, interp, index, bp+40) != 0) {
 		goto __2
 	}
 	return 1
@@ -29061,8 +29061,8 @@ __2:
 
 	varPtr = GetVarPtr(tls, interp)
 
-	subCmd = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)))
-	if !(libc.Xstrcmp(tls, subCmd, ts+4165 /* "set" */) == 0) {
+	subCmd = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)))
+	if !(libc.Xstrcmp(tls, subCmd, ts+4165) == 0) {
 		goto __3
 	}
 	if !(objc != 4) {
@@ -29071,7 +29071,7 @@ __2:
 	goto wrongNumArgs
 __5:
 	;
-	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 136 /* &.tcl_GetBooleanFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)), bp+44 /* &boolValue */) != 0) {
+	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 136)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)), bp+44) != 0) {
 		goto __6
 	}
 	return 1
@@ -29084,19 +29084,19 @@ __6:
 	// we must create a new object to modify/set and decrement the old
 	// formerly-shared object's ref count. This is "copy on write".
 
-	if !((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)) != (uintptr(0))) && !((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4))))).refCount > 1)) {
+	if !(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)) != uintptr(0) && !((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))).refCount > 1)) {
 		goto __7
 	}
-	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 252 /* &.tcl_SetIntObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)), (libc.Bool32((*(*int32)(unsafe.Pointer(bp + 44 /* boolValue */))) != 0)))
+	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 252)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)), libc.Bool32(*(*int32)(unsafe.Pointer(bp + 44)) != 0))
 	goto __8
 __7:
-	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)), (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, (libc.Bool32((*(*int32)(unsafe.Pointer(bp + 44 /* boolValue */))) != 0))))
+	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)), (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, libc.Bool32(*(*int32)(unsafe.Pointer(bp + 44)) != 0)))
 __8:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))
 	goto __4
 __3:
-	if !(libc.Xstrcmp(tls, subCmd, ts+1534 /* "get" */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+1534) == 0) {
 		goto __9
 	}
 	if !(objc != 3) {
@@ -29105,16 +29105,16 @@ __3:
 	goto wrongNumArgs
 __11:
 	;
-	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */))) != 0) {
+	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 40))) != 0) {
 		goto __12
 	}
 	return 1
 __12:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))
 	goto __10
 __9:
-	if !(libc.Xstrcmp(tls, subCmd, ts+9258 /* "not" */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+9258) == 0) {
 		goto __13
 	}
 	if !(objc != 3) {
@@ -29123,33 +29123,33 @@ __9:
 	goto wrongNumArgs
 __15:
 	;
-	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */))) != 0) {
+	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 40))) != 0) {
 		goto __16
 	}
 	return 1
 __16:
 	;
-	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 136 /* &.tcl_GetBooleanFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)),
-		bp+44 /* &boolValue */) != 0) {
+	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 136)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)),
+		bp+44) != 0) {
 		goto __17
 	}
 	return 1
 __17:
 	;
-	if !(!((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4))))).refCount > 1)) {
+	if !!((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))).refCount > 1) {
 		goto __18
 	}
-	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 252 /* &.tcl_SetIntObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)), (libc.Bool32((libc.BoolInt32(!(*(*int32)(unsafe.Pointer(bp + 44 /* boolValue */)) != 0))) != 0)))
+	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 252)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)), libc.Bool32(libc.BoolInt32(!(*(*int32)(unsafe.Pointer(bp + 44)) != 0)) != 0))
 	goto __19
 __18:
-	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)), (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, (libc.Bool32((libc.BoolInt32(!(*(*int32)(unsafe.Pointer(bp + 44 /* boolValue */)) != 0))) != 0))))
+	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)), (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, libc.Bool32(libc.BoolInt32(!(*(*int32)(unsafe.Pointer(bp + 44)) != 0)) != 0)))
 __19:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))
 	goto __14
 __13:
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 68 /* &.tcl_AppendStringsToObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp),
-		libc.VaList(bp, ts+1428 /* "bad option \"" */, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))),
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 68)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp),
+		libc.VaList(bp, ts+1428 /* "bad option \"" */, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))),
 			ts+9262 /* "\": must be set, ..." */, uintptr(0)))
 	return 1
 __14:
@@ -29195,23 +29195,23 @@ func TestdoubleobjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc
 		goto __1
 	}
 wrongNumArgs:
-	(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+9237 /* "option arg ?arg ..." */)
+	(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+9237)
 	return 1
 __1:
 	;
 
 	varPtr = GetVarPtr(tls, interp)
 
-	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
-	if !(GetVariableIndex(tls, interp, index, bp+40 /* &varIndex */) != 0) {
+	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
+	if !(GetVariableIndex(tls, interp, index, bp+40) != 0) {
 		goto __2
 	}
 	return 1
 __2:
 	;
 
-	subCmd = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)))
-	if !(libc.Xstrcmp(tls, subCmd, ts+4165 /* "set" */) == 0) {
+	subCmd = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)))
+	if !(libc.Xstrcmp(tls, subCmd, ts+4165) == 0) {
 		goto __3
 	}
 	if !(objc != 4) {
@@ -29220,8 +29220,8 @@ __2:
 	goto wrongNumArgs
 __5:
 	;
-	string = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))
-	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 144 /* &.tcl_GetDouble */))))(tls, interp, string, bp+48 /* &doubleValue */) != 0) {
+	string = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))
+	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 144)))(tls, interp, string, bp+48) != 0) {
 		goto __6
 	}
 	return 1
@@ -29234,19 +29234,19 @@ __6:
 	// must create a new object to modify/set and decrement the old
 	// formerly-shared object's ref count. This is "copy on write".
 
-	if !((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)) != (uintptr(0))) && !((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4))))).refCount > 1)) {
+	if !(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)) != uintptr(0) && !((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))).refCount > 1)) {
 		goto __7
 	}
-	(*(*func(*libc.TLS, uintptr, float64))(unsafe.Pointer((tclStubsPtr + 248 /* &.tcl_SetDoubleObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)), *(*float64)(unsafe.Pointer(bp + 48 /* doubleValue */)))
+	(*(*func(*libc.TLS, uintptr, float64))(unsafe.Pointer(tclStubsPtr + 248)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)), *(*float64)(unsafe.Pointer(bp + 48)))
 	goto __8
 __7:
-	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)), (*(*func(*libc.TLS, float64) uintptr)(unsafe.Pointer((tclStubsPtr + 212 /* &.tcl_NewDoubleObj */))))(tls, *(*float64)(unsafe.Pointer(bp + 48 /* doubleValue */))))
+	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)), (*(*func(*libc.TLS, float64) uintptr)(unsafe.Pointer(tclStubsPtr + 212)))(tls, *(*float64)(unsafe.Pointer(bp + 48))))
 __8:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))
 	goto __4
 __3:
-	if !(libc.Xstrcmp(tls, subCmd, ts+1534 /* "get" */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+1534) == 0) {
 		goto __9
 	}
 	if !(objc != 3) {
@@ -29255,16 +29255,16 @@ __3:
 	goto wrongNumArgs
 __11:
 	;
-	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */))) != 0) {
+	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 40))) != 0) {
 		goto __12
 	}
 	return 1
 __12:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))
 	goto __10
 __9:
-	if !(libc.Xstrcmp(tls, subCmd, ts+9095 /* "mult10" */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+9095) == 0) {
 		goto __13
 	}
 	if !(objc != 3) {
@@ -29273,32 +29273,32 @@ __9:
 	goto wrongNumArgs
 __15:
 	;
-	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */))) != 0) {
+	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 40))) != 0) {
 		goto __16
 	}
 	return 1
 __16:
 	;
-	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 148 /* &.tcl_GetDoubleFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)),
-		bp+48 /* &doubleValue */) != 0) {
+	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 148)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)),
+		bp+48) != 0) {
 		goto __17
 	}
 	return 1
 __17:
 	;
-	if !(!((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4))))).refCount > 1)) {
+	if !!((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))).refCount > 1) {
 		goto __18
 	}
-	(*(*func(*libc.TLS, uintptr, float64))(unsafe.Pointer((tclStubsPtr + 248 /* &.tcl_SetDoubleObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)), (*(*float64)(unsafe.Pointer(bp + 48 /* doubleValue */)) * 10.0))
+	(*(*func(*libc.TLS, uintptr, float64))(unsafe.Pointer(tclStubsPtr + 248)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)), *(*float64)(unsafe.Pointer(bp + 48))*10.0)
 	goto __19
 __18:
-	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)), (*(*func(*libc.TLS, float64) uintptr)(unsafe.Pointer((tclStubsPtr + 212 /* &.tcl_NewDoubleObj */))))(tls, (*(*float64)(unsafe.Pointer(bp + 48 /* doubleValue */))*10.0)))
+	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)), (*(*func(*libc.TLS, float64) uintptr)(unsafe.Pointer(tclStubsPtr + 212)))(tls, *(*float64)(unsafe.Pointer(bp + 48))*10.0))
 __19:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))
 	goto __14
 __13:
-	if !(libc.Xstrcmp(tls, subCmd, ts+9102 /* "div10" */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+9102) == 0) {
 		goto __20
 	}
 	if !(objc != 3) {
@@ -29307,33 +29307,33 @@ __13:
 	goto wrongNumArgs
 __22:
 	;
-	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */))) != 0) {
+	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 40))) != 0) {
 		goto __23
 	}
 	return 1
 __23:
 	;
-	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 148 /* &.tcl_GetDoubleFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)),
-		bp+48 /* &doubleValue */) != 0) {
+	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 148)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)),
+		bp+48) != 0) {
 		goto __24
 	}
 	return 1
 __24:
 	;
-	if !(!((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4))))).refCount > 1)) {
+	if !!((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))).refCount > 1) {
 		goto __25
 	}
-	(*(*func(*libc.TLS, uintptr, float64))(unsafe.Pointer((tclStubsPtr + 248 /* &.tcl_SetDoubleObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)), (*(*float64)(unsafe.Pointer(bp + 48 /* doubleValue */)) / 10.0))
+	(*(*func(*libc.TLS, uintptr, float64))(unsafe.Pointer(tclStubsPtr + 248)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)), *(*float64)(unsafe.Pointer(bp + 48))/10.0)
 	goto __26
 __25:
-	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)), (*(*func(*libc.TLS, float64) uintptr)(unsafe.Pointer((tclStubsPtr + 212 /* &.tcl_NewDoubleObj */))))(tls, (*(*float64)(unsafe.Pointer(bp + 48 /* doubleValue */))/10.0)))
+	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)), (*(*func(*libc.TLS, float64) uintptr)(unsafe.Pointer(tclStubsPtr + 212)))(tls, *(*float64)(unsafe.Pointer(bp + 48))/10.0))
 __26:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))
 	goto __21
 __20:
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 68 /* &.tcl_AppendStringsToObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp),
-		libc.VaList(bp, ts+1428 /* "bad option \"" */, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))),
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 68)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp),
+		libc.VaList(bp, ts+1428 /* "bad option \"" */, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))),
 			ts+9290 /* "\": must be set, ..." */, uintptr(0)))
 	return 1
 __21:
@@ -29380,56 +29380,56 @@ func TestindexobjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc 
 	var argv uintptr
 	var indexRep uintptr
 
-	if (objc == 3) && (libc.Xstrcmp(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))),
-		ts+9328 /* "check" */) == 0) {
+	if objc == 3 && libc.Xstrcmp(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))),
+		ts+9328) == 0 {
 		// This code checks to be sure that the results of Tcl_GetIndexFromObj
 		// are properly cached in the object and returned on subsequent
 		// lookups.
 
-		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp /* &index2 */) != 0 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp) != 0 {
 			return 1
 		}
 
-		(*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1224 /* &.tcl_GetIndexFromObjStruct */))))(tls, uintptr(0), *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), uintptr(unsafe.Pointer(&tablePtr)), int32(unsafe.Sizeof(uintptr(0))), ts+9334 /* "token" */, 0, bp+4 /* &index */)
+		(*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1224)))(tls, uintptr(0), *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), uintptr(unsafe.Pointer(&tablePtr)), int32(unsafe.Sizeof(uintptr(0))), ts+9334, 0, bp+4)
 		indexRep = *(*uintptr)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)) + 16 /* &.internalRep */ /* &.twoPtrValue */ /* &.ptr1 */))
 		(*IndexRep)(unsafe.Pointer(indexRep)).index = *(*int32)(unsafe.Pointer(bp /* index2 */))
-		result = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1224 /* &.tcl_GetIndexFromObjStruct */))))(tls, uintptr(0), *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), uintptr(unsafe.Pointer(&tablePtr)), int32(unsafe.Sizeof(uintptr(0))), ts+9334 /* "token" */, 0, bp+4 /* &index */)
+		result = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1224)))(tls, uintptr(0), *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), uintptr(unsafe.Pointer(&tablePtr)), int32(unsafe.Sizeof(uintptr(0))), ts+9334, 0, bp+4)
 		if result == 0 {
-			(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 252 /* &.tcl_SetIntObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp), *(*int32)(unsafe.Pointer(bp + 4 /* index */)))
+			(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 252)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp), *(*int32)(unsafe.Pointer(bp + 4)))
 		}
 		return result
 	}
 
 	if objc < 5 {
-		(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 72 /* &.tcl_AppendToObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp), ts+1396 /* "wrong # args" */, -1)
+		(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 72)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp), ts+1396, -1)
 		return 1
 	}
 
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 136 /* &.tcl_GetBooleanFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp+8 /* &setError */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 136)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp+8) != 0 {
 		return 1
 	}
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 136 /* &.tcl_GetBooleanFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp+12 /* &allowAbbrev */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 136)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)), bp+12) != 0 {
 		return 1
 	}
 
-	argv = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, ((uint32(objc - 3)) * uint32(unsafe.Sizeof(uintptr(0)))))
+	argv = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, uint32(objc-3)*uint32(unsafe.Sizeof(uintptr(0))))
 	for i = 4; i < objc; i++ {
-		*(*uintptr)(unsafe.Pointer(argv + uintptr((i-4))*4)) = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(i)*4)))
+		*(*uintptr)(unsafe.Pointer(argv + uintptr(i-4)*4)) = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(i)*4)))
 	}
-	*(*uintptr)(unsafe.Pointer(argv + uintptr((objc-4))*4)) = uintptr(0)
+	*(*uintptr)(unsafe.Pointer(argv + uintptr(objc-4)*4)) = uintptr(0)
 
 	// Tcl_GetIndexFromObj assumes that the table is statically-allocated so
 	// that its address is different for each index object. If we accidently
 	// allocate a table at the same address as that cached in the index
 	// object, clear out the object's cached state.
 
-	if ((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))).typePtr != (uintptr(0))) &&
-		!(libc.Xstrcmp(tls, ts+9340 /* "index" */, (*Tcl_ObjType)(unsafe.Pointer((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))).typePtr)).name) != 0) {
+	if (*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))).typePtr != uintptr(0) &&
+		!(libc.Xstrcmp(tls, ts+9340, (*Tcl_ObjType)(unsafe.Pointer((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))).typePtr)).name) != 0) {
 		indexRep = *(*uintptr)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)) + 16 /* &.internalRep */ /* &.twoPtrValue */ /* &.ptr1 */))
 		if (*IndexRep)(unsafe.Pointer(indexRep)).tablePtr == argv {
-			if (*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4))))).typePtr != (uintptr(0)) {
-				if (*Tcl_ObjType)(unsafe.Pointer((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4))))).typePtr)).freeIntRepProc != (uintptr(0)) {
-					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))).typePtr + 4 /* &.freeIntRepProc */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))
+			if (*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))).typePtr != uintptr(0) {
+				if (*Tcl_ObjType)(unsafe.Pointer((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))).typePtr)).freeIntRepProc != uintptr(0) {
+					(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))).typePtr + 4)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))
 				}
 				(*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))).typePtr = uintptr(0)
 			}
@@ -29437,7 +29437,7 @@ func TestindexobjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc 
 		}
 	}
 
-	result = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1224 /* &.tcl_GetIndexFromObjStruct */))))(tls, func() uintptr {
+	result = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1224)))(tls, func() uintptr {
 		if *(*int32)(unsafe.Pointer(bp + 8 /* setError */)) != 0 {
 			return interp
 		}
@@ -29448,9 +29448,9 @@ func TestindexobjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc 
 		}
 		return 1
 	}(), bp+4 /* &index */)
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, argv)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, argv)
 	if result == 0 {
-		(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 252 /* &.tcl_SetIntObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp), *(*int32)(unsafe.Pointer(bp + 4 /* index */)))
+		(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 252)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp), *(*int32)(unsafe.Pointer(bp + 4)))
 	}
 	return result
 }
@@ -29502,22 +29502,22 @@ func TestintobjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc in
 		goto __1
 	}
 wrongNumArgs:
-	(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+9237 /* "option arg ?arg ..." */)
+	(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+9237)
 	return 1
 __1:
 	;
 
 	varPtr = GetVarPtr(tls, interp)
-	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
-	if !(GetVariableIndex(tls, interp, index, bp+40 /* &varIndex */) != 0) {
+	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
+	if !(GetVariableIndex(tls, interp, index, bp+40) != 0) {
 		goto __2
 	}
 	return 1
 __2:
 	;
 
-	subCmd = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)))
-	if !(libc.Xstrcmp(tls, subCmd, ts+4165 /* "set" */) == 0) {
+	subCmd = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)))
+	if !(libc.Xstrcmp(tls, subCmd, ts+4165) == 0) {
 		goto __3
 	}
 	if !(objc != 4) {
@@ -29526,8 +29526,8 @@ __2:
 	goto wrongNumArgs
 __5:
 	;
-	string = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))
-	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, string, bp+44 /* &i */) != 0) {
+	string = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))
+	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, string, bp+44) != 0) {
 		goto __6
 	}
 	return 1
@@ -29541,19 +29541,19 @@ __6:
 	// must create a new object to modify/set and decrement the old
 	// formerly-shared object's ref count. This is "copy on write".
 
-	if !((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)) != (uintptr(0))) && !((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4))))).refCount > 1)) {
+	if !(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)) != uintptr(0) && !((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))).refCount > 1)) {
 		goto __7
 	}
-	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 252 /* &.tcl_SetIntObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)), *(*int32)(unsafe.Pointer(bp + 52 /* intValue */)))
+	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 252)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)), *(*int32)(unsafe.Pointer(bp + 52)))
 	goto __8
 __7:
-	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)), (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, *(*int32)(unsafe.Pointer(bp + 52 /* intValue */))))
+	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)), (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, *(*int32)(unsafe.Pointer(bp + 52))))
 __8:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))
 	goto __4
 __3:
-	if !(libc.Xstrcmp(tls, subCmd, ts+9346 /* "set2" */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+9346) == 0) {
 		goto __9
 	} // doesn't set result
 	if !(objc != 4) {
@@ -29562,26 +29562,26 @@ __3:
 	goto wrongNumArgs
 __11:
 	;
-	string = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))
-	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, string, bp+44 /* &i */) != 0) {
+	string = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))
+	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, string, bp+44) != 0) {
 		goto __12
 	}
 	return 1
 __12:
 	;
 	*(*int32)(unsafe.Pointer(bp + 52 /* intValue */)) = *(*int32)(unsafe.Pointer(bp + 44 /* i */))
-	if !((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)) != (uintptr(0))) && !((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4))))).refCount > 1)) {
+	if !(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)) != uintptr(0) && !((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))).refCount > 1)) {
 		goto __13
 	}
-	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 252 /* &.tcl_SetIntObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)), *(*int32)(unsafe.Pointer(bp + 52 /* intValue */)))
+	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 252)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)), *(*int32)(unsafe.Pointer(bp + 52)))
 	goto __14
 __13:
-	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)), (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, *(*int32)(unsafe.Pointer(bp + 52 /* intValue */))))
+	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)), (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, *(*int32)(unsafe.Pointer(bp + 52))))
 __14:
 	;
 	goto __10
 __9:
-	if !(libc.Xstrcmp(tls, subCmd, ts+9351 /* "setlong" */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+9351) == 0) {
 		goto __15
 	}
 	if !(objc != 4) {
@@ -29590,27 +29590,27 @@ __9:
 	goto wrongNumArgs
 __17:
 	;
-	string = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))
-	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, string, bp+44 /* &i */) != 0) {
+	string = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))
+	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, string, bp+44) != 0) {
 		goto __18
 	}
 	return 1
 __18:
 	;
 	*(*int32)(unsafe.Pointer(bp + 52 /* intValue */)) = *(*int32)(unsafe.Pointer(bp + 44 /* i */))
-	if !((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)) != (uintptr(0))) && !((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4))))).refCount > 1)) {
+	if !(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)) != uintptr(0) && !((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))).refCount > 1)) {
 		goto __19
 	}
-	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 260 /* &.tcl_SetLongObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)), int32(*(*int32)(unsafe.Pointer(bp + 52 /* intValue */))))
+	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 260)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)), int32(*(*int32)(unsafe.Pointer(bp + 52))))
 	goto __20
 __19:
-	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)), (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_NewLongObj */))))(tls, int32(*(*int32)(unsafe.Pointer(bp + 52 /* intValue */)))))
+	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)), (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 224)))(tls, int32(*(*int32)(unsafe.Pointer(bp + 52)))))
 __20:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))
 	goto __16
 __15:
-	if !(libc.Xstrcmp(tls, subCmd, ts+9359 /* "setmaxlong" */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+9359) == 0) {
 		goto __21
 	}
 	maxLong = 0x7fffffff
@@ -29620,18 +29620,18 @@ __15:
 	goto wrongNumArgs
 __23:
 	;
-	if !((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)) != (uintptr(0))) && !((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4))))).refCount > 1)) {
+	if !(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)) != uintptr(0) && !((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))).refCount > 1)) {
 		goto __24
 	}
-	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 260 /* &.tcl_SetLongObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)), maxLong)
+	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 260)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)), maxLong)
 	goto __25
 __24:
-	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)), (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 224 /* &.tcl_NewLongObj */))))(tls, maxLong))
+	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)), (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 224)))(tls, maxLong))
 __25:
 	;
 	goto __22
 __21:
-	if !(libc.Xstrcmp(tls, subCmd, ts+9370 /* "ismaxlong" */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+9370) == 0) {
 		goto __26
 	}
 	if !(objc != 3) {
@@ -29640,19 +29640,19 @@ __21:
 	goto wrongNumArgs
 __28:
 	;
-	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */))) != 0) {
+	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 40))) != 0) {
 		goto __29
 	}
 	return 1
 __29:
 	;
-	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 164 /* &.tcl_GetLongFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)), bp+48 /* &longValue */) != 0) {
+	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 164)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)), bp+48) != 0) {
 		goto __30
 	}
 	return 1
 __30:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 72 /* &.tcl_AppendToObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp),
+	(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 72)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp),
 		func() uintptr {
 			if *(*int32)(unsafe.Pointer(bp + 48 /* longValue */)) == 0x7fffffff {
 				return ts + 6692 /* "1" */
@@ -29661,7 +29661,7 @@ __30:
 		}(), -1)
 	goto __27
 __26:
-	if !(libc.Xstrcmp(tls, subCmd, ts+1534 /* "get" */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+1534) == 0) {
 		goto __31
 	}
 	if !(objc != 3) {
@@ -29670,16 +29670,16 @@ __26:
 	goto wrongNumArgs
 __33:
 	;
-	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */))) != 0) {
+	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 40))) != 0) {
 		goto __34
 	}
 	return 1
 __34:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))
 	goto __32
 __31:
-	if !(libc.Xstrcmp(tls, subCmd, ts+9380 /* "get2" */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+9380) == 0) {
 		goto __35
 	}
 	if !(objc != 3) {
@@ -29688,17 +29688,17 @@ __31:
 	goto wrongNumArgs
 __37:
 	;
-	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */))) != 0) {
+	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 40))) != 0) {
 		goto __38
 	}
 	return 1
 __38:
 	;
-	string = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)))
-	(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 72 /* &.tcl_AppendToObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp), string, -1)
+	string = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 72)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp), string, -1)
 	goto __36
 __35:
-	if !(libc.Xstrcmp(tls, subCmd, ts+9385 /* "inttoobigtest" */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+9385) == 0) {
 		goto __39
 	}
 	// If long ints have more bits than ints on this platform, verify that
@@ -29712,10 +29712,10 @@ __35:
 	goto wrongNumArgs
 __41:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 72 /* &.tcl_AppendToObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp), ts+6692 /* "1" */, -1)
+	(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 72)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp), ts+6692, -1)
 	goto __40
 __39:
-	if !(libc.Xstrcmp(tls, subCmd, ts+9095 /* "mult10" */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+9095) == 0) {
 		goto __42
 	}
 	if !(objc != 3) {
@@ -29724,32 +29724,32 @@ __39:
 	goto wrongNumArgs
 __44:
 	;
-	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */))) != 0) {
+	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 40))) != 0) {
 		goto __45
 	}
 	return 1
 __45:
 	;
-	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)),
-		bp+52 /* &intValue */) != 0) {
+	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)),
+		bp+52) != 0) {
 		goto __46
 	}
 	return 1
 __46:
 	;
-	if !(!((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4))))).refCount > 1)) {
+	if !!((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))).refCount > 1) {
 		goto __47
 	}
-	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 252 /* &.tcl_SetIntObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)), (*(*int32)(unsafe.Pointer(bp + 52 /* intValue */)) * 10))
+	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 252)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)), *(*int32)(unsafe.Pointer(bp + 52))*10)
 	goto __48
 __47:
-	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)), (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, (*(*int32)(unsafe.Pointer(bp + 52 /* intValue */))*10)))
+	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)), (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, *(*int32)(unsafe.Pointer(bp + 52))*10))
 __48:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))
 	goto __43
 __42:
-	if !(libc.Xstrcmp(tls, subCmd, ts+9102 /* "div10" */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+9102) == 0) {
 		goto __49
 	}
 	if !(objc != 3) {
@@ -29758,33 +29758,33 @@ __42:
 	goto wrongNumArgs
 __51:
 	;
-	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */))) != 0) {
+	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 40))) != 0) {
 		goto __52
 	}
 	return 1
 __52:
 	;
-	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)),
-		bp+52 /* &intValue */) != 0) {
+	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)),
+		bp+52) != 0) {
 		goto __53
 	}
 	return 1
 __53:
 	;
-	if !(!((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4))))).refCount > 1)) {
+	if !!((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))).refCount > 1) {
 		goto __54
 	}
-	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 252 /* &.tcl_SetIntObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)), (*(*int32)(unsafe.Pointer(bp + 52 /* intValue */)) / 10))
+	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 252)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)), *(*int32)(unsafe.Pointer(bp + 52))/10)
 	goto __55
 __54:
-	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)), (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, (*(*int32)(unsafe.Pointer(bp + 52 /* intValue */))/10)))
+	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)), (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, *(*int32)(unsafe.Pointer(bp + 52))/10))
 __55:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40 /* varIndex */)))*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 40)))*4)))
 	goto __50
 __49:
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 68 /* &.tcl_AppendStringsToObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp),
-		libc.VaList(bp, ts+1428 /* "bad option \"" */, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))),
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 68)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp),
+		libc.VaList(bp, ts+1428 /* "bad option \"" */, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))),
 			ts+9399 /* "\": must be set, ..." */, uintptr(0)))
 	return 1
 __50:
@@ -29848,54 +29848,54 @@ func TestlistobjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc i
 	var varPtr uintptr
 
 	if objc < 3 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+9451 /* "option arg ?arg...." */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+9451)
 		return 1
 	}
 	varPtr = GetVarPtr(tls, interp)
-	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
+	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
 	if GetVariableIndex(tls, interp, index, bp /* &varIndex */) != 0 {
 		return 1
 	}
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1224 /* &.tcl_GetIndexFromObjStruct */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp+4 /* &subcommands[0] */, int32(unsafe.Sizeof(uintptr(0))), ts+4595 /* "command" */, 0, bp+16 /* &cmdIndex */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1224)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp+4, int32(unsafe.Sizeof(uintptr(0))), ts+4595, 0, bp+16) != 0 {
 		return 1
 	}
 	switch *(*int32)(unsafe.Pointer(bp + 16 /* cmdIndex */)) {
 	case 0 /* LISTOBJ_SET */ :
-		if (*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp /* varIndex */)))*4)) != (uintptr(0))) && !((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp /* varIndex */)))*4))))).refCount > 1) {
-			(*(*func(*libc.TLS, uintptr, int32, uintptr))(unsafe.Pointer((tclStubsPtr + 256 /* &.tcl_SetListObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp /* varIndex */)))*4)), (objc - 3), (objv + uintptr(3)*4))
+		if *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp)))*4)) != uintptr(0) && !((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp)))*4)))).refCount > 1) {
+			(*(*func(*libc.TLS, uintptr, int32, uintptr))(unsafe.Pointer(tclStubsPtr + 256)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp)))*4)), objc-3, objv+uintptr(3)*4)
 		} else {
-			SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp /* varIndex */)), (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 220 /* &.tcl_NewListObj */))))(tls, (objc-3), (objv+uintptr(3)*4)))
+			SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp /* varIndex */)), (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 220)))(tls, objc-3, objv+uintptr(3)*4))
 		}
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp /* varIndex */)))*4)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp)))*4)))
 		break
 
 	case 1 /* LISTOBJ_GET */ :
 		if objc != 3 {
-			(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 2, objv, ts+9192 /* "varIndex" */)
+			(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 2, objv, ts+9192)
 			return 1
 		}
 		if CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp /* varIndex */))) != 0 {
 			return 1
 		}
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp /* varIndex */)))*4)))
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp)))*4)))
 		break
 
 	case 2 /* LISTOBJ_REPLACE */ :
 		if objc < 5 {
-			(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 2, objv,
+			(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 2, objv,
 				ts+9471 /* "varIndex start c..." */)
 			return 1
 		}
-		if ((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)), bp+20 /* &first */) != 0) ||
-			((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(4)*4)), bp+24 /* &count */) != 0) {
+		if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)), bp+20) != 0 ||
+			(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(4)*4)), bp+24) != 0 {
 			return 1
 		}
-		if (*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp /* varIndex */)))*4))))).refCount > 1 {
-			SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp /* varIndex */)), (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 124 /* &.tcl_DuplicateObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp /* varIndex */)))*4))))
+		if (*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp)))*4)))).refCount > 1 {
+			SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp /* varIndex */)), (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 124)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp)))*4))))
 		}
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 876 /* &.tcl_ResetResult */))))(tls, interp)
-		return (*(*func(*libc.TLS, uintptr, uintptr, int32, int32, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 200 /* &.tcl_ListObjReplace */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp /* varIndex */)))*4)), *(*int32)(unsafe.Pointer(bp + 20 /* first */)), *(*int32)(unsafe.Pointer(bp + 24 /* count */)),
-			(objc - 5), (objv + uintptr(5)*4))
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 876)))(tls, interp)
+		return (*(*func(*libc.TLS, uintptr, uintptr, int32, int32, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 200)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp)))*4)), *(*int32)(unsafe.Pointer(bp + 20)), *(*int32)(unsafe.Pointer(bp + 24)),
+			objc-5, objv+uintptr(5)*4)
 	}
 	return 0
 }
@@ -29940,14 +29940,14 @@ func TestobjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc int32
 		goto __1
 	}
 wrongNumArgs:
-	(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+9237 /* "option arg ?arg ..." */)
+	(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+9237)
 	return 1
 __1:
 	;
 
 	varPtr = GetVarPtr(tls, interp)
-	subCmd = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)))
-	if !(libc.Xstrcmp(tls, subCmd, ts+9505 /* "assign" */) == 0) {
+	subCmd = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)))
+	if !(libc.Xstrcmp(tls, subCmd, ts+9505) == 0) {
 		goto __2
 	}
 	if !(objc != 4) {
@@ -29956,31 +29956,31 @@ __1:
 	goto wrongNumArgs
 __4:
 	;
-	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
-	if !(GetVariableIndex(tls, interp, index, bp+80 /* &varIndex */) != 0) {
+	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
+	if !(GetVariableIndex(tls, interp, index, bp+80) != 0) {
 		goto __5
 	}
 	return 1
 __5:
 	;
-	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 80 /* varIndex */))) != 0) {
+	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 80))) != 0) {
 		goto __6
 	}
 	return 1
 __6:
 	;
-	string = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))
-	if !(GetVariableIndex(tls, interp, string, bp+84 /* &destIndex */) != 0) {
+	string = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))
+	if !(GetVariableIndex(tls, interp, string, bp+84) != 0) {
 		goto __7
 	}
 	return 1
 __7:
 	;
 	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 84 /* destIndex */)), *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 80 /* varIndex */)))*4)))
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 84 /* destIndex */)))*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 84)))*4)))
 	goto __3
 __2:
-	if !(libc.Xstrcmp(tls, subCmd, ts+9512 /* "bug3598580" */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+9512) == 0) {
 		goto __8
 	}
 	if !(objc != 2) {
@@ -29989,15 +29989,15 @@ __2:
 	goto wrongNumArgs
 __10:
 	;
-	*(*uintptr)(unsafe.Pointer(bp + 88 /* elemObjPtr */)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, 123)
-	listObjPtr = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 220 /* &.tcl_NewListObj */))))(tls, 1, bp+88 /* &elemObjPtr */)
+	*(*uintptr)(unsafe.Pointer(bp + 88 /* elemObjPtr */)) = (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, 123)
+	listObjPtr = (*(*func(*libc.TLS, int32, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 220)))(tls, 1, bp+88)
 	// Replace the single list element through itself, nonsense but legal.
-	(*(*func(*libc.TLS, uintptr, uintptr, int32, int32, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 200 /* &.tcl_ListObjReplace */))))(tls, interp, listObjPtr, 0, 1, 1, bp+88 /* &elemObjPtr */)
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, listObjPtr)
+	(*(*func(*libc.TLS, uintptr, uintptr, int32, int32, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 200)))(tls, interp, listObjPtr, 0, 1, 1, bp+88)
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, listObjPtr)
 	return 0
 	goto __9
 __8:
-	if !(libc.Xstrcmp(tls, subCmd, ts+9523 /* "convert" */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+9523) == 0) {
 		goto __11
 	}
 
@@ -30007,39 +30007,39 @@ __8:
 	goto wrongNumArgs
 __13:
 	;
-	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
-	if !(GetVariableIndex(tls, interp, index, bp+80 /* &varIndex */) != 0) {
+	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
+	if !(GetVariableIndex(tls, interp, index, bp+80) != 0) {
 		goto __14
 	}
 	return 1
 __14:
 	;
-	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 80 /* varIndex */))) != 0) {
+	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 80))) != 0) {
 		goto __15
 	}
 	return 1
 __15:
 	;
-	typeName = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))
-	if !((libc.AssignUintptr(&targetType, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 168 /* &.tcl_GetObjType */))))(tls, typeName))) == (uintptr(0))) {
+	typeName = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))
+	if !(libc.AssignUintptr(&targetType, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 168)))(tls, typeName)) == uintptr(0)) {
 		goto __16
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 68 /* &.tcl_AppendStringsToObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp),
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 68)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp),
 		libc.VaList(bp, ts+9531 /* "no type " */, typeName, ts+9540 /* " found" */, uintptr(0)))
 	return 1
 __16:
 	;
-	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 80 /* &.tcl_ConvertToType */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 80 /* varIndex */)))*4)), targetType) !=
+	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 80)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 80)))*4)), targetType) !=
 		0) {
 		goto __17
 	}
 	return 1
 __17:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 80 /* varIndex */)))*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 80)))*4)))
 	goto __12
 __11:
-	if !(libc.Xstrcmp(tls, subCmd, ts+9547 /* "duplicate" */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+9547) == 0) {
 		goto __18
 	}
 	if !(objc != 4) {
@@ -30048,31 +30048,31 @@ __11:
 	goto wrongNumArgs
 __20:
 	;
-	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
-	if !(GetVariableIndex(tls, interp, index, bp+80 /* &varIndex */) != 0) {
+	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
+	if !(GetVariableIndex(tls, interp, index, bp+80) != 0) {
 		goto __21
 	}
 	return 1
 __21:
 	;
-	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 80 /* varIndex */))) != 0) {
+	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 80))) != 0) {
 		goto __22
 	}
 	return 1
 __22:
 	;
-	string = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))
-	if !(GetVariableIndex(tls, interp, string, bp+84 /* &destIndex */) != 0) {
+	string = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))
+	if !(GetVariableIndex(tls, interp, string, bp+84) != 0) {
 		goto __23
 	}
 	return 1
 __23:
 	;
-	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 84 /* destIndex */)), (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 124 /* &.tcl_DuplicateObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 80 /* varIndex */)))*4))))
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 84 /* destIndex */)))*4)))
+	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 84 /* destIndex */)), (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 124)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 80)))*4))))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 84)))*4)))
 	goto __19
 __18:
-	if !(libc.Xstrcmp(tls, subCmd, ts+9557 /* "freeallvars" */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+9557) == 0) {
 		goto __24
 	}
 	if !(objc != 2) {
@@ -30086,15 +30086,15 @@ __27:
 	if !(i < 20) {
 		goto __29
 	}
-	if !(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(i)*4)) != (uintptr(0))) {
+	if !(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(i)*4)) != uintptr(0)) {
 		goto __30
 	}
 __31:
 	_objPtr = *(*uintptr)(unsafe.Pointer(varPtr + uintptr(i)*4))
-	if !(libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1) {
+	if !(libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1) {
 		goto __34
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 __34:
 	;
 	goto __32
@@ -30117,7 +30117,7 @@ __29:
 	;
 	goto __25
 __24:
-	if !(libc.Xstrcmp(tls, subCmd, ts+9569 /* "invalidateString..." */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+9569) == 0) {
 		goto __35
 	}
 	if !(objc != 3) {
@@ -30126,24 +30126,24 @@ __24:
 	goto wrongNumArgs
 __37:
 	;
-	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
-	if !(GetVariableIndex(tls, interp, index, bp+80 /* &varIndex */) != 0) {
+	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
+	if !(GetVariableIndex(tls, interp, index, bp+80) != 0) {
 		goto __38
 	}
 	return 1
 __38:
 	;
-	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 80 /* varIndex */))) != 0) {
+	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 80))) != 0) {
 		goto __39
 	}
 	return 1
 __39:
 	;
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 176 /* &.tcl_InvalidateStringRep */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 80 /* varIndex */)))*4)))
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 80 /* varIndex */)))*4)))
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 176)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 80)))*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 80)))*4)))
 	goto __36
 __35:
-	if !(libc.Xstrcmp(tls, subCmd, ts+9589 /* "newobj" */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+9589) == 0) {
 		goto __40
 	}
 	if !(objc != 3) {
@@ -30152,18 +30152,18 @@ __35:
 	goto wrongNumArgs
 __42:
 	;
-	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
-	if !(GetVariableIndex(tls, interp, index, bp+80 /* &varIndex */) != 0) {
+	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
+	if !(GetVariableIndex(tls, interp, index, bp+80) != 0) {
 		goto __43
 	}
 	return 1
 __43:
 	;
-	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 80 /* varIndex */)), (*(*func(*libc.TLS) uintptr)(unsafe.Pointer((tclStubsPtr + 228 /* &.tcl_NewObj */))))(tls))
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 80 /* varIndex */)))*4)))
+	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 80 /* varIndex */)), (*(*func(*libc.TLS) uintptr)(unsafe.Pointer(tclStubsPtr + 228)))(tls))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 80)))*4)))
 	goto __41
 __40:
-	if !(libc.Xstrcmp(tls, subCmd, ts+9596 /* "objtype" */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+9596) == 0) {
 		goto __44
 	}
 
@@ -30176,19 +30176,19 @@ __40:
 	goto wrongNumArgs
 __46:
 	;
-	if !((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))).typePtr == (uintptr(0))) {
+	if !((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))).typePtr == uintptr(0)) {
 		goto __47
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, ts+6511 /* "none" */, -1))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, ts+6511, -1))
 	goto __48
 __47:
 	typeName1 = (*Tcl_ObjType)(unsafe.Pointer((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))).typePtr)).name
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, typeName1, -1))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, typeName1, -1))
 __48:
 	;
 	goto __45
 __44:
-	if !(libc.Xstrcmp(tls, subCmd, ts+6705 /* "refcount" */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+6705) == 0) {
 		goto __49
 	}
 	if !(objc != 3) {
@@ -30197,23 +30197,23 @@ __44:
 	goto wrongNumArgs
 __51:
 	;
-	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
-	if !(GetVariableIndex(tls, interp, index, bp+80 /* &varIndex */) != 0) {
+	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
+	if !(GetVariableIndex(tls, interp, index, bp+80) != 0) {
 		goto __52
 	}
 	return 1
 __52:
 	;
-	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 80 /* varIndex */))) != 0) {
+	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 80))) != 0) {
 		goto __53
 	}
 	return 1
 __53:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, (*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 80 /* varIndex */)))*4)))).refCount))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, (*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 80)))*4)))).refCount))
 	goto __50
 __49:
-	if !(libc.Xstrcmp(tls, subCmd, ts+6714 /* "type" */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+6714) == 0) {
 		goto __54
 	}
 	if !(objc != 3) {
@@ -30222,32 +30222,32 @@ __49:
 	goto wrongNumArgs
 __56:
 	;
-	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
-	if !(GetVariableIndex(tls, interp, index, bp+80 /* &varIndex */) != 0) {
+	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
+	if !(GetVariableIndex(tls, interp, index, bp+80) != 0) {
 		goto __57
 	}
 	return 1
 __57:
 	;
-	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 80 /* varIndex */))) != 0) {
+	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 80))) != 0) {
 		goto __58
 	}
 	return 1
 __58:
 	;
-	if !((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 80 /* varIndex */)))*4)))).typePtr == (uintptr(0))) {
+	if !((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 80)))*4)))).typePtr == uintptr(0)) {
 		goto __59
 	} // a string!
-	(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 72 /* &.tcl_AppendToObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp), ts+4107 /* "string" */, -1)
+	(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 72)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp), ts+4107, -1)
 	goto __60
 __59:
-	(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 72 /* &.tcl_AppendToObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp),
+	(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 72)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp),
 		(*Tcl_ObjType)(unsafe.Pointer((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 80 /* varIndex */)))*4)))).typePtr)).name, -1)
 __60:
 	;
 	goto __55
 __54:
-	if !(libc.Xstrcmp(tls, subCmd, ts+9604 /* "types" */) == 0) {
+	if !(libc.Xstrcmp(tls, subCmd, ts+9604) == 0) {
 		goto __61
 	}
 	if !(objc != 2) {
@@ -30256,8 +30256,8 @@ __54:
 	goto wrongNumArgs
 __63:
 	;
-	if !((*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 64 /* &.tcl_AppendAllObjTypes */))))(tls, interp,
-		(*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp)) != 0) {
+	if !((*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 64)))(tls, interp,
+		(*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp)) != 0) {
 		goto __64
 	}
 	return 1
@@ -30265,8 +30265,8 @@ __64:
 	;
 	goto __62
 __61:
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 68 /* &.tcl_AppendStringsToObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp),
-		libc.VaList(bp+40, ts+1428 /* "bad option \"" */, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))),
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 68)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp),
+		libc.VaList(bp+40, ts+1428 /* "bad option \"" */, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))),
 
 			ts+9610 /* "\": must be assig..." */, uintptr(0)))
 	return 1
@@ -30335,21 +30335,21 @@ func TeststringobjCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc
 		goto __1
 	}
 wrongNumArgs:
-	(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+9237 /* "option arg ?arg ..." */)
+	(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+9237)
 	return 1
 __1:
 	;
 
 	varPtr = GetVarPtr(tls, interp)
-	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
-	if !(GetVariableIndex(tls, interp, index, bp+104 /* &varIndex */) != 0) {
+	index = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(2)*4)))
+	if !(GetVariableIndex(tls, interp, index, bp+104) != 0) {
 		goto __2
 	}
 	return 1
 __2:
 	;
 
-	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1224 /* &.tcl_GetIndexFromObjStruct */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), uintptr(unsafe.Pointer(&options2)), int32(unsafe.Sizeof(uintptr(0))), ts+3360 /* "option" */, 0, bp+108 /* &option */) !=
+	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1224)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), uintptr(unsafe.Pointer(&options2)), int32(unsafe.Sizeof(uintptr(0))), ts+3360, 0, bp+108) !=
 		0) {
 		goto __3
 	}
@@ -30392,61 +30392,61 @@ __5: // append
 	goto wrongNumArgs
 __18:
 	;
-	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(4)*4)), bp+112 /* &length */) != 0) {
+	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(4)*4)), bp+112) != 0) {
 		goto __19
 	}
 	return 1
 __19:
 	;
-	if !(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)) == (uintptr(0))) {
+	if !(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)) == uintptr(0)) {
 		goto __20
 	}
-	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)), (*(*func(*libc.TLS) uintptr)(unsafe.Pointer((tclStubsPtr + 228 /* &.tcl_NewObj */))))(tls))
+	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)), (*(*func(*libc.TLS) uintptr)(unsafe.Pointer(tclStubsPtr + 228)))(tls))
 __20:
 	;
 
 	// If the object bound to variable "varIndex" is shared, we must
 	// "copy on write" and append to a copy of the object.
 
-	if !((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4))))).refCount > 1) {
+	if !((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)))).refCount > 1) {
 		goto __21
 	}
-	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)), (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 124 /* &.tcl_DuplicateObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4))))
+	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)), (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 124)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4))))
 __21:
 	;
-	string = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))
-	(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 72 /* &.tcl_AppendToObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)), string, *(*int32)(unsafe.Pointer(bp + 112 /* length */)))
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)))
+	string = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 72)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)), string, *(*int32)(unsafe.Pointer(bp + 112)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)))
 	goto __4
 __6: // appendstrings
-	if !(objc > (11 + 3)) {
+	if !(objc > 11+3) {
 		goto __22
 	}
 	goto wrongNumArgs
 __22:
 	;
-	if !(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)) == (uintptr(0))) {
+	if !(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)) == uintptr(0)) {
 		goto __23
 	}
-	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)), (*(*func(*libc.TLS) uintptr)(unsafe.Pointer((tclStubsPtr + 228 /* &.tcl_NewObj */))))(tls))
+	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)), (*(*func(*libc.TLS) uintptr)(unsafe.Pointer(tclStubsPtr + 228)))(tls))
 __23:
 	;
 
 	// If the object bound to variable "varIndex" is shared, we must
 	// "copy on write" and append to a copy of the object.
 
-	if !((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4))))).refCount > 1) {
+	if !((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)))).refCount > 1) {
 		goto __24
 	}
-	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)), (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 124 /* &.tcl_DuplicateObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4))))
+	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)), (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 124)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4))))
 __24:
 	;
 	*(*int32)(unsafe.Pointer(bp + 164 /* i */)) = 3
 __25:
-	if !(*(*int32)(unsafe.Pointer(bp + 164 /* i */)) < objc) {
+	if !(*(*int32)(unsafe.Pointer(bp + 164)) < objc) {
 		goto __27
 	}
-	*(*uintptr)(unsafe.Pointer(bp + 116 /* &strings[0] */ + uintptr((*(*int32)(unsafe.Pointer(bp + 164 /* i */))-3))*4)) = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(*(*int32)(unsafe.Pointer(bp + 164 /* i */)))*4)))
+	*(*uintptr)(unsafe.Pointer(bp + 116 /* &strings[0] */ + uintptr(*(*int32)(unsafe.Pointer(bp + 164))-3)*4)) = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(*(*int32)(unsafe.Pointer(bp + 164)))*4)))
 	goto __26
 __26:
 	*(*int32)(unsafe.Pointer(bp + 164 /* i */))++
@@ -30455,10 +30455,10 @@ __26:
 __27:
 	;
 __28:
-	if !(*(*int32)(unsafe.Pointer(bp + 164 /* i */)) < (12 + 3)) {
+	if !(*(*int32)(unsafe.Pointer(bp + 164)) < 12+3) {
 		goto __30
 	}
-	*(*uintptr)(unsafe.Pointer(bp + 116 /* &strings[0] */ + uintptr((*(*int32)(unsafe.Pointer(bp + 164 /* i */))-3))*4)) = uintptr(0)
+	*(*uintptr)(unsafe.Pointer(bp + 116 /* &strings[0] */ + uintptr(*(*int32)(unsafe.Pointer(bp + 164))-3)*4)) = uintptr(0)
 	goto __29
 __29:
 	*(*int32)(unsafe.Pointer(bp + 164 /* i */))++
@@ -30466,11 +30466,11 @@ __29:
 	goto __30
 __30:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 68 /* &.tcl_AppendStringsToObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)), libc.VaList(bp, *(*uintptr)(unsafe.Pointer(bp + 116 /* &strings[0] */ + uintptr(0)*4)), *(*uintptr)(unsafe.Pointer(bp + 116 /* &strings[0] */ + uintptr(1)*4)),
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 68)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)), libc.VaList(bp, *(*uintptr)(unsafe.Pointer(bp + 116 + uintptr(0)*4)), *(*uintptr)(unsafe.Pointer(bp + 116 + uintptr(1)*4)),
 		*(*uintptr)(unsafe.Pointer(bp + 116 /* &strings[0] */ + uintptr(2)*4)), *(*uintptr)(unsafe.Pointer(bp + 116 /* &strings[0] */ + uintptr(3)*4)), *(*uintptr)(unsafe.Pointer(bp + 116 /* &strings[0] */ + uintptr(4)*4)), *(*uintptr)(unsafe.Pointer(bp + 116 /* &strings[0] */ + uintptr(5)*4)),
 		*(*uintptr)(unsafe.Pointer(bp + 116 /* &strings[0] */ + uintptr(6)*4)), *(*uintptr)(unsafe.Pointer(bp + 116 /* &strings[0] */ + uintptr(7)*4)), *(*uintptr)(unsafe.Pointer(bp + 116 /* &strings[0] */ + uintptr(8)*4)), *(*uintptr)(unsafe.Pointer(bp + 116 /* &strings[0] */ + uintptr(9)*4)),
 		*(*uintptr)(unsafe.Pointer(bp + 116 /* &strings[0] */ + uintptr(10)*4)), *(*uintptr)(unsafe.Pointer(bp + 116 /* &strings[0] */ + uintptr(11)*4))))
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)))
 	goto __4
 __7: // get
 	if !(objc != 3) {
@@ -30479,13 +30479,13 @@ __7: // get
 	goto wrongNumArgs
 __31:
 	;
-	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 104 /* varIndex */))) != 0) {
+	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 104))) != 0) {
 		goto __32
 	}
 	return 1
 __32:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)))
 	goto __4
 __8: // get2
 	if !(objc != 3) {
@@ -30494,14 +30494,14 @@ __8: // get2
 	goto wrongNumArgs
 __33:
 	;
-	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 104 /* varIndex */))) != 0) {
+	if !(CheckIfVarUnset(tls, interp, varPtr, *(*int32)(unsafe.Pointer(bp + 104))) != 0) {
 		goto __34
 	}
 	return 1
 __34:
 	;
-	string = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)))
-	(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 72 /* &.tcl_AppendToObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp), string, -1)
+	string = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 72)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp), string, -1)
 	goto __4
 __9: // length
 	if !(objc != 3) {
@@ -30510,8 +30510,8 @@ __9: // length
 	goto wrongNumArgs
 __35:
 	;
-	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 252 /* &.tcl_SetIntObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp), func() int32 {
-		if *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)) != (uintptr(0)) {
+	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 252)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp), func() int32 {
+		if *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)) != uintptr(0) {
 			return (*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)))).length
 		}
 		return -1
@@ -30524,11 +30524,11 @@ __10: // length2
 	goto wrongNumArgs
 __36:
 	;
-	if !(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)) != (uintptr(0))) {
+	if !(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)) != uintptr(0)) {
 		goto __37
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 80 /* &.tcl_ConvertToType */))))(tls, uintptr(0), *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)),
-		(*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 168 /* &.tcl_GetObjType */))))(tls, ts+4107 /* "string" */))
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 80)))(tls, uintptr(0), *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)),
+		(*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 168)))(tls, ts+4107))
 	strPtr = *(*uintptr)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)) + 16 /* &.internalRep */ /* &.twoPtrValue */ /* &.ptr1 */))
 	*(*int32)(unsafe.Pointer(bp + 112 /* length */)) = (*String)(unsafe.Pointer(strPtr)).allocated
 	goto __38
@@ -30536,7 +30536,7 @@ __37:
 	*(*int32)(unsafe.Pointer(bp + 112 /* length */)) = -1
 __38:
 	;
-	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 252 /* &.tcl_SetIntObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp), *(*int32)(unsafe.Pointer(bp + 112 /* length */)))
+	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 252)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp), *(*int32)(unsafe.Pointer(bp + 112)))
 	goto __4
 __11: // set
 	if !(objc != 4) {
@@ -30553,18 +30553,18 @@ __39:
 	// and decrement the old formerly-shared object's ref count. This
 	// is "copy on write".
 
-	string = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 172 /* &.tcl_GetStringFromObj */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)), bp+112 /* &length */)
-	if !((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)) != (uintptr(0))) &&
-		!((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4))))).refCount > 1)) {
+	string = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 172)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)), bp+112)
+	if !(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)) != uintptr(0) &&
+		!((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)))).refCount > 1)) {
 		goto __40
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 268 /* &.tcl_SetStringObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)), string, *(*int32)(unsafe.Pointer(bp + 112 /* length */)))
+	(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 268)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)), string, *(*int32)(unsafe.Pointer(bp + 112)))
 	goto __41
 __40:
-	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)), (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls, string, *(*int32)(unsafe.Pointer(bp + 112 /* length */))))
+	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)), (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls, string, *(*int32)(unsafe.Pointer(bp + 112))))
 __41:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)))
 	goto __4
 __12: // set2
 	if !(objc != 4) {
@@ -30582,16 +30582,16 @@ __13: // setlength
 	goto wrongNumArgs
 __43:
 	;
-	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)), bp+112 /* &length */) != 0) {
+	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)), bp+112) != 0) {
 		goto __44
 	}
 	return 1
 __44:
 	;
-	if !(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)) != (uintptr(0))) {
+	if !(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)) != uintptr(0)) {
 		goto __45
 	}
-	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 264 /* &.tcl_SetObjLength */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)), *(*int32)(unsafe.Pointer(bp + 112 /* length */)))
+	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 264)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)), *(*int32)(unsafe.Pointer(bp + 112)))
 __45:
 	;
 	goto __4
@@ -30602,11 +30602,11 @@ __14: // maxchars
 	goto wrongNumArgs
 __46:
 	;
-	if !(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)) != (uintptr(0))) {
+	if !(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)) != uintptr(0)) {
 		goto __47
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 80 /* &.tcl_ConvertToType */))))(tls, uintptr(0), *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)),
-		(*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 168 /* &.tcl_GetObjType */))))(tls, ts+4107 /* "string" */))
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 80)))(tls, uintptr(0), *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)),
+		(*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 168)))(tls, ts+4107))
 	strPtr = *(*uintptr)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)) + 16 /* &.internalRep */ /* &.twoPtrValue */ /* &.ptr1 */))
 	*(*int32)(unsafe.Pointer(bp + 112 /* length */)) = (*String)(unsafe.Pointer(strPtr)).maxChars
 	goto __48
@@ -30614,7 +30614,7 @@ __47:
 	*(*int32)(unsafe.Pointer(bp + 112 /* length */)) = -1
 __48:
 	;
-	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 252 /* &.tcl_SetIntObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp), *(*int32)(unsafe.Pointer(bp + 112 /* length */)))
+	(*(*func(*libc.TLS, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 252)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp), *(*int32)(unsafe.Pointer(bp + 112)))
 	goto __4
 __15: // getunicode
 	if !(objc != 3) {
@@ -30623,7 +30623,7 @@ __15: // getunicode
 	goto wrongNumArgs
 __49:
 	;
-	(*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1744 /* &.tcl_GetUnicodeFromObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)), uintptr(0))
+	(*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1744)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)), uintptr(0))
 	goto __4
 __16: // appendself
 	if !(objc != 4) {
@@ -30632,42 +30632,42 @@ __16: // appendself
 	goto wrongNumArgs
 __50:
 	;
-	if !(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)) == (uintptr(0))) {
+	if !(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)) == uintptr(0)) {
 		goto __51
 	}
-	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)), (*(*func(*libc.TLS) uintptr)(unsafe.Pointer((tclStubsPtr + 228 /* &.tcl_NewObj */))))(tls))
+	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)), (*(*func(*libc.TLS) uintptr)(unsafe.Pointer(tclStubsPtr + 228)))(tls))
 __51:
 	;
 
 	// If the object bound to variable "varIndex" is shared, we must
 	// "copy on write" and append to a copy of the object.
 
-	if !((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4))))).refCount > 1) {
+	if !((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)))).refCount > 1) {
 		goto __52
 	}
-	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)), (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 124 /* &.tcl_DuplicateObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4))))
+	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)), (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 124)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4))))
 __52:
 	;
 
-	string = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 172 /* &.tcl_GetStringFromObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)), bp+112 /* &length */)
+	string = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 172)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)), bp+112)
 
-	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)), bp+164 /* &i */) != 0) {
+	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)), bp+164) != 0) {
 		goto __53
 	}
 	return 1
 __53:
 	;
-	if !((*(*int32)(unsafe.Pointer(bp + 164 /* i */)) < 0) || (*(*int32)(unsafe.Pointer(bp + 164 /* i */)) > *(*int32)(unsafe.Pointer(bp + 112 /* length */)))) {
+	if !(*(*int32)(unsafe.Pointer(bp + 164)) < 0 || *(*int32)(unsafe.Pointer(bp + 164)) > *(*int32)(unsafe.Pointer(bp + 112))) {
 		goto __54
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls,
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls,
 		ts+9714 /* "index value out ..." */, -1))
 	return 1
 __54:
 	;
 
-	(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 72 /* &.tcl_AppendToObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)), (string + uintptr(*(*int32)(unsafe.Pointer(bp + 164 /* i */)))), (*(*int32)(unsafe.Pointer(bp + 112 /* length */)) - *(*int32)(unsafe.Pointer(bp + 164 /* i */))))
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 72)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)), string+uintptr(*(*int32)(unsafe.Pointer(bp + 164))), *(*int32)(unsafe.Pointer(bp + 112))-*(*int32)(unsafe.Pointer(bp + 164)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)))
 	goto __4
 __17: // appendself2
 	if !(objc != 4) {
@@ -30676,42 +30676,42 @@ __17: // appendself2
 	goto wrongNumArgs
 __55:
 	;
-	if !(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)) == (uintptr(0))) {
+	if !(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)) == uintptr(0)) {
 		goto __56
 	}
-	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)), (*(*func(*libc.TLS) uintptr)(unsafe.Pointer((tclStubsPtr + 228 /* &.tcl_NewObj */))))(tls))
+	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)), (*(*func(*libc.TLS) uintptr)(unsafe.Pointer(tclStubsPtr + 228)))(tls))
 __56:
 	;
 
 	// If the object bound to variable "varIndex" is shared, we must
 	// "copy on write" and append to a copy of the object.
 
-	if !((*Tcl_Obj)(unsafe.Pointer((*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4))))).refCount > 1) {
+	if !((*Tcl_Obj)(unsafe.Pointer(*(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)))).refCount > 1) {
 		goto __57
 	}
-	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)), (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 124 /* &.tcl_DuplicateObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4))))
+	SetVarToObj(tls, varPtr, *(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)), (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 124)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4))))
 __57:
 	;
 
-	unicode = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1744 /* &.tcl_GetUnicodeFromObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)), bp+112 /* &length */)
+	unicode = (*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1744)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)), bp+112)
 
-	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)), bp+164 /* &i */) != 0) {
+	if !((*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)), bp+164) != 0) {
 		goto __58
 	}
 	return 1
 __58:
 	;
-	if !((*(*int32)(unsafe.Pointer(bp + 164 /* i */)) < 0) || (*(*int32)(unsafe.Pointer(bp + 164 /* i */)) > *(*int32)(unsafe.Pointer(bp + 112 /* length */)))) {
+	if !(*(*int32)(unsafe.Pointer(bp + 164)) < 0 || *(*int32)(unsafe.Pointer(bp + 164)) > *(*int32)(unsafe.Pointer(bp + 112))) {
 		goto __59
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 232 /* &.tcl_NewStringObj */))))(tls,
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, uintptr, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 232)))(tls,
 		ts+9714 /* "index value out ..." */, -1))
 	return 1
 __59:
 	;
 
-	(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 1544 /* &.tcl_AppendUnicodeToObj */))))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)), (unicode + uintptr(*(*int32)(unsafe.Pointer(bp + 164 /* i */)))*2), (*(*int32)(unsafe.Pointer(bp + 112 /* length */)) - *(*int32)(unsafe.Pointer(bp + 164 /* i */))))
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104 /* varIndex */)))*4)))
+	(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 1544)))(tls, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)), unicode+uintptr(*(*int32)(unsafe.Pointer(bp + 164)))*2, *(*int32)(unsafe.Pointer(bp + 112))-*(*int32)(unsafe.Pointer(bp + 164)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, *(*uintptr)(unsafe.Pointer(varPtr + uintptr(*(*int32)(unsafe.Pointer(bp + 104)))*4)))
 	goto __4
 __4:
 	;
@@ -30743,16 +30743,16 @@ var options2 = [14]uintptr{
 //----------------------------------------------------------------------
 
 func SetVarToObj(tls *libc.TLS, varPtr uintptr, varIndex int32, objPtr uintptr) { /* tclTestObj.c:1446:1: */
-	if *(*uintptr)(unsafe.Pointer(varPtr + uintptr(varIndex)*4)) != (uintptr(0)) {
+	if *(*uintptr)(unsafe.Pointer(varPtr + uintptr(varIndex)*4)) != uintptr(0) {
 		for ok := true; ok; ok = 0 != 0 {
 			var _objPtr uintptr = *(*uintptr)(unsafe.Pointer(varPtr + uintptr(varIndex)*4))
-			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+			if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+				(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 			}
 		}
 	}
 	*(*uintptr)(unsafe.Pointer(varPtr + uintptr(varIndex)*4)) = objPtr
-	if objPtr != (uintptr(0)) {
+	if objPtr != uintptr(0) {
 		(*Tcl_Obj)(unsafe.Pointer(objPtr)).refCount++
 	}
 }
@@ -30777,12 +30777,12 @@ func GetVariableIndex(tls *libc.TLS, interp uintptr, string uintptr, indexPtr ui
 
 	// var index int32 at bp, 4
 
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 156 /* &.tcl_GetInt */))))(tls, interp, string, bp /* &index */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 156)))(tls, interp, string, bp) != 0 {
 		return 1
 	}
-	if (*(*int32)(unsafe.Pointer(bp /* index */)) < 0) || (*(*int32)(unsafe.Pointer(bp /* index */)) >= 20) {
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 876 /* &.tcl_ResetResult */))))(tls, interp)
-		(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 72 /* &.tcl_AppendToObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp), ts+9814 /* "bad variable ind..." */, -1)
+	if *(*int32)(unsafe.Pointer(bp)) < 0 || *(*int32)(unsafe.Pointer(bp)) >= 20 {
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 876)))(tls, interp)
+		(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 72)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp), ts+9814, -1)
 		return 1
 	}
 
@@ -30810,12 +30810,12 @@ func CheckIfVarUnset(tls *libc.TLS, interp uintptr, varPtr uintptr, varIndex int
 	bp := tls.Alloc(72)
 	defer tls.Free(72)
 
-	if *(*uintptr)(unsafe.Pointer(varPtr + uintptr(varIndex)*4)) == (uintptr(0)) {
+	if *(*uintptr)(unsafe.Pointer(varPtr + uintptr(varIndex)*4)) == uintptr(0) {
 		// var buf [56]int8 at bp+16, 56
 
 		libc.Xsprintf(tls, bp+16 /* &buf[0] */, ts+9833 /* "variable %d is u..." */, libc.VaList(bp, varIndex))
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 876 /* &.tcl_ResetResult */))))(tls, interp)
-		(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer((tclStubsPtr + 72 /* &.tcl_AppendToObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp), bp+16 /* &buf[0] */, -1)
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 876)))(tls, interp)
+		(*(*func(*libc.TLS, uintptr, uintptr, int32))(unsafe.Pointer(tclStubsPtr + 72)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp), bp+16, -1)
 		return 1
 	}
 	return 0
@@ -30955,13 +30955,13 @@ func RegisterCommand(tls *libc.TLS, interp uintptr, namespace uintptr, cmdTableP
 	if (*CmdTable)(unsafe.Pointer(cmdTablePtr)).exportIt != 0 {
 		libc.Xsprintf(tls, bp+48 /* &buf[0] */, ts+9883, /* "namespace eval %..." */
 			libc.VaList(bp, namespace, (*CmdTable)(unsafe.Pointer(cmdTablePtr)).cmdName))
-		if (*(*func(*libc.TLS, uintptr, uintptr, int32, int32) int32)(unsafe.Pointer((tclStubsPtr + 1172 /* &.tcl_EvalEx */))))(tls, interp, bp+48 /* &buf[0] */, -1, 0) != 0 {
+		if (*(*func(*libc.TLS, uintptr, uintptr, int32, int32) int32)(unsafe.Pointer(tclStubsPtr + 1172)))(tls, interp, bp+48, -1, 0) != 0 {
 			return 1
 		}
 	}
 
 	libc.Xsprintf(tls, bp+48 /* &buf[0] */, ts+9925 /* "%s::%s" */, libc.VaList(bp+24, namespace, (*CmdTable)(unsafe.Pointer(cmdTablePtr)).cmdName))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, bp+48 /* &buf[0] */, (*CmdTable)(unsafe.Pointer(cmdTablePtr)).proc, uintptr(0), uintptr(0))
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, bp+48, (*CmdTable)(unsafe.Pointer(cmdTablePtr)).proc, uintptr(0), uintptr(0))
 	return 0
 }
 
@@ -30984,9 +30984,9 @@ func ProcBodyTestInitInternal(tls *libc.TLS, interp uintptr, isSafe int32) int32
 	var cmdTablePtr uintptr
 
 	if isSafe != 0 {
-		cmdTablePtr = (uintptr(unsafe.Pointer(&safeCommands)) + uintptr(0)*12)
+		cmdTablePtr = uintptr(unsafe.Pointer(&safeCommands)) + uintptr(0)*12
 	} else {
-		cmdTablePtr = (uintptr(unsafe.Pointer(&commands)) + uintptr(0)*12)
+		cmdTablePtr = uintptr(unsafe.Pointer(&commands)) + uintptr(0)*12
 	}
 	for ; (*CmdTable)(unsafe.Pointer(cmdTablePtr)).cmdName != 0; cmdTablePtr += 12 {
 		if RegisterCommand(tls, interp, uintptr(unsafe.Pointer(&packageName)), cmdTablePtr) != 0 {
@@ -30994,7 +30994,7 @@ func ProcBodyTestInitInternal(tls *libc.TLS, interp uintptr, isSafe int32) int32
 		}
 	}
 
-	return (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 8 /* &.tcl_PkgProvideEx */))))(tls, interp, uintptr(unsafe.Pointer(&packageName)), uintptr(unsafe.Pointer(&packageVersion)), uintptr(0))
+	return (*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 8)))(tls, interp, uintptr(unsafe.Pointer(&packageName)), uintptr(unsafe.Pointer(&packageVersion)), uintptr(0))
 }
 
 //----------------------------------------------------------------------
@@ -31042,15 +31042,15 @@ func ProcBodyTestProcObjCmd(tls *libc.TLS, dummy ClientData, interp uintptr, obj
 	var result int32
 
 	if objc != 4 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+9932 /* "newName argsList..." */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+9932)
 		return 1
 	}
 
 	// Find the Command pointer to this procedure
 
-	fullName = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))
-	procCmd = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) Tcl_Command)(unsafe.Pointer((tclIntStubsPtr + 472 /* &.tcl_FindCommand */))))(tls, interp, fullName, uintptr(0), 0x200)
-	if procCmd == (uintptr(0)) {
+	fullName = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(3)*4)))
+	procCmd = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32) Tcl_Command)(unsafe.Pointer(tclIntStubsPtr + 472)))(tls, interp, fullName, uintptr(0), 0x200)
+	if procCmd == uintptr(0) {
 		return 1
 	}
 
@@ -31059,8 +31059,8 @@ func ProcBodyTestProcObjCmd(tls *libc.TLS, dummy ClientData, interp uintptr, obj
 	// check that this is a procedure and not a builtin command:
 	// If a procedure, cmdPtr->objClientData is TclIsProc(cmdPtr).
 
-	if (*Command)(unsafe.Pointer(cmdPtr)).objClientData != (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclIntStubsPtr + 228 /* &.tclIsProc */))))(tls, cmdPtr) {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 68 /* &.tcl_AppendStringsToObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp),
+	if (*Command)(unsafe.Pointer(cmdPtr)).objClientData != (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclIntStubsPtr + 228)))(tls, cmdPtr) {
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 68)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp),
 			libc.VaList(bp, ts+9958 /* "command \"" */, fullName, ts+9968 /* "\" is not a Tcl p..." */, uintptr(0)))
 		return 1
 	}
@@ -31068,17 +31068,17 @@ func ProcBodyTestProcObjCmd(tls *libc.TLS, dummy ClientData, interp uintptr, obj
 	// it is a Tcl procedure: the client data is the Proc structure
 
 	procPtr = (*Command)(unsafe.Pointer(cmdPtr)).objClientData
-	if procPtr == (uintptr(0)) {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 68 /* &.tcl_AppendStringsToObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp), libc.VaList(bp+40, ts+9993, /* "procedure \"" */
+	if procPtr == uintptr(0) {
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 68)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp), libc.VaList(bp+40, ts+9993,
 			fullName, ts+10005 /* "\" does not have ..." */, uintptr(0)))
 		return 1
 	}
 
 	// create a new object, initialize our argument vector, call into Tcl
 
-	bodyObjPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclIntStubsPtr + 252 /* &.tclNewProcBodyObj */))))(tls, procPtr)
-	if bodyObjPtr == (uintptr(0)) {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 68 /* &.tcl_AppendStringsToObj */))))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 672 /* &.tcl_GetObjResult */))))(tls, interp),
+	bodyObjPtr = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclIntStubsPtr + 252)))(tls, procPtr)
+	if bodyObjPtr == uintptr(0) {
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 68)))(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 672)))(tls, interp),
 			libc.VaList(bp+80, ts+10036, /* "failed to create..." */
 				fullName, ts+1803 /* "\"" */, uintptr(0)))
 		return 1
@@ -31091,11 +31091,11 @@ func ProcBodyTestProcObjCmd(tls *libc.TLS, dummy ClientData, interp uintptr, obj
 	*(*uintptr)(unsafe.Pointer(bp + 120 /* &myobjv[0] */ + uintptr(3)*4)) = bodyObjPtr
 	*(*uintptr)(unsafe.Pointer(bp + 120 /* &myobjv[0] */ + uintptr(4)*4)) = uintptr(0)
 
-	result = (*(*func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1568 /* &.tcl_ProcObjCmd */))))(tls, uintptr(0), interp, objc, bp+120 /* &myobjv[0] */)
+	result = (*(*func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1568)))(tls, uintptr(0), interp, objc, bp+120)
 	for ok := true; ok; ok = 0 != 0 {
 		var _objPtr uintptr = bodyObjPtr
-		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer((_objPtr))).refCount, 1) <= 1 {
-			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 128 /* &.tclFreeObj */))))(tls, _objPtr)
+		if libc.PostDecInt32(&(*Tcl_Obj)(unsafe.Pointer(_objPtr)).refCount, 1) <= 1 {
+			(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 128)))(tls, _objPtr)
 		}
 	}
 
@@ -31124,12 +31124,12 @@ func ProcBodyTestCheckObjCmd(tls *libc.TLS, dummy ClientData, interp uintptr, ob
 	var version uintptr
 
 	if objc != 1 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+1481 /* "" */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+1481)
 		return 1
 	}
 
-	version = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1096 /* &.tcl_PkgPresentEx */))))(tls, interp, uintptr(unsafe.Pointer(&packageName)), uintptr(unsafe.Pointer(&packageVersion)), 1, uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, (libc.Bool32((libc.Bool32(libc.Xstrcmp(tls, version, uintptr(unsafe.Pointer(&packageVersion))) == 0)) != 0))))
+	version = (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1096)))(tls, interp, uintptr(unsafe.Pointer(&packageName)), uintptr(unsafe.Pointer(&packageVersion)), 1, uintptr(0))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, libc.Bool32(libc.Bool32(libc.Xstrcmp(tls, version, uintptr(unsafe.Pointer(&packageVersion))) == 0) != 0)))
 	return 0
 }
 
@@ -40533,26 +40533,26 @@ type FN_PROGRESS = uintptr /* aclapi.h:20:16 */
 func TclplatformtestInit(tls *libc.TLS, interp uintptr) int32 { /* tclWinTest.c:69:1: */
 	// Add commands for platform specific tests for Windows here.
 
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+10087 /* "testchmod" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+10087, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestchmodCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+10097 /* "testeventloop" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+10097, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TesteventloopCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+10111 /* "testvolumetype" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+10111, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestvolumetypeCmd})),
 		uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+10126 /* "testwinclock" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+10126, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestwinclockCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+10139 /* "testwinsleep" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+10139, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestwinsleepCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+10152 /* "testexcept" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+10152, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestExceptionCmd})), uintptr(0), uintptr(0))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer((tclStubsPtr + 392 /* &.tcl_CreateObjCommand */))))(tls, interp, ts+10163 /* "testsize" */, *(*uintptr)(unsafe.Pointer(&struct {
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr, ClientData, uintptr) Tcl_Command)(unsafe.Pointer(tclStubsPtr + 392)))(tls, interp, ts+10163, *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32
 	}{TestSizeCmd})), uintptr(0), uintptr(0))
 	return 0
@@ -40582,16 +40582,16 @@ func TesteventloopCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc
 	// subcommand.
 
 	if objc < 2 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+10172 /* "option ..." */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+10172)
 		return 1
 	}
-	if libc.Xstrcmp(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))), ts+10183 /* "done" */) == 0 {
+	if libc.Xstrcmp(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))), ts+10183) == 0 {
 		*(*int32)(unsafe.Pointer(framePtr)) = 1
-	} else if libc.Xstrcmp(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))), ts+10188 /* "wait" */) == 0 {
+	} else if libc.Xstrcmp(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))), ts+10188) == 0 {
 		var oldFramePtr uintptr
 		// var done int32 at bp+40, 4
 
-		var oldMode int32 = (*(*func(*libc.TLS, int32) int32)(unsafe.Pointer((tclStubsPtr + 940 /* &.tcl_SetServiceMode */))))(tls, 1)
+		var oldMode int32 = (*(*func(*libc.TLS, int32) int32)(unsafe.Pointer(tclStubsPtr + 940)))(tls, 1)
 
 		// Save the old stack frame pointer and set up the current frame.
 
@@ -40602,10 +40602,10 @@ func TesteventloopCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc
 		// that we do not explicitly call Tcl_ServiceEvent().
 
 		*(*int32)(unsafe.Pointer(bp + 40 /* done */)) = 0
-		for !(*(*int32)(unsafe.Pointer(bp + 40 /* done */)) != 0) {
+		for !(*(*int32)(unsafe.Pointer(bp + 40)) != 0) {
 			// var msg MSG at bp+44, 28
 
-			if !(libc.XGetMessageW(tls, bp+44 /* &msg */, uintptr(0), uint32(0), uint32(0)) != 0) {
+			if !(libc.XGetMessageW(tls, bp+44, uintptr(0), uint32(0), uint32(0)) != 0) {
 				// The application is exiting, so repost the quit message and
 				// start unwinding.
 
@@ -40615,10 +40615,10 @@ func TesteventloopCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc
 			libc.XTranslateMessage(tls, bp+44 /* &msg */)
 			libc.XDispatchMessageW(tls, bp+44 /* &msg */)
 		}
-		(*(*func(*libc.TLS, int32) int32)(unsafe.Pointer((tclStubsPtr + 940 /* &.tcl_SetServiceMode */))))(tls, oldMode)
+		(*(*func(*libc.TLS, int32) int32)(unsafe.Pointer(tclStubsPtr + 940)))(tls, oldMode)
 		framePtr = oldFramePtr
 	} else {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+1428 /* "bad option \"" */, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))),
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+1428, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))),
 			ts+10193 /* "\": must be done ..." */, uintptr(0)))
 		return 1
 	}
@@ -40652,14 +40652,14 @@ func TestvolumetypeCmd(tls *libc.TLS, clientData ClientData, interp uintptr, obj
 	var path uintptr
 
 	if objc > 2 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+10217 /* "?name?" */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+10217)
 		return 1
 	}
 	if objc == 2 {
 		// path has to be really a proper volume, but we don't get query APIs
 		// for that until NT5
 
-		path = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)))
+		path = (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)))
 	} else {
 		path = uintptr(0)
 	}
@@ -40667,17 +40667,17 @@ func TestvolumetypeCmd(tls *libc.TLS, clientData ClientData, interp uintptr, obj
 		uint32(32))
 
 	if found == 0 {
-		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, ts+10224, /* "could not get vo..." */
+		(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, ts+10224,
 			func() uintptr {
 				if path != 0 {
 					return path
 				}
 				return ts + 1481 /* "" */
 			}(), ts+1803 /* "\"" */, uintptr(0)))
-		(*(*func(*libc.TLS, DWORD))(unsafe.Pointer((tclIntPlatStubsPtr + 8 /* &.tclWinConvertError */))))(tls, libc.XGetLastError(tls))
+		(*(*func(*libc.TLS, DWORD))(unsafe.Pointer(tclIntPlatStubsPtr + 8)))(tls, libc.XGetLastError(tls))
 		return 1
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp+40, bp+64 /* &volType[0] */, uintptr(0)))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp+40, bp+64, uintptr(0)))
 	return 0
 }
 
@@ -40725,34 +40725,34 @@ func TestwinclockCmd(tls *libc.TLS, dummy ClientData, interp uintptr, objc int32
 	// var p2 LARGE_INTEGER at bp+40, 8
 
 	if objc != 1 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+1481 /* "" */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+1481)
 		return 1
 	}
 
 	libc.XQueryPerformanceCounter(tls, bp /* &p1 */)
 
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 1936 /* &.tcl_GetTime */))))(tls, bp+8 /* &tclTime */)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 1936)))(tls, bp+8)
 	libc.XGetSystemTimeAsFileTime(tls, bp+16 /* &sysTime */)
 	*(*DWORD)(unsafe.Pointer(bp + 24 /* &t1 */)) = posixEpoch.dwLowDateTime
 	*(*LONG)(unsafe.Pointer(bp + 24 /* &t1 */)) = LONG(posixEpoch.dwHighDateTime)
 	*(*DWORD)(unsafe.Pointer(bp + 32 /* &t2 */)) = (*FILETIME)(unsafe.Pointer(bp + 16 /* &sysTime */)).dwLowDateTime
 	*(*LONG)(unsafe.Pointer(bp + 32 /* &t2 */)) = LONG((*FILETIME)(unsafe.Pointer(bp + 16 /* &sysTime */)).dwHighDateTime)
-	*(*LONGLONG)(unsafe.Pointer(bp + 32 /* &t2 */ /* &.QuadPart */)) -= (*(*LONGLONG)(unsafe.Pointer(bp + 24 /* &t1 */)))
+	*(*LONGLONG)(unsafe.Pointer(bp + 32 /* &t2 */ /* &.QuadPart */)) -= *(*LONGLONG)(unsafe.Pointer(bp + 24))
 
 	libc.XQueryPerformanceCounter(tls, bp+40 /* &p2 */)
 
-	result = (*(*func(*libc.TLS) uintptr)(unsafe.Pointer((tclStubsPtr + 228 /* &.tcl_NewObj */))))(tls)
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 184 /* &.tcl_ListObjAppendElement */))))(tls, interp, result,
-		(*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, (int32(*(*LONGLONG)(unsafe.Pointer(bp + 32 /* &t2 */))/int64(10000000)))))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 184 /* &.tcl_ListObjAppendElement */))))(tls, interp, result,
-		(*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, (int32((*(*LONGLONG)(unsafe.Pointer(bp + 32 /* &t2 */))/int64(10))%int64(1000000)))))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 184 /* &.tcl_ListObjAppendElement */))))(tls, interp, result, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, int32((*Tcl_Time)(unsafe.Pointer(bp+8 /* &tclTime */)).sec)))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 184 /* &.tcl_ListObjAppendElement */))))(tls, interp, result, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer((tclStubsPtr + 216 /* &.tcl_NewIntObj */))))(tls, int32((*Tcl_Time)(unsafe.Pointer(bp+8 /* &tclTime */)).usec)))
+	result = (*(*func(*libc.TLS) uintptr)(unsafe.Pointer(tclStubsPtr + 228)))(tls)
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 184)))(tls, interp, result,
+		(*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, int32(*(*LONGLONG)(unsafe.Pointer(bp + 32))/int64(10000000))))
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 184)))(tls, interp, result,
+		(*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, int32(*(*LONGLONG)(unsafe.Pointer(bp + 32))/int64(10)%int64(1000000))))
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 184)))(tls, interp, result, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, int32((*Tcl_Time)(unsafe.Pointer(bp+8)).sec)))
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 184)))(tls, interp, result, (*(*func(*libc.TLS, int32) uintptr)(unsafe.Pointer(tclStubsPtr + 216)))(tls, int32((*Tcl_Time)(unsafe.Pointer(bp+8)).usec)))
 
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 184 /* &.tcl_ListObjAppendElement */))))(tls, interp, result, (*(*func(*libc.TLS, Tcl_WideInt) uintptr)(unsafe.Pointer((tclStubsPtr + 1960 /* &.tcl_NewWideIntObj */))))(tls, *(*LONGLONG)(unsafe.Pointer(bp /* &p1 */))))
-	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 184 /* &.tcl_ListObjAppendElement */))))(tls, interp, result, (*(*func(*libc.TLS, Tcl_WideInt) uintptr)(unsafe.Pointer((tclStubsPtr + 1960 /* &.tcl_NewWideIntObj */))))(tls, *(*LONGLONG)(unsafe.Pointer(bp + 40 /* &p2 */))))
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 184)))(tls, interp, result, (*(*func(*libc.TLS, Tcl_WideInt) uintptr)(unsafe.Pointer(tclStubsPtr + 1960)))(tls, *(*LONGLONG)(unsafe.Pointer(bp))))
+	(*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 184)))(tls, interp, result, (*(*func(*libc.TLS, Tcl_WideInt) uintptr)(unsafe.Pointer(tclStubsPtr + 1960)))(tls, *(*LONGLONG)(unsafe.Pointer(bp + 40))))
 
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, result)
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, result)
 
 	return 0
 }
@@ -40768,10 +40768,10 @@ func TestwinsleepCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc 
 	// var ms int32 at bp, 4
 
 	if objc != 2 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+10256 /* "ms" */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+10256)
 		return 1
 	}
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp /* &ms */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp) != 0 {
 		return 1
 	}
 	libc.XSleep(tls, DWORD(*(*int32)(unsafe.Pointer(bp /* ms */))))
@@ -40787,23 +40787,23 @@ func TestSizeCmd(tls *libc.TLS, clientData ClientData, interp uintptr, objc int3
 	goto syntax
 __1:
 	;
-	if !(libc.Xstrcmp(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))), ts+10259 /* "time_t" */) == 0) {
+	if !(libc.Xstrcmp(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))), ts+10259) == 0) {
 		goto __2
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, Tcl_WideInt) uintptr)(unsafe.Pointer((tclStubsPtr + 1960 /* &.tcl_NewWideIntObj */))))(tls, int64(unsafe.Sizeof(time_t(0)))))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, Tcl_WideInt) uintptr)(unsafe.Pointer(tclStubsPtr + 1960)))(tls, int64(unsafe.Sizeof(time_t(0)))))
 	return 0
 __2:
 	;
-	if !(libc.Xstrcmp(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))), ts+10266 /* "st_mtime" */) == 0) {
+	if !(libc.Xstrcmp(tls, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4))), ts+10266) == 0) {
 		goto __3
 	}
-	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 948 /* &.tcl_SetObjResult */))))(tls, interp, (*(*func(*libc.TLS, Tcl_WideInt) uintptr)(unsafe.Pointer((tclStubsPtr + 1960 /* &.tcl_NewWideIntObj */))))(tls, int64(unsafe.Sizeof(int32(0)))))
+	(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 948)))(tls, interp, (*(*func(*libc.TLS, Tcl_WideInt) uintptr)(unsafe.Pointer(tclStubsPtr + 1960)))(tls, int64(unsafe.Sizeof(int32(0)))))
 	return 0
 __3:
 	;
 
 syntax:
-	(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+10275 /* "time_t|st_mtime" */)
+	(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+10275)
 	return 1
 }
 
@@ -40835,16 +40835,16 @@ func TestExceptionCmd(tls *libc.TLS, dummy ClientData, interp uintptr, objc int3
 	// var cmd int32 at bp, 4
 
 	if objc != 2 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 0, objv, ts+10291 /* "<type-of-excepti..." */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 0, objv, ts+10291)
 		return 1
 	}
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 1224 /* &.tcl_GetIndexFromObjStruct */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), uintptr(unsafe.Pointer(&cmds)), int32(unsafe.Sizeof(uintptr(0))), ts+4595 /* "command" */, 0, bp /* &cmd */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr, int32, uintptr, int32, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 1224)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), uintptr(unsafe.Pointer(&cmds)), int32(unsafe.Sizeof(uintptr(0))), ts+4595, 0, bp) != 0 {
 		return 1
 	}
 
 	// Make sure the GPF dialog doesn't popup.
 
-	libc.XSetErrorMode(tls, (uint32(0x0001 | 0x0002)))
+	libc.XSetErrorMode(tls, uint32(0x0001|0x0002))
 
 	// As Tcl does not handle structured exceptions, this falls all the way
 	// back up the instruction stack to the C run-time portion that called
@@ -40914,7 +40914,7 @@ func TestplatformChmod(tls *libc.TLS, nativePath uintptr, pmode int32) int32 { /
 	// var pACE2 LPVOID at bp+40, 4
 
 	var phACE2 uintptr
-	set_readOnly = libc.BoolInt32(!((pmode & 0222) != 0))
+	set_readOnly = libc.BoolInt32(!(pmode&0222 != 0))
 	acl_readOnly_found = 0
 	*(*SID_IDENTIFIER_AUTHORITY)(unsafe.Pointer(bp + 8 /* userSidAuthority */)) = SID_IDENTIFIER_AUTHORITY{
 		Value: [6]BYTE{BYTE(0), BYTE(0), BYTE(0), BYTE(0), BYTE(0), BYTE(1)},
@@ -40941,7 +40941,7 @@ __1:
 
 	// If nativePath is not a directory, there is no special handling.
 
-	if !(!((attr & DWORD(0x00000010)) != 0)) {
+	if !!(attr&DWORD(0x00000010) != 0) {
 		goto __2
 	}
 	goto done
@@ -40956,7 +40956,7 @@ __2:
 	// Read the security descriptor for the directory. Note the first call
 	// obtains the size of the security descriptor.
 
-	if !(!(libc.XGetFileSecurityA(tls, nativePath, infoBits, uintptr(0), uint32(0), bp /* &secDescLen */) != 0)) {
+	if !!(libc.XGetFileSecurityA(tls, nativePath, infoBits, uintptr(0), uint32(0), bp) != 0) {
 		goto __3
 	}
 	*(*DWORD)(unsafe.Pointer(bp + 4 /* secDescLen2 */)) = DWORD(0)
@@ -40968,10 +40968,10 @@ __2:
 __4:
 	;
 
-	secDesc = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, uint32(*(*DWORD)(unsafe.Pointer(bp /* secDescLen */))))
+	secDesc = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, uint32(*(*DWORD)(unsafe.Pointer(bp))))
 	if !(!(libc.XGetFileSecurityA(tls, nativePath, infoBits,
-		secDesc, *(*DWORD)(unsafe.Pointer(bp /* secDescLen */)), bp+4 /* &secDescLen2 */) != 0) ||
-		(*(*DWORD)(unsafe.Pointer(bp /* secDescLen */)) < *(*DWORD)(unsafe.Pointer(bp + 4 /* secDescLen2 */)))) {
+		secDesc, *(*DWORD)(unsafe.Pointer(bp)), bp+4) != 0) ||
+		*(*DWORD)(unsafe.Pointer(bp)) < *(*DWORD)(unsafe.Pointer(bp + 4))) {
 		goto __5
 	}
 	goto done
@@ -40982,28 +40982,28 @@ __3:
 
 	// Get the World SID.
 
-	userSid = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, uint32(libc.XGetSidLengthRequired(tls, UCHAR(1))))
+	userSid = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, uint32(libc.XGetSidLengthRequired(tls, UCHAR(1))))
 	libc.XInitializeSid(tls, userSid, bp+8 /* &userSidAuthority */, BYTE(1))
 	*(*DWORD)(unsafe.Pointer(libc.XGetSidSubAuthority(tls, userSid, uint32(0)))) = DWORD(0x00000000)
 
 	// If curAclPresent == false then curAcl and curAclDefaulted not valid.
 
-	if !(!(libc.XGetSecurityDescriptorDacl(tls, secDesc,
-		bp+16 /* &curAclPresent */, bp+20 /* &curAcl */, bp+24 /* &curAclDefaulted */) != 0)) {
+	if !!(libc.XGetSecurityDescriptorDacl(tls, secDesc,
+		bp+16, bp+20, bp+24) != 0) {
 		goto __6
 	}
 	goto done
 __6:
 	;
-	if !(!(*(*WINBOOL)(unsafe.Pointer(bp + 16 /* curAclPresent */)) != 0) || !(*(*PACL)(unsafe.Pointer(bp + 20 /* curAcl */)) != 0)) {
+	if !(!(*(*WINBOOL)(unsafe.Pointer(bp + 16)) != 0) || !(*(*PACL)(unsafe.Pointer(bp + 20)) != 0)) {
 		goto __7
 	}
 	(*ACL_SIZE_INFORMATION)(unsafe.Pointer(bp + 28 /* &ACLSize */)).AclBytesInUse = DWORD(0)
 	(*ACL_SIZE_INFORMATION)(unsafe.Pointer(bp + 28 /* &ACLSize */)).AceCount = DWORD(0)
 	goto __8
 __7:
-	if !(!(libc.XGetAclInformation(tls, *(*PACL)(unsafe.Pointer(bp + 20 /* curAcl */)), bp+28 /* &ACLSize */, uint32(unsafe.Sizeof(ACL_SIZE_INFORMATION{})),
-		AclSizeInformation) != 0)) {
+	if !!(libc.XGetAclInformation(tls, *(*PACL)(unsafe.Pointer(bp + 20)), bp+28, uint32(unsafe.Sizeof(ACL_SIZE_INFORMATION{})),
+		AclSizeInformation) != 0) {
 		goto __9
 	}
 	goto done
@@ -41014,13 +41014,13 @@ __8:
 
 	// Allocate memory for the new ACL.
 
-	newAclSize = ((((*ACL_SIZE_INFORMATION)(unsafe.Pointer(bp+28 /* &ACLSize */)).AclBytesInUse + DWORD(unsafe.Sizeof(ACCESS_DENIED_ACE{}))) +
-		libc.XGetLengthSid(tls, userSid)) - DWORD(unsafe.Sizeof(DWORD(0))))
-	newAcl = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer((tclStubsPtr + 20 /* &.tcl_Alloc */))))(tls, uint32(newAclSize))
+	newAclSize = (*ACL_SIZE_INFORMATION)(unsafe.Pointer(bp+28)).AclBytesInUse + DWORD(unsafe.Sizeof(ACCESS_DENIED_ACE{})) +
+		libc.XGetLengthSid(tls, userSid) - DWORD(unsafe.Sizeof(DWORD(0)))
+	newAcl = (*(*func(*libc.TLS, uint32) uintptr)(unsafe.Pointer(tclStubsPtr + 20)))(tls, uint32(newAclSize))
 
 	// Initialize the new ACL.
 
-	if !(!(libc.XInitializeAcl(tls, newAcl, newAclSize, uint32(2)) != 0)) {
+	if !!(libc.XInitializeAcl(tls, newAcl, newAclSize, uint32(2)) != 0) {
 		goto __10
 	}
 	goto done
@@ -41029,7 +41029,7 @@ __10:
 
 	// Add denied to make readonly, this will be known as a "read-only tag".
 
-	if !((set_readOnly != 0) && !(libc.XAddAccessDeniedAce(tls, newAcl, uint32(2),
+	if !(set_readOnly != 0 && !(libc.XAddAccessDeniedAce(tls, newAcl, uint32(2),
 		readOnlyMask, userSid) != 0)) {
 		goto __11
 	}
@@ -41040,11 +41040,11 @@ __11:
 	acl_readOnly_found = 0
 	j = WORD(0)
 __12:
-	if !(DWORD(j) < (*ACL_SIZE_INFORMATION)(unsafe.Pointer(bp+28 /* &ACLSize */)).AceCount) {
+	if !(DWORD(j) < (*ACL_SIZE_INFORMATION)(unsafe.Pointer(bp+28)).AceCount) {
 		goto __14
 	}
 
-	if !(!(libc.XGetAce(tls, *(*PACL)(unsafe.Pointer(bp + 20 /* curAcl */)), uint32(j), bp+40 /* &pACE2 */) != 0)) {
+	if !!(libc.XGetAce(tls, *(*PACL)(unsafe.Pointer(bp + 20)), uint32(j), bp+40) != 0) {
 		goto __15
 	}
 	goto done
@@ -41055,7 +41055,7 @@ __15:
 
 	// Do NOT propagate inherited ACEs.
 
-	if !((int32((*ACE_HEADER)(unsafe.Pointer(phACE2)).AceFlags) & (0x10)) != 0) {
+	if !(int32((*ACE_HEADER)(unsafe.Pointer(phACE2)).AceFlags)&0x10 != 0) {
 		goto __16
 	}
 	goto __13
@@ -41065,13 +41065,13 @@ __16:
 	// Skip the "read-only tag" restriction (either added above, or it is
 	// being removed).
 
-	if !(int32((*ACE_HEADER)(unsafe.Pointer(phACE2)).AceType) == (0x1)) {
+	if !(int32((*ACE_HEADER)(unsafe.Pointer(phACE2)).AceType) == 0x1) {
 		goto __17
 	}
 	pACEd = phACE2
 
-	if !(((*ACCESS_DENIED_ACE)(unsafe.Pointer(pACEd)).Mask == readOnlyMask) &&
-		(libc.XEqualSid(tls, userSid, (pACEd+8 /* &.SidStart */)) != 0)) {
+	if !((*ACCESS_DENIED_ACE)(unsafe.Pointer(pACEd)).Mask == readOnlyMask &&
+		libc.XEqualSid(tls, userSid, pACEd+8) != 0) {
 		goto __18
 	}
 	acl_readOnly_found = 1
@@ -41083,8 +41083,8 @@ __17:
 
 	// Copy the current ACE from the old to the new ACL.
 
-	if !(!(libc.XAddAce(tls, newAcl, uint32(2), 0xffffffff, *(*LPVOID)(unsafe.Pointer(bp + 40 /* pACE2 */)),
-		uint32((*ACE_HEADER)(unsafe.Pointer(*(*LPVOID)(unsafe.Pointer(bp + 40 /* pACE2 */)))).AceSize)) != 0)) {
+	if !!(libc.XAddAce(tls, newAcl, uint32(2), 0xffffffff, *(*LPVOID)(unsafe.Pointer(bp + 40)),
+		uint32((*ACE_HEADER)(unsafe.Pointer(*(*LPVOID)(unsafe.Pointer(bp + 40)))).AceSize)) != 0) {
 		goto __19
 	}
 	goto done
@@ -41101,10 +41101,10 @@ __14:
 	// Apply the new ACL. Note PROTECTED_DACL_SECURITY_INFORMATION can be used
 	// to remove inherited ACL (we need to overwrite the default ACL's in this case)
 
-	if !((set_readOnly == acl_readOnly_found) || (libc.XSetNamedSecurityInfoA(tls,
+	if !(set_readOnly == acl_readOnly_found || libc.XSetNamedSecurityInfoA(tls,
 		nativePath, SE_FILE_OBJECT,
 		uint32(0x00000004),
-		uintptr(0), uintptr(0), newAcl, uintptr(0)) == DWORD(0))) {
+		uintptr(0), uintptr(0), newAcl, uintptr(0)) == DWORD(0)) {
 		goto __20
 	}
 	res = 0
@@ -41115,25 +41115,25 @@ done:
 	if !(secDesc != 0) {
 		goto __21
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, secDesc)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, secDesc)
 __21:
 	;
 	if !(newAcl != 0) {
 		goto __22
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, newAcl)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, newAcl)
 __22:
 	;
 	if !(userSid != 0) {
 		goto __23
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, userSid)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, userSid)
 __23:
 	;
 	if !(userDomain != 0) {
 		goto __24
 	}
-	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 24 /* &.tcl_Free */))))(tls, userDomain)
+	(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 24)))(tls, userDomain)
 __24:
 	;
 
@@ -41149,12 +41149,12 @@ __25:
 	return libc.Xchmod(tls, nativePath, pmode)
 }
 
-var infoBits SECURITY_INFORMATION = (SECURITY_INFORMATION(((0x00000001) |
-	(0x00000002)) | (0x00000004))) /* tclWinTest.c:428:39 */
-var readOnlyMask DWORD = (DWORD(((((((0x0040) | (0x0002)) |
-	(0x0004)) | (0x0010)) | (0x0004)) |
-	(0x0002)) |
-	(0x00010000))) /* tclWinTest.c:431:24 */
+var infoBits SECURITY_INFORMATION = SECURITY_INFORMATION(0x00000001 |
+	0x00000002 | 0x00000004) /* tclWinTest.c:428:39 */
+var readOnlyMask DWORD = DWORD(0x0040 | 0x0002 |
+	0x0004 | 0x0010 | 0x0004 |
+	0x0002 |
+	0x00010000) /* tclWinTest.c:431:24 */
 
 //---------------------------------------------------------------------------
 //
@@ -41181,11 +41181,11 @@ func TestchmodCmd(tls *libc.TLS, dummy ClientData, interp uintptr, objc int32, o
 	// var mode int32 at bp+40, 4
 
 	if objc < 2 {
-		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 1064 /* &.tcl_WrongNumArgs */))))(tls, interp, 1, objv, ts+10619 /* "mode file ?file ..." */)
+		(*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 1064)))(tls, interp, 1, objv, ts+10619)
 		return 1
 	}
 
-	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer((tclStubsPtr + 160 /* &.tcl_GetIntFromObj */))))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp+40 /* &mode */) != 0 {
+	if (*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(tclStubsPtr + 160)))(tls, interp, *(*uintptr)(unsafe.Pointer(objv + uintptr(1)*4)), bp+40) != 0 {
 		return 1
 	}
 
@@ -41194,16 +41194,16 @@ func TestchmodCmd(tls *libc.TLS, dummy ClientData, interp uintptr, objc int32, o
 
 		var translated uintptr
 
-		translated = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1004 /* &.tcl_TranslateFileName */))))(tls, interp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 1368 /* &.tcl_GetString */))))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(i)*4))), bp+44 /* &buffer */)
-		if translated == (uintptr(0)) {
+		translated = (*(*func(*libc.TLS, uintptr, uintptr, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1004)))(tls, interp, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 1368)))(tls, *(*uintptr)(unsafe.Pointer(objv + uintptr(i)*4))), bp+44)
+		if translated == uintptr(0) {
 			return 1
 		}
 		if TestplatformChmod(tls, translated, *(*int32)(unsafe.Pointer(bp + 40 /* mode */))) != 0 {
-			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer((tclStubsPtr + 288 /* &.tcl_AppendResult */))))(tls, interp, libc.VaList(bp, translated, ts+3813 /* ": " */, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer((tclStubsPtr + 824 /* &.tcl_PosixError */))))(tls, interp),
+			(*(*func(*libc.TLS, uintptr, uintptr))(unsafe.Pointer(tclStubsPtr + 288)))(tls, interp, libc.VaList(bp, translated, ts+3813, (*(*func(*libc.TLS, uintptr) uintptr)(unsafe.Pointer(tclStubsPtr + 824)))(tls, interp),
 				uintptr(0)))
 			return 1
 		}
-		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer((tclStubsPtr + 488 /* &.tcl_DStringFree */))))(tls, bp+44 /* &buffer */)
+		(*(*func(*libc.TLS, uintptr))(unsafe.Pointer(tclStubsPtr + 488)))(tls, bp+44)
 	}
 	return 0
 }
@@ -42054,9 +42054,9 @@ func setargv(tls *libc.TLS, argcPtr uintptr, argvPtr uintptr) { /* tclAppInit.c:
 
 	size = 2
 	for p = cmdLine; int32(*(*TCHAR)(unsafe.Pointer(p))) != 0; p += 2 {
-		if (int32(*(*TCHAR)(unsafe.Pointer(p))) == ' ') || (int32(*(*TCHAR)(unsafe.Pointer(p))) == '\t') { // INTL: ISO space.
+		if int32(*(*TCHAR)(unsafe.Pointer(p))) == ' ' || int32(*(*TCHAR)(unsafe.Pointer(p))) == '\t' { // INTL: ISO space.
 			size++
-			for (int32(*(*TCHAR)(unsafe.Pointer(p))) == ' ') || (int32(*(*TCHAR)(unsafe.Pointer(p))) == '\t') { // INTL: ISO space.
+			for int32(*(*TCHAR)(unsafe.Pointer(p))) == ' ' || int32(*(*TCHAR)(unsafe.Pointer(p))) == '\t' { // INTL: ISO space.
 				p += 2
 			}
 			if int32(*(*TCHAR)(unsafe.Pointer(p))) == 0 {
@@ -42067,15 +42067,15 @@ func setargv(tls *libc.TLS, argcPtr uintptr, argvPtr uintptr) { /* tclAppInit.c:
 
 	// Make sure we don't call ckalloc through the (not yet initialized) stub table
 
-	argSpace = tcl.XTcl_Alloc(tls, (((uint32(size) * uint32(unsafe.Sizeof(uintptr(0)))) + (libc.Xwcslen(tls, cmdLine) * size_t(unsafe.Sizeof(TCHAR(0))))) + uint32(unsafe.Sizeof(TCHAR(0)))))
+	argSpace = tcl.XTcl_Alloc(tls, uint32(size)*uint32(unsafe.Sizeof(uintptr(0)))+libc.Xwcslen(tls, cmdLine)*size_t(unsafe.Sizeof(TCHAR(0)))+uint32(unsafe.Sizeof(TCHAR(0))))
 	argv = argSpace
-	argSpace += 2 * (uintptr(uint32(size) * (uint32(unsafe.Sizeof(uintptr(0))) / uint32(unsafe.Sizeof(TCHAR(0))))))
+	argSpace += 2 * uintptr(uint32(size)*(uint32(unsafe.Sizeof(uintptr(0)))/uint32(unsafe.Sizeof(TCHAR(0)))))
 	size--
 
 	p = cmdLine
 	for argc = 0; argc < size; argc++ {
 		*(*uintptr)(unsafe.Pointer(argv + uintptr(argc)*4)) = libc.AssignUintptr(&arg, argSpace)
-		for (int32(*(*TCHAR)(unsafe.Pointer(p))) == ' ') || (int32(*(*TCHAR)(unsafe.Pointer(p))) == '\t') { // INTL: ISO space.
+		for int32(*(*TCHAR)(unsafe.Pointer(p))) == ' ' || int32(*(*TCHAR)(unsafe.Pointer(p))) == '\t' { // INTL: ISO space.
 			p += 2
 		}
 		if int32(*(*TCHAR)(unsafe.Pointer(p))) == 0 {
@@ -42091,9 +42091,9 @@ func setargv(tls *libc.TLS, argcPtr uintptr, argvPtr uintptr) { /* tclAppInit.c:
 				p += 2
 			}
 			if int32(*(*TCHAR)(unsafe.Pointer(p))) == '"' {
-				if (slashes & 1) == 0 {
+				if slashes&1 == 0 {
 					copy = 0
-					if (inquote != 0) && (int32(*(*TCHAR)(unsafe.Pointer(p + uintptr(1)*2))) == '"') {
+					if inquote != 0 && int32(*(*TCHAR)(unsafe.Pointer(p + uintptr(1)*2))) == '"' {
 						p += 2
 						copy = 1
 					} else {
@@ -42109,7 +42109,7 @@ func setargv(tls *libc.TLS, argcPtr uintptr, argvPtr uintptr) { /* tclAppInit.c:
 				slashes--
 			}
 
-			if (int32(*(*TCHAR)(unsafe.Pointer(p))) == 0) || (!(inquote != 0) && ((int32(*(*TCHAR)(unsafe.Pointer(p))) == ' ') || (int32(*(*TCHAR)(unsafe.Pointer(p))) == '\t'))) { // INTL: ISO space.
+			if int32(*(*TCHAR)(unsafe.Pointer(p))) == 0 || !(inquote != 0) && (int32(*(*TCHAR)(unsafe.Pointer(p))) == ' ' || int32(*(*TCHAR)(unsafe.Pointer(p))) == '\t') { // INTL: ISO space.
 				break
 			}
 			if copy != 0 {
@@ -42119,7 +42119,7 @@ func setargv(tls *libc.TLS, argcPtr uintptr, argvPtr uintptr) { /* tclAppInit.c:
 			p += 2
 		}
 		*(*TCHAR)(unsafe.Pointer(arg)) = TCHAR(0)
-		argSpace = (arg + uintptr(1)*2)
+		argSpace = arg + uintptr(1)*2
 	}
 	*(*uintptr)(unsafe.Pointer(argv + uintptr(argc)*4)) = uintptr(0)
 
@@ -42134,44 +42134,44 @@ func setargv(tls *libc.TLS, argcPtr uintptr, argvPtr uintptr) { /* tclAppInit.c:
 // End:
 
 func init() {
-	*(*uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&commands)) + 0 /* .cmdName */)) = uintptr(unsafe.Pointer(&procCommand))                                                                              // tclTestProcBodyObj.c:62:7:
-	*(*func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&commands)) + 4 /* .proc */)) = ProcBodyTestProcObjCmd                                             // tclTestProcBodyObj.c:62:20:
-	*(*uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&commands)) + 12 /* .cmdName */)) = uintptr(unsafe.Pointer(&checkCommand))                                                                            // tclTestProcBodyObj.c:63:7:
-	*(*func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&commands)) + 16 /* .proc */)) = ProcBodyTestCheckObjCmd                                           // tclTestProcBodyObj.c:63:21:
-	*(*uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&safeCommands)) + 0 /* .cmdName */)) = uintptr(unsafe.Pointer(&procCommand))                                                                          // tclTestProcBodyObj.c:68:7:
-	*(*func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&safeCommands)) + 4 /* .proc */)) = ProcBodyTestProcObjCmd                                         // tclTestProcBodyObj.c:68:20:
-	*(*uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&safeCommands)) + 12 /* .cmdName */)) = uintptr(unsafe.Pointer(&checkCommand))                                                                        // tclTestProcBodyObj.c:69:7:
-	*(*func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&safeCommands)) + 16 /* .proc */)) = ProcBodyTestCheckObjCmd                                       // tclTestProcBodyObj.c:69:21:
-	*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&simpleFilesystem)) + 12 /* .pathInFilesystemProc */)) = SimplePathInFilesystem                                       // tclTest.c:480:5:
-	*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&simpleFilesystem)) + 44 /* .statProc */)) = SimpleStat                                                               // tclTest.c:494:5:
-	*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&simpleFilesystem)) + 48 /* .accessProc */)) = SimpleAccess                                                             // tclTest.c:495:5:
-	*(*func(*libc.TLS, uintptr, uintptr, int32, int32) Tcl_Channel)(unsafe.Pointer(uintptr(unsafe.Pointer(&simpleFilesystem)) + 52 /* .openFileChannelProc */)) = SimpleOpenFileChannel                     // tclTest.c:496:5:
-	*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&simpleFilesystem)) + 56 /* .matchInDirectoryProc */)) = SimpleMatchInDirectory            // tclTest.c:497:5:
-	*(*func(*libc.TLS) uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&simpleFilesystem)) + 68 /* .listVolumesProc */)) = SimpleListVolumes                                                                 // tclTest.c:501:5:
-	*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 12 /* .pathInFilesystemProc */)) = TestReportInFilesystem                                // tclTest.c:446:5:
-	*(*func(*libc.TLS, ClientData) ClientData)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 16 /* .dupInternalRepProc */)) = TestReportDupInternalRep                                 // tclTest.c:447:5:
-	*(*func(*libc.TLS, ClientData))(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 20 /* .freeInternalRepProc */)) = TestReportFreeInternalRep                                          // tclTest.c:448:5:
-	*(*func(*libc.TLS, uintptr, uintptr, int32) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 32 /* .normalizePathProc */)) = TestReportNormalizePath                           // tclTest.c:451:5:
-	*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 44 /* .statProc */)) = TestReportStat                                                    // tclTest.c:454:5:
-	*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 48 /* .accessProc */)) = TestReportAccess                                                  // tclTest.c:455:5:
-	*(*func(*libc.TLS, uintptr, uintptr, int32, int32) Tcl_Channel)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 52 /* .openFileChannelProc */)) = TestReportOpenFileChannel          // tclTest.c:456:5:
-	*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 56 /* .matchInDirectoryProc */)) = TestReportMatchInDirectory // tclTest.c:457:5:
-	*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 60 /* .utimeProc */)) = TestReportUtime                                                  // tclTest.c:458:5:
-	*(*func(*libc.TLS, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 64 /* .linkProc */)) = TestReportLink                                           // tclTest.c:459:5:
-	*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 72 /* .fileAttrStringsProc */)) = TestReportFileAttrStrings                            // tclTest.c:461:5:
-	*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 76 /* .fileAttrsGetProc */)) = TestReportFileAttrsGet                    // tclTest.c:462:5:
-	*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 80 /* .fileAttrsSetProc */)) = TestReportFileAttrsSet                    // tclTest.c:463:5:
-	*(*func(*libc.TLS, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 84 /* .createDirectoryProc */)) = TestReportCreateDirectory                                       // tclTest.c:464:5:
-	*(*func(*libc.TLS, uintptr, int32, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 88 /* .removeDirectoryProc */)) = TestReportRemoveDirectory                       // tclTest.c:465:5:
-	*(*func(*libc.TLS, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 92 /* .deleteFileProc */)) = TestReportDeleteFile                                                 // tclTest.c:466:5:
-	*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 96 /* .copyFileProc */)) = TestReportCopyFile                                            // tclTest.c:467:5:
-	*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 100 /* .renameFileProc */)) = TestReportRenameFile                                       // tclTest.c:468:5:
-	*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 104 /* .copyDirectoryProc */)) = TestReportCopyDirectory                        // tclTest.c:469:5:
-	*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 108 /* .lstatProc */)) = TestReportLstat                                                 // tclTest.c:470:5:
+	*(*uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&commands)) + 0 /* .cmdName */)) = uintptr(unsafe.Pointer(&procCommand))                                                  // tclTestProcBodyObj.c:62:7:
+	*(*func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&commands)) + 4)) = ProcBodyTestProcObjCmd                             // tclTestProcBodyObj.c:62:20:
+	*(*uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&commands)) + 12 /* .cmdName */)) = uintptr(unsafe.Pointer(&checkCommand))                                                // tclTestProcBodyObj.c:63:7:
+	*(*func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&commands)) + 16)) = ProcBodyTestCheckObjCmd                           // tclTestProcBodyObj.c:63:21:
+	*(*uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&safeCommands)) + 0 /* .cmdName */)) = uintptr(unsafe.Pointer(&procCommand))                                              // tclTestProcBodyObj.c:68:7:
+	*(*func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&safeCommands)) + 4)) = ProcBodyTestProcObjCmd                         // tclTestProcBodyObj.c:68:20:
+	*(*uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&safeCommands)) + 12 /* .cmdName */)) = uintptr(unsafe.Pointer(&checkCommand))                                            // tclTestProcBodyObj.c:69:7:
+	*(*func(*libc.TLS, ClientData, uintptr, int32, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&safeCommands)) + 16)) = ProcBodyTestCheckObjCmd                       // tclTestProcBodyObj.c:69:21:
+	*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&simpleFilesystem)) + 12)) = SimplePathInFilesystem                                       // tclTest.c:480:5:
+	*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&simpleFilesystem)) + 44)) = SimpleStat                                                   // tclTest.c:494:5:
+	*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&simpleFilesystem)) + 48)) = SimpleAccess                                                   // tclTest.c:495:5:
+	*(*func(*libc.TLS, uintptr, uintptr, int32, int32) Tcl_Channel)(unsafe.Pointer(uintptr(unsafe.Pointer(&simpleFilesystem)) + 52)) = SimpleOpenFileChannel                    // tclTest.c:496:5:
+	*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&simpleFilesystem)) + 56)) = SimpleMatchInDirectory            // tclTest.c:497:5:
+	*(*func(*libc.TLS) uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&simpleFilesystem)) + 68)) = SimpleListVolumes                                                            // tclTest.c:501:5:
+	*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 12)) = TestReportInFilesystem                                // tclTest.c:446:5:
+	*(*func(*libc.TLS, ClientData) ClientData)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 16)) = TestReportDupInternalRep                               // tclTest.c:447:5:
+	*(*func(*libc.TLS, ClientData))(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 20)) = TestReportFreeInternalRep                                         // tclTest.c:448:5:
+	*(*func(*libc.TLS, uintptr, uintptr, int32) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 32)) = TestReportNormalizePath                        // tclTest.c:451:5:
+	*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 44)) = TestReportStat                                        // tclTest.c:454:5:
+	*(*func(*libc.TLS, uintptr, int32) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 48)) = TestReportAccess                                        // tclTest.c:455:5:
+	*(*func(*libc.TLS, uintptr, uintptr, int32, int32) Tcl_Channel)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 52)) = TestReportOpenFileChannel         // tclTest.c:456:5:
+	*(*func(*libc.TLS, uintptr, uintptr, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 56)) = TestReportMatchInDirectory // tclTest.c:457:5:
+	*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 60)) = TestReportUtime                                       // tclTest.c:458:5:
+	*(*func(*libc.TLS, uintptr, uintptr, int32) uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 64)) = TestReportLink                               // tclTest.c:459:5:
+	*(*func(*libc.TLS, uintptr, uintptr) uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 72)) = TestReportFileAttrStrings                           // tclTest.c:461:5:
+	*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 76)) = TestReportFileAttrsGet                // tclTest.c:462:5:
+	*(*func(*libc.TLS, uintptr, int32, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 80)) = TestReportFileAttrsSet                // tclTest.c:463:5:
+	*(*func(*libc.TLS, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 84)) = TestReportCreateDirectory                                      // tclTest.c:464:5:
+	*(*func(*libc.TLS, uintptr, int32, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 88)) = TestReportRemoveDirectory                      // tclTest.c:465:5:
+	*(*func(*libc.TLS, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 92)) = TestReportDeleteFile                                           // tclTest.c:466:5:
+	*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 96)) = TestReportCopyFile                                    // tclTest.c:467:5:
+	*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 100)) = TestReportRenameFile                                 // tclTest.c:468:5:
+	*(*func(*libc.TLS, uintptr, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 104)) = TestReportCopyDirectory                     // tclTest.c:469:5:
+	*(*func(*libc.TLS, uintptr, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 108)) = TestReportLstat                                      // tclTest.c:470:5:
 	*(*uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 112 /* .loadFileProc */)) = *(*uintptr)(unsafe.Pointer(&struct {
 		f func(*libc.TLS, uintptr, uintptr, uintptr, uintptr) int32
 	}{TestReportLoadFile})) // tclTest.c:471:5:
-	*(*func(*libc.TLS, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 120 /* .chdirProc */)) = TestReportChdir // tclTest.c:473:5:
+	*(*func(*libc.TLS, uintptr) int32)(unsafe.Pointer(uintptr(unsafe.Pointer(&testReportingFilesystem)) + 120)) = TestReportChdir // tclTest.c:473:5:
 }
 
 var ts1 = "TclOO\x00missing stub table pointer\x00Error loading \x00 (requested version \x00, actual version \x00): \x00interpreter uses an incompatible stubs mechanism\x00Tcl\x00tcl::tommath\x00epoch number mismatch\x00requires a later revision\x00reporting\x00simple\x008.5\x001.1.0\x00Tcltest\x008.6.10\x00gettimes\x00noop\x00testpurebytesobj\x00testbytestring\x00testwrongnumargs\x00testfilesystem\x00testsimplefilesystem\x00testgetindexfromobjstruct\x00testasync\x00testbumpinterpepoch\x00testchannel\x00testchannelevent\x00testcmdtoken\x00testcmdinfo\x00testcmdtrace\x00testconcatobj\x00testcreatecommand\x00testdcall\x00testdel\x00testdelassocdata\x00testdoubledigits\x00testdstring\x00testencoding\x00testevalex\x00testevalobjv\x00testevent\x00testexithandler\x00testexprlong\x00testexprlongobj\x00testexprdouble\x00testexprdoubleobj\x00testexprparser\x00testexprstring\x00testfevent\x00testfilelink\x00testfile\x00testhashsystemhash\x00testgetassocdata\x00testgetint\x00testgetplatform\x00testgetvarfullname\x00testinterpdelete\x00testlink\x00testlocale\x00testpanic\x00testparseargs\x00testparser\x00testparsevar\x00testparsevarname\x00testregexp\x00testreturn\x00testsaveresult\x00testsetassocdata\x00testsetnoerr\x00testseterr\x00testset2\x00testseterrorcode\x00testsetobjerrorcode\x00testnumutfchars\x00testfindfirst\x00testfindlast\x00testsetplatform\x00teststaticpkg\x00testtranslatefilename\x00testupvar\x00T1\x00T2\x00testmainthread\x00testsetmainloop\x00testexitmainloop\x00testcpuid\x00T3\x00testnreunwind\x00testnrelevels\x00testinterpresolver\x00argv\x00stderr\x00tcl_rcFileName\x00-appinitprocerror\x00-appinitprocdeleteinterp\x00-appinitprocclosestderr\x00-appinitprocsetrcfile\x00wrong # args\x00create\x00delete\x00mark\x00bad option \"\x00\": must be create, delete, int, or mark\x00\x00wrong # args: should be \"\x00 option cmdName\"\x00original\x00get\x00??\x00CmdProc1\x00 \x00CmdProc2\x00unknown\x00 CmdDelProc1\x00 CmdDelProc2\x00 unknown\x00 nativeObjectProc\x00 stringProc\x00modify\x00new_command_data\x00new_delete_data\x00\": must be create, delete, get, or modify\x00CmdProc1 \x00CmdProc2 \x00CmdDelProc1 \x00CmdDelProc2 \x00 option arg\"\x00%p\x00name\x00bad command token \"\x00\"\x00\": must be create or name\x00 option script\"\x00tracetest\x00deletetest\x00leveltest\x00resulttest\x00Delete wasn't called\x00doubletest\x00\": must be tracetest, deletetest, doubletest or resulttest\x00Error\x00Break\x00Continue\x00Return\x00OtherStatus\x00 option\"\x00test_ns_basic::createdcommand\x00create2\x00value:at:\x00delete2\x00\": must be create, delete, create2, or delete2\x00CreatedCommandProc could not get command info for test_ns_basic::createdcommand\x00CreatedCommandProc in \x00CreatedCommandProc2 could not get command info for test_ns_basic::createdcommand\x00CreatedCommandProc2 in \x00bogus interpreter argument!\x00wrong # arguments: should be \"\x00 data_key\"\x00fpval ndigits type ?shorten?\x00double\x00conversion type\x00bad value? %g\n\x00shorten\x00bad flag\x00-\x00+\x00shortest\x00Steele\x00e\x00f\x00append\x00element\x00end\x00free\x00gresult\x00staticsmall\x00short\x00staticlarge\x00first0 first1 first2 first3 first4 first5 first6 first7 first8 first9\nsecond0 second1 second2 second3 second4 second5 second6 second7 second8 second9\nthird0 third1 third2 third3 third4 third5 third6 third7 third8 third9\nfourth0 fourth1 fourth2 fourth3 fourth4 fourth5 fourth6 fourth7 fourth8 fourth9\nfifth0 fifth1 fifth2 fifth3 fifth4 fifth5 fifth6 fifth7 fifth8 fifth9\nsixth0 sixth1 sixth2 sixth3 sixth4 sixth5 sixth6 sixth7 sixth8 sixth9\nseventh0 seventh1 seventh2 seventh3 seventh4 seventh5 seventh6 seventh7 seventh8 seventh9\n\x00This is a malloc-ed string\x00special\x00This is a specially-allocated string\x00bad gresult option \"\x00\": must be staticsmall, staticlarge, free, or special\x00length\x00result\x00trunc\x00start\x00\": must be append, element, end, free, get, length, result, trunc, or start\x00option\x00global\x00bad value \"\x00\": must be global\x00script ?global?\x00global word ?word ...?\x00subcommand ?arg ...?\x00subcommand\x00name position script\x00position specifier\x00queue\x00head\x00tail\x00    (command bound to \"testevent\" callback)\x00    (return value from \"testevent\" callback)\x00 create|delete value\"\x00\": must be create or delete\x00odd %d\n\x00ExitProcOdd: unable to write to stdout\x00even %d\n\x00ExitProcEven: unable to write to stdout\x00 expression\"\x00This is a result\x00: %ld\x00expression\x00: \x00source ?target?\x00could not create link from \"\x00\" to \"\x00\": \x00could not read link \"\x00unix\x00mac\x00windows\x00 path\"\x00 option ?arg arg arg arg arg arg arg arg arg arg arg arg arg arg?\"\x00 intRO realRO boolRO stringRO wideRO charRO ucharRO shortRO ushortRO uintRO longRO ulongRO floatRO uwideRO\"\x00int\x00real\x00bool\x00string\x00wide\x00char\x00uchar\x00ushort\x00uint\x00long\x00ulong\x00float\x00uwide\x00set\x00 intValue realValue boolValue stringValue wideValue charValue ucharValue shortValue ushortValue uintValue longValue ulongValue floatValue uwideValue\"\x00update\x00\": should be create, delete, get, set, or update\x00category ?locale?\x00ctype\x00numeric\x00time\x00collate\x00monetary\x00all\x00T3: wrong type for arg 2\x00T3: wrong type for arg 1\x00script length\x00\n    (remainder of script: \"\x00\")\x00expr length\x00\n    (remainder of expr: \"\x00expand\x00word\x00text\x00backslash\x00command\x00variable\x00subexpr\x00operator\x00varName\x00script length append\x00switch\x00?-switch ...? exp string ?matchVar? ?subMatchVar ...?\x00%d %d\x00couldn't set variable \"\x00%ld\x00-indices\x00-nocase\x00-about\x00-expanded\x00-line\x00-linestop\x00-lineanchor\x00-xflags\x00--\x00 data_key data_item\"\x00 platform\"\x00unsupported platform: should be one of unix, or windows\x00 pkgName safe loaded\"\x00x\x00loaded\x00 level name ?name2? dest global\"\x00namespace\x00too many args\x00NONE\x00 option ?arg ...?\x00cmd\x00 cmd script\x00called \"testfevent code\" before \"testfevent create\"\x00share\x00%s\x00-force\x00mv\x00cp\x00rm\x00mkdir\x00cpdir\x00rmdir\x00name scope\x00::test_ns_var\x00alloc & free 100000 6 word items\n\x00   %.3f usec per alloc+free\n\x00alloc 5000 6 word items\n\x00   %.3f usec per alloc\n\x00free 5000 6 word items\n\x00   %.3f usec per free\n\x00Tcl_NewObj 5000 times\n\x00   %.3f usec per Tcl_NewObj\n\x00Tcl_DecrRefCount 5000 times\n\x00   %.3f usec per Tcl_DecrRefCount\n\x00TclGetStringFromObj of \"12345\" 100000 times\n\x0012345\x00   %.3f usec per TclGetStringFromObj of \"12345\"\n\x00Tcl_GetIntFromObj of \"12345\" 100000 times\n\x00   %.3f usec per Tcl_GetIntFromObj of \"12345\"\n\x00Tcl_GetInt of \"12345\" 100000 times\n\x00   %.3f usec per Tcl_GetInt of \"12345\"\n\x00sprintf of 12345 100000 times\n\x00%d\x00   %.3f usec per sprintf of 12345\n\x00hashtable lookup of \"gettimes\" 100000 times\n\x00   %.3f usec per hashtable lookup of \"gettimes\"\n\x00Tcl_SetVar of \"12345\" 100000 times\n\x00a\x00   %.3f usec per Tcl_SetVar of a to \"12345\"\n\x00Tcl_GetVar of a==\"12345\" 100000 times\n\x00   %.3f usec per Tcl_GetVar of a==\"12345\"\n\x00?string?\x00bytearray\x00before get\x00before set\x00 varName ?newValue?\"\x00 varName elemName ?newValue?\"\x00type script discard\x00small result\x00append result\x00free result\x00dynamic result\x00object result\x00called\x00notCalled\x00present\x00missing\x00same\x00different\x00dynamic\x00object\x00small\x00Exit MainLoop\n\x00 subcommand ?additional args..?\"\x00splice\x00setchannelerror\x00setchannelerrorinterp\x00cut\x00 cut channelName\"\x00clearchannelhandlers\x00 clearchannelhandlers channelName\"\x00info\x00 info channelName\"\x00read\x00write\x00nonblocking\x00blocking\x00line\x00none\x00full\x00async_flush\x00eof\x00blocked\x00unblocked\x00auto\x00saw_cr\x00lf\x00cr\x00crlf\x00queued_cr\x00inputbuffered\x00channel name required\x00isshared\x00isstandard\x00mode\x00mthread\x00open\x00tclIO\x00outputbuffered\x00queuedcr\x001\x000\x00readable\x00refcount\x00type\x00writable\x00transform\x00 transform channelId -command cmd\"\x00-command\x00bad argument \"\x00\": should be \"-command\"\x00unstack\x00 unstack channel\"\x00\": should be cut, clearchannelhandlers, info, isshared, mode, open, readable, splice, writable, transform, unstack\x00 channelName cmd ?arg1? ?arg2?\"\x00add\x00 channelName add eventSpec script\"\x00bad event name \"\x00\": must be readable, writable, or none\x00 channelName delete index\"\x00bad event index: \x00: must be nonnegative\x00bad event index \x00: out of range\x00TestChannelEventCmd: damaged event script list\x00list\x00 channelName list\"\x00removeall\x00 channelName removeall\"\x00 channelName delete index event\"\x00bad command \x00, must be one of add, delete, list, set, or removeall\x00insufficient arguments\x00b\x00c\x00d\x00argument targetvalue\x00dummy\x00index value comparison failed: got \x00 when \x00 expected\x00boolean\x00registered\x00failed\x00unregistered\x00lappend filesystemReport \x00stat\x00lstat\x00access\x00matchmounts\x00matchindirectory\x00chdir\x00loadfile\x00link\x00renamefile\x00copyfile\x00deletefile\x00createdirectory\x00copydirectory\x00removedirectory\x00fileattributestrings\x00fileattributesget\x00fileattributesset\x00utime\x00normalizepath\x00simplefs:/\x00read-only\x00r\x00eax\x00operation not available\x00non-zero initial size\x00 creation problem\x00unexpected maximal size\x00 lookup problem\x00 value problem\x00non-zero final size\x00OK\x00Tcl_ConcatObj is unsafe:\x00foo bar sum\x00eeny meeny\x00\n\t* (a) concatObj does not have refCount 0\x00\n\t* (a) concatObj is not a new obj \x00(no new refCount)\x00(refCount added)\x00(more than one refCount added!)\x00extremely unsafe behaviour by Tcl_ConcatObj()\x00\n\t* (b) concatObj does not have refCount 0\x00\n\t* (b) concatObj is not a new obj \x00(refCount removed?)\x00\n\t* (c) concatObj does not have refCount 0\x00\n\t* (c) concatObj is not a new obj \x00\n\t* (d) concatObj does not have refCount 0\x00\n\t* (d) concatObj is not a new obj \x00\n\t* (e) concatObj does not have refCount 0\x00\n\t* (e) concatObj is not a new obj \x00(failed to concat)\x00(corrupted input!)\x00\n\t* (f) concatObj does not have refCount 0\x00\n\t* (f) concatObj is not a new obj \x00\n\t* (g) concatObj does not have refCount 0\x00\n\t* (g) concatObj is not a new obj \x00-bool\x00booltest\x00Marks the end of the options\x00-help\x00Print summary of command-line options and abort\x00::ns2\x00y\x00(NULL)\x00ctx1\x00ctx2\x00Y\x00up|down ?interp?\x00provided interpreter not found\x00operation\x00testInterpResolver\x00could not remove the resolver scheme\x00down\x00up\x00TCLOBJTEST_VARPTR\x00testbignumobj\x00testbooleanobj\x00testdoubleobj\x00testintobj\x00testindexobj\x00testlistobj\x00testobj\x00teststringobj\x00mult10\x00div10\x00iseven\x00radixsize\x00option ?arg ...?\x00var value\x00error in mp_init\x00error in mp_read_radix\x00varIndex\x00error in mp_mul_d\x00error in mp_div_d\x00option arg ?arg ...?\x00not\x00\": must be set, get, or not\x00\": must be set, get, mult10, or div10\x00check\x00token\x00index\x00set2\x00setlong\x00setmaxlong\x00ismaxlong\x00get2\x00inttoobigtest\x00\": must be set, get, get2, mult10, or div10\x00replace\x00option arg ?arg...?\x00varIndex start count ?element...?\x00assign\x00bug3598580\x00convert\x00no type \x00 found\x00duplicate\x00freeallvars\x00invalidateStringRep\x00newobj\x00objtype\x00types\x00\": must be assign, convert, duplicate, freeallvars, newobj, objcount, objtype, refcount, type, or types\x00index value out of range\x00appendstrings\x00length2\x00setlength\x00maxchars\x00getunicode\x00appendself\x00appendself2\x00bad variable index\x00variable %d is unset (NULL)\x00procbodytest\x001.1\x00proc\x00namespace eval %s { namespace export %s }\x00%s::%s\x00newName argsList bodyName\x00command \"\x00\" is not a Tcl procedure\x00procedure \"\x00\" does not have a Proc struct!\x00failed to create a procbody object for procedure \"\x00testchmod\x00testeventloop\x00testvolumetype\x00testwinclock\x00testwinsleep\x00testexcept\x00testsize\x00option ...\x00done\x00wait\x00\": must be done or wait\x00?name?\x00could not get volume type for \"\x00ms\x00time_t\x00st_mtime\x00time_t|st_mtime\x00<type-of-exception>\x00access_violation\x00datatype_misalignment\x00array_bounds\x00float_denormal\x00float_divbyzero\x00float_inexact\x00float_invalidop\x00float_overflow\x00float_stack\x00float_underflow\x00int_divbyzero\x00int_overflow\x00private_instruction\x00inpageerror\x00illegal_instruction\x00noncontinue\x00stack_overflow\x00invalid_disp\x00guard_page\x00invalid_handle\x00ctrl+c\x00mode file ?file ...?\x00C\x00~/tclshrc.tcl\x00"
