@@ -29,20 +29,21 @@ const (
 type supportedKey = struct{ os, arch string }
 
 var (
-	gcc       = ccgo.Env("GO_GENERATE_CC", "gcc")
+	gcc       = ccgo.Env("GO_GENERATE_CC", ccgo.Env("CC", "gcc"))
 	goarch    = ccgo.Env("TARGET_GOARCH", runtime.GOARCH)
 	goos      = ccgo.Env("TARGET_GOOS", runtime.GOOS)
 	supported = map[supportedKey]struct{}{
 		{"darwin", "amd64"}:  {},
 		{"darwin", "arm64"}:  {},
-		{"freebsd", "amd64"}: {},
 		{"freebsd", "386"}:   {},
+		{"freebsd", "amd64"}: {},
 		{"linux", "386"}:     {},
 		{"linux", "amd64"}:   {},
 		{"linux", "arm"}:     {},
 		{"linux", "arm64"}:   {},
 		{"linux", "s390x"}:   {},
 		{"netbsd", "amd64"}:  {},
+		{"openbsd", "amd64"}: {},
 		{"windows", "386"}:   {},
 		{"windows", "amd64"}: {},
 	}
@@ -161,6 +162,11 @@ func main() {
 			"libtcl8.6.a",
 			"libtclstub8.6.a",
 		)
+	case "openbsd":
+		lib = append(lib,
+			"libtcl86.a",
+			"libtclstub86.a",
+		)
 	}
 	if !haveCDB {
 		ccgo.MustInDir(true, srcDir+platformDir, func() error {
@@ -174,6 +180,10 @@ func main() {
 				// ccgo.MustShell(true, "sed", "-i", "", "s/ -mdynamic-no-pic//", "Makefile")
 				ccgo.MustRun(true, "-compiledb", cdb, "gmake", "CFLAGS='-UHAVE_CPUID -UHAVE_COPYFILE'", "binaries", "tcltest")
 			case "freebsd/amd64", "freebsd/386", "netbsd/amd64":
+				ccgo.MustRun(true, "-verbose-compiledb", "-compiledb", cdb, "gmake", "CFLAGS='-DNO_ISNAN -UHAVE_CPUID'", "binaries", "tcltest")
+			case "openbsd/amd64":
+				//TODO- ccgo.MustShell(true, "sed", "-i", `s/\\ __attribute__\\(\\(__visibility__\\(\\"hidden\\"\\)\\)\\)//`, "Makefile")
+				//TODO- ccgo.MustShell(true, "sed", "-i", `s/-DTCL_SHLIB_EXT=\\"\\"//`, "Makefile")
 				ccgo.MustRun(true, "-verbose-compiledb", "-compiledb", cdb, "gmake", "CFLAGS='-DNO_ISNAN -UHAVE_CPUID'", "binaries", "tcltest")
 			case "linux/amd64":
 				switch goarch {
