@@ -41,6 +41,7 @@ var (
 		{"linux", "amd64"}:   {},
 		{"linux", "arm"}:     {},
 		{"linux", "arm64"}:   {},
+		{"linux", "riscv64"}: {},
 		{"linux", "s390x"}:   {},
 		{"netbsd", "amd64"}:  {},
 		{"openbsd", "amd64"}: {},
@@ -195,6 +196,7 @@ func main() {
 				"linux/386",
 				"linux/arm",
 				"linux/arm64",
+				"linux/riscv64",
 				"linux/s390x":
 
 				ccgo.MustRun(true, "-compiledb", cdb, "make", "CFLAGS=-UHAVE_CPUID -UHAVE_COPYFILE", "binaries", "tcltest")
