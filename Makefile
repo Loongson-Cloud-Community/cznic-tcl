@@ -29,6 +29,7 @@ all: editor
 	GOOS=openbsd GOARCH=arm64 go build -o /dev/null
 	GOOS=windows GOARCH=386 go build -o /dev/null
 	GOOS=windows GOARCH=amd64 go build -o /dev/null
+	GOOS=windows GOARCH=arm64 go build -o /dev/null
 	go vet 2>&1 | grep -v $(ngrep) || true
 	golint 2>&1 | grep -v $(ngrep) || true
 	#make todo
@@ -78,6 +79,8 @@ build_all_targets:
 	GOOS=windows GOARCH=386 go test -c -o /dev/null
 	GOOS=windows GOARCH=amd64 go build -v ./...
 	GOOS=windows GOARCH=amd64 go test -c -o /dev/null
+	GOOS=windows GOARCH=arm64 go build -v ./...
+	GOOS=windows GOARCH=arm64 go test -c -o /dev/null
 	echo done
 
 darwin_amd64:
@@ -181,7 +184,7 @@ linux_s390x_config:
 	GO_GENERATE_TMPDIR=tmp/src GO_GENERATE_SAVE_CONFIG=tmp/config go generate 2>&1 | tee log-generate
 
 linux_s390x_pull:
-	@echo "Can be executed everywhere"
+	@echo "Can be executed everywhere with enough RAM."
 	rm -rf /home/${S390XVM_USER}/*
 	mkdir -p /home/${S390XVM_USER}/src/modernc.org/tcl/tmp/ || true
 	rsync -rp ${S390XVM}:src/modernc.org/tcl/tmp/ /home/${S390XVM_USER}/src/modernc.org/tcl/tmp/
@@ -204,6 +207,10 @@ windows_amd64:
 windows_386:
 	GO_GENERATE_CC=i686-w64-mingw32-gcc CCGO_CPP=i686-w64-mingw32-cpp TARGET_GOOS=windows TARGET_GOARCH=386 go generate 2>&1 | tee log-generate
 	GOOS=windows GOARCH=386 go build -v ./... 2>&1 | tee -a log-generate
+
+windows_arm64:
+	go run addport.go windows_amd64 windows_arm64
+	GOOS=windows GOARCH=arm64 go build -v ./... 2>&1 | tee -a log-generate
 
 test:
 	go version | tee $(testlog)

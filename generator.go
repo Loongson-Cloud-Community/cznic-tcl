@@ -145,7 +145,7 @@ func main() {
 		case "linux":
 			cfg = append(cfg, "--host=linux")
 		default:
-			ccgo.Fatal(true, "unsupported cross compilation host: %s", s)
+			ccgo.Fatalf(true, "unsupported cross compilation host: %s", s)
 		}
 
 		platformDir = "/win"
