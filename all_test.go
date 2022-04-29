@@ -626,6 +626,11 @@ func TestTclTest(t *testing.T) {
 		}
 	case "linux/amd64":
 		skip = []string{"cmdIL-5.7"}
+	case "linux/ppc64le":
+		skip = []string{
+			"encoding-16.3",    //TODO
+			"socket_inet-2.13", //TODO
+		}
 	case "netbsd/amd64":
 		notFile = []string{ //TODO
 			"chan.test",

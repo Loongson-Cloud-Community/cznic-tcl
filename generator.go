@@ -41,6 +41,7 @@ var (
 		{"linux", "amd64"}:   {},
 		{"linux", "arm"}:     {},
 		{"linux", "arm64"}:   {},
+		{"linux", "ppc64le"}: {},
 		{"linux", "riscv64"}: {},
 		{"linux", "s390x"}:   {},
 		{"netbsd", "amd64"}:  {},
@@ -196,6 +197,7 @@ func main() {
 				"linux/386",
 				"linux/arm",
 				"linux/arm64",
+				"linux/ppc64le",
 				"linux/riscv64",
 				"linux/s390x":
 
