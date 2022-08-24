@@ -5,8 +5,8 @@ go 1.17
 require (
 	modernc.org/ccgo/v3 v3.16.8
 	modernc.org/httpfs v1.0.6
-	modernc.org/libc v1.16.19
-	modernc.org/mathutil v1.4.1
+	modernc.org/libc v1.17.0
+	modernc.org/mathutil v1.5.0
 	modernc.org/z v1.5.1
 )
 
@@ -21,7 +21,7 @@ require (
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	lukechampine.com/uint128 v1.1.1 // indirect
 	modernc.org/cc/v3 v3.36.0 // indirect
-	modernc.org/memory v1.1.1 // indirect
+	modernc.org/memory v1.2.0 // indirect
 	modernc.org/opt v0.1.1 // indirect
 	modernc.org/strutil v1.1.1 // indirect
 	modernc.org/token v1.0.0 // indirect
