@@ -61,6 +61,8 @@ build_all_targets:
 	GOOS=freebsd GOARCH=386 go test -c -o /dev/null
 	GOOS=freebsd GOARCH=amd64 go build -v ./...
 	GOOS=freebsd GOARCH=amd64 go test -c -o /dev/null
+	GOOS=freebsd GOARCH=arm go build -v ./...
+	GOOS=freebsd GOARCH=arm go test -c -o /dev/null
 	GOOS=linux GOARCH=386 go build -v ./...
 	GOOS=linux GOARCH=386 go test -c -o /dev/null
 	GOOS=linux GOARCH=amd64 go build -v ./...
@@ -108,11 +110,19 @@ freebsd_386_config:
 
 freebsd_386_pull:
 	@echo "Should be executed only on freebsd/amd64 after manually pulling and pushing tcl/tmp freebsd-386 -> 3900x -> freebsd64"
-	# rm -rf tmp/
-	# mkdir tmp/
-	# rsync -rp nuc32:src/modernc.org/tcl/tmp/ tmp/
 	GO_GENERATE_TMPDIR=tmp/src GO_GENERATE_LOAD_CONFIG=tmp/config TARGET_GOOS=freebsd TARGET_GOARCH=386 go generate 2>&1 | tee log-generate
 	GOOS=freebsd GOARCH=386 go build -v ./... 2>&1 | tee -a log-generate
+
+freebsd_arm_config:
+	@echo "Should be executed only on freebsd/arm."
+	rm -rf tmp/
+	mkdir -p tmp/config tmp/src
+	GO_GENERATE_TMPDIR=tmp/src GO_GENERATE_SAVE_CONFIG=tmp/config go generate 2>&1 | tee log-generate
+
+freebsd_arm_pull:
+	@echo "Should be executed only on freebsd/amd64 after manually pulling and pushing tcl/tmp freebsd-arm -> 3900x -> freebsd64"
+	GO_GENERATE_TMPDIR=tmp/src GO_GENERATE_LOAD_CONFIG=tmp/config TARGET_GOOS=freebsd TARGET_GOARCH=arm go generate 2>&1 | tee log-generate
+	GOOS=freebsd GOARCH=arm go build -v ./... 2>&1 | tee -a log-generate
 
 netbsd_amd64:
 	@echo "Should be executed only on netbsd/amd64."

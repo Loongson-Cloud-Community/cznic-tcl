@@ -37,6 +37,7 @@ var (
 		{"darwin", "arm64"}:  {},
 		{"freebsd", "386"}:   {},
 		{"freebsd", "amd64"}: {},
+		{"freebsd", "arm"}: {},
 		{"linux", "386"}:     {},
 		{"linux", "amd64"}:   {},
 		{"linux", "arm"}:     {},
@@ -181,7 +182,7 @@ func main() {
 				// Ex: error: invalid variant 'BLEAH'
 				// ccgo.MustShell(true, "sed", "-i", "", "s/ -mdynamic-no-pic//", "Makefile")
 				ccgo.MustRun(true, "-compiledb", cdb, "gmake", "CFLAGS='-UHAVE_CPUID -UHAVE_COPYFILE'", "binaries", "tcltest")
-			case "freebsd/amd64", "freebsd/386", "netbsd/amd64":
+			case "freebsd/amd64", "freebsd/386", "freebsd/arm", "netbsd/amd64":
 				ccgo.MustRun(true, "-verbose-compiledb", "-compiledb", cdb, "gmake", "CFLAGS='-DNO_ISNAN -UHAVE_CPUID'", "binaries", "tcltest")
 			case "openbsd/amd64":
 				//TODO- ccgo.MustShell(true, "sed", "-i", `s/\\ __attribute__\\(\\(__visibility__\\(\\"hidden\\"\\)\\)\\)//`, "Makefile")
