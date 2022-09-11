@@ -5,7 +5,7 @@ go 1.17
 require (
 	modernc.org/ccgo/v3 v3.0.0-20220910160915-348f15de615a
 	modernc.org/httpfs v1.0.6
-	modernc.org/libc v1.18.0
+	modernc.org/libc v1.18.1
 	modernc.org/mathutil v1.5.0
 	modernc.org/z v0.0.0-20220910162414-3f9b4d772da4
 )
