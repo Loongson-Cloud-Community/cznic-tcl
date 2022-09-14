@@ -13,7 +13,7 @@
 //
 // A separate Tcl shell is in the gotclsh directory.
 //
-// Supported platforms
+// # Supported platforms
 //
 // All tests pass on supported platforms.
 //
@@ -23,7 +23,7 @@
 //	linux/arm64
 //	linux/s390x
 //
-// Experimental support
+// # Experimental support
 //
 // Some tests pass on experimental platforms.
 //
@@ -31,7 +31,7 @@
 //	darwin/arm64
 //	windows/amd64
 //
-// Changelog
+// # Changelog
 //
 // 2020-09-13 v1.4.0 supports linux/{amd64,386,arm,arm64}. The arm, arm64 ports
 // fail the http tests.

@@ -37,7 +37,7 @@ var (
 		{"darwin", "arm64"}:  {},
 		{"freebsd", "386"}:   {},
 		{"freebsd", "amd64"}: {},
-		{"freebsd", "arm"}: {},
+		{"freebsd", "arm"}:   {},
 		{"linux", "386"}:     {},
 		{"linux", "amd64"}:   {},
 		{"linux", "arm"}:     {},
