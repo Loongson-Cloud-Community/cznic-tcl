@@ -47,6 +47,7 @@ var (
 		{"linux", "s390x"}:   {},
 		{"netbsd", "amd64"}:  {},
 		{"openbsd", "amd64"}: {},
+		{"openbsd", "arm64"}: {},
 		{"windows", "386"}:   {},
 		{"windows", "amd64"}: {},
 	}
@@ -184,7 +185,7 @@ func main() {
 				ccgo.MustRun(true, "-compiledb", cdb, "gmake", "CFLAGS='-UHAVE_CPUID -UHAVE_COPYFILE'", "binaries", "tcltest")
 			case "freebsd/amd64", "freebsd/386", "freebsd/arm", "netbsd/amd64":
 				ccgo.MustRun(true, "-verbose-compiledb", "-compiledb", cdb, "gmake", "CFLAGS='-DNO_ISNAN -UHAVE_CPUID'", "binaries", "tcltest")
-			case "openbsd/amd64":
+			case "openbsd/amd64", "openbsd/arm64":
 				//TODO- ccgo.MustShell(true, "sed", "-i", `s/\\ __attribute__\\(\\(__visibility__\\(\\"hidden\\"\\)\\)\\)//`, "Makefile")
 				//TODO- ccgo.MustShell(true, "sed", "-i", `s/-DTCL_SHLIB_EXT=\\"\\"//`, "Makefile")
 				ccgo.MustRun(true, "-verbose-compiledb", "-compiledb", cdb, "gmake", "CFLAGS='-DNO_ISNAN -UHAVE_CPUID'", "binaries", "tcltest")

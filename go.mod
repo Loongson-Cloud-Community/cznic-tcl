@@ -7,7 +7,7 @@ require (
 	modernc.org/httpfs v1.0.6
 	modernc.org/libc v1.19.0
 	modernc.org/mathutil v1.5.0
-	modernc.org/z v1.6.0
+	modernc.org/z v1.7.0
 )
 
 require (

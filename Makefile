@@ -81,6 +81,8 @@ build_all_targets:
 	GOOS=linux GOARCH=s390x go test -c -o /dev/null
 	GOOS=openbsd GOARCH=amd64 go build -v ./...
 	GOOS=openbsd GOARCH=amd64 go test -c -o /dev/null
+	GOOS=openbsd GOARCH=arm64 go build -v ./...
+	GOOS=openbsd GOARCH=arm64 go test -c -o /dev/null
 	GOOS=windows GOARCH=386 go build -v ./...
 	GOOS=windows GOARCH=386 go test -c -o /dev/null
 	GOOS=windows GOARCH=amd64 go build -v ./...
@@ -216,6 +218,9 @@ openbsd_amd64:
 	@echo "Should be executed only on openbsd/amd64."
 	AR=$$(which ar) go generate 2>&1 | tee log-generate
 	go build -v ./... 2>&1 | tee -a log-generate
+
+openbsd_arm64:
+	go run addport openbsd_amd64 openbsd_arm64
 
 windows_amd64:
 	@echo "Should be executed only on linux/amd64."
