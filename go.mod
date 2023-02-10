@@ -1,16 +1,17 @@
 module modernc.org/tcl
 
-go 1.17
+go 1.18
 
 require (
-	modernc.org/ccgo/v3 v3.16.13-0.20221017192402-261537637ce8
+	modernc.org/ccgo/v3 v3.16.13
 	modernc.org/httpfs v1.0.6
-	modernc.org/libc v1.21.2
+	modernc.org/libc v1.22.2
 	modernc.org/mathutil v1.5.0
-	modernc.org/z v1.7.0
+	modernc.org/z v1.7.1
 )
 
 require (
+	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
