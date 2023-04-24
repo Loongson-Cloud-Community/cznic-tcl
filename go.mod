@@ -5,9 +5,9 @@ go 1.18
 require (
 	modernc.org/ccgo/v3 v3.16.13
 	modernc.org/httpfs v1.0.6
-	modernc.org/libc v1.22.4
+	modernc.org/libc v1.22.5
 	modernc.org/mathutil v1.5.0
-	modernc.org/z v1.7.1
+	modernc.org/z v1.7.3
 )
 
 require (
