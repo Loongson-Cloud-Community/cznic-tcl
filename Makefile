@@ -23,6 +23,7 @@ all: editor
 	GOOS=linux GOARCH=amd64 go build -o /dev/null
 	GOOS=linux GOARCH=arm go build -o /dev/null
 	GOOS=linux GOARCH=arm64 go build -o /dev/null
+	GOOS=linux GOARCH=loong64 go build -o /dev/null
 	GOOS=linux GOARCH=riscv64 go build -o /dev/null
 	GOOS=linux GOARCH=s390x go build -o /dev/null
 	GOOS=netbsd GOARCH=arm64 go build -o /dev/null
@@ -73,6 +74,8 @@ build_all_targets:
 	GOOS=linux GOARCH=arm go test -c -o /dev/null
 	GOOS=linux GOARCH=arm64 go build -v ./...
 	GOOS=linux GOARCH=arm64 go test -c -o /dev/null
+	GOOS=linux GOARCH=loong64 go build -v ./...
+	GOOS=linux GOARCH=loong64 go test -c -o /dev/null
 	GOOS=linux GOARCH=ppc64le go build -v ./...
 	GOOS=linux GOARCH=ppc64le go test -c -o /dev/null
 	GOOS=linux GOARCH=riscv64 go build -v ./...
@@ -187,6 +190,10 @@ linux_arm64_pull:
 	rsync -rp pi64:src/modernc.org/tcl/tmp/ tmp/
 	GO_GENERATE_TMPDIR=tmp/src GO_GENERATE_LOAD_CONFIG=tmp/config TARGET_GOOS=linux TARGET_GOARCH=arm64 go generate 2>&1 | tee log-generate
 	GOOS=linux GOARCH=arm64 go build -v ./... 2>&1 | tee -a log-generate
+
+linux_loong64:
+	go run addport.go linux_arm64 linux_loong64
+	GOOS=linux GOARCH=loong64 go build -v ./... 2>&1 | tee -a log-generate
 
 linux_ppc64le:
 	go run addport.go linux_amd64 linux_ppc64le
