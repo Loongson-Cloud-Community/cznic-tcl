@@ -90,7 +90,7 @@ func main() {
 		if s := cc.LongDouble64Flag(goos, goarch); s != "" {
 			cflags = append(cflags, s)
 		}
-		util.MustShell(true, "sh", "-c", "go mod init example.com/tcl ; go get modernc.org/libc/v2@v2.0.0-20230828211956-085ca768d9db")
+		util.MustShell(true, "sh", "-c", "go mod init example.com/tcl ; go get modernc.org/libc/v2@master")
 		if dev {
 			util.MustShell(true, "sh", "-c", "go work init ; go work use $GOPATH/src/modernc.org/libc/v2")
 		}
