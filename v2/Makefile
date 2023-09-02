@@ -60,7 +60,8 @@ work:
 	rm -f go.work*
 	go work init
 	go work use .
-	go work use ../../ccgo/v4
-	go work use ../../ccgo/v3
 	go work use ../../cc/v4
+	go work use ../../ccgo/v3
+	go work use ../../ccgo/v4
 	go work use ../../libc/v2
+	go work use ../../z/v2

@@ -94,6 +94,7 @@ func main() {
 		if dev {
 			util.MustShell(true, "sh", "-c", "go work init ; go work use $GOPATH/src/modernc.org/libc/v2")
 		}
+		//TODO 64 bits?
 		util.MustShell(true, "sh", "-c", fmt.Sprintf("CC=%s CFLAGS='%s' ./configure --enable-threads=no", cCompiler, strings.Join(cflags, " ")))
 		args := []string{os.Args[0]}
 		if dev {
